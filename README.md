@@ -1,3 +1,22 @@
+# pxt-tileworld
+
+This [MakeCode Arcade](https://arcade.makecode.com/) extension defines "TileWorld" for sprites that move Up, Right, Left Down on a matrix. For an example game programmed with the TileWorld extension, see https://github.com/tballmsft/pxt-bouldergame.
+
+## Reference
+
+
+- [x] Add a reference for your blocks here
+- [x] Add "icon.png" image (300x200) in the root folder
+- [x] Add "- beta" to the GitHub project description if you are still iterating it.
+- [x] Use "pxt bump" to create a tagged release on GitHub
+- [x] Get your package reviewed and approved https://arcade.makecode.com/packages/approval
+
+Read more at https://arcade.makecode.com/packages/build-your-own
+
+## Supported targets
+
+* for PXT/arcade
+(The metadata above is needed for package search.)
 
 # Contributing
 

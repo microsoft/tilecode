@@ -1,0 +1,20 @@
+{
+    "name": "pxt-tileworld",
+    "version": "2.0.2",
+    "description": "",
+    "dependencies": {
+        "device": "*"
+    },
+    "files": [
+        "README.md",
+        "tileworld.ts",
+        "editor.ts",
+        "main.ts",
+        "bytecode.ts",
+        "vm.ts"
+    ],
+    "testFiles": [],
+    "public": false,
+    "installedVersion": "workspace:d1e04821-c6b0-4067-a2db-aef6881f404a",
+    "preferredEditor": "tsprj"
+}
