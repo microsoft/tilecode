@@ -17,6 +17,8 @@ namespace tileWorldEditor {
         5 . . . . 5
         5 5 5 5 5 5
     `
+    const colorSize = 8;
+    const paintSize = 6;
     export class ImageEditor {
         private color: boolean;
         private colorCursor: Sprite;
@@ -28,12 +30,12 @@ namespace tileWorldEditor {
         constructor(i: Image) {
             this.color = true;
             this.colorCursor = sprites.create(colorCursor)
-            this.colorCursor.x = 12
-            this.colorCursor.y = 16 + 8 * 7
+            this.colorCursor.x = colorSize >> 1
+            this.colorCursor.y = colorSize << 1
             this.selectedColor = 0;
             this.paintCursor = sprites.create(paintCursor)
-            this.paintCursor.x = 32
-            this.paintCursor.y = 14
+            this.paintCursor.x = paintSize * 5 + 2 
+            this.paintCursor.y = paintSize * 2 + 2
             this.paintCursor.setFlag(SpriteFlag.Invisible, true)
             this.original = i;
             this.image = i.clone();
@@ -41,11 +43,11 @@ namespace tileWorldEditor {
             scene.setBackgroundImage(this.tileMap)
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.color) {
-                    if (this.colorCursor.x > 8)
-                        this.colorCursor.x -= 8
+                    if (this.colorCursor.x > colorSize)
+                        this.colorCursor.x -= colorSize
                 } else {
-                    if (this.paintCursor.x > 35)
-                        this.paintCursor.x -= 6
+                    if (this.paintCursor.x > paintSize * 6 - 1)
+                        this.paintCursor.x -= paintSize
                     else {
                         // transition cursor to color editor
                         this.colorCursor.setFlag(SpriteFlag.Invisible, false)
@@ -56,8 +58,8 @@ namespace tileWorldEditor {
             })
             controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.color) {
-                    if (this.colorCursor.x < 8)
-                        this.colorCursor.x += 8
+                    if (this.colorCursor.x < colorSize)
+                        this.colorCursor.x += colorSize
                     else {
                         // transition cursor to paint editor
                         this.colorCursor.setFlag(SpriteFlag.Invisible, true)
@@ -65,37 +67,37 @@ namespace tileWorldEditor {
                         this.color = false;
                     }
                 } else {
-                    if (this.paintCursor.x < 32 + 6 * 15)
-                        this.paintCursor.x += 6
+                    if (this.paintCursor.x < (paintSize*5 +2) + paintSize * 15)
+                        this.paintCursor.x += paintSize
                 }
             })
             controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.color) {
-                    if (this.colorCursor.y > 16 + 7)
-                        this.colorCursor.y -= 8
+                    if (this.colorCursor.y > (colorSize << 1) + (colorSize-1))
+                        this.colorCursor.y -= colorSize
                 } else {
-                    if (this.paintCursor.y > 19)
-                        this.paintCursor.y -= 6
+                    if (this.paintCursor.y > (paintSize * 3 + 1))
+                        this.paintCursor.y -= paintSize
                 }
             })
             controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.color) {
-                    if (this.colorCursor.y < 16 + 8 * 7)
-                        this.colorCursor.y += 8
+                    if (this.colorCursor.y < (colorSize << 1) + colorSize * (colorSize-1))
+                        this.colorCursor.y += colorSize
                 } else {
-                    if (this.paintCursor.y < 14 + 6 * 15)
-                        this.paintCursor.y += 6
+                    if (this.paintCursor.y < (paintSize*2) + 2 + paintSize * 15)
+                        this.paintCursor.y += paintSize
                 }
             })
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.color) {
-                    let col = (this.colorCursor.x) >> 3
-                    let row = (this.colorCursor.y - 16) >> 3
+                    let col = ((this.colorCursor.x) / colorSize ) | 0x0
+                    let row = ((this.colorCursor.y - (colorSize << 1)) / colorSize) | 0x0
                     this.selectedColor = row * 2 + col
                     this.update()
                 } else {
-                    let col = ((this.paintCursor.x - 32) / 6) | 0x0
-                    let row = ((this.paintCursor.y - 14) / 6) | 0x0
+                    let col = ((this.paintCursor.x - (paintSize*5 + 2)) / paintSize) | 0x0
+                    let row = ((this.paintCursor.y - (paintSize*2 + 2)) / paintSize) | 0x0
                     this.image.setPixel(col, row, this.selectedColor)
                     this.update()
                 }
@@ -104,13 +106,14 @@ namespace tileWorldEditor {
         }
         private update() {
             this.tileMap.fill(0)
-            // draw the colors
+            // draw the 16 colors
             for (let row = 0; row < 8; row++) {
                 for (let col = 0; col < 2; col++) {
                     let color = row * 2 + col
-                    this.tileMap.fillRect(col * 8 + 1, 12 + row * 8 + 1, 6, 6, color)
+                    let yOffset = colorSize + (colorSize >> 1)
+                    this.tileMap.fillRect(col * colorSize + 1, yOffset + row * colorSize + 1, colorSize-2, colorSize-2, color)
                     if (this.selectedColor == color) {
-                        this.tileMap.drawRect(col * 8, 12 + row * 8, 8, 8, 1)
+                        this.tileMap.drawRect(col * colorSize, yOffset + row * colorSize, colorSize, colorSize, 1)
                     }
                 }
             }
@@ -118,22 +121,21 @@ namespace tileWorldEditor {
             this.tileMap.fillRect(1, 13, 3, 3, 13)
             this.tileMap.fillRect(4, 16, 3, 3, 13)
             // frame the sprite editor
-            this.tileMap.drawRect(28, 10, 6 * 16 + 4, 6 * 16 + 4, 1)
+            this.tileMap.drawRect(28, 10, paintSize * 16 + (paintSize - 2), paintSize * 16 + (paintSize -2), 1)
             // draw the sprite editor
             for (let row = 0; row < this.image.height; row++) {
-                let y = 12 + row * 6
+                let y = (paintSize << 1) + row * paintSize
                 for (let col = 0; col < this.image.width; col++) {
-                    let x = 30 + col * 6
+                    let x = paintSize * 5 + col * paintSize
                     let color = this.image.getPixel(col, row)
-                    this.tileMap.fillRect(x, y, 5, 5, color)
+                    this.tileMap.fillRect(x, y, paintSize-1, paintSize-1, color)
                     if (color == 0) {
-                        this.tileMap.fillRect(x, y, 2, 2, 13)
-                        this.tileMap.fillRect(x + 3, y + 3, 2, 2, 13)
+                        this.tileMap.fillRect(x, y, (paintSize >> 1) -1, (paintSize >> 1) -1, 13)
+                        this.tileMap.fillRect(x + (paintSize >> 1), y + (paintSize >> 1), (paintSize >> 1)-1, (paintSize >> 1)-1, 13)
                     }
                 }
             }
             // draw the sprite
-            this.tileMap.fillRect(134, 12, 16, 16, 0)
             this.tileMap.drawImage(this.image, 134, 12)
         }
     }
