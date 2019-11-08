@@ -167,5 +167,6 @@ namespace boulder {
         fixedSprites.push(foo)
     })
 }
-//let allSprites: Sprite[] = [].concat(boulder.movableSprites).concat(boulder.fixedSprites)
-//let mapEditor = new tileWorldEditor.MapEditor(allSprites)
+let allSprites: Sprite[] = [].concat(boulder.movableSprites).concat(boulder.fixedSprites)
+// let imageEditor = new tileWorldEditor.ImageEditor(allSprites[4].image)
+// let mapEditor = new tileWorldEditor.MapEditor(allSprites)

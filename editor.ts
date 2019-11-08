@@ -379,6 +379,46 @@ namespace tileWorldEditor {
          instance.show();
      }
 
+    // cursors for image editor
+    export class ImageEditor {
+        private image: Image;
+        private tileMap: Image;
+        // images are 16x16
+        // we will use 6x6 tiles, so sprite editor is 96 x 96 pixels
+        // three parts to editor
+        // - color palette (left: 16 colors, 8 x 8 for each color) 
+        // - sprite editor (middle)
+        // - sprite view (right)
+        constructor(i: Image) {
+            this.image = i.clone();
+            this.tileMap = image.create(160, 120)
+            scene.setBackgroundImage(this.tileMap)
+            this.update()
+        }
+        private update() {
+            // draw the colors
+            for (let row=0; row < 8; row++) {
+                for (let col = 0; col < 2; col++) {
+                    this.tileMap.fillRect(col*8+1, 12 + row*8+1, 6, 6, row * 2 + col )
+                }
+            }
+            // frame the sprite editor
+            this.tileMap.drawRect(28, 10, 6*16 + 4, 6*16 + 4, 1)
+            // draw the sprite editor
+            for(let row = 0; row < this.image.height; row++) {
+                let y = 12 + row*6 + 1
+                for (let col = 0; col < this.image.width; col++) {
+                    let x = 30 + col*6 + 1
+                    this.tileMap.fillRect(x, y, 4, 4, this.image.getPixel(col,row))
+                }
+            }
+            // draw the sprite
+            this.tileMap.fillRect(134,12,16,16,0)
+            this.tileMap.drawImage(this.image, 134, 12)
+        }
+    }
+
+    // the root of the editing experience is created a (shared) tile map
     export class MapEditor {
         private tileMap: Image;
         private cursor: Sprite;
@@ -443,7 +483,9 @@ namespace tileWorldEditor {
         }
     } 
 
-    class Editor {
+/*  TODO: for later...
+
+    class RuleEditor {
         private currentMap: Image;
         constructor(private fixed: Sprite[], private movable: Sprite[]) {
                 this.currentMap = editorMap.clone();
@@ -468,6 +510,7 @@ namespace tileWorldEditor {
             }
         }
     }
+*/
 
      //let editor = new Editor(boulder.fixedSprites, boulder.movableSprites)
      
