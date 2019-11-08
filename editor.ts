@@ -379,17 +379,28 @@ namespace tileWorldEditor {
          instance.show();
      }
 
-    // cursors for image editor
+     const colorCursor = img`
+         1 1 1 1 1 1 1 1
+         1 . . . . . . 1
+         1 . . . . . . 1
+         1 . . . . . . 1
+         1 . . . . . . 1
+         1 . . . . . . 1
+         1 . . . . . . 1
+         1 1 1 1 1 1 1 1
+     `
+
+    // cursor logic:
+    // - selection of color and highlighting thereof
+    // - motion of cursor
     export class ImageEditor {
-        private image: Image;
-        private tileMap: Image;
-        // images are 16x16
-        // we will use 6x6 tiles, so sprite editor is 96 x 96 pixels
-        // three parts to editor
-        // - color palette (left: 16 colors, 8 x 8 for each color) 
-        // - sprite editor (middle)
-        // - sprite view (right)
+        private selectedColor: number;
+        private original: Image; // 16x16
+        private image: Image;    // 16x16
+        private tileMap: Image;  // whole screen
         constructor(i: Image) {
+            this.selectedColor = 0;
+            this.original = i;
             this.image = i.clone();
             this.tileMap = image.create(160, 120)
             scene.setBackgroundImage(this.tileMap)
@@ -399,9 +410,16 @@ namespace tileWorldEditor {
             // draw the colors
             for (let row=0; row < 8; row++) {
                 for (let col = 0; col < 2; col++) {
-                    this.tileMap.fillRect(col*8+1, 12 + row*8+1, 6, 6, row * 2 + col )
+                    let color = row * 2 + col 
+                    this.tileMap.fillRect(col*8+1, 12 + row*8+1, 6, 6, color)
+                    if (this.selectedColor == color ) {
+                        this.tileMap.drawRect(col*8, 12 + row*8, 8, 8, 1)
+                    }
                 }
             }
+            // take care of transparent
+            this.tileMap.fillRect(1, 13, 3, 3, 13)
+            this.tileMap.fillRect(4, 16, 3, 3, 13)
             // frame the sprite editor
             this.tileMap.drawRect(28, 10, 6*16 + 4, 6*16 + 4, 1)
             // draw the sprite editor
@@ -409,7 +427,12 @@ namespace tileWorldEditor {
                 let y = 12 + row*6
                 for (let col = 0; col < this.image.width; col++) {
                     let x = 30 + col*6 
-                    this.tileMap.fillRect(x, y, 5, 5, this.image.getPixel(col,row))
+                    let color = this.image.getPixel(col, row)
+                    this.tileMap.fillRect(x, y, 5, 5, color)
+                    if (color == 0) {
+                        this.tileMap.fillRect(x, y, 2, 2, 13)
+                        this.tileMap.fillRect(x+3, y+3, 2, 2, 13)
+                    }
                 }
             }
             // draw the sprite
