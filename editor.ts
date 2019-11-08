@@ -380,30 +380,53 @@ namespace tileWorldEditor {
      }
 
      const colorCursor = img`
-         1 1 1 1 1 1 1 1
-         1 . . . . . . 1
-         1 . . . . . . 1
-         1 . . . . . . 1
-         1 . . . . . . 1
-         1 . . . . . . 1
-         1 . . . . . . 1
-         1 1 1 1 1 1 1 1
+         5 5 5 5 5 5 5 5
+         5 . . . . . . 5
+         5 . . . . . . 5
+         5 . . . . . . 5
+         5 . . . . . . 5
+         5 . . . . . . 5
+         5 . . . . . . 5
+         5 5 5 5 5 5 5 5
      `
 
     // cursor logic:
     // - selection of color and highlighting thereof
     // - motion of cursor
     export class ImageEditor {
+        private cursor: Sprite;
         private selectedColor: number;
         private original: Image; // 16x16
         private image: Image;    // 16x16
         private tileMap: Image;  // whole screen
         constructor(i: Image) {
+            this.cursor = sprites.create(colorCursor, SpriteKind.Player)
+            this.cursor.x = 12
+            this.cursor.y = 16+8*7
             this.selectedColor = 0;
             this.original = i;
             this.image = i.clone();
             this.tileMap = image.create(160, 120)
             scene.setBackgroundImage(this.tileMap)
+            controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
+                if (this.cursor.x > 8)
+                    this.cursor.x -= 8
+            })
+            controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
+                if (this.cursor.x < 8) 
+                   this.cursor.x += 8
+                else {
+                    // transition cursor to sprite editor
+                }
+            })
+            controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
+                if (this.cursor.y > 16+7)
+                    this.cursor.y -= 8
+            })
+            controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
+                if (this.cursor.y < 16+8*7)
+                   this.cursor.y += 8
+            })
             this.update()
         }
         private update() {
