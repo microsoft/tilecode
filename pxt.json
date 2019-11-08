@@ -11,7 +11,8 @@
         "editor.ts",
         "main.ts",
         "bytecode.ts",
-        "vm.ts"
+        "vm.ts",
+        "imageeditor.ts"
     ],
     "testFiles": [],
     "public": false,
