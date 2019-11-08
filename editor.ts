@@ -389,43 +389,86 @@ namespace tileWorldEditor {
          5 . . . . . . 5
          5 5 5 5 5 5 5 5
      `
-
+     const paintCursor = img`
+         5 5 5 5 5 5
+         5 . . . . 5
+         5 . . . . 5
+         5 . . . . 5
+         5 . . . . 5
+         5 5 5 5 5 5
+     `
     // cursor logic:
     // - selection of color and highlighting thereof
     // - motion of cursor
     export class ImageEditor {
-        private cursor: Sprite;
+        private color: boolean;
+        private colorCursor: Sprite;
+        private paintCursor: Sprite;
         private selectedColor: number;
         private original: Image; // 16x16
         private image: Image;    // 16x16
         private tileMap: Image;  // whole screen
         constructor(i: Image) {
-            this.cursor = sprites.create(colorCursor, SpriteKind.Player)
-            this.cursor.x = 12
-            this.cursor.y = 16+8*7
+            this.color = true;
+            this.colorCursor = sprites.create(colorCursor)
+            this.colorCursor.x = 12
+            this.colorCursor.y = 16+8*7
             this.selectedColor = 0;
+            this.paintCursor = sprites.create(paintCursor)
+            this.paintCursor.x = 32
+            this.paintCursor.y = 14
+            this.paintCursor.setFlag(SpriteFlag.Invisible, true)
             this.original = i;
             this.image = i.clone();
             this.tileMap = image.create(160, 120)
             scene.setBackgroundImage(this.tileMap)
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.cursor.x > 8)
-                    this.cursor.x -= 8
+                if (this.color) {
+                    if (this.colorCursor.x > 8)
+                        this.colorCursor.x -= 8
+                } else {
+                    if (this.paintCursor.x > 35)
+                        this.paintCursor.x -= 6
+                    else {
+                        // transition cursor to color editor
+                        this.colorCursor.setFlag(SpriteFlag.Invisible, false)
+                        this.paintCursor.setFlag(SpriteFlag.Invisible, true)
+                        this.color = true;
+                    }
+                }
             })
             controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.cursor.x < 8) 
-                   this.cursor.x += 8
-                else {
-                    // transition cursor to sprite editor
+                if (this.color) {
+                    if (this.colorCursor.x < 8) 
+                        this.colorCursor.x += 8
+                    else {
+                        // transition cursor to paint editor
+                        this.colorCursor.setFlag(SpriteFlag.Invisible, true)
+                        this.paintCursor.setFlag(SpriteFlag.Invisible, false)
+                        this.color = false;
+                    }
+                } else {
+                    if (this.paintCursor.x < 32 + 6*15)
+                        this.paintCursor.x += 6
                 }
             })
             controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.cursor.y > 16+7)
-                    this.cursor.y -= 8
+                if (this.color) {
+                    if (this.colorCursor.y > 16+7)
+                        this.colorCursor.y -= 8
+                } else {
+                    if (this.paintCursor.y > 19)
+                        this.paintCursor.y -= 6
+                }
             })
             controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.cursor.y < 16+8*7)
-                   this.cursor.y += 8
+                if (this.color) {
+                    if (this.colorCursor.y < 16+8*7)
+                        this.colorCursor.y += 8
+                } else {
+                    if (this.paintCursor.y < 14 + 6 * 15)
+                        this.paintCursor.y += 6
+                }
             })
             this.update()
         }
