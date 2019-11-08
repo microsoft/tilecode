@@ -167,6 +167,15 @@ namespace boulder {
         fixedSprites.push(foo)
     })
 }
+/*
 let allSprites: Sprite[] = [].concat(boulder.movableSprites).concat(boulder.fixedSprites)
-// let imageEditor = new tileWorldEditor.ImageEditor(allSprites[4].image)
+let imageEditor = new tileWorldEditor.ImageEditor(allSprites[0].image)
+let cnt = 1;
+
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    imageEditor = new tileWorldEditor.ImageEditor(allSprites[cnt].image)
+    cnt ++
+    if (cnt >= allSprites.length()) cnt = 0;
+})
 // let mapEditor = new tileWorldEditor.MapEditor(allSprites)
+*/

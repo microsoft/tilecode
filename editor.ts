@@ -406,10 +406,10 @@ namespace tileWorldEditor {
             this.tileMap.drawRect(28, 10, 6*16 + 4, 6*16 + 4, 1)
             // draw the sprite editor
             for(let row = 0; row < this.image.height; row++) {
-                let y = 12 + row*6 + 1
+                let y = 12 + row*6
                 for (let col = 0; col < this.image.width; col++) {
-                    let x = 30 + col*6 + 1
-                    this.tileMap.fillRect(x, y, 4, 4, this.image.getPixel(col,row))
+                    let x = 30 + col*6 
+                    this.tileMap.fillRect(x, y, 5, 5, this.image.getPixel(col,row))
                 }
             }
             // draw the sprite
