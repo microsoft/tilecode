@@ -144,16 +144,17 @@ namespace boulder {
         f f f f c c c f f f c c c c f f
         f f f f f f f f f c c c c c c f
     `
-    let movable = [player, diamond, boulder, enemy]
+
+    // readable names are the keys to sprites (not kinds)
     let movableNames = ["Player", "Diamond", "Boulder", "Enemy"]
-    let fixed = [wall, dirt, space]
+    let movable = [player, diamond, boulder, enemy]
     let fixedNames = ["Wall", "Dirt", "Space"]
+    let fixed = [wall, dirt, space]
 
     export let movableSprites: Sprite[] = []
     movable.forEach((img, i) => {
         let foo = sprites.create(img)
         foo.setFlag(SpriteFlag.Invisible, true)
-        foo.setKind(i + 1)
         foo.data = movableNames[i]
         movableSprites.push(foo)
     })
@@ -162,12 +163,11 @@ namespace boulder {
     fixed.forEach((img, i) => {
         let foo = sprites.create(img)
         foo.setFlag(SpriteFlag.Invisible, true)
-        foo.setKind(movableSprites.length + i + 1)
         foo.data = movableNames[i]
         fixedSprites.push(foo)
     })
 }
 
-//let allSprites: Sprite[] = [].concat(boulder.movableSprites).concat(boulder.fixedSprites)
+let allSprites: Sprite[] = [].concat(boulder.movableSprites).concat(boulder.fixedSprites)
 //let imageEditor = new tileWorldEditor.ImageEditor(allSprites[0].image)
-// let mapEditor = new tileWorldEditor.MapEditor(allSprites)
+let mapEditor = new tileWorldEditor.MapEditor(allSprites)

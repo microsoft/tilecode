@@ -12,7 +12,9 @@
         "main.ts",
         "bytecode.ts",
         "vm.ts",
-        "imageeditor.ts"
+        "imageeditor.ts",
+        "toolbox.ts",
+        "ruleeditor.ts"
     ],
     "testFiles": [],
     "public": false,
