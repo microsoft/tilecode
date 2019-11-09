@@ -56,6 +56,24 @@ namespace tileWorldEditor {
          . 1 1 1 1 1 1 1 1 1 1 1 1 1 1 .
      `
      // commands
+     const map = img`
+         f f f f f f f f f f f f f f f f
+         f f f f f f 2 2 2 2 f f f f f f
+         f f f f 2 2 2 2 2 2 2 2 f f f f
+         f f f 2 2 2 2 1 1 2 2 2 2 f f f
+         f f f 2 2 2 1 1 1 1 2 2 2 f f f
+         f f f 2 2 2 1 1 1 1 2 2 2 f f f
+         f f f 2 2 2 2 1 1 2 2 2 2 f f f
+         f f f f 2 2 2 2 2 2 2 2 f f f f
+         f f f f 2 2 2 2 2 2 2 2 f f f f
+         f f f f f 2 2 2 2 2 2 f f f f f
+         f f f f f 2 2 2 2 2 2 f f f f f
+         f f f f f f 2 2 2 2 f f f f f f
+         f f f f f f 2 2 2 2 f f f f f f
+         f f f f f f f 2 2 f f f f f f f
+         f f f f f f f 2 2 f f f f f f f
+         f f f f f f f f f f f f f f f f
+     `
      const play = img`
          f f f f f f f f f f f f f f f f
          f f f f f f f f f f f f f f f f
@@ -292,6 +310,11 @@ namespace tileWorldEditor {
             tileSprite.setFlag(SpriteFlag.Invisible, true)
             this.allSprites.insertAt(0, tileSprite)
             // the commands - move out to toolbox
+            let mapSprite = new Sprite(map)
+            mapSprite.setKind(1000)
+            mapSprite.data = "Map"
+            mapSprite.setFlag(SpriteFlag.Invisible, true)
+            this.commands.push(mapSprite);
             let paintSprite = new Sprite(paint)
             paintSprite.setKind(1000)
             paintSprite.data = "Paint"
