@@ -279,6 +279,7 @@ namespace tileWorldEditor {
         private toolBox: ToolboxMenu;
         private tileMap: Image;
         private cursor: Sprite;
+        private cursorAnim: animation.Animation;
         private currentTileSprite: Sprite;
         private commands: Sprite[] = [];
         constructor(private allSprites: Sprite[]) {
@@ -290,7 +291,7 @@ namespace tileWorldEditor {
             tileSprite.data = "Transparent"
             tileSprite.setFlag(SpriteFlag.Invisible, true)
             this.allSprites.insertAt(0, tileSprite)
-            // the commands
+            // the commands - move out to toolbox
             let paintSprite = new Sprite(paint)
             paintSprite.setKind(1000)
             paintSprite.data = "Paint"
@@ -318,6 +319,11 @@ namespace tileWorldEditor {
             this.cursor.x = 40
             this.cursor.y = 56
             scene.cameraFollowSprite(this.cursor)
+            this.cursorAnim = animation.createAnimation(0, 500)
+            this.cursorAnim.frames.push(cursorIn)
+            this.cursorAnim.frames.push(tile)
+            animation.attachAnimation(this.cursor, this.cursorAnim)
+            animation.setAction(this.cursor, 0)
 
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
                 if ((this.cursor.x >> 4) > 0)
@@ -358,11 +364,14 @@ namespace tileWorldEditor {
             }
             if (command) {
                 // look up name of sprite and get code
-                let s = this.allSprites.find((s) => (s.data == command))
+                let  s = this.allSprites.find((s) => (s.data == command))
                 if (s) {
                     this.currentTileSprite = s;
+                    if (this.cursorAnim.frames.length > 1)
+                        this.cursorAnim.frames.pop();
+                    this.cursorAnim.frames.push(s.image)
                 } else if (command == "Paint") {
-
+                    // game.pushScene();
                 }
             }
         }

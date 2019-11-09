@@ -3,7 +3,8 @@
     "version": "2.0.2",
     "description": "",
     "dependencies": {
-        "device": "*"
+        "device": "*",
+        "animation": "*"
     },
     "files": [
         "README.md",

@@ -163,11 +163,11 @@ namespace boulder {
     fixed.forEach((img, i) => {
         let foo = sprites.create(img)
         foo.setFlag(SpriteFlag.Invisible, true)
-        foo.data = movableNames[i]
+        foo.data = fixedNames[i]
         fixedSprites.push(foo)
     })
 }
 
-// let allSprites: Sprite[] = [].concat(boulder.movableSprites).concat(boulder.fixedSprites)
+//let allSprites: Sprite[] = [].concat(boulder.movableSprites).concat(boulder.fixedSprites)
 //let imageEditor = new tileWorldEditor.ImageEditor(allSprites[0].image)
-// let mapEditor = new tileWorldEditor.MapEditor(allSprites)
+//let mapEditor = new tileWorldEditor.MapEditor(allSprites)
