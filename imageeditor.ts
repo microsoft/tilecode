@@ -42,7 +42,7 @@ namespace tileWorldEditor {
             this.paintCursor.y = paintSize * 2 + 2
             this.paintCursor.setFlag(SpriteFlag.Invisible, true)
             this.original = i;
-            this.image = i.clone();
+            this.image = i; // i.clone();
             this.tileMap = image.create(160, 120)
             scene.setBackgroundImage(this.tileMap)
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
@@ -54,9 +54,7 @@ namespace tileWorldEditor {
                         this.paintCursor.x -= paintSize
                     else {
                         // transition cursor to color editor
-                        this.colorCursor.setFlag(SpriteFlag.Invisible, false)
-                        this.paintCursor.setFlag(SpriteFlag.Invisible, true)
-                        this.color = true;
+                        this.setColorCursor(true);
                     }
                 }
             })
@@ -66,9 +64,7 @@ namespace tileWorldEditor {
                         this.colorCursor.x += colorSize
                     else {
                         // transition cursor to paint editor
-                        this.colorCursor.setFlag(SpriteFlag.Invisible, true)
-                        this.paintCursor.setFlag(SpriteFlag.Invisible, false)
-                        this.color = false;
+                        this.setColorCursor(false);
                     }
                 } else {
                     if (this.paintCursor.x < (paintSize*5 +2) + paintSize * 15)
@@ -110,6 +106,11 @@ namespace tileWorldEditor {
                 this.showMenu() 
             })
             this.update()
+        }
+        private setColorCursor(color: boolean) {
+            this.colorCursor.setFlag(SpriteFlag.Invisible, !color)
+            this.paintCursor.setFlag(SpriteFlag.Invisible, color)
+            this.color = color;
         }
         private update() {
             this.tileMap.fill(0)
@@ -155,6 +156,10 @@ namespace tileWorldEditor {
             if (command) {
                 if (command == "Map")
                     game.popScene();
+                else if (command == "Paint") {
+                    this.setColorCursor(!this.color);
+                    this.update();
+                }
             }
         }
         private showMenu() {

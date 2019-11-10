@@ -197,11 +197,10 @@ namespace tileWorldEditor {
                         this.cursorAnim.frames.pop();
                     this.cursorAnim.frames.push(s.image)
                 } else if (command == "Paint") {
-                    if (this.currentTileSprite && this.currentTileSprite.data != "Transparent") {
+                    if (this.currentTileSprite && this.currentTileSprite.data != "Empty") {
                         game.pushScene();
                         let spriteEditor = new ImageEditor(this.currentTileSprite.image)
                     }
-
                 }
             }
         }
