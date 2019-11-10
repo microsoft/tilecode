@@ -20,6 +20,8 @@ namespace tileWorldEditor {
     const colorSize = 8;
     const paintSize = 6;
     export class ImageEditor {
+        private toolBox: ToolboxMenu;
+        private commands: Sprite[] = [];
         private color: boolean;
         private colorCursor: Sprite;
         private paintCursor: Sprite;
@@ -28,6 +30,8 @@ namespace tileWorldEditor {
         private image: Image;    // 16x16
         private tileMap: Image;  // whole screen
         constructor(i: Image) {
+            this.commands.push(mapSprite);
+            this.commands.push(paintSprite);
             this.color = true;
             this.colorCursor = sprites.create(colorCursor)
             this.colorCursor.x = colorSize >> 1
@@ -102,6 +106,9 @@ namespace tileWorldEditor {
                     this.update()
                 }
             })
+            controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
+                this.showMenu() 
+            })
             this.update()
         }
         private update() {
@@ -137,6 +144,24 @@ namespace tileWorldEditor {
             }
             // draw the sprite
             this.tileMap.drawImage(this.image, 134, 12)
+        }
+        private closeMenu(command: string) {
+            if (this.toolBox) {
+                this.toolBox.dispose();
+                this.toolBox = undefined;
+                controller._setUserEventsEnabled(true);
+                game.popScene();
+            }
+            if (command) {
+                if (command == "Map")
+                    game.popScene();
+            }
+        }
+        private showMenu() {
+            if (this.toolBox) return;
+            game.pushScene();
+            this.toolBox = new ToolboxMenu(this.commands, (s: string) => { this.closeMenu(s) });
+            this.toolBox.show();
         }
     }
 
