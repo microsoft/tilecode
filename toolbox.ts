@@ -74,22 +74,22 @@ namespace tileWorldEditor {
     // command set
     // commands
     const map = img`
-        f f f f f f f f f f f f f f f f
-        f f f f f f 2 2 2 2 f f f f f f
-        f f f f 2 2 2 2 2 2 2 2 f f f f
-        f f f 2 2 2 2 1 1 2 2 2 2 f f f
-        f f f 2 2 2 1 1 1 1 2 2 2 f f f
-        f f f 2 2 2 1 1 1 1 2 2 2 f f f
-        f f f 2 2 2 2 1 1 2 2 2 2 f f f
-        f f f f 2 2 2 2 2 2 2 2 f f f f
-        f f f f 2 2 2 2 2 2 2 2 f f f f
-        f f f f f 2 2 2 2 2 2 f f f f f
-        f f f f f 2 2 2 2 2 2 f f f f f
-        f f f f f f 2 2 2 2 f f f f f f
-        f f f f f f 2 2 2 2 f f f f f f
-        f f f f f f f 2 2 f f f f f f f
-        f f f f f f f 2 2 f f f f f f f
-        f f f f f f f f f f f f f f f f
+        . . . . . . . . . . . . . . . .
+        . f f f f f 2 2 2 2 f f f f f .
+        . f f f 2 2 2 2 2 2 2 2 f f f .
+        . f f 2 2 2 2 1 1 2 2 2 2 f f .
+        . f f 2 2 2 1 1 1 1 2 2 2 f f .
+        . f f 2 2 2 1 1 1 1 2 2 2 f f .
+        . f f 2 2 2 2 1 1 2 2 2 2 f f .
+        . f f f 2 2 2 2 2 2 2 2 f f f .
+        . f f f 2 2 2 2 2 2 2 2 f f f .
+        . f f f f 2 2 2 2 2 2 f f f f .
+        . f f f f 2 2 2 2 2 2 f f f f .
+        . f f f f f 2 2 2 2 f f f f f .
+        . f f f f f 2 2 2 2 f f f f f .
+        . f f f f f f 2 2 f f f f f f .
+        . f f f f f f 2 2 f f f f f f .
+        . . . . . . . . . . . . . . . .
     `
     const play = img`
         f f f f f f f f f f f f f f f f
