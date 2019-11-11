@@ -168,5 +168,5 @@ namespace boulder {
     })
 }
 
-//let allSprites: Sprite[] = [].concat(boulder.movableSprites).concat(boulder.fixedSprites)
-//let mapEditor = new tileWorldEditor.MapEditor(allSprites)
+let allSprites: Sprite[] = [].concat(boulder.movableSprites).concat(boulder.fixedSprites)
+// let mapEditor = new tileWorldEditor.MapEditor(allSprites)

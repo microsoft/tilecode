@@ -114,6 +114,7 @@ namespace tileWorldEditor {
         }
         private update() {
             this.tileMap.fill(0)
+            this.tileMap.drawImage(paintSprite.image, 0, 100)
             // draw the 16 colors
             for (let row = 0; row < 8; row++) {
                 for (let col = 0; col < 2; col++) {

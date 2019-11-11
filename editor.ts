@@ -1,24 +1,25 @@
 namespace tileWorldEditor {
 
-    // world editing spriates
-     const tile = img`
-         b b b b b b b b b b b b b b b c
-         b . . . . . . . . . . . . . . c
-         b . . . . . . . . . . . . . . c
-         b . . . . . . . . . . . . . . c
-         b . . . . . . . . . . . . . . c
-         b . . . . . . . . . . . . . . c
-         b . . . . . . . . . . . . . . c
-         b . . . . . . . . . . . . . . c
-         b . . . . . . . . . . . . . . c
-         b . . . . . . . . . . . . . . c
-         b . . . . . . . . . . . . . . c
-         b . . . . . . . . . . . . . . c
-         b . . . . . . . . . . . . . . c
-         b . . . . . . . . . . . . . . c
-         b . . . . . . . . . . . . . . c
-         c c c c c c c c c c c c c c c c
-     `
+    // world editing sprites
+    export const tile = img`
+        b b b b b b b b b b b b b b b c
+        b . . . . . . . . . . . . . . c
+        b . . . . . . . . . . . . . . c
+        b . . . . . . . . . . . . . . c
+        b . . . . . . . . . . . . . . c
+        b . . . . . . . . . . . . . . c
+        b . . . . . . . . . . . . . . c
+        b . . . . . . . . . . . . . . c
+        b . . . . . . . . . . . . . . c
+        b . . . . . . . . . . . . . . c
+        b . . . . . . . . . . . . . . c
+        b . . . . . . . . . . . . . . c
+        b . . . . . . . . . . . . . . c
+        b . . . . . . . . . . . . . . c
+        b . . . . . . . . . . . . . . c
+        c c c c c c c c c c c c c c c c
+    `;
+
      /*
      const cursorIn = img`
          . . . . . . . . . . . . . . . .
@@ -56,6 +57,8 @@ namespace tileWorldEditor {
          1 1 . . . . . . . . . . . . 1 1
          . 1 1 1 1 1 1 1 1 1 1 1 1 1 1 .
      ` */
+
+     // TODO: map expansion???
      const editorMap = img`
          . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
          . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
