@@ -2,24 +2,6 @@ namespace tileWorldEditor {
 
     // language sprites
 
-    const negate = img`
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . 2 2 2 2 2 2 . . . . .
-        . . . . 2 2 . . . . 2 2 . . . .
-        . . . 2 2 2 2 . . . . 2 2 . . .
-        . . . 2 . 2 2 2 . . . . 2 . . .
-        . . . 2 . . 2 2 2 . . . 2 . . .
-        . . . 2 . . . 2 2 2 . . 2 . . .
-        . . . 2 . . . . 2 2 2 . 2 . . .
-        . . . 2 2 . . . . 2 2 2 2 . . .
-        . . . . 2 2 . . . . 2 2 . . . .
-        . . . . . 2 2 2 2 2 2 . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-    `
     const genericSprite = img`
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -34,6 +16,25 @@ namespace tileWorldEditor {
         . . . 1 5 5 5 5 5 5 5 5 5 . . .
         . . . . 5 5 5 5 5 5 5 5 . . . .
         . . . . . 5 5 5 5 5 5 . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `
+    
+    const negate = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . 2 2 2 2 2 2 . . . . .
+        . . . . 2 2 . . . . 2 2 . . . .
+        . . . 2 2 2 2 . . . . 2 2 . . .
+        . . . 2 . 2 2 2 . . . . 2 . . .
+        . . . 2 . . 2 2 2 . . . 2 . . .
+        . . . 2 . . . 2 2 2 . . 2 . . .
+        . . . 2 . . . . 2 2 2 . 2 . . .
+        . . . 2 2 . . . . 2 2 2 2 . . .
+        . . . . 2 2 . . . . 2 2 . . . .
+        . . . . . 2 2 2 2 2 2 . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -110,6 +111,8 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
     `
+    let arrows = [leftArrow, rightArrow, upArrow, downArrow]
+    let arrowNames = ["Left", "Right", "Up", "Down"]
 
     // TODO:
     // - background image with "before" and "after" words
@@ -143,6 +146,13 @@ namespace tileWorldEditor {
             this.allSprites.insertAt(0, tileSprite)
             this.tileMap = image.create(10, 7)
             scene.setTileMap(this.tileMap)
+            // add the arrows
+            arrows.forEach((img,i) => {
+                let arrow = new Sprite(img);
+                arrow.data = arrowNames[i]
+                arrow.setFlag(SpriteFlag.Invisible, true)
+                this.allSprites.push(arrow)
+            })
             // set up user-defined sprites
             this.allSprites.forEach(function (s: Sprite, index: number) {
                 s.setKind(index+1)
