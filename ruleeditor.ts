@@ -146,40 +146,27 @@ namespace tileWorldEditor {
         private cursor: Sprite;
         private cursorAnim: animation.Animation;
         private currentTileSprite: Sprite;
-        constructor(private allSprites: Sprite[], private centerSprite: Sprite) {
+        constructor(private manager: SpriteManager, private centerSprite: Sprite) {
             this.background = image.create(160, 120)
+            this.tileMap = image.create(10,7)
             this.background.fill(11)
             this.background.fillRect(0, 0, 80, 120, 12)
             this.background.print("pre", 0, 0)
             this.background.print("post", 80, 0)
             scene.setBackgroundImage(this.background)
-            // the transparent tile
-            let tileSprite = new Sprite(tile)
-            tileSprite.data = "Empty"
-            tileSprite.setFlag(SpriteFlag.Invisible, true)
-            this.allSprites.insertAt(0, tileSprite)
-            this.tileMap = image.create(10, 7)
             scene.setTileMap(this.tileMap)
+            this.manager.setScene()
             // add the arrows
             arrows.forEach((img,i) => {
                 let arrow = new Sprite(img);
                 arrow.data = arrowNames[i]
                 arrow.setFlag(SpriteFlag.Invisible, true)
-                this.allSprites.push(arrow)
+                this.commands.push(arrow)
             })
-            // set up user-defined sprites
-            this.allSprites.forEach(function (s: Sprite, index: number) {
-                s.setKind(index+1)
-                scene.setTile(s.kind(), s.image)
-            })
+            this.commands.push(mapSprite);
+
             this.makeContext(2,2, this.centerSprite)
             this.makeContext(2,7)
-
-            // commands
-            this.commands.push(mapSprite);
-            //this.commands.push(paintSprite);
-            //this.commands.push(playSprite);
-            //this.commands.push(editSprite);
 
             // the color code of selected tile/sprite
             this.currentTileSprite = undefined;
@@ -254,7 +241,7 @@ namespace tileWorldEditor {
             }
             if (command) {
                 // look up name of sprite and get code
-                let s = this.allSprites.find((s) => (s.data == command))
+                let s = this.manager.findName(command)
                 if (s) {
                     this.currentTileSprite = s;
                     if (this.cursorAnim.frames.length > 1)
@@ -269,7 +256,7 @@ namespace tileWorldEditor {
         private showMenu() {
             if (this.toolBox) return;
             game.pushScene();
-            this.toolBox = new ToolboxMenu(this.allSprites.concat(this.commands), (s: string) => { this.closeMenu(s) });
+            this.toolBox = new ToolboxMenu(this.manager.sprites(), this.commands, (s: string) => { this.closeMenu(s) });
             this.toolBox.show();
         }
 

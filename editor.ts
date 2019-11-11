@@ -112,32 +112,53 @@ namespace tileWorldEditor {
          . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
      `
 
-    class SpriteManager {
+    // consistent management of (user-defined) sprite kinds and names
+    export class SpriteManager {
+        constructor(private allSprites: Sprite []) {
+            let tileSprite = new Sprite(tile)
+            tileSprite.data = "Empty"
+            tileSprite.setFlag(SpriteFlag.Invisible, true)
+            this.allSprites.insertAt(0, tileSprite)
+            this.allSprites.forEach(function (s: Sprite, index: number) {
+                s.setKind(index+1)
+            })
+        }
 
+        setScene() {
+            this.allSprites.forEach(function (s: Sprite, index: number) {
+                scene.setTile(s.kind(), s.image)
+            })
+        }
+
+        findName(name: string) {
+            return this.allSprites.find((s) => s.data == name)
+        }
+
+        findKind(kind: number) {
+            return this.allSprites.find((s) => s.kind() == kind)
+        }
+
+        sprites() {
+            return this.allSprites;
+        }
     }
     
     // the root of the editing experience is creating a (shared) tile map
     export class MapEditor {
+        private manager: SpriteManager;
         private commands: Sprite[] = [];
         private toolBox: ToolboxMenu;
         private tileMap: Image;
         private cursor: Sprite;
         private cursorAnim: animation.Animation;
         private currentTileSprite: Sprite;
-        constructor(private allSprites: Sprite[]) {
+        constructor(allSprites: Sprite[]) {
             // the transparent tile
-            let tileSprite = new Sprite(tile)
-            tileSprite.setKind(0)
-            tileSprite.data = "Empty"
-            tileSprite.setFlag(SpriteFlag.Invisible, true)
-            this.allSprites.insertAt(0, tileSprite)
+            this.manager = new SpriteManager(allSprites)
             this.tileMap = image.create(30, 30)
+            this.tileMap.fill(1)
             scene.setTileMap(this.tileMap)
-            // set up user-defined sprites
-            this.allSprites.forEach(function (s: Sprite, index: number) {
-                s.setKind(index)
-                scene.setTile(s.kind(), s.image)
-            })
+            this.manager.setScene()
 
             // commands
             this.commands.push(mapSprite);
@@ -191,9 +212,9 @@ namespace tileWorldEditor {
         private executeCommand(command: string, s: Sprite) {
             game.pushScene();
             if (command == "Paint") {
-                let spriteEditor = new ImageEditor(s.image)
+                let spriteEditor = new ImageEditor(this.manager, s)
             } else {
-                let ruleEditor = new RuleEditor(this.allSprites, s)
+                let ruleEditor = new RuleEditor(this.manager, s)
             }
         }
 
@@ -206,7 +227,7 @@ namespace tileWorldEditor {
             }
             if (command) {
                 // look up name of sprite and get code
-                let  s = this.allSprites.find((s) => (s.data == command))
+                let  s = this.manager.findName(command)
                 if (s) {
                     this.currentTileSprite = s;
                     if (this.cursorAnim.frames.length > 1)
@@ -218,8 +239,7 @@ namespace tileWorldEditor {
                     else {
                         let row = this.cursor.y >> 4
                         let col = this.cursor.x >> 4
-                        let pixel = this.tileMap.getPixel(col,row)
-                        let s = this.allSprites.find((s) => s.kind() == pixel)
+                        let s = this.manager.findKind(this.tileMap.getPixel(col, row))
                         if (s.data != "Empty")
                             this.executeCommand(command, s)
                     }
@@ -230,7 +250,7 @@ namespace tileWorldEditor {
         private showMenu() {
             if (this.toolBox) return;
             game.pushScene();
-            this.toolBox = new ToolboxMenu(this.allSprites.concat(this.commands), (s: string) => { this.closeMenu(s) });
+            this.toolBox = new ToolboxMenu(this.manager.sprites(), this.commands, (s: string) => { this.closeMenu(s) });
             this.toolBox.show();
         }
 

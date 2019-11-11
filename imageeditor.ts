@@ -29,7 +29,7 @@ namespace tileWorldEditor {
         private original: Image; // 16x16
         private image: Image;    // 16x16
         private tileMap: Image;  // whole screen
-        constructor(i: Image) {
+        constructor(private manager: SpriteManager, s: Sprite) {
             this.commands.push(mapSprite);
             this.commands.push(paintSprite);
             this.color = true;
@@ -41,8 +41,8 @@ namespace tileWorldEditor {
             this.paintCursor.x = paintSize * 5 + 2 
             this.paintCursor.y = paintSize * 2 + 2
             this.paintCursor.setFlag(SpriteFlag.Invisible, true)
-            this.original = i;
-            this.image = i; // i.clone();
+            this.original = s.image;
+            this.image = s.image; // i.clone();
             this.tileMap = image.create(160, 120)
             scene.setBackgroundImage(this.tileMap)
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
@@ -166,7 +166,7 @@ namespace tileWorldEditor {
         private showMenu() {
             if (this.toolBox) return;
             game.pushScene();
-            this.toolBox = new ToolboxMenu(this.commands, (s: string) => { this.closeMenu(s) });
+            this.toolBox = new ToolboxMenu([], this.commands, (s: string) => { this.closeMenu(s) });
             this.toolBox.show();
         }
     }

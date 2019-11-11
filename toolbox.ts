@@ -162,9 +162,12 @@ namespace tileWorldEditor {
     editSprite.data = "Program"
     editSprite.setFlag(SpriteFlag.Invisible, true)
 
-    function buildOptionList(s: Sprite[], h: (s:string) => void): MenuOption[] {
+    function buildOptionList(userSprites: Sprite[],  commandSprites: Sprite[], h: (s:string) => void): MenuOption[] {
         let options: MenuOption[] = [];
-        s.forEach((s: Sprite, index: number) => {
+        userSprites.forEach((s: Sprite, index: number) => {
+            options.push(new MenuOption(s.image, () => s.data, () => { h(s.data) }));
+        })
+        commandSprites.forEach((s: Sprite, index: number) => {
             options.push(new MenuOption(s.image, () => s.data, () => { h(s.data) }));
         })
         options.push(new MenuOption(scene.systemMenu.CLOSE_MENU_ICON, () => "CLOSE", () => { h(null) }));
@@ -182,8 +185,8 @@ namespace tileWorldEditor {
 
     export class ToolboxMenu extends PauseMenu {
         private myTheme: MenuTheme;
-        constructor(s: Sprite[], h: (s: string) => void) {
-            super(() => buildOptionList(s,h), toolboxTheme())
+        constructor(user: Sprite[], commands: Sprite[], h: (s: string) => void) {
+            super(() => buildOptionList(user, commands, h), toolboxTheme())
         }
         // get rid of floating animation
         onUpdate() { }
