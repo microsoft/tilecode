@@ -75,75 +75,75 @@ namespace tileWorldEditor {
     // commands
     const map = img`
         . . . . . . . . . . . . . . . .
-        . f f f f f 2 2 2 2 f f f f f .
-        . f f f 2 2 2 2 2 2 2 2 f f f .
-        . f f 2 2 2 2 1 1 2 2 2 2 f f .
-        . f f 2 2 2 1 1 1 1 2 2 2 f f .
-        . f f 2 2 2 1 1 1 1 2 2 2 f f .
-        . f f 2 2 2 2 1 1 2 2 2 2 f f .
-        . f f f 2 2 2 2 2 2 2 2 f f f .
-        . f f f 2 2 2 2 2 2 2 2 f f f .
-        . f f f f 2 2 2 2 2 2 f f f f .
-        . f f f f 2 2 2 2 2 2 f f f f .
-        . f f f f f 2 2 2 2 f f f f f .
-        . f f f f f 2 2 2 2 f f f f f .
-        . f f f f f f 2 2 f f f f f f .
-        . f f f f f f 2 2 f f f f f f .
+        . . . . . . 2 2 2 2 . . . . . .
+        . . . . 2 2 2 2 2 2 2 2 . . . .
+        . . . 2 2 2 2 1 1 2 2 2 2 . . .
+        . . . 2 2 2 1 1 1 1 2 2 2 . . .
+        . . . 2 2 2 1 1 1 1 2 2 2 . . .
+        . . . 2 2 2 2 1 1 2 2 2 2 . . .
+        . . . . 2 2 2 2 2 2 2 2 . . . .
+        . . . . 2 2 2 2 2 2 2 2 . . . .
+        . . . . . 2 2 2 2 2 2 . . . . .
+        . . . . . 2 2 2 2 2 2 . . . . .
+        . . . . . . 2 2 2 2 . . . . . .
+        . . . . . . 2 2 2 2 . . . . . .
+        . . . . . . . 2 2 . . . . . . .
+        . . . . . . . 2 2 . . . . . . .
         . . . . . . . . . . . . . . . .
     `
     const play = img`
-        f f f f f f f f f f f f f f f f
-        f f f f f f f f f f f f f f f f
-        f f 7 7 f f f f f f f f f f f f
-        f f 7 7 7 7 f f f f f f f f f f
-        f f 7 7 7 7 7 7 f f f f f f f f
-        f f 7 7 7 7 7 7 7 7 f f f f f f
-        f f 7 7 7 7 7 7 7 7 7 7 f f f f
-        f f 7 7 7 7 7 7 7 7 7 7 1 1 f f
-        f f 7 7 7 7 7 7 7 7 1 1 f f f f
-        f f 7 7 7 7 7 7 1 1 f f f f f f
-        f f 7 7 7 7 1 1 f f f f f f f f
-        f f 7 7 1 1 f f f f f f f f f f
-        f f 1 1 f f f f f f f f f f f f
-        f f f f f f f f f f f f f f f f
-        f f f f f f f f f f f f f f f f
-        f f f f f f f f f f f f f f f f
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . 7 7 . . . . . . . . . . . .
+        . . 7 7 7 7 . . . . . . . . . .
+        . . 7 7 7 7 7 7 . . . . . . . .
+        . . 7 7 7 7 7 7 7 7 . . . . . .
+        . . 7 7 7 7 7 7 7 7 7 7 . . . .
+        . . 7 7 7 7 7 7 7 7 7 7 1 1 . .
+        . . 7 7 7 7 7 7 7 7 1 1 . . . .
+        . . 7 7 7 7 7 7 1 1 . . . . . .
+        . . 7 7 7 7 1 1 . . . . . . . .
+        . . 7 7 1 1 . . . . . . . . . .
+        . . 1 1 . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
     `
     const pencil = img`
-        f f f f f f f f f f f f f f f f
-        f f f f f f f f f f f f f f f f
-        f f f f f f f f f f f 3 f f f f
-        f f f f f f f f f f 3 3 3 f f f
-        f f f f f f f f f 4 1 3 3 3 f f
-        f f f f f f f f 4 4 e 1 3 f f f
-        f f f f f f f 4 4 e 4 4 f f f f
-        f f f f f f 4 4 e 4 4 f f f f f
-        f f f f f 4 4 e 4 4 f f f f f f
-        f f f f 4 4 e 4 4 f f f f f f f
-        f f f 4 4 e 4 4 f f f f f f f f
-        f f 4 4 e 4 4 f f f f f f f f f
-        f f 1 e 4 4 f f f f f f f f f f
-        f f 1 1 4 f f f f f f f f f f f
-        f f f f f f f f f f f f f f f f
-        f f f f f f f f f f f f f f f f
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . 3 . . . .
+        . . . . . . . . . . 3 3 3 . . .
+        . . . . . . . . . 4 1 3 3 3 . .
+        . . . . . . . . 4 4 e 1 3 . . .
+        . . . . . . . 4 4 e 4 4 . . . .
+        . . . . . . 4 4 e 4 4 . . . . .
+        . . . . . 4 4 e 4 4 . . . . . .
+        . . . . 4 4 e 4 4 . . . . . . .
+        . . . 4 4 e 4 4 . . . . . . . .
+        . . 4 4 e 4 4 . . . . . . . . .
+        . . 1 e 4 4 . . . . . . . . . .
+        . . 1 1 4 . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
     `
     const paint = img`
-        f f f f f f f f f f f f f f f f
-        f f f f f f f f f f f f f f f f
-        f f f f 4 1 4 1 4 1 4 1 f f f f
-        f f f f 4 1 4 1 4 1 4 1 f f f f
-        f f f f 1 1 1 1 1 1 1 1 f f f f
-        f f f f 1 1 1 1 1 1 1 1 f f f f
-        f f f f 9 9 9 9 9 9 9 9 f f f f
-        f f f f d e e e e e e e f f f f
-        f f f f d e e e e e e e f f f f
-        f f f f f f d e e e f f f f f f
-        f f f f f f d e e e f f f f f f
-        f f f f f f d e e e f f f f f f
-        f f f f f f d f f e f f f f f f
-        f f f f f f d e e e f f f f f f
-        f f f f f f f f f f f f f f f f
-        f f f f f f f f f f f f f f f f
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . 4 1 4 1 4 1 4 1 . . . .
+        . . . . 4 1 4 1 4 1 4 1 . . . .
+        . . . . 1 1 1 1 1 1 1 1 . . . .
+        . . . . 1 1 1 1 1 1 1 1 . . . .
+        . . . . 9 9 9 9 9 9 9 9 . . . .
+        . . . . d e e e e e e e . . . .
+        . . . . d e e e e e e e . . . .
+        . . . . . . d e e e . . . . . .
+        . . . . . . d e e e . . . . . .
+        . . . . . . d e e e . . . . . .
+        . . . . . . d f f e . . . . . .
+        . . . . . . d e e e . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
     `
     // the commands - move out to toolbox
     export let mapSprite = new Sprite(map)

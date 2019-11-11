@@ -170,4 +170,4 @@ namespace boulder {
 
 let allSprites: Sprite[] = [].concat(boulder.movableSprites).concat(boulder.fixedSprites)
 //let ruleEditor = new tileWorldEditor.RuleEditor(allSprites, allSprites[2])
-// let mapEditor = new tileWorldEditor.MapEditor(allSprites)
+let mapEditor = new tileWorldEditor.MapEditor(allSprites)
