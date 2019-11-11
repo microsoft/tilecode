@@ -111,18 +111,32 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
     `
-    let arrows = [leftArrow, rightArrow, upArrow, downArrow]
-    let arrowNames = ["Left", "Right", "Up", "Down"]
+    let arrows = [negate, leftArrow, rightArrow, upArrow, downArrow]
+    let arrowNames = ["Not", "Left", "Right", "Up", "Down"]
 
     // TODO:
-    // - background image with "before" and "after" words
     // - editing can only take place within context
     // - can't change the center sprite
-    // - different sprites on Before After context
-    // - arrows on before context - only one arrow, on center or pushing center
+    // - different sprites in toolbox for Before After context
+    // language
+    // - LRUD arrows
+    //   - Before context: only one arrow, on center or pushing center
+    //   - After context: no arrows
+    // - no negation on center, or After context
     // - dealing with ORs and negation
     // - Before vs After editing
-    // - previous rule, next rule
+    // - symmetry: toggles on arrows?
+    // - GUI: previous rule, next rule
+
+    // data structure - 
+    // list of sprites per diamond location - sparse structure
+    // sprite list: 2 max, with/without NEG, NEG distributed 
+    // arrows: at most one arrow, 
+    // how to remove sprite? don't, just reset the list 
+
+    // upon selecting a tool, show viable spaces
+
+    // editing of Post context: same as Pre??? 
 
     export class RuleEditor {
         private commands: Sprite[] = [];
@@ -136,8 +150,8 @@ namespace tileWorldEditor {
             this.background = image.create(160, 120)
             this.background.fill(11)
             this.background.fillRect(0, 0, 80, 120, 12)
-            this.background.print("before", 0, 110)
-            this.background.print("after", 80, 110)
+            this.background.print("pre", 0, 0)
+            this.background.print("post", 80, 0)
             scene.setBackgroundImage(this.background)
             // the transparent tile
             let tileSprite = new Sprite(tile)
@@ -205,7 +219,7 @@ namespace tileWorldEditor {
                     return;
                 let row = this.cursor.y >> 4
                 let col = this.cursor.x >> 4
-                if (this.inDiamond(false) || this.inDiamond(true)) {
+                if (this.inDiamond()) {
                     this.tileMap.setPixel(col, row, this.currentTileSprite.kind())
                 }
             })
@@ -215,18 +229,20 @@ namespace tileWorldEditor {
         }
 
         private update() {
-            if (this.inDiamond(true) || this.inDiamond(false)) {
+            if (this.inDiamond()) {
                 this.cursorAnim.frames = [editSprite.image]
             } else {
                 this.cursorAnim.frames = [genericSprite]
             }
         }
 
-        private inDiamond(before: boolean) {
+        private manhattanDistance2(dCol: number, dRow: number) {
             let row = this.cursor.y >> 4
             let col = this.cursor.x >> 4
-            return ((before && col < 5) || (!before && col >=5)) && 
-                this.tileMap.getPixel(col, row) == 1
+            return (Math.abs(dCol - col) + Math.abs(dRow - row)) <= 2
+        }
+        private inDiamond() {
+            return this.manhattanDistance2(2, 2) || this.manhattanDistance2(7, 2)
         }
 
         private closeMenu(command: string) {
