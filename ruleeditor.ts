@@ -119,15 +119,23 @@ namespace tileWorldEditor {
     // - arrows on before context - only one arrow, on center or pushing center
     // - dealing with ORs and negation
     // - Before vs After editing
+    // - previous rule, next rule
 
     export class RuleEditor {
         private commands: Sprite[] = [];
         private toolBox: ToolboxMenu;
         private tileMap: Image;
+        private background: Image;
         private cursor: Sprite;
         private cursorAnim: animation.Animation;
         private currentTileSprite: Sprite;
         constructor(private allSprites: Sprite[], private centerSprite: Sprite) {
+            this.background = image.create(160, 120)
+            this.background.fill(11)
+            this.background.fillRect(0, 0, 80, 120, 12)
+            this.background.print("before", 0, 110)
+            this.background.print("after", 80, 110)
+            scene.setBackgroundImage(this.background)
             // the transparent tile
             let tileSprite = new Sprite(tile)
             tileSprite.data = "Empty"

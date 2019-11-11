@@ -3,20 +3,20 @@ namespace tileWorldEditor {
     // world editing sprites
     export const tile = img`
         b b b b b b b b b b b b b b b c
-        b . . . . . . . . . . . . . . c
-        b . . . . . . . . . . . . . . c
-        b . . . . . . . . . . . . . . c
-        b . . . . . . . . . . . . . . c
-        b . . . . . . . . . . . . . . c
-        b . . . . . . . . . . . . . . c
-        b . . . . . . . . . . . . . . c
-        b . . . . . . . . . . . . . . c
-        b . . . . . . . . . . . . . . c
-        b . . . . . . . . . . . . . . c
-        b . . . . . . . . . . . . . . c
-        b . . . . . . . . . . . . . . c
-        b . . . . . . . . . . . . . . c
-        b . . . . . . . . . . . . . . c
+        b f f f f f f f f f f f f f f c
+        b f f f f f f f f f f f f f f c
+        b f f f f f f f f f f f f f f c
+        b f f f f f f f f f f f f f f c
+        b f f f f f f f f f f f f f f c
+        b f f f f f f f f f f f f f f c
+        b f f f f f f f f f f f f f f c
+        b f f f f f f f f f f f f f f c
+        b f f f f f f f f f f f f f f c
+        b f f f f f f f f f f f f f f c
+        b f f f f f f f f f f f f f f c
+        b f f f f f f f f f f f f f f c
+        b f f f f f f f f f f f f f f c
+        b f f f f f f f f f f f f f f c
         c c c c c c c c c c c c c c c c
     `;
 
