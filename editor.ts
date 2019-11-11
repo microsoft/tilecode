@@ -112,6 +112,10 @@ namespace tileWorldEditor {
          . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
      `
 
+    class SpriteManager {
+
+    }
+    
     // the root of the editing experience is creating a (shared) tile map
     export class MapEditor {
         private commands: Sprite[] = [];
@@ -184,6 +188,15 @@ namespace tileWorldEditor {
             })
         }
 
+        private executeCommand(command: string, s: Sprite) {
+            game.pushScene();
+            if (command == "Paint") {
+                let spriteEditor = new ImageEditor(s.image)
+            } else {
+                let ruleEditor = new RuleEditor(this.allSprites, s)
+            }
+        }
+
         private closeMenu(command: string) {
             if (this.toolBox) {
                 this.toolBox.dispose();
@@ -200,13 +213,15 @@ namespace tileWorldEditor {
                         this.cursorAnim.frames.pop();
                     this.cursorAnim.frames.push(s.image)
                 } else if (command == "Paint" || command == "Program") {
-                    if (this.currentTileSprite && this.currentTileSprite.data != "Empty") {
-                        game.pushScene();
-                        if (command == "Paint") {
-                            let spriteEditor = new ImageEditor(this.currentTileSprite.image)
-                        } else { 
-                            let ruleEditor = new RuleEditor(this.allSprites, this.currentTileSprite)
-                        }
+                    if (this.currentTileSprite && this.currentTileSprite.data != "Empty")
+                        this.executeCommand(command, this.currentTileSprite)
+                    else {
+                        let row = this.cursor.y >> 4
+                        let col = this.cursor.x >> 4
+                        let pixel = this.tileMap.getPixel(col,row)
+                        let s = this.allSprites.find((s) => s.kind() == pixel)
+                        if (s.data != "Empty")
+                            this.executeCommand(command, s)
                     }
                 }
             }
