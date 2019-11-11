@@ -111,7 +111,15 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
     `
 
-    // the root of the editing experience is creating a (shared) tile map
+    // TODO:
+    // - background image with "before" and "after" words
+    // - editing can only take place within context
+    // - can't change the center sprite
+    // - different sprites on Before After context
+    // - arrows on before context - only one arrow, on center or pushing center
+    // - dealing with ORs and negation
+    // - Before vs After editing
+
     export class RuleEditor {
         private commands: Sprite[] = [];
         private toolBox: ToolboxMenu;
@@ -119,10 +127,9 @@ namespace tileWorldEditor {
         private cursor: Sprite;
         private cursorAnim: animation.Animation;
         private currentTileSprite: Sprite;
-        constructor(private allSprites: Sprite[]) {
+        constructor(private allSprites: Sprite[], private centerSprite: Sprite) {
             // the transparent tile
             let tileSprite = new Sprite(tile)
-            tileSprite.setKind(0)
             tileSprite.data = "Empty"
             tileSprite.setFlag(SpriteFlag.Invisible, true)
             this.allSprites.insertAt(0, tileSprite)
@@ -130,9 +137,11 @@ namespace tileWorldEditor {
             scene.setTileMap(this.tileMap)
             // set up user-defined sprites
             this.allSprites.forEach(function (s: Sprite, index: number) {
-                s.setKind(index)
+                s.setKind(index+1)
                 scene.setTile(s.kind(), s.image)
             })
+            this.makeContext(2,2, this.centerSprite)
+            this.makeContext(2,7)
 
             // commands
             this.commands.push(mapSprite);
@@ -143,44 +152,63 @@ namespace tileWorldEditor {
             // the color code of selected tile/sprite
             this.currentTileSprite = undefined;
             // cursor
-            this.cursor = sprites.create(mapSprite.image, SpriteKind.Player)
+            this.cursor = sprites.create(editSprite.image, SpriteKind.Player)
             this.cursor.x = 40
             this.cursor.y = 56
             scene.cameraFollowSprite(this.cursor)
             this.cursorAnim = animation.createAnimation(0, 333)
-            this.cursorAnim.frames.push(mapSprite.image)
-            this.cursorAnim.frames.push(tile)
+            this.cursorAnim.frames.push(editSprite.image)
+            // this.cursorAnim.frames.push(tile)
             animation.attachAnimation(this.cursor, this.cursorAnim)
             animation.setAction(this.cursor, 0)
 
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
                 if ((this.cursor.x >> 4) > 0)
                     this.cursor.x -= 16
+                this.update()
             })
             controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
                 if ((this.cursor.x >> 4) < this.tileMap.width - 1)
                     this.cursor.x += 16
+                this.update()
             })
             controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
                 if ((this.cursor.y >> 4) > 0)
                     this.cursor.y -= 16
+                this.update()
             })
             controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
                 if ((this.cursor.y >> 4) < this.tileMap.height - 1)
                     this.cursor.y += 16
+                this.update()
             })
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (!this.currentTileSprite)
                     return;
                 let row = this.cursor.y >> 4
                 let col = this.cursor.x >> 4
-                if (row >= 0 && row < this.tileMap.height && col >= 0 && col < this.tileMap.width) {
+                if (this.inDiamond(false) || this.inDiamond(true)) {
                     this.tileMap.setPixel(col, row, this.currentTileSprite.kind())
                 }
             })
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 this.showMenu()
             })
+        }
+
+        private update() {
+            if (this.inDiamond(true) || this.inDiamond(false)) {
+                this.cursorAnim.frames = [editSprite.image]
+            } else {
+                this.cursorAnim.frames = [genericSprite]
+            }
+        }
+
+        private inDiamond(before: boolean) {
+            let row = this.cursor.y >> 4
+            let col = this.cursor.x >> 4
+            return ((before && col < 5) || (!before && col >=5)) && 
+                this.tileMap.getPixel(col, row) == 1
         }
 
         private closeMenu(command: string) {
@@ -209,14 +237,17 @@ namespace tileWorldEditor {
             this.toolBox.show();
         }
 
-        private makeContext(row: number, col: number) {
+        private makeContext(row: number, col: number, center: Sprite = null) {
             for (let i = -2; i <= 2; i++) {
-                this.tileMap.setPixel(col + i, row, 9);
-                this.tileMap.setPixel(col, row + i, 9);
+                this.tileMap.setPixel(col + i, row, 1);
+                this.tileMap.setPixel(col, row + i, 1);
                 if (i > -2 && i < 2) {
-                    this.tileMap.setPixel(col + i, row + i, 9);
-                    this.tileMap.setPixel(col + i, row - i, 9);
+                    this.tileMap.setPixel(col + i, row + i, 1);
+                    this.tileMap.setPixel(col + i, row - i, 1);
                 }
+            }
+            if (center) {
+                this.tileMap.setPixel(row,col,center.kind())
             }
         }
     } 
