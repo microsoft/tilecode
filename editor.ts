@@ -199,10 +199,14 @@ namespace tileWorldEditor {
                     if (this.cursorAnim.frames.length > 1)
                         this.cursorAnim.frames.pop();
                     this.cursorAnim.frames.push(s.image)
-                } else if (command == "Paint") {
+                } else if (command == "Paint" || command == "Program") {
                     if (this.currentTileSprite && this.currentTileSprite.data != "Empty") {
                         game.pushScene();
-                        let spriteEditor = new ImageEditor(this.currentTileSprite.image)
+                        if (command == "Paint") {
+                            let spriteEditor = new ImageEditor(this.currentTileSprite.image)
+                        } else { 
+                            let ruleEditor = new RuleEditor(this.allSprites, this.currentTileSprite)
+                        }
                     }
                 }
             }

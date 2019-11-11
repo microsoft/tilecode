@@ -234,6 +234,8 @@ namespace tileWorldEditor {
                     if (this.cursorAnim.frames.length > 1)
                         this.cursorAnim.frames.pop();
                     this.cursorAnim.frames.push(s.image)
+                } else if (command == "Map") {
+                    game.popScene();
                 }
             }
         }
