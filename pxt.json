@@ -15,7 +15,8 @@
         "vm.ts",
         "imageeditor.ts",
         "toolbox.ts",
-        "ruleeditor.ts"
+        "ruleeditor.ts",
+        "parser.ts"
     ],
     "testFiles": [],
     "public": false,
