@@ -206,6 +206,7 @@ namespace tileWorldEditor {
             this.currentTileSprite = undefined;
             // cursor
             this.cursor = sprites.create(cursorIn, SpriteKind.Player)
+            this.cursor.setFlag(SpriteFlag.Invisible, true)
             this.cursor.x = 40
             this.cursor.y = 56
             scene.cameraFollowSprite(this.cursor)
@@ -255,19 +256,29 @@ namespace tileWorldEditor {
                     this.showInDiamond(x, 4, noSprite.image,10)
                     x++
                 })
-                has.forEach(s => {
-                    let userSprite = this.manager.findName(s)
-                    this.showInDiamond(x, 4, userSprite.image)
-                    let noSprite = this.commands.find(s => s.data == "Check")
-                    this.showInDiamond(x, 4, noSprite.image, 10)
-                    x++
-                })
+                if (has) {
+                    has.forEach(s => {
+                        let userSprite = this.manager.findName(s)
+                        this.showInDiamond(x, 4, userSprite.image)
+                        let noSprite = this.commands.find(s => s.data == "Check")
+                        this.showInDiamond(x, 4, noSprite.image, 10)
+                        x++
+                    })
+                }
             }
             if (rule.commands) {
                 let y = -1
                 rule.commands.forEach(c => {
                     let userSprite = this.manager.findName(c.kinds[0])
                     this.showInDiamond(3, y, userSprite.image)
+                    if (c.inst == CommandType.Move) {
+                        let arrowSprite = this.commands.find(s => s.kind() == c.dir);
+                        this.showInDiamond(4, y, arrowSprite.image)
+                    } else if (c.inst == CommandType.Paint) {
+                        this.showInDiamond(4, y, paintSprite.image);
+                        let userSprite = this.manager.findName(c.kind)
+                        this.showInDiamond(5, y, userSprite.image)
+                    }
                     y++
                 })
             }

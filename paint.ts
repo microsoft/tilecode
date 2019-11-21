@@ -50,8 +50,8 @@ let ruleB: Rule = {
     dir: TileDir.Right,
     guards: [ { x:1, y:0, none:["Wall", "Boulder"] } ],
     commands: [{
-        kinds: ["Player"], inst: CommandType.Paint,
-        dir: TileDir.None, kind: "Space"
+        kinds: ["Player"], inst: CommandType.Move,
+        dir: TileDir.Right
     }]
 }
 
