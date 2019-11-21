@@ -192,7 +192,7 @@ namespace tileWorldEditor {
             this.centerY = 2 * 16 + 8
 
             let centerImage = manager.findName(rule.kinds[0]).image.clone()
-            if (rule.kinds.length > 1) {
+            if (false) {
                 let other = manager.findName(rule.kinds[1]).image;
                 for(let x = 8; x<16;x++) {
                     for(let y=0;y<15;y++){
@@ -261,6 +261,14 @@ namespace tileWorldEditor {
                     let noSprite = this.commands.find(s => s.data == "Check")
                     this.showInDiamond(x, 4, noSprite.image, 10)
                     x++
+                })
+            }
+            if (rule.commands) {
+                let y = -1
+                rule.commands.forEach(c => {
+                    let userSprite = this.manager.findName(c.kinds[0])
+                    this.showInDiamond(3, y, userSprite.image)
+                    y++
                 })
             }
             //this.cursorAnim = animation.createAnimation(0, 333)
