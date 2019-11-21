@@ -209,6 +209,7 @@ namespace tileWorldEditor {
                 let ay = rule.dir == TileDir.Down ? -1 : (rule.dir == TileDir.Up ? 1 : 0)
                 this.showInDiamond(ax, ay, arrowSprite.image)
             }
+            let none : string[] = []
             if (rule.guards) {
                 rule.guards.forEach(g => {
                     if (g.some) {
@@ -217,7 +218,8 @@ namespace tileWorldEditor {
                     }
                     if (g.none) {
                         let notSprite = this.commands.find(s => s.data == "Not");
-                        this.showInDiamond(g.x, g.y, notSprite.image)
+                        this.showInDiamond(g.x, g.y, notSprite.image, 10)
+                        none = g.none
                     }
                     if (g.has) {
                         let userSprite = this.manager.findName(g.has[0])
@@ -227,6 +229,16 @@ namespace tileWorldEditor {
                         let userSprite = this.manager.findName(g.exactly[0])
                         this.showInDiamond(g.x, g.y, userSprite.image)
                     }
+                })
+            }
+            if (none) {
+                let x = -2
+                none.forEach(s => {
+                    let userSprite = this.manager.findName(s)
+                    this.showInDiamond(x, 4, userSprite.image)
+                    let noSprite = this.commands.find(s => s.data == "Not")
+                    this.showInDiamond(x, 4, noSprite.image,10)
+                    x++
                 })
             }
             //this.cursorAnim = animation.createAnimation(0, 333)
@@ -271,10 +283,13 @@ namespace tileWorldEditor {
             })
         }
 
-        private showInDiamond(c: number, r:number, img: Image) {
+        private showInDiamond(c: number, r:number, img: Image, z: number = 0) {
             let spr = sprites.create(img)
             spr.x = this.centerX + c*16
             spr.y = this.centerY + r*16
+            if (z != 0) {
+                spr.z =z
+            }
         }
 
         private update() {
