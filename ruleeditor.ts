@@ -25,19 +25,37 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
-        . . . . . 2 2 2 2 2 2 . . . . .
-        . . . . 2 2 . . . . 2 2 . . . .
-        . . . 2 2 2 2 . . . . 2 2 . . .
-        . . . 2 . 2 2 2 . . . . 2 . . .
-        . . . 2 . . 2 2 2 . . . 2 . . .
-        . . . 2 . . . 2 2 2 . . 2 . . .
-        . . . 2 . . . . 2 2 2 . 2 . . .
-        . . . 2 2 . . . . 2 2 2 2 . . .
-        . . . . 2 2 . . . . 2 2 . . . .
-        . . . . . 2 2 2 2 2 2 . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . 2 2 2 2 . .
+        . . . . . . . . . 2 2 . . 2 2 .
+        . . . . . . . . 2 2 2 2 . . 2 2
+        . . . . . . . . 2 . 2 2 2 . . 2
+        . . . . . . . . 2 . . 2 2 2 . 2
+        . . . . . . . . 2 2 . . 2 2 2 2
+        . . . . . . . . . 2 2 . . 2 2 .
+        . . . . . . . . . . 2 2 2 2 . .
+    `
+    const check = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . 7 . . . . . . .
+        . . . . . . . 7 6 . . . . . . .
+        . . . . . . 7 7 6 . . . . . . .
+        . . . . . . 7 6 . . . . . . . .
+        7 . . . . 7 7 6 . . . . . . . .
+        7 7 . . . 7 6 . . . . . . . . .
+        . 7 7 . 7 7 6 . . . . . . . . .
+        . . 7 7 7 6 . . . . . . . . . .
+        . . . 7 6 . . . . . . . . . . .
     `
     const downArrow = img`
         . . . . . . . . . . . . . . . .
@@ -111,9 +129,9 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
     `
-    let arrows = [negate, leftArrow, rightArrow, upArrow, downArrow]
-    let arrowNames = ["Not", "Left", "Right", "Up", "Down"]
-    let arrowValues = [-1, TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down]
+    let arrows = [negate, check, leftArrow, rightArrow, upArrow, downArrow]
+    let arrowNames = ["Not", "Check", "Left", "Right", "Up", "Down"]
+    let arrowValues = [-2, -1, TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down]
 
     // TODO:
     // - editing can only take place within context
@@ -193,6 +211,14 @@ namespace tileWorldEditor {
             }
             if (rule.guards) {
                 rule.guards.forEach(g => {
+                    if (g.some) {
+                        let userSprite = this.manager.findName(g.some[0])
+                        this.showInDiamond(g.x, g.y, userSprite.image)
+                    }
+                    if (g.none) {
+                        let notSprite = this.commands.find(s => s.data == "Not");
+                        this.showInDiamond(g.x, g.y, notSprite.image)
+                    }
                     if (g.has) {
                         let userSprite = this.manager.findName(g.has[0])
                         this.showInDiamond(g.x, g.y, userSprite.image)
