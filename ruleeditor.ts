@@ -210,6 +210,7 @@ namespace tileWorldEditor {
                 this.showInDiamond(ax, ay, arrowSprite.image)
             }
             let none : string[] = []
+            let has : string [] = []
             if (rule.guards) {
                 rule.guards.forEach(g => {
                     if (g.some) {
@@ -219,7 +220,12 @@ namespace tileWorldEditor {
                     if (g.none) {
                         let notSprite = this.commands.find(s => s.data == "Not");
                         this.showInDiamond(g.x, g.y, notSprite.image, 10)
+                        if (g.has) {
+                            let checkS = this.commands.find(s => s.data == "Check");
+                            this.showInDiamond(g.x, g.y, checkS.image, 10)
+                        }
                         none = g.none
+                        has = g.has
                     }
                     if (g.has) {
                         let userSprite = this.manager.findName(g.has[0])
@@ -238,6 +244,13 @@ namespace tileWorldEditor {
                     this.showInDiamond(x, 4, userSprite.image)
                     let noSprite = this.commands.find(s => s.data == "Not")
                     this.showInDiamond(x, 4, noSprite.image,10)
+                    x++
+                })
+                has.forEach(s => {
+                    let userSprite = this.manager.findName(s)
+                    this.showInDiamond(x, 4, userSprite.image)
+                    let noSprite = this.commands.find(s => s.data == "Check")
+                    this.showInDiamond(x, 4, noSprite.image, 10)
                     x++
                 })
             }
