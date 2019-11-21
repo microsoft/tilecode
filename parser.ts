@@ -3,15 +3,18 @@ namespace tileWorldEditor {
     // visitor
 
     // let Boulder = 0 // range 0-F
-    // R[0 - F]\n
-    // - G[-LRUD][-LRUD][ENA][0 - F] *\n
-    // - CMS[-LRUD]
-    // - CMO[-LRUD][-LRUD]
-    // - CPS[0 - F]
-    // - CPO[-LRUD][0 - F]
+    //   R -- [0 - F]\n
+    // - P1   [LRUD] ([0-F][A-C])+
+    // - P2   [LRUD][LRUD] ([0-F][A-C])+
+
+
+    // - C MS [-LRUD]
+    // - C MO [-LRUD][-LRUD]
+    // - C PS [0 - F]
+    // - C PO [-LRUD][0 - F]
     // - X
 
-    type ids = (id: number) => void
+
     type guard = (dir: string, dir2: string, op: string) => void
 
     function getHex(s: string, i: number){
@@ -23,7 +26,7 @@ namespace tileWorldEditor {
             n = 10 + (c - 65)
         return n
     }
-
+/*
     function getIds(s: string, i: number, gotId: ids) {
         if (i < 0)
             return i;
@@ -36,7 +39,7 @@ namespace tileWorldEditor {
         return i;
     }
 
-    export class RuleVisitor {
+    export class RulePainter {
         private index = 0;
         private guard = -1;
         private fail() { this.index = -1;  }
@@ -44,11 +47,13 @@ namespace tileWorldEditor {
 
         }
 
+
         private ok(i: number) {
             return i< this.rule.length
         }
 
-        public getHeader() {
+
+        public getRule(k: ids) {
             if (this.rule[0] != 'R')
                 this.index = -1
         }
@@ -65,5 +70,10 @@ namespace tileWorldEditor {
                 this.guard = -1;
             }
         }
+
+        public getCommand() {
+
+        }
     }
+    */
 }
