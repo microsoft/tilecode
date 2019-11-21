@@ -68,6 +68,19 @@ let ruleC: Rule = {
     ]
 }
 
+let ruleC_Left: Rule = {
+    event: RuleType.Push,
+    kinds: ["Player"],
+    dir: TileDir.Left,
+    guards: [{ x: -1, y: 0, has: ["Boulder"] },
+    { x: -2, y: 0, exactly: ["Space"] }
+    ],
+    commands: [
+        { kinds: ["Player"], inst: CommandType.Move, dir: TileDir.Left },
+        { kinds: ["Boulder"], inst: CommandType.Move, dir: TileDir.Left }
+    ]
+}
+
 let ruleG: Rule = {
     event: RuleType.Resting,
     kinds: bd,
