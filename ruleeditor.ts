@@ -113,6 +113,7 @@ namespace tileWorldEditor {
     `
     let arrows = [negate, leftArrow, rightArrow, upArrow, downArrow]
     let arrowNames = ["Not", "Left", "Right", "Up", "Down"]
+    let arrowValues = [-1, TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down]
 
     // TODO:
     // - editing can only take place within context
@@ -146,6 +147,8 @@ namespace tileWorldEditor {
         private cursor: Sprite;
         private cursorAnim: animation.Animation;
         private currentTileSprite: Sprite;
+        private centerX: number;
+        private centerY: number;
         constructor(private manager: SpriteManager, private rule: Rule) {  // private centerSprite: Sprite) {
             this.background = image.create(160, 120)
             this.tileMap = image.create(10,7)
@@ -160,6 +163,7 @@ namespace tileWorldEditor {
             arrows.forEach((img,i) => {
                 let arrow = new Sprite(img);
                 arrow.data = arrowNames[i]
+                arrow.setKind(arrowValues[i])
                 arrow.setFlag(SpriteFlag.Invisible, true)
                 this.commands.push(arrow)
             })
@@ -167,6 +171,8 @@ namespace tileWorldEditor {
 
             let centerSprite = manager.findName(rule.kinds[0]);
             this.makeContext(2,2, centerSprite)
+            this.centerX = 2*16 + 8
+            this.centerY = 2*16 + 8
             // this.makeContext(2,7)
 
             // the color code of selected tile/sprite
@@ -176,6 +182,18 @@ namespace tileWorldEditor {
             this.cursor.x = 40
             this.cursor.y = 56
             scene.cameraFollowSprite(this.cursor)
+            if (rule.event == RuleType.Moving) {
+                let arrowSprite = this.commands.find(s => s.kind() == rule.dir);
+                this.showInDiamond(0, 0, arrowSprite.image)
+            }
+            if (rule.guards) {
+                rule.guards.forEach(g => {
+                    if (g.has) {
+                        let userSprite = this.manager.findName(g.has[0])
+                        this.showInDiamond(g.x, g.y, userSprite.image)
+                    }
+                })
+            }
             //this.cursorAnim = animation.createAnimation(0, 333)
             //this.cursorAnim.frames.push(editSprite.image)
             // this.cursorAnim.frames.push(tile)
@@ -216,6 +234,12 @@ namespace tileWorldEditor {
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 this.showMenu()
             })
+        }
+
+        private showInDiamond(c: number, r:number, img: Image) {
+            let spr = sprites.create(img)
+            spr.x = this.centerX + c*16
+            spr.y = this.centerY + r*16
         }
 
         private update() {
