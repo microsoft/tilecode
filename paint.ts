@@ -59,7 +59,7 @@ let ruleC: Rule = {
     kinds: ["Player"],
     dir: TileDir.Right,
     guards: [{ x: 1, y: 0, has: ["Boulder"] },
-                { x: 2, y: 0, exactly: ["Space"] }
+             { x: 2, y: 0, exactly: ["Space"] }
             ],
     commands: [
         { x: 0, y: 0, inst: CommandType.Move, dir: TileDir.Right},

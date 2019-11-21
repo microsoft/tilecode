@@ -185,11 +185,20 @@ namespace tileWorldEditor {
             if (rule.event == RuleType.Moving) {
                 let arrowSprite = this.commands.find(s => s.kind() == rule.dir);
                 this.showInDiamond(0, 0, arrowSprite.image)
+            } else if (rule.event == RuleType.Push) {
+                let arrowSprite = this.commands.find(s => s.kind() == rule.dir);
+                let ax = rule.dir == TileDir.Left ? 1 : (rule.dir == TileDir.Right ? -1 : 0)
+                let ay = rule.dir == TileDir.Down ? -1 : (rule.dir == TileDir.Up ? 1 : 0)
+                this.showInDiamond(ax, ay, arrowSprite.image)
             }
             if (rule.guards) {
                 rule.guards.forEach(g => {
                     if (g.has) {
                         let userSprite = this.manager.findName(g.has[0])
+                        this.showInDiamond(g.x, g.y, userSprite.image)
+                    }
+                    if (g.exactly) {
+                        let userSprite = this.manager.findName(g.exactly[0])
                         this.showInDiamond(g.x, g.y, userSprite.image)
                     }
                 })
