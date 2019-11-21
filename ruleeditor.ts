@@ -151,8 +151,8 @@ namespace tileWorldEditor {
             this.tileMap = image.create(10,7)
             this.background.fill(11)
             this.background.fillRect(0, 0, 80, 120, 12)
-            this.background.print("pre", 0, 0)
-            this.background.print("post", 80, 0)
+            this.background.print("When", 0, 0)
+            this.background.print("Do", 80, 0)
             scene.setBackgroundImage(this.background)
             scene.setTileMap(this.tileMap)
             this.manager.setScene()
@@ -165,21 +165,22 @@ namespace tileWorldEditor {
             })
             this.commands.push(mapSprite);
 
-            // this.makeContext(2,2, this.centerSprite)
-            this.makeContext(2,7)
+            let centerSprite = manager.findName(rule.kinds[0]);
+            this.makeContext(2,2, centerSprite)
+            // this.makeContext(2,7)
 
             // the color code of selected tile/sprite
             this.currentTileSprite = undefined;
             // cursor
-            this.cursor = sprites.create(editSprite.image, SpriteKind.Player)
+            this.cursor = sprites.create(cursorIn, SpriteKind.Player)
             this.cursor.x = 40
             this.cursor.y = 56
             scene.cameraFollowSprite(this.cursor)
-            this.cursorAnim = animation.createAnimation(0, 333)
-            this.cursorAnim.frames.push(editSprite.image)
+            //this.cursorAnim = animation.createAnimation(0, 333)
+            //this.cursorAnim.frames.push(editSprite.image)
             // this.cursorAnim.frames.push(tile)
-            animation.attachAnimation(this.cursor, this.cursorAnim)
-            animation.setAction(this.cursor, 0)
+            // animation.attachAnimation(this.cursor, this.cursorAnim)
+            // animation.setAction(this.cursor, 0)
 
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
                 if ((this.cursor.x >> 4) > 0)
@@ -202,6 +203,7 @@ namespace tileWorldEditor {
                 this.update()
             })
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
+                /*
                 if (!this.currentTileSprite)
                     return;
                 let row = this.cursor.y >> 4
@@ -209,6 +211,7 @@ namespace tileWorldEditor {
                 if (this.inDiamond()) {
                     this.tileMap.setPixel(col, row, this.currentTileSprite.kind())
                 }
+                */
             })
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 this.showMenu()
@@ -216,11 +219,12 @@ namespace tileWorldEditor {
         }
 
         private update() {
+            /*
             if (this.inDiamond()) {
                 this.cursorAnim.frames = [editSprite.image]
             } else {
                 this.cursorAnim.frames = [genericSprite]
-            }
+            }*/
         }
 
         private manhattanDistance2(dCol: number, dRow: number) {

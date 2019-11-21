@@ -20,8 +20,8 @@ namespace tileWorldEditor {
         c c c c c c c c c c c c c c c c
     `;
 
-     /*
-     const cursorIn = img`
+    
+     export const cursorIn = img`
          . . . . . . . . . . . . . . . .
          . . 1 1 1 1 1 1 1 1 1 1 1 1 . .
          . 1 1 . . . . . . . . . . 1 1 .
@@ -39,7 +39,8 @@ namespace tileWorldEditor {
          . . 1 1 1 1 1 1 1 1 1 1 1 1 . .
          . . . . . . . . . . . . . . . .
      `
-     const cursorOut = img`
+
+     export const cursorOut = img`
          . 1 1 1 1 1 1 1 1 1 1 1 1 1 1 .
          1 1 . . . . . . . . . . . . 1 1
          1 . . . . . . . . . . . . . . 1
@@ -56,7 +57,7 @@ namespace tileWorldEditor {
          1 . . . . . . . . . . . . . . 1
          1 1 . . . . . . . . . . . . 1 1
          . 1 1 1 1 1 1 1 1 1 1 1 1 1 1 .
-     ` */
+     `;
 
      // TODO: map expansion???
      const editorMap = img`
