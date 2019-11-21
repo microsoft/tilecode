@@ -146,7 +146,7 @@ namespace tileWorldEditor {
         private cursor: Sprite;
         private cursorAnim: animation.Animation;
         private currentTileSprite: Sprite;
-        constructor(private manager: SpriteManager, private centerSprite: Sprite) {
+        constructor(private manager: SpriteManager, private rule: Rule) {  // private centerSprite: Sprite) {
             this.background = image.create(160, 120)
             this.tileMap = image.create(10,7)
             this.background.fill(11)
@@ -165,7 +165,7 @@ namespace tileWorldEditor {
             })
             this.commands.push(mapSprite);
 
-            this.makeContext(2,2, this.centerSprite)
+            // this.makeContext(2,2, this.centerSprite)
             this.makeContext(2,7)
 
             // the color code of selected tile/sprite

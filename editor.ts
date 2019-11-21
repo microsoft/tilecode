@@ -214,7 +214,7 @@ namespace tileWorldEditor {
             if (command == "Paint") {
                 let spriteEditor = new ImageEditor(this.manager, s)
             } else {
-                let ruleEditor = new RuleEditor(this.manager, s)
+                // let ruleEditor = new RuleEditor(this.manager, s)
             }
         }
 
