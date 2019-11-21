@@ -19,8 +19,7 @@ type Guard = {
 }
 
 type Command = {
-    x: number;
-    y: number;
+    kinds: string[];
     inst: CommandType;
     dir?: TileDir;
     kind?: string;
@@ -34,12 +33,14 @@ type Rule = {
     commands: Command[];
 }
 
+let bd = ["Boulder", "Diamond"]
+
 let ruleA: Rule =  {
     event:  RuleType.Resting,
     kinds:  ["Player"],
     dir:    TileDir.None,
     guards: [],
-    commands: [ { x:0, y:0, inst:CommandType.Paint, 
+    commands: [ { kinds: ["Player"], inst:CommandType.Paint, 
                     dir:TileDir.None, kind: "Space"} ] 
 }
 
@@ -49,7 +50,7 @@ let ruleB: Rule = {
     dir: TileDir.Right,
     guards: [ { x:1, y:0, none:["Wall", "Boulder"] } ],
     commands: [{
-        x: 0, y: 0, inst: CommandType.Paint,
+        kinds: ["Player"], inst: CommandType.Paint,
         dir: TileDir.None, kind: "Space"
     }]
 }
@@ -62,19 +63,19 @@ let ruleC: Rule = {
              { x: 2, y: 0, exactly: ["Space"] }
             ],
     commands: [
-        { x: 0, y: 0, inst: CommandType.Move, dir: TileDir.Right},
-        { x: 1, y: 0, inst: CommandType.Move, dir: TileDir.Right}
+        { kinds:["Player"], inst: CommandType.Move, dir: TileDir.Right},
+        { kinds:["Boulder"], inst: CommandType.Move, dir: TileDir.Right}
     ]
 }
 
 let ruleG: Rule = {
     event: RuleType.Resting,
-    kinds: ["Boulder", "Diamond"],
+    kinds: bd,
     guards: [
         { x: 0, y: 1, exactly: ["Space"] },
     ],
     commands: [
-        { x: 0, y: 0, inst: CommandType.Move, dir: TileDir.Down }
+        { kinds: bd, inst: CommandType.Move, dir: TileDir.Down }
     ]
 }
 
@@ -84,21 +85,21 @@ let ruleH: Rule = {
     guards: [
         { x: -1, y: 0, exactly: ["Space"] },
         { x: -1, y: 1, exactly: ["Space"] },
-        { x: 0, y: 1, some: ["Boulder", "Diamond"] },
+        { x: 0, y: 1, some: bd },
     ],
     commands: [
-        { x: 0, y: 0, inst: CommandType.Move, dir: TileDir.Left }
+        { kinds: bd, inst: CommandType.Move, dir: TileDir.Left }
     ]
 }
 
 let ruleI: Rule = {
     event: RuleType.Moving,
     dir: TileDir.Down,
-    kinds: ["Boulder", "Diamond"],
+    kinds: bd,
     guards: [
         { x: 0, y: 1, has: ["Space"], none: ["Boulder", "Diamond"]  }
     ],
     commands: [
-        { x: 0, y: 0, inst: CommandType.Move, dir: TileDir.Down }
+        { kinds: bd, inst: CommandType.Move, dir: TileDir.Down }
     ]
 }

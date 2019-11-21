@@ -187,11 +187,20 @@ namespace tileWorldEditor {
             })
             this.commands.push(mapSprite);
 
-            let centerSprite = manager.findName(rule.kinds[0]);
-            this.makeContext(2,2, centerSprite)
-            this.centerX = 2*16 + 8
-            this.centerY = 2*16 + 8
-            // this.makeContext(2,7)
+            this.makeContext(2, 2, null)
+            this.centerX = 2 * 16 + 8
+            this.centerY = 2 * 16 + 8
+
+            let centerImage = manager.findName(rule.kinds[0]).image.clone()
+            if (rule.kinds.length > 1) {
+                let other = manager.findName(rule.kinds[1]).image;
+                for(let x = 8; x<16;x++) {
+                    for(let y=0;y<15;y++){
+                        centerImage.setPixel(x,y,other.getPixel(x,y))
+                    }
+                }
+            }
+            this.showInDiamond(0, 0, centerImage)
 
             // the color code of selected tile/sprite
             this.currentTileSprite = undefined;
