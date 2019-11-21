@@ -237,7 +237,7 @@ namespace tileWorldEditor {
                         none = g.none
                         has = g.has
                     }
-                    if (g.has) {
+                    if (g.has && !g.none) {
                         let userSprite = this.manager.findName(g.has[0])
                         this.showInDiamond(g.x, g.y, userSprite.image)
                     }
@@ -249,13 +249,6 @@ namespace tileWorldEditor {
             }
             if (none) {
                 let x = -2
-                none.forEach(s => {
-                    let userSprite = this.manager.findName(s)
-                    this.showInDiamond(x, 4, userSprite.image)
-                    let noSprite = this.commands.find(s => s.data == "Not")
-                    this.showInDiamond(x, 4, noSprite.image,10)
-                    x++
-                })
                 if (has) {
                     has.forEach(s => {
                         let userSprite = this.manager.findName(s)
@@ -265,12 +258,23 @@ namespace tileWorldEditor {
                         x++
                     })
                 }
+                none.forEach(s => {
+                    let userSprite = this.manager.findName(s)
+                    this.showInDiamond(x, 4, userSprite.image)
+                    let noSprite = this.commands.find(s => s.data == "Not")
+                    this.showInDiamond(x, 4, noSprite.image,10)
+                    x++
+                })
             }
             if (rule.commands) {
                 let y = -1
                 rule.commands.forEach(c => {
                     let userSprite = this.manager.findName(c.kinds[0])
                     this.showInDiamond(3, y, userSprite.image)
+                    if (c.highlight && y == -1) {
+                        this.showInDiamond(0, 0, cursorOut, 10)
+                        this.showInDiamond(3, y, cursorOut, 10)
+                    }
                     if (c.inst == CommandType.Move) {
                         let arrowSprite = this.commands.find(s => s.kind() == c.dir);
                         this.showInDiamond(4, y, arrowSprite.image)

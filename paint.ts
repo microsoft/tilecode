@@ -5,6 +5,7 @@ enum RuleType {
 }
 
 enum CommandType {
+    None,
     Move,
     Paint,
 }
@@ -23,6 +24,7 @@ type Command = {
     inst: CommandType;
     dir?: TileDir;
     kind?: string;
+    highlight?: boolean;
 }
 
 type Rule = {
@@ -101,7 +103,8 @@ let ruleH: Rule = {
         { x: 0, y: 1, some: bd },
     ],
     commands: [
-        { kinds: bd, inst: CommandType.Move, dir: TileDir.Left }
+        { kinds: bd, inst: CommandType.Move, dir: TileDir.Left, highlight: true},
+        { kinds: bd, inst: CommandType.None }
     ]
 }
 
