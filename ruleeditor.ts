@@ -131,6 +131,24 @@ namespace tileWorldEditor {
         . d d d d d d d d d d d d d d .
         . . . . . . . . . . . . . . . .
     `
+    const eraseCenter = img`
+        . . . . . . . . . . . . . . . .
+        . d d d d d d d d d d d d d d .
+        . d . . . . . . . . . . . . d .
+        . d . . . . . . 3 3 . . . . d .
+        . d . . . . . 3 3 3 3 . . . d .
+        . d . . . . 3 3 3 3 3 3 . . d .
+        . d . . . 3 3 3 3 3 3 3 3 . d .
+        . d . . 3 3 3 3 3 3 3 3 3 . d .
+        . d . 3 3 3 3 3 3 3 3 3 . . d .
+        . d . 3 3 3 3 3 3 3 3 . . . d .
+        . d . . 3 3 3 3 3 3 . . . . d .
+        . d . . . 3 3 3 3 . . . . . d .
+        . d . . . . 3 3 . . . . . . d .
+        . d . . . . . . . . . . . . d .
+        . d d d d d d d d d d d d d d .
+        . . . . . . . . . . . . . . . .
+    `
     const downArrow = img`
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -203,9 +221,9 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
     `
-    let arrows = [negate, check, leftArrow, rightArrow, upArrow, downArrow]
-    let arrowNames = ["Not", "Check", "Left", "Right", "Up", "Down"]
-    let arrowValues = [-2, -1, TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down]
+    let arrows = [oneof, negate, check, leftArrow, rightArrow, upArrow, downArrow]
+    let arrowNames = ["OneOf", "Not", "Check", "Left", "Right", "Up", "Down"]
+    let arrowValues = [-3, -2, -1, TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down]
 
     // TODO:
     // - editing can only take place within context
@@ -242,7 +260,14 @@ namespace tileWorldEditor {
         private centerX: number;
         private centerY: number;
         private menuOn: boolean;
+        private showSelected: Sprite;
+        private selected: Sprite;
+        private attrs: Sprite[];
+        private menuItems: Sprite[];
         constructor(private manager: SpriteManager, private rule: Rule) {  // private centerSprite: Sprite) {
+            this.selected = null;
+            this.attrs = [];
+            this.menuItems = [];
             this.menuOn = false;
             this.tileMap = image.create(10, 7)
             this.background = image.create(160, 120)
@@ -263,10 +288,14 @@ namespace tileWorldEditor {
             this.centerX = 2 * 16 + 8
             this.centerY = 2 * 16 + 8
 
+            this.showSelected = sprites.create(cursorOut)
+            this.showSelected.setFlag(SpriteFlag.Invisible, true)
+
             this.cursor = sprites.create(cursorIn, SpriteKind.Player)
-            this.cursor.setFlag(SpriteFlag.Invisible, true)
+            this.cursor.setFlag(SpriteFlag.Invisible, false)
             this.cursor.x = 40
             this.cursor.y = 56
+            this.cursor.z = 50;
             scene.cameraFollowSprite(this.cursor)
 
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
@@ -294,21 +323,53 @@ namespace tileWorldEditor {
                     let x = -2
                     this.manager.sprites().forEach((s,i) => {
                         if (i > 0) {
-                            this.showInDiamond(x, 4, s.image)
+                            let spr = this.showInDiamond(x, 4, s.image)
+                            this.menuItems.push(spr);
                             x++;
                         }
                     })
-                    this.showInDiamond(-2, 3, checkCenter);
-                    this.showInDiamond(-1, 3, negateCenter);
-                    this.showInDiamond(0, 3, oneofCenter);
-                } else {
-                    this.doit(this.rule)
-                    this.update();
-                }
-                this.menuOn = !this.menuOn
+                    let checkS = this.showInDiamond(-2, 3, checkCenter);
+                    checkS.data = "Check";
+                    this.attrs.push(checkS)
+                    let negateS = this.showInDiamond(-1, 3, negateCenter);
+                    negateS.data = "Not";
+                    this.attrs.push(negateS)
+                    let oneofS = this.showInDiamond(0, 3, oneofCenter);
+                    oneofS.data = "OneOf"
+                    this.attrs.push(oneofS)
+                    let eraseS = this.showInDiamond(1, 3, eraseCenter);
+                    eraseS.data = "erase"
+                    this.attrs.push(eraseS)
+                } 
+                this.menuOn = true;
             })
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
-                this.showMenu()
+                if (this.menuOn) {
+                    this.attrs.forEach(m => {
+                        if (this.cursor.overlapsWith(m)) {
+                            this.selected = m;
+                            this.showSelected.x = m.x
+                            this.showSelected.y = m.y
+                            this.showSelected.setFlag(SpriteFlag.Invisible, false)
+                        }
+                    })
+                    this.menuItems.forEach(m => {
+                        if (this.cursor.overlapsWith(m)) {
+                            if (this.selected) {
+                                if (this.selected.data != "erase") { 
+                                    let index = arrowNames.indexOf(this.selected.data)
+                                    if (index >=0 ) {
+                                        let spr = sprites.create(arrows[index])
+                                        spr.x = m.x; spr.y = m.y
+                                    }
+                                } else {
+
+                                }
+                            }
+                        }
+                    })
+                }
+                // this.showMenu()
             })
 
             this.doit(this.rule);
@@ -419,6 +480,7 @@ namespace tileWorldEditor {
             if (z != 0) {
                 spr.z =z
             }
+            return spr
         }
 
         private update() {

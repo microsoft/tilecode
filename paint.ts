@@ -96,7 +96,7 @@ let ruleG: Rule = {
 
 let ruleH: Rule = {
     event: RuleType.Resting,
-    kinds: ["Boulder", "Diamond"],
+    kinds: bd,
     guards: [
         { x: -1, y: 0, exactly: ["Space"] },
         { x: -1, y: 1, exactly: ["Space"] },
@@ -113,9 +113,18 @@ let ruleI: Rule = {
     dir: TileDir.Down,
     kinds: bd,
     guards: [
-        { x: 0, y: 1, has: ["Space"], none: ["Boulder", "Diamond"]  }
+        { x: 0, y: 1, has: ["Space"], none: bd  }
     ],
     commands: [
         { kinds: bd, inst: CommandType.Move, dir: TileDir.Down }
     ]
 }
+
+let ruleAttr: Rule = {
+    event: RuleType.Moving,
+    dir: TileDir.Down,
+    kinds: bd,
+    guards: [ ],
+    commands: []
+}
+
