@@ -21,6 +21,7 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
     `
     
+
     const negate = img`
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -56,6 +57,79 @@ namespace tileWorldEditor {
         . 7 7 . 7 7 6 . . . . . . . . .
         . . 7 7 7 6 . . . . . . . . . .
         . . . 7 6 . . . . . . . . . . .
+    `
+    const oneof = img`
+        . . . . . . . . . . . . . . . .
+        . . 5 5 5 5 . . . . . . . . . .
+        . 5 5 5 5 5 5 . . . . . . . . .
+        . 5 5 5 5 5 5 . . . . . . . . .
+        . 5 5 5 5 5 5 . . . . . . . . .
+        . 5 5 5 5 5 5 . . . . . . . . .
+        . . 5 5 5 5 . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `
+
+    const negateCenter = img`
+        . . . . . . . . . . . . . . . .
+        . d d d d d d d d d d d d d d .
+        . d . . . . . . . . . . . . d .
+        . d . . . . . . . . . . . . d .
+        . d . . . . 2 2 2 2 . . . . d .
+        . d . . . 2 2 . . 2 2 . . . d .
+        . d . . 2 2 2 2 . . 2 2 . . d .
+        . d . . 2 . 2 2 2 . . 2 . . d .
+        . d . . 2 . . 2 2 2 . 2 . . d .
+        . d . . 2 2 . . 2 2 2 2 . . d .
+        . d . . . 2 2 . . 2 2 . . . d .
+        . d . . . . 2 2 2 2 . . . . d .
+        . d . . . . . . . . . . . . d .
+        . d . . . . . . . . . . . . d .
+        . d d d d d d d d d d d d d d .
+        . . . . . . . . . . . . . . . .
+    `
+    const checkCenter = img`
+        . . . . . . . . . . . . . . . .
+        . d d d d d d d d d d d d d d .
+        . d . . . . . . . . . . . . d .
+        . d . . . . . . . . . . 7 . d .
+        . d . . . . . . . . . 7 6 . d .
+        . d . . . . . . . . 7 7 6 . d .
+        . d . . . . . . . . 7 6 . . d .
+        . d . . 7 . . . . 7 7 6 . . d .
+        . d . . 7 7 . . . 7 6 . . . d .
+        . d . . . 7 7 . 7 7 6 . . . d .
+        . d . . . . 7 7 7 6 . . . . d .
+        . d . . . . . 7 6 . . . . . d .
+        . d . . . . . . . . . . . . d .
+        . d . . . . . . . . . . . . d .
+        . d d d d d d d d d d d d d d .
+        . . . . . . . . . . . . . . . .
+    `
+    const oneofCenter = img`
+        . . . . . . . . . . . . . . . .
+        . d d d d d d d d d d d d d d .
+        . d . . . . . . . . . . . . d .
+        . d . . . . . . . . . . . . d .
+        . d . . . . . . . . . . . . d .
+        . d . . . . 5 5 5 5 . . . . d .
+        . d . . . 5 5 5 5 5 5 . . . d .
+        . d . . . 5 5 5 5 5 5 . . . d .
+        . d . . . 5 5 5 5 5 5 . . . d .
+        . d . . . 5 5 5 5 5 5 . . . d .
+        . d . . . . 5 5 5 5 . . . . d .
+        . d . . . . . . . . . . . . d .
+        . d . . . . . . . . . . . . d .
+        . d . . . . . . . . . . . . d .
+        . d d d d d d d d d d d d d d .
+        . . . . . . . . . . . . . . . .
     `
     const downArrow = img`
         . . . . . . . . . . . . . . . .
@@ -167,13 +241,11 @@ namespace tileWorldEditor {
         private currentTileSprite: Sprite;
         private centerX: number;
         private centerY: number;
+        private menuOn: boolean;
         constructor(private manager: SpriteManager, private rule: Rule) {  // private centerSprite: Sprite) {
+            this.menuOn = false;
+            this.tileMap = image.create(10, 7)
             this.background = image.create(160, 120)
-            this.tileMap = image.create(10,7)
-            this.background.fill(11)
-            this.background.fillRect(0, 0, 80, 120, 12)
-            this.background.print("When", 0, 0)
-            this.background.print("Do", 80, 0)
             scene.setBackgroundImage(this.background)
             scene.setTileMap(this.tileMap)
             this.manager.setScene()
@@ -191,12 +263,69 @@ namespace tileWorldEditor {
             this.centerX = 2 * 16 + 8
             this.centerY = 2 * 16 + 8
 
+            this.cursor = sprites.create(cursorIn, SpriteKind.Player)
+            this.cursor.setFlag(SpriteFlag.Invisible, true)
+            this.cursor.x = 40
+            this.cursor.y = 56
+            scene.cameraFollowSprite(this.cursor)
+
+            controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
+                if ((this.cursor.x >> 4) > 0)
+                    this.cursor.x -= 16
+                this.update()
+            })
+            controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
+                if ((this.cursor.x >> 4) < this.tileMap.width - 1)
+                    this.cursor.x += 16
+                this.update()
+            })
+            controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
+                if ((this.cursor.y >> 4) > 0)
+                    this.cursor.y -= 16
+                this.update()
+            })
+            controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
+                if ((this.cursor.y >> 4) < this.tileMap.height - 1)
+                    this.cursor.y += 16
+                this.update()
+            })
+            controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
+                if (!this.menuOn) {
+                    let x = -2
+                    this.manager.sprites().forEach((s,i) => {
+                        if (i > 0) {
+                            this.showInDiamond(x, 4, s.image)
+                            x++;
+                        }
+                    })
+                    this.showInDiamond(-2, 3, checkCenter);
+                    this.showInDiamond(-1, 3, negateCenter);
+                    this.showInDiamond(0, 3, oneofCenter);
+                } else {
+                    this.doit(this.rule)
+                    this.update();
+                }
+                this.menuOn = !this.menuOn
+            })
+            controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
+                this.showMenu()
+            })
+
+            this.doit(this.rule);
+        }
+
+        private doit(rule: Rule) {
+            this.background.fill(11)
+            this.background.fillRect(0, 0, 80, 120, 12)
+            this.background.print("When", 0, 0)
+            this.background.print("Do", 80, 0)
+
             let centerImage = manager.findName(rule.kinds[0]).image.clone()
             if (false) {
                 let other = manager.findName(rule.kinds[1]).image;
-                for(let x = 8; x<16;x++) {
-                    for(let y=0;y<15;y++){
-                        centerImage.setPixel(x,y,other.getPixel(x,y))
+                for (let x = 8; x < 16; x++) {
+                    for (let y = 0; y < 15; y++) {
+                        centerImage.setPixel(x, y, other.getPixel(x, y))
                     }
                 }
             }
@@ -204,12 +333,7 @@ namespace tileWorldEditor {
 
             // the color code of selected tile/sprite
             this.currentTileSprite = undefined;
-            // cursor
-            this.cursor = sprites.create(cursorIn, SpriteKind.Player)
-            this.cursor.setFlag(SpriteFlag.Invisible, true)
-            this.cursor.x = 40
-            this.cursor.y = 56
-            scene.cameraFollowSprite(this.cursor)
+
             if (rule.event == RuleType.Moving) {
                 let arrowSprite = this.commands.find(s => s.kind() == rule.dir);
                 this.showInDiamond(0, 0, arrowSprite.image)
@@ -219,8 +343,8 @@ namespace tileWorldEditor {
                 let ay = rule.dir == TileDir.Down ? -1 : (rule.dir == TileDir.Up ? 1 : 0)
                 this.showInDiamond(ax, ay, arrowSprite.image)
             }
-            let none : string[] = []
-            let has : string [] = []
+            let none: string[] = []
+            let has: string[] = []
             if (rule.guards) {
                 rule.guards.forEach(g => {
                     if (g.some) {
@@ -262,7 +386,7 @@ namespace tileWorldEditor {
                     let userSprite = this.manager.findName(s)
                     this.showInDiamond(x, 4, userSprite.image)
                     let noSprite = this.commands.find(s => s.data == "Not")
-                    this.showInDiamond(x, 4, noSprite.image,10)
+                    this.showInDiamond(x, 4, noSprite.image, 10)
                     x++
                 })
             }
@@ -286,46 +410,6 @@ namespace tileWorldEditor {
                     y++
                 })
             }
-            //this.cursorAnim = animation.createAnimation(0, 333)
-            //this.cursorAnim.frames.push(editSprite.image)
-            // this.cursorAnim.frames.push(tile)
-            // animation.attachAnimation(this.cursor, this.cursorAnim)
-            // animation.setAction(this.cursor, 0)
-
-            controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
-                if ((this.cursor.x >> 4) > 0)
-                    this.cursor.x -= 16
-                this.update()
-            })
-            controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
-                if ((this.cursor.x >> 4) < this.tileMap.width - 1)
-                    this.cursor.x += 16
-                this.update()
-            })
-            controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
-                if ((this.cursor.y >> 4) > 0)
-                    this.cursor.y -= 16
-                this.update()
-            })
-            controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
-                if ((this.cursor.y >> 4) < this.tileMap.height - 1)
-                    this.cursor.y += 16
-                this.update()
-            })
-            controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                /*
-                if (!this.currentTileSprite)
-                    return;
-                let row = this.cursor.y >> 4
-                let col = this.cursor.x >> 4
-                if (this.inDiamond()) {
-                    this.tileMap.setPixel(col, row, this.currentTileSprite.kind())
-                }
-                */
-            })
-            controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
-                this.showMenu()
-            })
         }
 
         private showInDiamond(c: number, r:number, img: Image, z: number = 0) {
