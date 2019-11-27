@@ -223,15 +223,15 @@ namespace tileWorldEditor {
     export const arrowValues = [-3, -2, -1, TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down]
 
     // select center square: show nine event options
-    enum EventType { Resting, MovingLeft, MovingRight, MovingUp, MovingDown, 
-                    PushingLeft, PushingRight, PushingUp, PushingDown }
+    enum EventType { Resting, Moving, Pushing, Colliding }
 
     export class RuleEditor {
+        // the event type
         private eventType: EventType;
+        private eventDir: TileDir;
 
         private commands: Sprite[] = [];
         private toolBox: ToolboxMenu;
-        private tileMap: Image;
         private background: Image;
         private cursor: Sprite;
         private currentTileSprite: Sprite;
@@ -247,17 +247,16 @@ namespace tileWorldEditor {
         private attrs: Sprite[];
         private menuItems: Sprite[];
 
-
-        constructor(private manager: SpriteManager, ) {  // private centerSprite: Sprite) {
+        constructor(private manager: SpriteManager, private centerImage: Image) {
             this.eventType = EventType.Resting;
+            this.eventDir = TileDir.None;
+
             this.selected = null;
             this.attrs = [];
             this.menuItems = [];
             this.menuOn = false;
-            this.tileMap = image.create(10, 7)
             this.background = image.create(160, 120)
             scene.setBackgroundImage(this.background)
-            scene.setTileMap(this.tileMap)
             this.manager.setScene()
             // add the arrows
             arrows.forEach((img,i) => {
@@ -268,8 +267,6 @@ namespace tileWorldEditor {
                 this.commands.push(arrow)
             })
             this.commands.push(mapSprite);
-
-            this.makeContext(2, 2, null)
             this.centerX = 2 * 16 + 8
             this.centerY = 2 * 16 + 8
 
@@ -282,6 +279,7 @@ namespace tileWorldEditor {
             this.cursor.y = 56
             this.cursor.z = 50;
             scene.cameraFollowSprite(this.cursor)
+            this.doit();
 
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
                 if ((this.cursor.x >> 4) > 0)
@@ -289,7 +287,7 @@ namespace tileWorldEditor {
                 this.update()
             })
             controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
-                if ((this.cursor.x >> 4) < this.tileMap.width - 1)
+                if ((this.cursor.x >> 4) < 9)
                     this.cursor.x += 16
                 this.update()
             })
@@ -299,7 +297,7 @@ namespace tileWorldEditor {
                 this.update()
             })
             controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
-                if ((this.cursor.y >> 4) < this.tileMap.height - 1)
+                if ((this.cursor.y >> 4) < 7)
                     this.cursor.y += 16
                 this.update()
             })
@@ -310,7 +308,12 @@ namespace tileWorldEditor {
             })
         }
 
+        private eventsMenu() {
+
+        }
+
         private propositionMenu() {
+            /*
             if (!this.menuOn) {
                 let x = -2
                 this.manager.sprites().forEach((s, i) => {
@@ -332,7 +335,8 @@ namespace tileWorldEditor {
                 let eraseS = this.showInDiamond(1, 3, eraseCenter);
                 eraseS.data = "erase"
                 this.attrs.push(eraseS)
-            } 
+            }
+            */ 
         }
 
         private propositionUpdate() {
@@ -364,112 +368,29 @@ namespace tileWorldEditor {
             // this.showMenu()
         }
 
-        private doit(rule: Rule) {
+        private doit() {
             this.background.fill(11)
             this.background.fillRect(0, 0, 80, 120, 12)
             this.background.print("When", 0, 0)
             this.background.print("Do", 80, 0)
 
-            let centerImage = manager.findName(rule.kinds[0]).image.clone()
-            if (false) {
-                let other = manager.findName(rule.kinds[1]).image;
-                for (let x = 8; x < 16; x++) {
-                    for (let y = 0; y < 15; y++) {
-                        centerImage.setPixel(x, y, other.getPixel(x, y))
-                    }
-                }
-            }
-            this.showInDiamond(0, 0, centerImage)
+            this.makeContext(0, 0)
+            this.showInDiamond(0, 0, this.centerImage)
 
-            // the color code of selected tile/sprite
-            this.currentTileSprite = undefined;
-
-            if (rule.event == RuleType.Moving) {
-                let arrowSprite = this.commands.find(s => s.kind() == rule.dir);
+            if (this.eventType == EventType.Moving) {
+                let arrowSprite = this.commands.find(s => s.kind() == this.eventDir);
                 this.showInDiamond(0, 0, arrowSprite.image)
-            } else if (rule.event == RuleType.Push) {
-                let arrowSprite = this.commands.find(s => s.kind() == rule.dir);
-                let ax = rule.dir == TileDir.Left ? 1 : (rule.dir == TileDir.Right ? -1 : 0)
-                let ay = rule.dir == TileDir.Down ? -1 : (rule.dir == TileDir.Up ? 1 : 0)
+            } else if (this.eventType == EventType.Pushing) {
+                let dir = this.eventDir;
+                let arrowSprite = this.commands.find(s => s.kind() == dir);
+                let ax = dir == TileDir.Left ? 1 : (dir == TileDir.Right ? -1 : 0)
+                let ay = dir == TileDir.Down ? -1 : (dir == TileDir.Up ? 1 : 0)
+                // TODO: what should we do if user wants to put something in this tile?
                 this.showInDiamond(ax, ay, arrowSprite.image)
+            } else {
+                // Resting, Colliding
             }
-            let none: string[] = []
-            let has: string[] = []
-            if (rule.guards) {
-                rule.guards.forEach(g => {
-                    if (g.some) {
-                        let userSprite = this.manager.findName(g.some[0])
-                        this.showInDiamond(g.x, g.y, userSprite.image)
-                    }
-                    if (g.none) {
-                        let notSprite = this.commands.find(s => s.data == "Not");
-                        this.showInDiamond(g.x, g.y, notSprite.image, 10)
-                        if (g.has) {
-                            let checkS = this.commands.find(s => s.data == "Check");
-                            this.showInDiamond(g.x, g.y, checkS.image, 10)
-                        }
-                        none = g.none
-                        has = g.has
-                    }
-                    if (g.has && !g.none) {
-                        let userSprite = this.manager.findName(g.has[0])
-                        this.showInDiamond(g.x, g.y, userSprite.image)
-                    }
-                    if (g.exactly) {
-                        let userSprite = this.manager.findName(g.exactly[0])
-                        this.showInDiamond(g.x, g.y, userSprite.image)
-                    }
-                })
-            }
-            if (none) {
-                let x = -2
-                if (has) {
-                    has.forEach(s => {
-                        let userSprite = this.manager.findName(s)
-                        this.showInDiamond(x, 4, userSprite.image)
-                        let noSprite = this.commands.find(s => s.data == "Check")
-                        this.showInDiamond(x, 4, noSprite.image, 10)
-                        x++
-                    })
-                }
-                none.forEach(s => {
-                    let userSprite = this.manager.findName(s)
-                    this.showInDiamond(x, 4, userSprite.image)
-                    let noSprite = this.commands.find(s => s.data == "Not")
-                    this.showInDiamond(x, 4, noSprite.image, 10)
-                    x++
-                })
-            }
-            if (rule.commands) {
-                let y = -1
-                rule.commands.forEach(c => {
-                    let userSprite = this.manager.findName(c.kinds[0])
-                    this.showInDiamond(3, y, userSprite.image)
-                    if (c.highlight && y == -1) {
-                        this.showInDiamond(0, 0, cursorOut, 10)
-                        this.showInDiamond(3, y, cursorOut, 10)
-                    }
-                    if (c.inst == CommandType.Move) {
-                        let arrowSprite = this.commands.find(s => s.kind() == c.dir);
-                        this.showInDiamond(4, y, arrowSprite.image)
-                    } else if (c.inst == CommandType.Paint) {
-                        this.showInDiamond(4, y, paintSprite.image);
-                        let userSprite = this.manager.findName(c.kind)
-                        this.showInDiamond(5, y, userSprite.image)
-                    }
-                    y++
-                })
-            }
-        }
 
-        private showInDiamond(c: number, r:number, img: Image, z: number = 0) {
-            let spr = sprites.create(img)
-            spr.x = this.centerX + c*16
-            spr.y = this.centerY + r*16
-            if (z != 0) {
-                spr.z =z
-            }
-            return spr
         }
 
         private update() {
@@ -510,17 +431,21 @@ namespace tileWorldEditor {
             this.toolBox.show();
         }
 
-        private makeContext(row: number, col: number, center: Sprite = null) {
+        private showInDiamond(c: number, r: number, img: Image, z: number = 0) {
+            let imgX = this.centerX + c * 16
+            let imgY = this.centerY + r * 16
+            this.background.drawImage(img, imgX - 8, imgY - 8)
+        }
+
+        private makeContext(row: number, col: number) {
+            let spaceImg = this.manager.findName("Empty").image
             for (let i = -2; i <= 2; i++) {
-                this.tileMap.setPixel(col + i, row, 1);
-                this.tileMap.setPixel(col, row + i, 1);
+                this.showInDiamond(col + i, row, spaceImg);
+                this.showInDiamond(col, row + i, spaceImg);
                 if (i > -2 && i < 2) {
-                    this.tileMap.setPixel(col + i, row + i, 1);
-                    this.tileMap.setPixel(col + i, row - i, 1);
+                    this.showInDiamond(col + i, row + i, spaceImg);
+                    this.showInDiamond(col + i, row - i, spaceImg);
                 }
-            }
-            if (center) {
-                this.tileMap.setPixel(row,col,center.kind())
             }
         }
     } 
