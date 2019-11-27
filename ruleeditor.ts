@@ -77,7 +77,7 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
     `
 
-    const negateCenter = img`
+    export const negateCenter = img`
         . . . . . . . . . . . . . . . .
         . d d d d d d d d d d d d d d .
         . d . . . . . . . . . . . . d .
@@ -95,7 +95,7 @@ namespace tileWorldEditor {
         . d d d d d d d d d d d d d d .
         . . . . . . . . . . . . . . . .
     `
-    const checkCenter = img`
+    export const checkCenter = img`
         . . . . . . . . . . . . . . . .
         . d d d d d d d d d d d d d d .
         . d . . . . . . . . . . . . d .
@@ -113,7 +113,7 @@ namespace tileWorldEditor {
         . d d d d d d d d d d d d d d .
         . . . . . . . . . . . . . . . .
     `
-    const oneofCenter = img`
+    export const oneofCenter = img`
         . . . . . . . . . . . . . . . .
         . d d d d d d d d d d d d d d .
         . d . . . . . . . . . . . . d .
@@ -131,7 +131,7 @@ namespace tileWorldEditor {
         . d d d d d d d d d d d d d d .
         . . . . . . . . . . . . . . . .
     `
-    const eraseCenter = img`
+    export const eraseCenter = img`
         . . . . . . . . . . . . . . . .
         . d d d d d d d d d d d d d d .
         . d . . . . . . . . . . . . d .
@@ -221,9 +221,9 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
     `
-    let arrows = [oneof, negate, check, leftArrow, rightArrow, upArrow, downArrow]
-    let arrowNames = ["OneOf", "Not", "Check", "Left", "Right", "Up", "Down"]
-    let arrowValues = [-3, -2, -1, TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down]
+    export const arrows = [oneof, negate, check, leftArrow, rightArrow, upArrow, downArrow]
+    export const arrowNames = ["OneOf", "Not", "Check", "Left", "Right", "Up", "Down"]
+    export const arrowValues = [-3, -2, -1, TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down]
 
     // TODO:
     // - editing can only take place within context

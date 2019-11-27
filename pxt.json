@@ -16,11 +16,9 @@
         "imageeditor.ts",
         "toolbox.ts",
         "ruleeditor.ts",
-        "parser.ts",
         "paint.ts"
     ],
     "testFiles": [],
     "public": false,
-    "installedVersion": "workspace:d1e04821-c6b0-4067-a2db-aef6881f404a",
     "preferredEditor": "tsprj"
 }
