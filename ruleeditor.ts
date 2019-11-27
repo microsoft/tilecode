@@ -222,39 +222,50 @@ namespace tileWorldEditor {
     export const arrowNames = ["OneOf", "Not", "Check", "Left", "Right", "Up", "Down"]
     export const arrowValues = [-3, -2, -1, TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down]
 
+    enum RuleEditorMenus { RuleTypeMenu, PropositionMenu, None };
+
     export class RuleEditor {
         // the rule type and associated direction (if any)
         private ruleType: RuleType;
-        private ruleDir: TileDir;
-
-        private commands: Sprite[] = [];
-        private toolBox: ToolboxMenu;
+        private ruleDir: TileDir;;
+        
         private background: Image;
         private cursor: Sprite;
-        private currentTileSprite: Sprite;
         private centerX: number;
         private centerY: number;
 
+        private menu: RuleEditorMenus;
         // event menu
 
         // propositional menu
-        private menuOn: boolean;
         private showSelected: Sprite;
         private selected: Sprite;
         private attrs: Sprite[];
         private menuItems: Sprite[];
 
+        // toolbox menu
+        private commands: Sprite[] = [];
+        private toolBox: ToolboxMenu
+
         constructor(private manager: SpriteManager, private centerImage: Image) {
+            // rule header
             this.ruleType = RuleType.Resting;
             this.ruleDir = TileDir.None;
 
+            this.menu = RuleEditorMenus.None;
+
+            // rule type menu
+
+            // propositional menu
             this.selected = null;
             this.attrs = [];
             this.menuItems = [];
-            this.menuOn = false;
+
             this.background = image.create(160, 120)
             scene.setBackgroundImage(this.background)
+            
             this.manager.setScene()
+            
             // add the arrows
             arrows.forEach((img,i) => {
                 let arrow = new Sprite(img);
@@ -275,38 +286,44 @@ namespace tileWorldEditor {
             this.cursor.x = 40
             this.cursor.y = 56
             this.cursor.z = 50;
-            scene.cameraFollowSprite(this.cursor)
             this.doit();
 
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
                 if ((this.cursor.x >> 4) > 0)
                     this.cursor.x -= 16
-                this.update()
             })
             controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
                 if ((this.cursor.x >> 4) < 9)
                     this.cursor.x += 16
-                this.update()
             })
             controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
                 if ((this.cursor.y >> 4) > 0)
                     this.cursor.y -= 16
-                this.update()
             })
             controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
-                if ((this.cursor.y >> 4) < 7)
+                if ((this.cursor.y >> 4) < 6)
                     this.cursor.y += 16
-                this.update()
             })
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-
+                // if we are on center sprite, bring up the ruletype menu
+                if (this.manhattanDistance2(2,2) == 0) {
+                    if (this.menu == RuleEditorMenus.RuleTypeMenu) {
+                        // commit the result
+                        this.menu = RuleEditorMenus.None;
+                    } else {
+                        this.menu = RuleEditorMenus.RuleTypeMenu
+                    }
+                    this.doit();
+                }        
             })
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
             })
         }
 
-        private eventsMenu() {
-
+        private manhattanDistance2(dCol: number, dRow: number) {
+            let row = this.cursor.y >> 4
+            let col = this.cursor.x >> 4
+            return (Math.abs(dCol - col) + Math.abs(dRow - row));
         }
 
         private propositionMenu() {
@@ -337,100 +354,83 @@ namespace tileWorldEditor {
         }
 
         private propositionUpdate() {
-            if (this.menuOn) {
-                this.attrs.forEach(m => {
-                    if (this.cursor.overlapsWith(m)) {
-                        this.selected = m;
-                        this.showSelected.x = m.x
-                        this.showSelected.y = m.y
-                        this.showSelected.setFlag(SpriteFlag.Invisible, false)
-                    }
-                })
-                this.menuItems.forEach(m => {
-                    if (this.cursor.overlapsWith(m)) {
-                        if (this.selected) {
-                            if (this.selected.data != "erase") {
-                                let index = arrowNames.indexOf(this.selected.data)
-                                if (index >= 0) {
-                                    let spr = sprites.create(arrows[index])
-                                    spr.x = m.x; spr.y = m.y
-                                }
-                            } else {
-
+            this.attrs.forEach(m => {
+                if (this.cursor.overlapsWith(m)) {
+                    this.selected = m;
+                    this.showSelected.x = m.x
+                    this.showSelected.y = m.y
+                    this.showSelected.setFlag(SpriteFlag.Invisible, false)
+                }
+            })
+            this.menuItems.forEach(m => {
+                if (this.cursor.overlapsWith(m)) {
+                    if (this.selected) {
+                        if (this.selected.data != "erase") {
+                            let index = arrowNames.indexOf(this.selected.data)
+                            if (index >= 0) {
+                                let spr = sprites.create(arrows[index])
+                                spr.x = m.x; spr.y = m.y
                             }
+                        } else {
+
                         }
                     }
-                })
-            }
-            // this.showMenu()
+                }
+            })
         }
 
         private doit() {
+            this.showSprites.forEach(spr => { spr.destroy(); })
+            this.showSprites = [];
             this.background.fill(11)
             this.background.fillRect(0, 0, 80, 120, 12)
             this.background.print("When", 0, 0)
             this.background.print("Do", 80, 0)
 
             this.makeContext(0, 0)
-            this.showInDiamond(0, 0, this.centerImage)
+            this.showInDiamond(0, 0, this.centerImage, 10)
             this.showRuleType(this.ruleType, this.ruleDir, 0, 0)
+            if (this.menu == RuleEditorMenus.RuleTypeMenu) {
+                this.showRuleMenu(-2, 3);
+            }
         }
 
+        // TODO: which rule is selected?
+        private showRuleMenu(x: number, y: number) {
+            this.showRuleType(RuleType.Resting, 0, x, y);
+            this.showRuleType(RuleType.Moving, TileDir.Left, x + 1, y+1);
+            this.showRuleType(RuleType.Moving, TileDir.Right, x + 2, y + 1);
+            this.showRuleType(RuleType.Moving, TileDir.Up, x + 3, y + 1);
+            this.showRuleType(RuleType.Moving, TileDir.Down, x + 4, y + 1);
+            this.showRuleType(RuleType.Pushing, TileDir.Right, x + 7, y);
+            this.showRuleType(RuleType.Pushing, TileDir.Left, x + 6, y+1);
+            this.showRuleType(RuleType.Pushing, TileDir.Down, x + 8, y+1);
+            this.showRuleType(RuleType.Pushing, TileDir.Up, x + 9, y);
+        }
+
+        // TODO: compute the reverse map
         private showRuleType(rt: RuleType, rd: TileDir, x: number, y: number) {
+            this.showInDiamond(x, y, this.centerImage)
             if (rt == RuleType.Moving) {
                 let arrowSprite = this.commands.find(s => s.kind() == rd);
-                this.showInDiamond(x, y, arrowSprite.image)
+                this.showInDiamond(x, y, arrowSprite.image, 10)
             } else if (rt == RuleType.Pushing) {
                 let arrowSprite = this.commands.find(s => s.kind() == rd);
                 let ax = rd == TileDir.Left ? 1 : (rd == TileDir.Right ? -1 : 0)
                 let ay = rd == TileDir.Down ? -1 : (rd == TileDir.Up ? 1 : 0)
                 // TODO: what should we do if user wants to put something in this tile?
-                this.showInDiamond(x+ax, x+ay, arrowSprite.image)
+                this.showInDiamond(x+ax, y+ay, arrowSprite.image, 10)
             }
         }
-
-        private update() {
-
-        }
-
-        private manhattanDistance2(dCol: number, dRow: number) {
-            let row = this.cursor.y >> 4
-            let col = this.cursor.x >> 4
-            return (Math.abs(dCol - col) + Math.abs(dRow - row)) <= 2
-        }
-        private inDiamond() {
-            return this.manhattanDistance2(2, 2) || this.manhattanDistance2(7, 2)
-        }
-
-        private closeMenu(command: string) {
-            if (this.toolBox) {
-                this.toolBox.dispose();
-                this.toolBox = undefined;
-                controller._setUserEventsEnabled(true);
-                game.popScene();
-            }
-            if (command) {
-                // look up name of sprite and get code
-                let s = this.manager.findName(command)
-                if (s) {
-                    this.currentTileSprite = s;
-                } else if (command == "Map") {
-                    game.popScene();
-                }
-            }
-        }
-
-        private showMenu() {
-            if (this.toolBox) return;
-            game.pushScene();
-            this.toolBox = new ToolboxMenu(this.manager.sprites(), this.commands, (s: string) => { this.closeMenu(s) });
-            this.toolBox.show();
-        }
+        private showSprites: Sprite[] = [];
 
         private showInDiamond(c: number, r: number, img: Image, z: number = 0) {
-            let imgX = this.centerX + c * 16
-            let imgY = this.centerY + r * 16
-            this.background.drawImage(img, imgX - 8, imgY - 8)
+            let spr = sprites.create(img)
+            spr.z = z;
+            spr.x = this.centerX + c * 16
+            spr.y = this.centerY + r * 16
+            this.showSprites.push(spr)
+            // this.background.drawImage(img, imgX - 8, imgY - 8)
         }
 
         private makeContext(row: number, col: number) {
@@ -444,6 +444,30 @@ namespace tileWorldEditor {
                 }
             }
         }
+
+        private closeMenu(command: string) {
+            if (this.toolBox) {
+                this.toolBox.dispose();
+                this.toolBox = undefined;
+                controller._setUserEventsEnabled(true);
+                game.popScene();
+            }
+            if (command) {
+                // look up name of sprite and get code
+                let s = this.manager.findName(command)
+                if (command == "Map") {
+                    game.popScene();
+                }
+            }
+        }
+
+        private showMenu() {
+            if (this.toolBox) return;
+            game.pushScene();
+            this.toolBox = new ToolboxMenu(this.manager.sprites(), this.commands, (s: string) => { this.closeMenu(s) });
+            this.toolBox.show();
+        }
+
     } 
 }
 
