@@ -222,13 +222,10 @@ namespace tileWorldEditor {
     export const arrowNames = ["OneOf", "Not", "Check", "Left", "Right", "Up", "Down"]
     export const arrowValues = [-3, -2, -1, TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down]
 
-    // select center square: show nine event options
-    enum EventType { Resting, Moving, Pushing, Colliding }
-
     export class RuleEditor {
-        // the event type
-        private eventType: EventType;
-        private eventDir: TileDir;
+        // the rule type and associated direction (if any)
+        private ruleType: RuleType;
+        private ruleDir: TileDir;
 
         private commands: Sprite[] = [];
         private toolBox: ToolboxMenu;
@@ -248,8 +245,8 @@ namespace tileWorldEditor {
         private menuItems: Sprite[];
 
         constructor(private manager: SpriteManager, private centerImage: Image) {
-            this.eventType = EventType.Resting;
-            this.eventDir = TileDir.None;
+            this.ruleType = RuleType.Resting;
+            this.ruleDir = TileDir.None;
 
             this.selected = null;
             this.attrs = [];
@@ -376,21 +373,20 @@ namespace tileWorldEditor {
 
             this.makeContext(0, 0)
             this.showInDiamond(0, 0, this.centerImage)
+            this.showRuleType(this.ruleType, this.ruleDir, 0, 0)
+        }
 
-            if (this.eventType == EventType.Moving) {
-                let arrowSprite = this.commands.find(s => s.kind() == this.eventDir);
-                this.showInDiamond(0, 0, arrowSprite.image)
-            } else if (this.eventType == EventType.Pushing) {
-                let dir = this.eventDir;
-                let arrowSprite = this.commands.find(s => s.kind() == dir);
-                let ax = dir == TileDir.Left ? 1 : (dir == TileDir.Right ? -1 : 0)
-                let ay = dir == TileDir.Down ? -1 : (dir == TileDir.Up ? 1 : 0)
+        private showRuleType(rt: RuleType, rd: TileDir, x: number, y: number) {
+            if (rt == RuleType.Moving) {
+                let arrowSprite = this.commands.find(s => s.kind() == rd);
+                this.showInDiamond(x, y, arrowSprite.image)
+            } else if (rt == RuleType.Pushing) {
+                let arrowSprite = this.commands.find(s => s.kind() == rd);
+                let ax = rd == TileDir.Left ? 1 : (rd == TileDir.Right ? -1 : 0)
+                let ay = rd == TileDir.Down ? -1 : (rd == TileDir.Up ? 1 : 0)
                 // TODO: what should we do if user wants to put something in this tile?
-                this.showInDiamond(ax, ay, arrowSprite.image)
-            } else {
-                // Resting, Colliding
+                this.showInDiamond(x+ax, x+ay, arrowSprite.image)
             }
-
         }
 
         private update() {

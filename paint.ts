@@ -1,7 +1,8 @@
 enum RuleType {
     Resting,
     Moving,
-    Push
+    Pushing, 
+    Colliding
 }
 
 enum CommandType {
@@ -47,7 +48,7 @@ let ruleA: Rule =  {
 }
 
 let ruleB: Rule = {
-    event: RuleType.Push,
+    event: RuleType.Pushing,
     kinds: ["Player"],
     dir: TileDir.Right,
     guards: [ { x:1, y:0, none:["Wall", "Boulder"] } ],
@@ -58,7 +59,7 @@ let ruleB: Rule = {
 }
 
 let ruleC: Rule = {
-    event: RuleType.Push,
+    event: RuleType.Pushing,
     kinds: ["Player"],
     dir: TileDir.Right,
     guards: [{ x: 1, y: 0, has: ["Boulder"] },
@@ -71,7 +72,7 @@ let ruleC: Rule = {
 }
 
 let ruleC_Left: Rule = {
-    event: RuleType.Push,
+    event: RuleType.Pushing,
     kinds: ["Player"],
     dir: TileDir.Left,
     guards: [{ x: -1, y: 0, has: ["Boulder"] },
@@ -279,7 +280,7 @@ namespace tileWorldEditor {
             if (rule.event == RuleType.Moving) {
                 let arrowSprite = this.commands.find(s => s.kind() == rule.dir);
                 this.showInDiamond(0, 0, arrowSprite.image)
-            } else if (rule.event == RuleType.Push) {
+            } else if (rule.event == RuleType.Pushing) {
                 let arrowSprite = this.commands.find(s => s.kind() == rule.dir);
                 let ax = rule.dir == TileDir.Left ? 1 : (rule.dir == TileDir.Right ? -1 : 0)
                 let ay = rule.dir == TileDir.Down ? -1 : (rule.dir == TileDir.Up ? 1 : 0)
