@@ -20,8 +20,6 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
     `
-    
-
     const negate = img`
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -76,7 +74,6 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
     `
-
     export const negateCenter = img`
         . . . . . . . . . . . . . . . .
         . d d d d d d d d d d d d d d .
@@ -225,46 +222,34 @@ namespace tileWorldEditor {
     export const arrowNames = ["OneOf", "Not", "Check", "Left", "Right", "Up", "Down"]
     export const arrowValues = [-3, -2, -1, TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down]
 
-    // TODO:
-    // - editing can only take place within context
-    // - can't change the center sprite
-    // - different sprites in toolbox for Before After context
-    // language
-    // - LRUD arrows
-    //   - Before context: only one arrow, on center or pushing center
-    //   - After context: no arrows
-    // - no negation on center, or After context
-    // - dealing with ORs and negation
-    // - Before vs After editing
-    // - symmetry: toggles on arrows?
-    // - GUI: previous rule, next rule
-
-    // data structure - 
-    // list of sprites per diamond location - sparse structure
-    // sprite list: 2 max, with/without NEG, NEG distributed 
-    // arrows: at most one arrow, 
-    // how to remove sprite? don't, just reset the list 
-
-    // upon selecting a tool, show viable spaces
-
-    // editing of Post context: same as Pre??? 
+    // select center square: show nine event options
+    enum EventType { Resting, MovingLeft, MovingRight, MovingUp, MovingDown, 
+                    PushingLeft, PushingRight, PushingUp, PushingDown }
 
     export class RuleEditor {
+        private eventType: EventType;
+
         private commands: Sprite[] = [];
         private toolBox: ToolboxMenu;
         private tileMap: Image;
         private background: Image;
         private cursor: Sprite;
-        private cursorAnim: animation.Animation;
         private currentTileSprite: Sprite;
         private centerX: number;
         private centerY: number;
+
+        // event menu
+
+        // propositional menu
         private menuOn: boolean;
         private showSelected: Sprite;
         private selected: Sprite;
         private attrs: Sprite[];
         private menuItems: Sprite[];
-        constructor(private manager: SpriteManager, private rule: Rule) {  // private centerSprite: Sprite) {
+
+
+        constructor(private manager: SpriteManager, ) {  // private centerSprite: Sprite) {
+            this.eventType = EventType.Resting;
             this.selected = null;
             this.attrs = [];
             this.menuItems = [];
@@ -319,60 +304,64 @@ namespace tileWorldEditor {
                 this.update()
             })
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (!this.menuOn) {
-                    let x = -2
-                    this.manager.sprites().forEach((s,i) => {
-                        if (i > 0) {
-                            let spr = this.showInDiamond(x, 4, s.image)
-                            this.menuItems.push(spr);
-                            x++;
-                        }
-                    })
-                    let checkS = this.showInDiamond(-2, 3, checkCenter);
-                    checkS.data = "Check";
-                    this.attrs.push(checkS)
-                    let negateS = this.showInDiamond(-1, 3, negateCenter);
-                    negateS.data = "Not";
-                    this.attrs.push(negateS)
-                    let oneofS = this.showInDiamond(0, 3, oneofCenter);
-                    oneofS.data = "OneOf"
-                    this.attrs.push(oneofS)
-                    let eraseS = this.showInDiamond(1, 3, eraseCenter);
-                    eraseS.data = "erase"
-                    this.attrs.push(eraseS)
-                } 
-                this.menuOn = true;
+
             })
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.menuOn) {
-                    this.attrs.forEach(m => {
-                        if (this.cursor.overlapsWith(m)) {
-                            this.selected = m;
-                            this.showSelected.x = m.x
-                            this.showSelected.y = m.y
-                            this.showSelected.setFlag(SpriteFlag.Invisible, false)
-                        }
-                    })
-                    this.menuItems.forEach(m => {
-                        if (this.cursor.overlapsWith(m)) {
-                            if (this.selected) {
-                                if (this.selected.data != "erase") { 
-                                    let index = arrowNames.indexOf(this.selected.data)
-                                    if (index >=0 ) {
-                                        let spr = sprites.create(arrows[index])
-                                        spr.x = m.x; spr.y = m.y
-                                    }
-                                } else {
+            })
+        }
 
+        private propositionMenu() {
+            if (!this.menuOn) {
+                let x = -2
+                this.manager.sprites().forEach((s, i) => {
+                    if (i > 0) {
+                        let spr = this.showInDiamond(x, 4, s.image)
+                        this.menuItems.push(spr);
+                        x++;
+                    }
+                })
+                let checkS = this.showInDiamond(-2, 3, checkCenter);
+                checkS.data = "Check";
+                this.attrs.push(checkS)
+                let negateS = this.showInDiamond(-1, 3, negateCenter);
+                negateS.data = "Not";
+                this.attrs.push(negateS)
+                let oneofS = this.showInDiamond(0, 3, oneofCenter);
+                oneofS.data = "OneOf"
+                this.attrs.push(oneofS)
+                let eraseS = this.showInDiamond(1, 3, eraseCenter);
+                eraseS.data = "erase"
+                this.attrs.push(eraseS)
+            } 
+        }
+
+        private propositionUpdate() {
+            if (this.menuOn) {
+                this.attrs.forEach(m => {
+                    if (this.cursor.overlapsWith(m)) {
+                        this.selected = m;
+                        this.showSelected.x = m.x
+                        this.showSelected.y = m.y
+                        this.showSelected.setFlag(SpriteFlag.Invisible, false)
+                    }
+                })
+                this.menuItems.forEach(m => {
+                    if (this.cursor.overlapsWith(m)) {
+                        if (this.selected) {
+                            if (this.selected.data != "erase") {
+                                let index = arrowNames.indexOf(this.selected.data)
+                                if (index >= 0) {
+                                    let spr = sprites.create(arrows[index])
+                                    spr.x = m.x; spr.y = m.y
                                 }
+                            } else {
+
                             }
                         }
-                    })
-                }
-                // this.showMenu()
-            })
-
-            this.doit(this.rule);
+                    }
+                })
+            }
+            // this.showMenu()
         }
 
         private doit(rule: Rule) {
@@ -484,12 +473,7 @@ namespace tileWorldEditor {
         }
 
         private update() {
-            /*
-            if (this.inDiamond()) {
-                this.cursorAnim.frames = [editSprite.image]
-            } else {
-                this.cursorAnim.frames = [genericSprite]
-            }*/
+
         }
 
         private manhattanDistance2(dCol: number, dRow: number) {
@@ -513,9 +497,6 @@ namespace tileWorldEditor {
                 let s = this.manager.findName(command)
                 if (s) {
                     this.currentTileSprite = s;
-                    if (this.cursorAnim.frames.length > 1)
-                        this.cursorAnim.frames.pop();
-                    this.cursorAnim.frames.push(s.image)
                 } else if (command == "Map") {
                     game.popScene();
                 }
