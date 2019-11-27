@@ -224,6 +224,11 @@ namespace tileWorldEditor {
 
     enum RuleEditorMenus { RuleTypeMenu, PropositionMenu, None };
 
+    // TODO: selected rule type...
+    // TODO: change selected rule type
+    // TODO: getting rid of menu?
+
+
     export class RuleEditor {
         // the rule type and associated direction (if any)
         private ruleType: RuleType;
@@ -235,6 +240,9 @@ namespace tileWorldEditor {
         private centerY: number;
 
         private menu: RuleEditorMenus;
+        private ruleTypeMap: Image;
+        private dirMap: Image;
+
         // event menu
 
         // propositional menu
@@ -251,6 +259,8 @@ namespace tileWorldEditor {
             // rule header
             this.ruleType = RuleType.Resting;
             this.ruleDir = TileDir.None;
+            this.ruleTypeMap = image.create(10,7);
+            this.dirMap = image.create(10,7);
 
             this.menu = RuleEditorMenus.None;
 
@@ -281,7 +291,7 @@ namespace tileWorldEditor {
             this.showSelected = sprites.create(cursorOut)
             this.showSelected.setFlag(SpriteFlag.Invisible, true)
 
-            this.cursor = sprites.create(cursorIn, SpriteKind.Player)
+            this.cursor = sprites.create(cursorOut, SpriteKind.Player)
             this.cursor.setFlag(SpriteFlag.Invisible, false)
             this.cursor.x = 40
             this.cursor.y = 56
@@ -314,7 +324,16 @@ namespace tileWorldEditor {
                         this.menu = RuleEditorMenus.RuleTypeMenu
                     }
                     this.doit();
-                }        
+                } else if (this.menu == RuleEditorMenus.RuleTypeMenu) {
+                    let col = this.cursor.x >> 4;
+                    let row = this.cursor.y >> 4;
+                    let rt = this.ruleTypeMap.getPixel(col, row) 
+                    if (rt != 0xf) {
+                        this.ruleType = rt;
+                        this.ruleDir = this.dirMap.getPixel(col,row);
+                        this.doit();
+                    }
+                }
             })
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
             })
@@ -391,11 +410,12 @@ namespace tileWorldEditor {
             this.showInDiamond(0, 0, this.centerImage, 10)
             this.showRuleType(this.ruleType, this.ruleDir, 0, 0)
             if (this.menu == RuleEditorMenus.RuleTypeMenu) {
+                this.ruleTypeMap.fill(0xf);
+                this.dirMap.fill(0xf);
                 this.showRuleMenu(-2, 3);
             }
         }
 
-        // TODO: which rule is selected?
         private showRuleMenu(x: number, y: number) {
             this.showRuleType(RuleType.Resting, 0, x, y);
             this.showRuleType(RuleType.Moving, TileDir.Left, x + 1, y+1);
@@ -411,6 +431,8 @@ namespace tileWorldEditor {
         // TODO: compute the reverse map
         private showRuleType(rt: RuleType, rd: TileDir, x: number, y: number) {
             this.showInDiamond(x, y, this.centerImage)
+            this.ruleTypeMap.setPixel(x+2, y+2, rt);
+            this.dirMap.setPixel(x+2, y+2, rd);
             if (rt == RuleType.Moving) {
                 let arrowSprite = this.commands.find(s => s.kind() == rd);
                 this.showInDiamond(x, y, arrowSprite.image, 10)
@@ -420,6 +442,8 @@ namespace tileWorldEditor {
                 let ay = rd == TileDir.Down ? -1 : (rd == TileDir.Up ? 1 : 0)
                 // TODO: what should we do if user wants to put something in this tile?
                 this.showInDiamond(x+ax, y+ay, arrowSprite.image, 10)
+                this.ruleTypeMap.setPixel(x+ax+2, y+ay+2, rt);
+                this.dirMap.setPixel(x+ax+2, y+ay+2, rd);
             }
         }
         private showSprites: Sprite[] = [];
