@@ -492,7 +492,7 @@ namespace tileWorldEditor {
                 this.attrMap.push({col:col, row:row, attrs:attrs})
             }
             let x = -2
-            this.manager.sprites().forEach((s, i) => {
+            this.manager.all().forEach((s, i) => {
                 if (i > 0) {
                     let spr = this.showInDiamond(x, 4, s.image)
                     this.menuItems.push(spr);
@@ -561,7 +561,7 @@ namespace tileWorldEditor {
         private showMenu() {
             if (this.toolBox) return;
             game.pushScene();
-            this.toolBox = new ToolboxMenu(this.manager.sprites(), this.commands, (s: string) => { this.closeMenu(s) });
+            this.toolBox = new ToolboxMenu(this.manager.all(), this.commands, (s: string) => { this.closeMenu(s) });
             this.toolBox.show();
         }
 

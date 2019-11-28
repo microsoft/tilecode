@@ -122,9 +122,9 @@ namespace tileWorldEditor {
             tileSprite.data = "Empty"
             tileSprite.setFlag(SpriteFlag.Invisible, true)
             this.fixedSprites.insertAt(0, tileSprite)
-            this.fixedSprites.forEach((s, index) => { s.setKind(index+1) })
+            this.fixedSprites.forEach((s, index) => { s.setKind(index) })
             this.movableSprites.forEach((s, index) => {
-                s.setKind(index + 1 + this.fixedSprites.length)
+                s.setKind(index + this.fixedSprites.length)
             })
             this.allSprites = [];
             this.fixedSprites.forEach(s => { this.allSprites.push(s) })
@@ -152,9 +152,9 @@ namespace tileWorldEditor {
             return s;
         }
 
-        sprites() {
-            return this.allSprites;
-        }
+        fixed() { return this.fixedSprites; }
+        movable() { return this.movableSprites; }
+        all() { return this.allSprites; }
     }
     
     // the root of the editing experience is creating a (shared) tile map
@@ -261,7 +261,7 @@ namespace tileWorldEditor {
         private showMenu() {
             if (this.toolBox) return;
             game.pushScene();
-            this.toolBox = new ToolboxMenu(this.manager.sprites(), this.commands, (s: string) => { this.closeMenu(s) });
+            this.toolBox = new ToolboxMenu(this.manager.all(), this.commands, (s: string) => { this.closeMenu(s) });
             this.toolBox.show();
         }
 
