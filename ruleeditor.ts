@@ -20,7 +20,7 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
     `
-    const negate = img`
+    const exclude = img`
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -38,7 +38,7 @@ namespace tileWorldEditor {
         . . . . . . . . . 2 2 . . 2 2 .
         . . . . . . . . . . 2 2 2 2 . .
     `
-    const check = img`
+    const include = img`
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -92,7 +92,7 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
     `
-    export const negateCenter = img`
+    export const excludeCenter = img`
         . . . . . . . . . . . . . . . .
         . d d d d d d d d d d d d d d .
         . d . . . . . . . . . . . . d .
@@ -110,7 +110,7 @@ namespace tileWorldEditor {
         . d d d d d d d d d d d d d d .
         . . . . . . . . . . . . . . . .
     `
-    export const checkCenter = img`
+    export const includeCenter = img`
         . . . . . . . . . . . . . . . .
         . d d d d d d d d d d d d d d .
         . d . . . . . . . . . . . . d .
@@ -254,9 +254,14 @@ namespace tileWorldEditor {
         . . . . . . . . . 5 . . . . . .
         . . . . . . . . . . . . . . . .
     `
-    export const arrows = [only, oneof, negate, check, leftArrow, rightArrow, upArrow, downArrow]
-    export const arrowNames = ["Only","OneOf", "Not", "Check", "Left", "Right", "Up", "Down"]
-    export const arrowValues = [0, 0, 0, 0, TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down]
+    export const arrows = [leftArrow, rightArrow, upArrow, downArrow]
+    export const arrowNames = ["Left", "Right", "Up", "Down"]
+    export const arrowValues = [TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down]
+
+    const attrs = [only, oneof, exclude, include]
+    const attrNames = ["Only", "OneOf", "Exclude", "Include"]
+    const attrValues = [AttrType.Only, AttrType.OneOf, AttrType.Exclude, AttrType.Include]
+
 
     enum RuleEditorMenus { RuleTypeMenu, PropositionMenu, None };
 
@@ -441,7 +446,6 @@ namespace tileWorldEditor {
                 let indexOf = arrowValues.indexOf(rd);
                 let ax = rd == TileDir.Left ? 1 : (rd == TileDir.Right ? -1 : 0)
                 let ay = rd == TileDir.Down ? -1 : (rd == TileDir.Up ? 1 : 0)
-                // TODO: what should we do if user wants to put something in this tile?
                 if (rt == RuleType.Pushing) {
                     this.showInDiamond(x+ax, y+ay, arrows[indexOf], 10)
                     this.ruleTypeMap.setPixel(x+ax+2, y+ay+2, rt);
@@ -471,7 +475,7 @@ namespace tileWorldEditor {
         }
 
         private makeContext(col: number, row: number) {
-            let spaceImg = this.manager.findName("Empty").image
+            let spaceImg = this.manager.empty().image
             for (let i = -2; i <= 2; i++) {
                 this.showInDiamond(col + i, row, spaceImg);
                 this.showInDiamond(col, row + i, spaceImg);
@@ -487,23 +491,25 @@ namespace tileWorldEditor {
             let row = this.oldCursor.y >> 4;
             let item = this.attrMap.find(a => a.col == col && a.row == row)
             if (item == undefined) {
-                let attrs: AttrType[] = []
-                // what is the default mapping?
-                this.attrMap.push({col:col, row:row, attrs:attrs})
+                let attrs: AttrType[] = [];
+                // default mapping
+                for(let i=0;i<this.manager.all().length; i++) {
+                    attrs.push(i == 0 ? AttrType.Only : AttrType.Exclude)
+                }
+                item = { col: col, row: row, attrs: attrs }
+                this.attrMap.push(item)
             }
             let x = -2
             this.manager.all().forEach((s, i) => {
-                if (i > 0) {
-                    let spr = this.showInDiamond(x, 4, s.image)
-                    this.menuItems.push(spr);
-                    // TODO: which attribute is on for this sprite?
-                    x++;
-                }
+                let spr = this.showInDiamond(x, 4, s.image);
+                this.menuItems.push(spr);
+                this.ruleTypeMap.setPixel(x + 2, 0, item.attrs[i]);
+                x++;
             })
-            let checkS = this.showInDiamond(-2, 3, checkCenter);
+            let checkS = this.showInDiamond(-2, 3, includeCenter);
             checkS.data = "Check";
             this.attrs.push(checkS)
-            let negateS = this.showInDiamond(-1, 3, negateCenter);
+            let negateS = this.showInDiamond(-1, 3, excludeCenter);
             negateS.data = "Not";
             this.attrs.push(negateS)
             let oneofS = this.showInDiamond(0, 3, oneofCenter);

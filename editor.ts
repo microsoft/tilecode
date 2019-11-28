@@ -116,28 +116,26 @@ namespace tileWorldEditor {
     // consistent management of (user-defined) sprite kinds and names
     export class SpriteManager {
         private allSprites: Sprite[];
+        private emptySprite: Sprite;
         constructor(private fixedSprites: Sprite [], 
                     private movableSprites: Sprite []) {
-            let tileSprite = new Sprite(tile)
-            tileSprite.data = "Empty"
-            tileSprite.setFlag(SpriteFlag.Invisible, true)
-            this.fixedSprites.insertAt(0, tileSprite)
-            this.fixedSprites.forEach((s, index) => { s.setKind(index) })
+
+            this.fixedSprites.forEach((s, index) => { s.setKind(1+index) })
             this.movableSprites.forEach((s, index) => {
-                s.setKind(index + this.fixedSprites.length)
+                s.setKind(1+index + this.fixedSprites.length)
             })
             this.allSprites = [];
             this.fixedSprites.forEach(s => { this.allSprites.push(s) })
             this.movableSprites.forEach(s => { this.allSprites.push(s) })
+
+            this.emptySprite = sprites.create(tile,0)
+            this.emptySprite.data = "Empty"
+            this.emptySprite.setFlag(SpriteFlag.Invisible, true)
         }
 
         setScene() {
-            this.fixedSprites.forEach(s => {
-                scene.setTile(s.kind(), s.image)
-            })
-            this.movableSprites.forEach(s => {
-                scene.setTile(s.kind(), s.image)
-            })
+            this.fixedSprites.forEach(s => { scene.setTile(s.kind(), s.image) })
+            this.movableSprites.forEach(s => { scene.setTile(s.kind(), s.image) })
         }
 
         findName(name: string) {
@@ -155,6 +153,7 @@ namespace tileWorldEditor {
         fixed() { return this.fixedSprites; }
         movable() { return this.movableSprites; }
         all() { return this.allSprites; }
+        empty() { return this.emptySprite; }
     }
     
     // the root of the editing experience is creating a (shared) tile map

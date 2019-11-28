@@ -225,11 +225,11 @@ namespace tileWorldEditor {
                             x++;
                         }
                     })
-                    let checkS = this.showInDiamond(-2, 3, checkCenter);
-                    checkS.data = "Check";
+                    let checkS = this.showInDiamond(-2, 3, includeCenter);
+                    checkS.data = "Include";
                     this.attrs.push(checkS)
-                    let negateS = this.showInDiamond(-1, 3, negateCenter);
-                    negateS.data = "Not";
+                    let negateS = this.showInDiamond(-1, 3, excludeCenter);
+                    negateS.data = "Exclude";
                     this.attrs.push(negateS)
                     let oneofS = this.showInDiamond(0, 3, oneofCenter);
                     oneofS.data = "OneOf"
