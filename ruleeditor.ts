@@ -390,8 +390,11 @@ namespace tileWorldEditor {
         }
 
         private doit() {
+            this.menuItems.forEach(m => { m.data.destroy(); })
             this.showSprites.forEach(spr => { spr.destroy(); })
             this.showSprites = [];
+            this.attrs = [];
+            this.menuItems = [];
 
             this.background.fill(11);
             this.background.fillRect(0, 0, 80, 120, 12);
@@ -482,10 +485,6 @@ namespace tileWorldEditor {
         }
 
         private propositionMenu() {
-            this.attrs.forEach(s => { s.destroy(); });
-            this.menuItems.forEach(s => { s.data.destroy(); s.destroy(); });
-            this.attrs = [];
-            this.menuItems = [];
             // which tile in the diamond are we attributing?
             let col = this.tileSaved.x >> 4;
             let row = this.tileSaved.y >> 4;
@@ -499,41 +498,44 @@ namespace tileWorldEditor {
                 item = { col: col, row: row, attrs: attrs }
                 this.attrMap.push(item)
             }
-            let x = -2
+            // for all user-defined sprites
+            let x = -2;
             this.manager.all().forEach((s, i) => {
                 let spr = this.showInDiamond(x, 4, s.image);
                 this.menuItems.push(spr);
-                let sprAttr = sprites.create(attrImages[attrValues.indexOf(item.attrs[i])])
+                let sprAttr = sprites.create(attrImages[attrValues.indexOf(item.attrs[i])]);
                 spr.data = sprAttr;
                 sprAttr.x = spr.x; sprAttr.y = spr.y;
                 x++;
-            })
-            x = -2
+            });
+            x = -2;
             attrsCentered.forEach((img,i) => {
                 let attrSpr = this.showInDiamond(x, 3, img);
                 attrSpr.setKind(attrValues[i]);
                 this.attrs.push(attrSpr);
                 x++;
-            })
+            });
+            this.selectAttr(this.attrs[0]);
+        }
+
+        private selectAttr(a: Sprite) {
+            this.attrSelected = a;
+            this.showSelected.x = a.x
+            this.showSelected.y = a.y
+            this.showSelected.setFlag(SpriteFlag.Invisible, false)
         }
 
         private propositionUpdate() {
-            this.attrs.forEach(a => {
-                if (this.cursor.overlapsWith(a)) {
-                    this.attrSelected = a;
-                    this.showSelected.x = a.x
-                    this.showSelected.y = a.y
-                    this.showSelected.setFlag(SpriteFlag.Invisible, false)
-                }
-            })
-            this.menuItems.forEach(m => {
-                if (this.cursor.overlapsWith(m)) {
-                    if (this.attrSelected) {
-                        let i = attrValues.indexOf(this.attrSelected.data);
-                        (<Sprite>m.data).setImage(attrImages[i]);
-                    }
-                }
-            })
+            let a = this.attrs.find(a => this.cursor.overlapsWith(a));
+            if (a) { 
+                this.selectAttr(a);
+            }
+            let m = this.menuItems.find(m => this.cursor.overlapsWith(m));
+            if (m) {
+                let i = attrValues.indexOf(this.attrSelected.kind());
+                (<Sprite>(m.data)).setImage(attrImages[i]);
+                // TODO: update the model
+            }
         }
 
         private closeMenu(command: string) {
