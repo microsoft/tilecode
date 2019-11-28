@@ -428,6 +428,7 @@ namespace tileWorldEditor {
             this.showInDiamond(0, 0, this.centerImage, 10)
             this.showRuleType(this.ruleType, this.ruleDir, 0, 0)
             if (this.menu == RuleEditorMenus.RuleTypeMenu) {
+                // TODO: lookup cursor and determine where it is, show selection
                 this.ruleTypeMap.fill(0xf);
                 this.dirMap.fill(0xf);
                 this.showRuleMenu(-2, 3);
@@ -452,6 +453,17 @@ namespace tileWorldEditor {
 
         // TODO: compute the reverse map
         private showRuleType(rt: RuleType, rd: TileDir, x: number, y: number) {
+            let selected = false
+            if (rt == this.ruleType) {
+                if (rt == RuleType.Resting) {
+                    selected = true;
+                } else if (rd == this.ruleDir) {
+                    selected = true
+                }
+            }
+            if (selected) {
+                this.background.fillRect((x+2) << 4, (y+2) << 4, 16, 16, 13)
+            }
             this.showInDiamond(x, y, this.centerImage)
             this.ruleTypeMap.setPixel(x+2, y+2, rt);
             this.dirMap.setPixel(x+2, y+2, rd);
@@ -468,10 +480,16 @@ namespace tileWorldEditor {
                     this.showInDiamond(x+ax, y+ay, arrowSprite.image, 10)
                     this.ruleTypeMap.setPixel(x+ax+2, y+ay+2, rt);
                     this.dirMap.setPixel(x+ax+2, y+ay+2, rd);
+                    if (selected) {
+                        this.background.fillRect((x + ax + 2) << 4, (y + ay + 2) << 4, 16, 16, 13)
+                    }
                 } else {
                     this.showInDiamond(x - ax, y - ay, explode, 10);
                     this.ruleTypeMap.setPixel(x - ax + 2, y - ay + 2, rt);
                     this.dirMap.setPixel(x - ax + 2, y - ay + 2, rd);
+                    if (selected) {
+                        this.background.fillRect((x - ax + 2) << 4, (y - ay + 2) << 4, 16, 16, 13)
+                    }
                 }
             }
         }
