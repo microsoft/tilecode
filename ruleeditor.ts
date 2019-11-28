@@ -218,6 +218,24 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
     `
+    const explode = img`
+        . . . . . . . . . . . . . . . .
+        . . . . 4 4 5 . . . . . . . . .
+        . . . . 4 4 5 5 4 4 . . 5 5 5 .
+        . . . 4 5 4 4 5 4 4 . 5 5 5 . .
+        . . 5 5 4 4 5 4 4 2 5 5 . . . .
+        . 5 5 5 2 4 4 5 2 2 4 4 4 . . .
+        . 5 5 5 2 2 2 2 4 4 4 4 4 . . .
+        . . 4 4 4 2 2 4 4 2 4 5 5 5 . .
+        . . 4 4 4 4 4 4 5 2 2 2 5 5 5 .
+        . . 5 4 2 4 5 4 4 2 2 2 4 4 5 .
+        . . 4 2 2 2 2 2 2 2 2 4 5 4 . .
+        . . . 4 5 2 4 4 2 4 2 4 4 . . .
+        . . 5 5 5 . 4 5 5 4 . . 4 . . .
+        . . 5 . . . 4 . 5 5 . . . . . .
+        . . . . . . . . . 5 . . . . . .
+        . . . . . . . . . . . . . . . .
+    `
     export const arrows = [oneof, negate, check, leftArrow, rightArrow, upArrow, downArrow]
     export const arrowNames = ["OneOf", "Not", "Check", "Left", "Right", "Up", "Down"]
     export const arrowValues = [-3, -2, -1, TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down]
@@ -417,15 +435,19 @@ namespace tileWorldEditor {
         }
 
         private showRuleMenu(x: number, y: number) {
-            this.showRuleType(RuleType.Resting, 0, x, y);
-            this.showRuleType(RuleType.Moving, TileDir.Left, x + 1, y+1);
-            this.showRuleType(RuleType.Moving, TileDir.Right, x + 2, y + 1);
-            this.showRuleType(RuleType.Moving, TileDir.Up, x + 3, y + 1);
-            this.showRuleType(RuleType.Moving, TileDir.Down, x + 4, y + 1);
-            this.showRuleType(RuleType.Pushing, TileDir.Right, x + 7, y);
-            this.showRuleType(RuleType.Pushing, TileDir.Left, x + 6, y+1);
-            this.showRuleType(RuleType.Pushing, TileDir.Down, x + 8, y+1);
-            this.showRuleType(RuleType.Pushing, TileDir.Up, x + 9, y);
+            this.showRuleType(RuleType.Resting, 0, x, y-1);
+            this.showRuleType(RuleType.Moving, TileDir.Left, x, y);
+            this.showRuleType(RuleType.Moving, TileDir.Right, x + 1, y);
+            this.showRuleType(RuleType.Moving, TileDir.Up, x, y + 1);
+            this.showRuleType(RuleType.Moving, TileDir.Down, x + 1, y + 1);
+            this.showRuleType(RuleType.Pushing, TileDir.Right, x + 3, y);
+            this.showRuleType(RuleType.Pushing, TileDir.Left, x + 2, y+1);
+            this.showRuleType(RuleType.Pushing, TileDir.Down, x + 4, y+1);
+            this.showRuleType(RuleType.Pushing, TileDir.Up, x + 5, y);
+            this.showRuleType(RuleType.Colliding, TileDir.Right, x + 6, y);
+            this.showRuleType(RuleType.Colliding, TileDir.Left, x + 7, y + 1);
+            this.showRuleType(RuleType.Colliding, TileDir.Down, x + 9, y);
+            this.showRuleType(RuleType.Colliding, TileDir.Up, x + 8, y+1);
         }
 
         // TODO: compute the reverse map
@@ -433,17 +455,24 @@ namespace tileWorldEditor {
             this.showInDiamond(x, y, this.centerImage)
             this.ruleTypeMap.setPixel(x+2, y+2, rt);
             this.dirMap.setPixel(x+2, y+2, rd);
-            if (rt == RuleType.Moving) {
+            if (rt == RuleType.Moving || rt == RuleType.Colliding) {
                 let arrowSprite = this.commands.find(s => s.kind() == rd);
                 this.showInDiamond(x, y, arrowSprite.image, 10)
-            } else if (rt == RuleType.Pushing) {
+            }
+            if (rt == RuleType.Pushing || rt == RuleType.Colliding) {
                 let arrowSprite = this.commands.find(s => s.kind() == rd);
                 let ax = rd == TileDir.Left ? 1 : (rd == TileDir.Right ? -1 : 0)
                 let ay = rd == TileDir.Down ? -1 : (rd == TileDir.Up ? 1 : 0)
                 // TODO: what should we do if user wants to put something in this tile?
-                this.showInDiamond(x+ax, y+ay, arrowSprite.image, 10)
-                this.ruleTypeMap.setPixel(x+ax+2, y+ay+2, rt);
-                this.dirMap.setPixel(x+ax+2, y+ay+2, rd);
+                if (rt == RuleType.Pushing) {
+                    this.showInDiamond(x+ax, y+ay, arrowSprite.image, 10)
+                    this.ruleTypeMap.setPixel(x+ax+2, y+ay+2, rt);
+                    this.dirMap.setPixel(x+ax+2, y+ay+2, rd);
+                } else {
+                    this.showInDiamond(x - ax, y - ay, explode, 10);
+                    this.ruleTypeMap.setPixel(x - ax + 2, y - ay + 2, rt);
+                    this.dirMap.setPixel(x - ax + 2, y - ay + 2, rd);
+                }
             }
         }
         private showSprites: Sprite[] = [];
