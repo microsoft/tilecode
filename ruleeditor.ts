@@ -1,7 +1,5 @@
 namespace tileWorldEditor {
 
-    // language sprites
-
     const genericSprite = img`
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -19,7 +17,7 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
-    `
+    `;
     const exclude = img`
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -37,7 +35,7 @@ namespace tileWorldEditor {
         . . . . . . . . 2 2 . . 2 2 2 2
         . . . . . . . . . 2 2 . . 2 2 .
         . . . . . . . . . . 2 2 2 2 . .
-    `
+    `;
     const include = img`
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -55,7 +53,7 @@ namespace tileWorldEditor {
         . 7 7 . 7 7 6 . . . . . . . . .
         . . 7 7 7 6 . . . . . . . . . .
         . . . 7 6 . . . . . . . . . . .
-    `
+    `;
     const oneof = img`
         . . . . . . . . . . . . . . . .
         . . 5 5 5 5 . . . . . . . . . .
@@ -73,7 +71,7 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
-    `
+    `;
     export const only = img`
         . . . . . . . . . . 7 7 7 7 . .
         . . . . . . . . . 7 7 . . 7 7 .
@@ -91,7 +89,7 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
-    `
+    `;
     export const excludeCenter = img`
         . . . . . . . . . . . . . . . .
         . d d d d d d d d d d d d d d .
@@ -109,7 +107,7 @@ namespace tileWorldEditor {
         . d . . . . . . . . . . . . d .
         . d d d d d d d d d d d d d d .
         . . . . . . . . . . . . . . . .
-    `
+    `;
     export const includeCenter = img`
         . . . . . . . . . . . . . . . .
         . d d d d d d d d d d d d d d .
@@ -127,7 +125,7 @@ namespace tileWorldEditor {
         . d . . . . . . . . . . . . d .
         . d d d d d d d d d d d d d d .
         . . . . . . . . . . . . . . . .
-    `
+    `;
     export const oneofCenter = img`
         . . . . . . . . . . . . . . . .
         . d d d d d d d d d d d d d d .
@@ -145,7 +143,7 @@ namespace tileWorldEditor {
         . d . . . . . . . . . . . . d .
         . d d d d d d d d d d d d d d .
         . . . . . . . . . . . . . . . .
-    `
+    `;
     export const onlyCenter = img`
         . . . . . . . . . . . . . . . .
         . d d d d d d d d d d d d d d .
@@ -163,7 +161,7 @@ namespace tileWorldEditor {
         . d . . . . . . . . . . . . d .
         . d d d d d d d d d d d d d d .
         . . . . . . . . . . . . . . . .
-    `
+    `;
     const downArrow = img`
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -181,7 +179,7 @@ namespace tileWorldEditor {
         . . . . . 9 9 9 9 9 6 . . . . .
         . . . . . . 9 9 9 6 . . . . . .
         . . . . . . . 9 6 . . . . . . .
-    `
+    `;
     const upArrow = img`
         . . . . . . . 9 6 . . . . . . .
         . . . . . . 9 9 9 6 . . . . . .
@@ -199,7 +197,7 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
-    `
+    `;
     const rightArrow = img`
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -217,7 +215,7 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
-    `
+    `;
     const leftArrow = img`
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -235,7 +233,7 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
-    `
+    `;
     const explode = img`
         . . . . . . . . . . . . . . . .
         . . . . 4 4 5 . . . . . . . . .
@@ -253,15 +251,14 @@ namespace tileWorldEditor {
         . . 5 . . . 4 . 5 5 . . . . . .
         . . . . . . . . . 5 . . . . . .
         . . . . . . . . . . . . . . . .
-    `
-    export const arrows = [leftArrow, rightArrow, upArrow, downArrow]
-    export const arrowNames = ["Left", "Right", "Up", "Down"]
-    export const arrowValues = [TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down]
+    `;
+    export const arrowImages = [leftArrow, rightArrow, upArrow, downArrow];
+    // export const arrowNames = ["Left", "Right", "Up", "Down"];
+    export const arrowValues = [TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down];
 
-    const attrs = [only, oneof, exclude, include]
-    const attrNames = ["Only", "OneOf", "Exclude", "Include"]
-    const attrValues = [AttrType.Only, AttrType.OneOf, AttrType.Exclude, AttrType.Include]
-
+    const attrsCentered = [onlyCenter, oneofCenter, excludeCenter, includeCenter];
+    const attrImages = [only, oneof, exclude, include];
+    const attrValues = [AttrType.Only, AttrType.OneOf, AttrType.Exclude, AttrType.Include];
 
     enum RuleEditorMenus { RuleTypeMenu, PropositionMenu, None };
 
@@ -285,9 +282,9 @@ namespace tileWorldEditor {
         private ruleTypeMap: Image;
         private dirMap: Image;
         // attribute menu
-        private oldCursor: Sprite;
+        private tileSaved: Sprite;
         private showSelected: Sprite;
-        private selected: Sprite;
+        private attrSelected: Sprite;
         private attrs: Sprite[];
         private menuItems: Sprite[];
 
@@ -310,11 +307,11 @@ namespace tileWorldEditor {
             this.dirMap = image.create(10,7);
 
             // attribute menu view
-            this.selected = null;
+            this.attrSelected = null;
             this.attrs = [];
             this.menuItems = [];
-            this.oldCursor = sprites.create(cursorOut)
-            this.oldCursor.setFlag(SpriteFlag.Invisible, true)
+            this.tileSaved = sprites.create(cursorOut)
+            this.tileSaved.setFlag(SpriteFlag.Invisible, true)
             this.showSelected = sprites.create(cursorOut)
             this.showSelected.setFlag(SpriteFlag.Invisible, true)
 
@@ -365,9 +362,9 @@ namespace tileWorldEditor {
                     this.doit();
                 } else if (this.manhattanDistance2(2,2) <=2) {
                     this.menu = RuleEditorMenus.PropositionMenu;
-                    this.oldCursor.x = this.cursor.x;
-                    this.oldCursor.y = this.cursor.y;
-                    this.oldCursor.setFlag(SpriteFlag.Invisible, false)
+                    this.tileSaved.x = this.cursor.x;
+                    this.tileSaved.y = this.cursor.y;
+                    this.tileSaved.setFlag(SpriteFlag.Invisible, false)
                     this.doit();
                 } else if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                     let col = this.cursor.x >> 4;
@@ -395,8 +392,6 @@ namespace tileWorldEditor {
         private doit() {
             this.showSprites.forEach(spr => { spr.destroy(); })
             this.showSprites = [];
-            this.menuItems = [];
-            this.attrs = [];
 
             this.background.fill(11);
             this.background.fillRect(0, 0, 80, 120, 12);
@@ -440,14 +435,14 @@ namespace tileWorldEditor {
             this.dirMap.setPixel(x+2, y+2, rd);
             if (rt == RuleType.Moving || rt == RuleType.Colliding) {
                 let indexOf = arrowValues.indexOf(rd);
-                this.showInDiamond(x, y, arrows[indexOf], 10)
+                this.showInDiamond(x, y, arrowImages[indexOf], 10)
             }
             if (rt == RuleType.Pushing || rt == RuleType.Colliding) {
                 let indexOf = arrowValues.indexOf(rd);
                 let ax = rd == TileDir.Left ? 1 : (rd == TileDir.Right ? -1 : 0)
                 let ay = rd == TileDir.Down ? -1 : (rd == TileDir.Up ? 1 : 0)
                 if (rt == RuleType.Pushing) {
-                    this.showInDiamond(x+ax, y+ay, arrows[indexOf], 10)
+                    this.showInDiamond(x+ax, y+ay, arrowImages[indexOf], 10)
                     this.ruleTypeMap.setPixel(x+ax+2, y+ay+2, rt);
                     this.dirMap.setPixel(x+ax+2, y+ay+2, rd);
                     if (selected) {
@@ -487,8 +482,13 @@ namespace tileWorldEditor {
         }
 
         private propositionMenu() {
-            let col = this.oldCursor.x >> 4;
-            let row = this.oldCursor.y >> 4;
+            this.attrs.forEach(s => { s.destroy(); });
+            this.menuItems.forEach(s => { s.data.destroy(); s.destroy(); });
+            this.attrs = [];
+            this.menuItems = [];
+            // which tile in the diamond are we attributing?
+            let col = this.tileSaved.x >> 4;
+            let row = this.tileSaved.y >> 4;
             let item = this.attrMap.find(a => a.col == col && a.row == row)
             if (item == undefined) {
                 let attrs: AttrType[] = [];
@@ -503,46 +503,34 @@ namespace tileWorldEditor {
             this.manager.all().forEach((s, i) => {
                 let spr = this.showInDiamond(x, 4, s.image);
                 this.menuItems.push(spr);
-                this.ruleTypeMap.setPixel(x + 2, 0, item.attrs[i]);
+                let sprAttr = sprites.create(attrImages[attrValues.indexOf(item.attrs[i])])
+                spr.data = sprAttr;
+                sprAttr.x = spr.x; sprAttr.y = spr.y;
                 x++;
             })
-            let checkS = this.showInDiamond(-2, 3, includeCenter);
-            checkS.data = "Check";
-            this.attrs.push(checkS)
-            let negateS = this.showInDiamond(-1, 3, excludeCenter);
-            negateS.data = "Not";
-            this.attrs.push(negateS)
-            let oneofS = this.showInDiamond(0, 3, oneofCenter);
-            oneofS.data = "OneOf"
-            this.attrs.push(oneofS)
-            let onlyS = this.showInDiamond(1, 3, onlyCenter);
-            onlyS.data = "Only"
-            this.attrs.push(onlyS)
+            x = -2
+            attrsCentered.forEach((img,i) => {
+                let attrSpr = this.showInDiamond(x, 3, img);
+                attrSpr.setKind(attrValues[i]);
+                this.attrs.push(attrSpr);
+                x++;
+            })
         }
 
         private propositionUpdate() {
-            this.attrs.forEach(m => {
-                if (this.cursor.overlapsWith(m)) {
-                    this.selected = m;
-                    this.showSelected.x = m.x
-                    this.showSelected.y = m.y
+            this.attrs.forEach(a => {
+                if (this.cursor.overlapsWith(a)) {
+                    this.attrSelected = a;
+                    this.showSelected.x = a.x
+                    this.showSelected.y = a.y
                     this.showSelected.setFlag(SpriteFlag.Invisible, false)
                 }
             })
-            // each item has exactly one attribute
             this.menuItems.forEach(m => {
                 if (this.cursor.overlapsWith(m)) {
-                    if (this.selected) {
-                        if (this.selected.data != "erase") {
-                            let index = arrowNames.indexOf(this.selected.data)
-                            if (index >= 0) {
-                                let spr = sprites.create(arrows[index])
-                                spr.x = m.x; spr.y = m.y
-                                this.showSprites.push(spr)
-                            }
-                        } else {
-
-                        }
+                    if (this.attrSelected) {
+                        let i = attrValues.indexOf(this.attrSelected.data);
+                        (<Sprite>m.data).setImage(attrImages[i]);
                     }
                 }
             })
