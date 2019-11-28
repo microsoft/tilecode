@@ -146,8 +146,8 @@ namespace boulder {
     `
 
     // readable names are the keys to sprites (not kinds)
-    let movableNames = ["Player", "Diamond", "Boulder", "Enemy"]
-    let movable = [player, diamond, boulder, enemy]
+    let movableNames = ["Player", "Boulder", "Diamond", "Enemy"]
+    let movable = [player, boulder, diamond, enemy]
     let fixedNames = ["Wall", "Dirt", "Space"]
     let fixed = [wall, dirt, space]
 
@@ -171,7 +171,7 @@ namespace boulder {
 let allSprites: Sprite[] = [].concat(boulder.movableSprites).concat(boulder.fixedSprites)
 let manager = new tileWorldEditor.SpriteManager(allSprites)
 let rules = [ruleA, ruleB, ruleC, ruleC_Left, ruleG, ruleH, ruleI]
-let ruleEditor = new tileWorldEditor.RuleEditor(manager, allSprites[3].image)
+let ruleEditor = new tileWorldEditor.RuleEditor(manager, allSprites[2])
 //let paint = new tileWorldEditor.PaintRule(manager, ruleAttr);
 
 // let mapEditor = new tileWorldEditor.MapEditor(allSprites)

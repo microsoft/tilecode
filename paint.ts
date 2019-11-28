@@ -11,6 +11,22 @@ enum CommandType {
     Paint,
 }
 
+
+enum AttrType {
+    Exclude,  // => !Only
+    Include,  // => Only 
+    OneOf,    // => Only   (= Include in case there is only OneOf)
+    Only      //
+}
+
+type AttrsAt = {
+    x: number;
+    y: number;
+    attrs: AttrType[];
+}
+
+// deprecate all below
+
 type Guard = {
     x: number;
     y: number;
