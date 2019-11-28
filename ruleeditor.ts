@@ -74,6 +74,24 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
     `
+    export const only = img`
+        . . . . . . . . . . 7 7 7 7 . .
+        . . . . . . . . . 7 7 . . 7 7 .
+        . . . . . . . . 7 7 . . . . 7 7
+        . . . . . . . . 7 . . . . . . 7
+        . . . . . . . . 7 . . . . . . 7
+        . . . . . . . . 7 7 . . . . 7 7
+        . . . . . . . . . 7 7 . . 7 7 .
+        . . . . . . . . . . 7 7 7 7 . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `
     export const negateCenter = img`
         . . . . . . . . . . . . . . . .
         . d d d d d d d d d d d d d d .
@@ -128,20 +146,20 @@ namespace tileWorldEditor {
         . d d d d d d d d d d d d d d .
         . . . . . . . . . . . . . . . .
     `
-    export const eraseCenter = img`
+    export const onlyCenter = img`
         . . . . . . . . . . . . . . . .
         . d d d d d d d d d d d d d d .
         . d . . . . . . . . . . . . d .
-        . d . . . . . . 3 3 . . . . d .
-        . d . . . . . 3 3 3 3 . . . d .
-        . d . . . . 3 3 3 3 3 3 . . d .
-        . d . . . 3 3 3 3 3 3 3 3 . d .
-        . d . . 3 3 3 3 3 3 3 3 3 . d .
-        . d . 3 3 3 3 3 3 3 3 3 . . d .
-        . d . 3 3 3 3 3 3 3 3 . . . d .
-        . d . . 3 3 3 3 3 3 . . . . d .
-        . d . . . 3 3 3 3 . . . . . d .
-        . d . . . . 3 3 . . . . . . d .
+        . d . . . . . . . . . . . . d .
+        . d . . . . 7 7 7 7 . . . . d .
+        . d . . . 7 7 . . 7 7 . . . d .
+        . d . . 7 7 . . . . 7 7 . . d .
+        . d . . 7 . . . . . . 7 . . d .
+        . d . . 7 . . . . . . 7 . . d .
+        . d . . 7 7 . . . . 7 7 . . d .
+        . d . . . 7 7 . . 7 7 . . . d .
+        . d . . . . 7 7 7 7 . . . . d .
+        . d . . . . . . . . . . . . d .
         . d . . . . . . . . . . . . d .
         . d d d d d d d d d d d d d d .
         . . . . . . . . . . . . . . . .
@@ -236,16 +254,11 @@ namespace tileWorldEditor {
         . . . . . . . . . 5 . . . . . .
         . . . . . . . . . . . . . . . .
     `
-    export const arrows = [oneof, negate, check, leftArrow, rightArrow, upArrow, downArrow]
-    export const arrowNames = ["OneOf", "Not", "Check", "Left", "Right", "Up", "Down"]
-    export const arrowValues = [0, 0, 0, TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down]
+    export const arrows = [only, oneof, negate, check, leftArrow, rightArrow, upArrow, downArrow]
+    export const arrowNames = ["Only","OneOf", "Not", "Check", "Left", "Right", "Up", "Down"]
+    export const arrowValues = [0, 0, 0, 0, TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down]
 
     enum RuleEditorMenus { RuleTypeMenu, PropositionMenu, None };
-
-    // TODO: selected rule type...
-    // TODO: change selected rule type
-    // TODO: getting rid of menu?
-
 
     export class RuleEditor {
         // the rule type and associated direction (if any)
@@ -253,19 +266,21 @@ namespace tileWorldEditor {
         private ruleDir: TileDir;
         // the attribution
         private attrMap: AttrsAt[];
+        // TODO: the commands
 
         private background: Image;
         private cursor: Sprite;
+        // the center of the diamond
         private centerX: number;
         private centerY: number;
 
+        // in-world menus
         private menu: RuleEditorMenus;
+        // rule type menu
         private ruleTypeMap: Image;
         private dirMap: Image;
-
-        // event menu
-
-        // propositional menu
+        // attribute menu
+        private oldCursor: Sprite;
         private showSelected: Sprite;
         private selected: Sprite;
         private attrs: Sprite[];
@@ -284,7 +299,6 @@ namespace tileWorldEditor {
             this.ruleType = RuleType.Resting;
             this.ruleDir = TileDir.None;
             this.attrMap = [];
-            // TODO: commands
 
             // rule menu view
             this.ruleTypeMap = image.create(10,7);
@@ -294,6 +308,8 @@ namespace tileWorldEditor {
             this.selected = null;
             this.attrs = [];
             this.menuItems = [];
+            this.oldCursor = sprites.create(cursorOut)
+            this.oldCursor.setFlag(SpriteFlag.Invisible, true)
             this.showSelected = sprites.create(cursorOut)
             this.showSelected.setFlag(SpriteFlag.Invisible, true)
 
@@ -307,7 +323,7 @@ namespace tileWorldEditor {
             // Control
             this.commands.push(mapSprite);
             this.menu = RuleEditorMenus.None;
-            this.cursor = sprites.create(cursorOut, SpriteKind.Player)
+            this.cursor = sprites.create(cursorIn, SpriteKind.Player)
             this.cursor.setFlag(SpriteFlag.Invisible, false)
             this.cursor.x = 40
             this.cursor.y = 56
@@ -344,6 +360,9 @@ namespace tileWorldEditor {
                     this.doit();
                 } else if (this.manhattanDistance2(2,2) <=2) {
                     this.menu = RuleEditorMenus.PropositionMenu;
+                    this.oldCursor.x = this.cursor.x;
+                    this.oldCursor.y = this.cursor.y;
+                    this.oldCursor.setFlag(SpriteFlag.Invisible, false)
                     this.doit();
                 } else if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                     let col = this.cursor.x >> 4;
@@ -451,7 +470,7 @@ namespace tileWorldEditor {
             return spr;
         }
 
-        private makeContext(row: number, col: number) {
+        private makeContext(col: number, row: number) {
             let spaceImg = this.manager.findName("Empty").image
             for (let i = -2; i <= 2; i++) {
                 this.showInDiamond(col + i, row, spaceImg);
@@ -464,6 +483,14 @@ namespace tileWorldEditor {
         }
 
         private propositionMenu() {
+            let col = this.oldCursor.x >> 4;
+            let row = this.oldCursor.y >> 4;
+            let item = this.attrMap.find(a => a.col == col && a.row == row)
+            if (item == undefined) {
+                let attrs: AttrType[] = []
+                // what is the default mapping?
+                this.attrMap.push({col:col, row:row, attrs:attrs})
+            }
             let x = -2
             this.manager.sprites().forEach((s, i) => {
                 if (i > 0) {
@@ -482,9 +509,9 @@ namespace tileWorldEditor {
             let oneofS = this.showInDiamond(0, 3, oneofCenter);
             oneofS.data = "OneOf"
             this.attrs.push(oneofS)
-            let eraseS = this.showInDiamond(1, 3, eraseCenter);
-            eraseS.data = "erase"
-            this.attrs.push(eraseS)
+            let onlyS = this.showInDiamond(1, 3, onlyCenter);
+            onlyS.data = "Only"
+            this.attrs.push(onlyS)
         }
 
         private propositionUpdate() {

@@ -11,7 +11,6 @@ enum CommandType {
     Paint,
 }
 
-
 enum AttrType {
     Exclude,  // => !Only
     Include,  // => Only 
@@ -20,8 +19,8 @@ enum AttrType {
 }
 
 type AttrsAt = {
-    x: number;
-    y: number;
+    col: number;
+    row: number;
     attrs: AttrType[];
 }
 
@@ -235,9 +234,9 @@ namespace tileWorldEditor {
                     let oneofS = this.showInDiamond(0, 3, oneofCenter);
                     oneofS.data = "OneOf"
                     this.attrs.push(oneofS)
-                    let eraseS = this.showInDiamond(1, 3, eraseCenter);
-                    eraseS.data = "erase"
-                    this.attrs.push(eraseS)
+                    let onlyS = this.showInDiamond(1, 3, onlyCenter);
+                    onlyS.data = "Only"
+                    this.attrs.push(onlyS)
                 }
                 this.menuOn = true;
             })

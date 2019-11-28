@@ -115,28 +115,41 @@ namespace tileWorldEditor {
 
     // consistent management of (user-defined) sprite kinds and names
     export class SpriteManager {
-        constructor(private allSprites: Sprite []) {
+        private allSprites: Sprite[];
+        constructor(private fixedSprites: Sprite [], 
+                    private movableSprites: Sprite []) {
             let tileSprite = new Sprite(tile)
             tileSprite.data = "Empty"
             tileSprite.setFlag(SpriteFlag.Invisible, true)
-            this.allSprites.insertAt(0, tileSprite)
-            this.allSprites.forEach(function (s: Sprite, index: number) {
-                s.setKind(index+1)
+            this.fixedSprites.insertAt(0, tileSprite)
+            this.fixedSprites.forEach((s, index) => { s.setKind(index+1) })
+            this.movableSprites.forEach((s, index) => {
+                s.setKind(index + 1 + this.fixedSprites.length)
             })
+            this.allSprites = [];
+            this.fixedSprites.forEach(s => { this.allSprites.push(s) })
+            this.movableSprites.forEach(s => { this.allSprites.push(s) })
         }
 
         setScene() {
-            this.allSprites.forEach(function (s: Sprite, index: number) {
+            this.fixedSprites.forEach(s => {
+                scene.setTile(s.kind(), s.image)
+            })
+            this.movableSprites.forEach(s => {
                 scene.setTile(s.kind(), s.image)
             })
         }
 
         findName(name: string) {
-            return this.allSprites.find((s) => s.data == name)
+            let s = this.fixedSprites.find(s => s.data == name)
+            if (!s) s = this.movableSprites.find(s => s.data == name)
+            return s;
         }
 
         findKind(kind: number) {
-            return this.allSprites.find((s) => s.kind() == kind)
+            let s = this.fixedSprites.find(s => s.kind() == kind)
+            if (!s) s = this.movableSprites.find(s => s.kind() == kind)
+            return s;
         }
 
         sprites() {
@@ -146,16 +159,13 @@ namespace tileWorldEditor {
     
     // the root of the editing experience is creating a (shared) tile map
     export class MapEditor {
-        private manager: SpriteManager;
         private commands: Sprite[] = [];
         private toolBox: ToolboxMenu;
         private tileMap: Image;
         private cursor: Sprite;
         private cursorAnim: animation.Animation;
         private currentTileSprite: Sprite;
-        constructor(allSprites: Sprite[]) {
-            // the transparent tile
-            this.manager = new SpriteManager(allSprites)
+        constructor(private manager: SpriteManager) {
             this.tileMap = image.create(30, 30)
             this.tileMap.fill(1)
             scene.setTileMap(this.tileMap)
