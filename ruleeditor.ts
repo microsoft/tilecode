@@ -262,6 +262,11 @@ namespace tileWorldEditor {
 
     enum RuleEditorMenus { RuleTypeMenu, PropositionMenu, None };
 
+    function projectAttrs(a: AttrsAt) {
+        // if only one positive, then use image
+        // 
+    }
+
     export class RuleEditor {
         // the rule type and associated direction (if any)
         private ruleType: RuleType;
@@ -292,7 +297,8 @@ namespace tileWorldEditor {
         private commands: Sprite[] = [];
         private toolBox: ToolboxMenu
 
-        constructor(private manager: SpriteManager, private centerSprite: Sprite) {
+        constructor(private manager: SpriteManager, 
+                    private centerSprite: Sprite) {  // optional rule
             // the center of the diamond
             this.centerX = 2 * 16 + 8
             this.centerY = 2 * 16 + 8
@@ -354,7 +360,6 @@ namespace tileWorldEditor {
                 // if we are on center sprite, bring up the ruletype menu
                 if (this.manhattanDistance2(2,2) == 0) {
                     if (this.menu == RuleEditorMenus.RuleTypeMenu) {
-                        // commit the result
                         this.menu = RuleEditorMenus.None;
                     } else {
                         this.menu = RuleEditorMenus.RuleTypeMenu
@@ -369,7 +374,7 @@ namespace tileWorldEditor {
                 } else if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                     let col = this.cursor.x >> 4;
                     let row = this.cursor.y >> 4;
-                    let rt = this.ruleTypeMap.getPixel(col, row) 
+                    let rt = this.ruleTypeMap.getPixel(col, row); 
                     if (rt != 0xf) {
                         this.ruleType = rt;
                         this.ruleDir = this.dirMap.getPixel(col,row);
@@ -380,6 +385,7 @@ namespace tileWorldEditor {
                 }
             })
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
+                // TODO: toolbox menu
             })
         }
 
@@ -390,7 +396,7 @@ namespace tileWorldEditor {
         }
 
         private doit() {
-            this.menuItems.forEach(m => { m.data.destroy(); })
+            //this.menuItems.forEach(m => { m.data.destroy(); })
             this.showSprites.forEach(spr => { spr.destroy(); })
             this.showSprites = [];
             this.attrs = [];
@@ -505,6 +511,7 @@ namespace tileWorldEditor {
                 this.menuItems.push(spr);
                 let sprAttr = sprites.create(attrImages[attrValues.indexOf(item.attrs[i])]);
                 spr.data = sprAttr;
+                spr.setKind(i);
                 sprAttr.x = spr.x; sprAttr.y = spr.y;
                 x++;
             });
@@ -534,7 +541,10 @@ namespace tileWorldEditor {
             if (m) {
                 let i = attrValues.indexOf(this.attrSelected.kind());
                 (<Sprite>(m.data)).setImage(attrImages[i]);
-                // TODO: update the model
+                let col = this.tileSaved.x >> 4;
+                let row = this.tileSaved.y >> 4;
+                let item = this.attrMap.find(a => a.col == col && a.row == row);
+                item.attrs[m.kind()] = this.attrSelected.kind();
             }
         }
 
