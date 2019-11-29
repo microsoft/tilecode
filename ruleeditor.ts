@@ -260,20 +260,19 @@ namespace tileWorldEditor {
 
     enum RuleEditorMenus { RuleTypeMenu, PropositionMenu, None };
 
-    // default options: maximize exclude
-    // - show include, exclude, oneof
-    // - if exactly one include, show that
+    // properties:
+    // - unique (positive) tile (UPT)
+    // - unique (positive) sprite (UPS)
+    // cases:
+    // - UPT & !UPS => show the tile
+    // - UPS & !UPT =? show the sprite
+
     function projectAttrs(a: AttrType[]): number[] {
         let res: number[] = [];
         let excludeCnt = a.filter(v => v == AttrType.Exclude).length;
         let onlyCnt = a.filter(v => v == AttrType.Only).length;
-        let IncludeOneofCnt = a.length - excludeCnt - onlyCnt;
-        // possible sets
-        // { Exclude, Include, OneOf }
-        // { Only, Include, OneOf }
-        if (excludeCnt < onlyCnt) {
-            return res;
-        }
+        let remove = excludeCnt < onlyCnt ? AttrType.Exclude : AttrType.Only;
+        a.forEach((v,i) => { if (v != remove) res.push(i); })
         return res;
     }
 
