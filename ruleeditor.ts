@@ -501,24 +501,13 @@ namespace tileWorldEditor {
 
         private propositionMenu() {
             // which tile in the diamond are we attributing?
-            let col = this.tileSaved.x >> 4;
-            let row = this.tileSaved.y >> 4;
-            let item = this.attrMap.find(a => a.col == col && a.row == row)
-            if (item == undefined) {
-                let attrs: AttrType[] = [];
-                // default mapping
-                for(let i=0;i<this.manager.all().length; i++) {
-                    attrs.push(i == 0 ? AttrType.Only : AttrType.Exclude)
-                }
-                item = { col: col, row: row, attrs: attrs }
-                this.attrMap.push(item)
-            }
+            let attrs = this.getAttrs(this.tileSaved.x >> 4, this.tileSaved.y >> 4);
             // for all user-defined sprites
             let x = -2;
             this.manager.all().forEach((s, i) => {
                 let spr = this.showInDiamond(x, 4, s.image);
                 this.menuItems.push(spr);
-                let sprAttr = sprites.create(attrImages[attrValues.indexOf(item.attrs[i])]);
+                let sprAttr = sprites.create(attrImages[attrValues.indexOf(attrs[i])]);
                 spr.data = sprAttr;
                 spr.setKind(i);
                 sprAttr.x = spr.x; sprAttr.y = spr.y;
@@ -543,29 +532,63 @@ namespace tileWorldEditor {
 
         private propositionUpdate() {
             let a = this.attrs.find(a => this.cursor.overlapsWith(a));
-            if (a) { 
-                this.selectAttr(a);
-            }
+            if (a)  this.selectAttr(a);
             let m = this.menuItems.find(m => this.cursor.overlapsWith(m));
             if (m) {
-                let i = attrValues.indexOf(this.attrSelected.kind());
-                (<Sprite>(m.data)).setImage(attrImages[i]);
-                let col = this.tileSaved.x >> 4;
-                let row = this.tileSaved.y >> 4;
-                let item = this.attrMap.find(a => a.col == col && a.row == row);
-                item.attrs[m.kind()] = this.attrSelected.kind();
+                let val = this.attrSelected.kind();
+                if (m.kind() < this.manager.fixed().length) {
+                    if (val == AttrType.Include)
+                       this.setFixedOther(m, AttrType.Exclude);
+                    else if (val == AttrType.Only)
+                       this.setFixedOther(m, AttrType.Only,true);
+                    else if (val == AttrType.OneOf)
+                        this.setFixedOther(m, AttrType.OneOf,true);
+                    else {
+
+                    }
+                }
+                this.setAttr(m, val);
                 // TODO; constraints on fixed sprites?
                 // for fixed sprites:
                 // - there must be one from {include, oneof, ok}
-                // - include^1 => rest are exclude
                 // - ok^+ => rest are exclude
                 // - oneof^+ => rest are exclude
                 // - so:
                 //     - change to exclude always fine, except can't have all exclude
-                //     - change to include, sets others to exclude
+                //     * change to include, sets others to exclude
                 //     - change to ok, sets non-exclude to ok
                 //     - change to oneof, sets non-exclude to oneof
             }
+        }
+
+        private getAttrs(col: number, row: number) {
+            let item = this.attrMap.find(a => a.col == col && a.row == row)
+            if (item == undefined) {
+                let attrs: AttrType[] = [];
+                // default mapping
+                for (let i = 0; i < this.manager.all().length; i++) {
+                    attrs.push(i == 0 ? AttrType.Only : AttrType.Exclude)
+                }
+                item = { col: col, row: row, attrs: attrs }
+                this.attrMap.push(item)
+            }
+            return item.attrs;
+        }
+        
+        private setFixedOther(m: Sprite, val: AttrType, nonExclude: boolean = false) {
+            for(let i =0; i<this.manager.fixed().length; i++) {
+                let o = this.menuItems[i];
+                if (o != m) {
+                    if (!nonExclude || o.data.image != exclude)
+                        this.setAttr(o, val);
+                }
+            }
+        }
+        private setAttr(m: Sprite, val: AttrType) {
+            let i = attrValues.indexOf(val);
+            let attrs = this.getAttrs(this.tileSaved.x >> 4, this.tileSaved.y >> 4);
+            attrs[m.kind()] = val;
+            (<Sprite>(m.data)).setImage(attrImages[i]);
         }
 
         private closeMenu(command: string) {
