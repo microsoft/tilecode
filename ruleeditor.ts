@@ -260,12 +260,12 @@ namespace tileWorldEditor {
 
     enum RuleEditorMenus { RuleTypeMenu, PropositionMenu, None };
 
-    function projectAttrs(a: AttrType[]): number[] {
+    function projectAttrs(a: AttrType[], begin: number, end: number): number[] {
         let res: number[] = [];
-        let excludeCnt = a.filter(v => v == AttrType.Exclude).length;
-        let okCnt = a.filter(v => v == AttrType.OK).length;
+        let excludeCnt = a.filter((v,i) => v == AttrType.Exclude && begin <= i && i <=end).length;
+        let okCnt = a.filter((v,i) => v == AttrType.OK && begin <= i && i <=end).length;
         let remove = excludeCnt < okCnt ? AttrType.OK : AttrType.Exclude;
-        a.forEach((v,i) => { if (v != remove) res.push(i); })
+        a.forEach((v,i) => { if (v != remove && begin <=i && i <=end) res.push(i); })
         return res;
     }
 
@@ -360,17 +360,20 @@ namespace tileWorldEditor {
                 // if we are on center sprite, bring up the ruletype menu
                 if (this.manhattanDistance2(2,2) == 0) {
                     if (this.menu == RuleEditorMenus.RuleTypeMenu) {
-                        this.menu = RuleEditorMenus.None;
+                        this.noMenu();
                     } else {
+                        this.noMenu();
                         this.menu = RuleEditorMenus.RuleTypeMenu
                     }
-                    this.tileSaved.setFlag(SpriteFlag.Invisible, true);
-                    this.showSelected.setFlag(SpriteFlag.Invisible, true);
                 } else if (this.manhattanDistance2(2,2) <=2) {
-                    this.menu = RuleEditorMenus.PropositionMenu;
-                    this.tileSaved.x = this.cursor.x;
-                    this.tileSaved.y = this.cursor.y;
-                    this.tileSaved.setFlag(SpriteFlag.Invisible, false);
+                    if (this.menu == RuleEditorMenus.PropositionMenu) {
+                        this.noMenu();
+                    } else {
+                        this.menu = RuleEditorMenus.PropositionMenu;
+                        this.tileSaved.x = this.cursor.x;
+                        this.tileSaved.y = this.cursor.y;
+                        this.tileSaved.setFlag(SpriteFlag.Invisible, false);
+                    }
                 } else if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                     let col = this.cursor.x >> 4;
                     let row = this.cursor.y >> 4;
@@ -390,6 +393,11 @@ namespace tileWorldEditor {
             })
         }
 
+        private noMenu() {
+            this.menu = RuleEditorMenus.None;
+            this.tileSaved.setFlag(SpriteFlag.Invisible, true);
+            this.showSelected.setFlag(SpriteFlag.Invisible, true);
+        }
         private manhattanDistance2(dCol: number, dRow: number) {
             let row = this.cursor.y >> 4
             let col = this.cursor.x >> 4
@@ -505,20 +513,26 @@ namespace tileWorldEditor {
             if (item) {
                 // if there are includes, just show them (tile first then sprite)
                 let index = item.attrs.indexOf(AttrType.Include);
+                let begin = 0;
+                let end = item.attrs.length-1;
                 if (index != -1) {
-                    this.showInDiamond(col, row, this.manager.all()[index].image)
-                } else {
-                    // otherwise summarize
-                    let project = projectAttrs(item.attrs);
-                    let done: AttrType[] = [];
-                    project.forEach(index => {
-                        let val = item.attrs[index];
-                        if (done.indexOf(val) == -1) {
-                            done.push(val);
-                            this.showInDiamond(col, row, attrImages[attrValues.indexOf(val)]);
-                        }
-                    });
-                }
+                    this.showInDiamond(col, row, this.manager.all()[index].image);
+                    // TODO: remove the include and associated excludes
+                    if (index < this.manager.fixed().length) {
+                        begin = this.manager.fixed().length;
+                    } else {
+                        end = this.manager.fixed().length-1;
+                    }
+                } 
+                let project = projectAttrs(item.attrs, begin, end);
+                let done: AttrType[] = [];
+                project.forEach(index => {
+                    let val = item.attrs[index];
+                    if (done.indexOf(val) == -1) {
+                        done.push(val);
+                        this.showInDiamond(col, row, attrImages[attrValues.indexOf(val)]);
+                    }
+                });
             }
         }
 
