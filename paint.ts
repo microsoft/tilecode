@@ -12,10 +12,10 @@ enum CommandType {
 }
 
 enum AttrType {
-    Exclude,  // => !Only
-    Include,  // => Only 
-    OneOf,    // => Only   (= Include in case there is only OneOf)
-    Only      //
+    Exclude,  // => !OK
+    Include,  // => OK 
+    OneOf,    // => OK   (= Include in case there is only OneOf)
+    OK        //
 }
 
 type AttrsAt = {

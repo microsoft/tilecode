@@ -72,7 +72,7 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
     `;
-    const only = img`
+    const ok = img`
         . . . . . . . . . f 7 7 7 7 f .
         . . . . . . . . f 7 7 f f 7 7 f
         . . . . . . . . 7 7 f f f f 7 7
@@ -144,7 +144,7 @@ namespace tileWorldEditor {
         . d d d d d d d d d d d d d d .
         . . . . . . . . . . . . . . . .
     `;
-    const onlyCenter = img`
+    const okCenter = img`
         . . . . . . . . . . . . . . . .
         . d d d d d d d d d d d d d d .
         . d . . . . . . . . . . . . d .
@@ -254,9 +254,9 @@ namespace tileWorldEditor {
     `;
     const arrowImages = [leftArrow, rightArrow, upArrow, downArrow];
     const arrowValues = [TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down];
-    const attrsCentered = [onlyCenter, oneofCenter, excludeCenter, includeCenter];
-    const attrImages = [only, oneof, exclude, include];
-    const attrValues = [AttrType.Only, AttrType.OneOf, AttrType.Exclude, AttrType.Include];
+    const attrsCentered = [okCenter, oneofCenter, excludeCenter, includeCenter];
+    const attrImages = [ok, oneof, exclude, include];
+    const attrValues = [AttrType.OK, AttrType.OneOf, AttrType.Exclude, AttrType.Include];
 
     enum RuleEditorMenus { RuleTypeMenu, PropositionMenu, None };
 
@@ -270,8 +270,8 @@ namespace tileWorldEditor {
     function projectAttrs(a: AttrType[]): number[] {
         let res: number[] = [];
         let excludeCnt = a.filter(v => v == AttrType.Exclude).length;
-        let onlyCnt = a.filter(v => v == AttrType.Only).length;
-        let remove = excludeCnt < onlyCnt ? AttrType.Exclude : AttrType.Only;
+        let okCnt = a.filter(v => v == AttrType.OK).length;
+        let remove = excludeCnt < okCnt ? AttrType.OK : AttrType.Exclude;
         a.forEach((v,i) => { if (v != remove) res.push(i); })
         return res;
     }
@@ -552,7 +552,7 @@ namespace tileWorldEditor {
                     if (val == AttrType.Include) 
                        // all other fixed must be exclude
                        this.setFixedOther(m, AttrType.Exclude);
-                    else if (val == AttrType.Only || val == AttrType.OneOf)
+                    else if (val == AttrType.OK || val == AttrType.OneOf)
                        // all other non-exclude fixed transition to only
                        this.setFixedOther(m, val,true);
                     else {
@@ -573,7 +573,7 @@ namespace tileWorldEditor {
                     if (val == AttrType.Include)
                         // all other fixed must be exclude
                         this.setMovableOther(m, AttrType.Exclude);
-                    else if (val == AttrType.Only || val == AttrType.OneOf)
+                    else if (val == AttrType.OK || val == AttrType.OneOf)
                         // all other non-exclude fixed transition to only
                         this.setMovableOther(m, val, true);
                 }
@@ -586,7 +586,7 @@ namespace tileWorldEditor {
             if (item == undefined) {
                 let attrs: AttrType[] = [];
                 // default mapping
-                this.manager.all().forEach(s => { attrs.push(AttrType.Only) });
+                this.manager.all().forEach(s => { attrs.push(AttrType.OK) });
                 item = { col: col, row: row, attrs: attrs }
                 this.attrMap.push(item)
             }
