@@ -327,6 +327,7 @@ namespace tileWorldEditor {
             this.menuItems = [];
             this.tileSaved = sprites.create(cursorOut)
             this.tileSaved.setFlag(SpriteFlag.Invisible, true)
+            this.tileSaved.z = 10;
             this.showSelected = sprites.create(cursorOut)
             this.showSelected.setFlag(SpriteFlag.Invisible, true)
 
@@ -373,13 +374,12 @@ namespace tileWorldEditor {
                     } else {
                         this.menu = RuleEditorMenus.RuleTypeMenu
                     }
-                    this.doit();
+                    this.tileSaved.setFlag(SpriteFlag.Invisible, true);
                 } else if (this.manhattanDistance2(2,2) <=2) {
                     this.menu = RuleEditorMenus.PropositionMenu;
                     this.tileSaved.x = this.cursor.x;
                     this.tileSaved.y = this.cursor.y;
-                    this.tileSaved.setFlag(SpriteFlag.Invisible, false)
-                    this.doit();
+                    this.tileSaved.setFlag(SpriteFlag.Invisible, false);
                 } else if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                     let col = this.cursor.x >> 4;
                     let row = this.cursor.y >> 4;
@@ -387,11 +387,12 @@ namespace tileWorldEditor {
                     if (rt != 0xf) {
                         this.ruleType = rt;
                         this.ruleDir = this.dirMap.getPixel(col,row);
-                        this.doit();
                     }
                 } else if (this.menu == RuleEditorMenus.PropositionMenu) {
                     this.propositionUpdate();
+                    return;
                 }
+                this.doit();
             })
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 // TODO: toolbox menu
@@ -405,7 +406,10 @@ namespace tileWorldEditor {
         }
 
         private doit() {
-            //this.menuItems.forEach(m => { m.data.destroy(); })
+            this.menuItems.forEach(m => {
+                let s:Sprite = m.data;       // TODO: file a bug on this -
+                s.destroy();                 // TODO: m.data.destroy() failes
+            })
             this.showSprites.forEach(spr => { spr.destroy(); })
             this.showSprites = [];
             this.attrs = [];
@@ -490,11 +494,18 @@ namespace tileWorldEditor {
         private makeContext(col: number, row: number) {
             let spaceImg = this.manager.empty().image
             for (let i = -2; i <= 2; i++) {
-                this.showInDiamond(col + i, row, spaceImg);
-                this.showInDiamond(col, row + i, spaceImg);
-                if (i > -2 && i < 2) {
-                    this.showInDiamond(col + i, row + i, spaceImg);
-                    this.showInDiamond(col + i, row - i, spaceImg);
+                for (let j = -2; j <= 2; j++) {
+                   let dist = Math.abs(j) + Math.abs(i);
+                   if (dist <= 2) {
+                       this.showInDiamond(i,j, spaceImg);
+                       let item = this.attrMap.find(a => a.col == i && a.row == j);
+                       if (item) {
+                           let project = projectAttrs(item.attrs);
+                           // two things TODO
+                           // 1. show summary in tile
+                           // 2. show summary at bottom if no menu
+                       }
+                   }
                 }
             }
         }
@@ -559,16 +570,6 @@ namespace tileWorldEditor {
                     }
                 }
                 this.setAttr(m, val);
-                // TODO; constraints on fixed sprites?
-                // for fixed sprites:
-                // - there must be one from {include, oneof, ok}
-                // - ok^+ => rest are exclude
-                // - oneof^+ => rest are exclude
-                // - so:
-                //     - change to exclude always fine, except can't have all exclude
-                //     * change to include, sets others to exclude
-                //     - change to ok, sets non-exclude to ok
-                //     - change to oneof, sets non-exclude to oneof
             }
         }
 
