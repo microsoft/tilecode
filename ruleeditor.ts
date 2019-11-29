@@ -27,14 +27,14 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
-        . . . . . . . . . . 2 2 2 2 . .
-        . . . . . . . . . 2 2 . . 2 2 .
-        . . . . . . . . 2 2 2 2 . . 2 2
-        . . . . . . . . 2 . 2 2 2 . . 2
-        . . . . . . . . 2 . . 2 2 2 . 2
-        . . . . . . . . 2 2 . . 2 2 2 2
-        . . . . . . . . . 2 2 . . 2 2 .
-        . . . . . . . . . . 2 2 2 2 . .
+        . . . . . . . . . f 2 2 2 2 f .
+        . . . . . . . . f 2 2 f f 2 2 f
+        . . . . . . . . 2 2 2 2 f f 2 2
+        . . . . . . . . 2 f 2 2 2 f f 2
+        . . . . . . . . 2 f f 2 2 2 f 2
+        . . . . . . . . 2 2 f f 2 2 2 2
+        . . . . . . . . f 2 2 f f 2 2 f
+        . . . . . . . . . f 2 2 2 2 f .
     `;
     const include = img`
         . . . . . . . . . . . . . . . .
@@ -43,26 +43,26 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . 7 . . . . . . .
-        . . . . . . . 7 6 . . . . . . .
-        . . . . . . 7 7 6 . . . . . . .
-        . . . . . . 7 6 . . . . . . . .
-        7 . . . . 7 7 6 . . . . . . . .
-        7 7 . . . 7 6 . . . . . . . . .
-        . 7 7 . 7 7 6 . . . . . . . . .
-        . . 7 7 7 6 . . . . . . . . . .
-        . . . 7 6 . . . . . . . . . . .
+        . . . . . . . f f . . . . . . .
+        . . . . . . f f 7 . . . . . . .
+        . . . . . f f 7 6 . . . . . . .
+        . . . . . f 7 7 6 . . . . . . .
+        f f . . f f 7 6 f . . . . . . .
+        7 f f . f 7 7 6 f . . . . . . .
+        7 7 f f f 7 6 f . . . . . . . .
+        f 7 7 f 7 7 6 f . . . . . . . .
+        f f 7 7 7 6 f . . . . . . . . .
+        . f f 7 6 f . . . . . . . . . .
     `;
     const oneof = img`
-        . . . . . . . . . . . . . . . .
-        . . 5 5 5 5 . . . . . . . . . .
-        . 5 5 5 5 5 5 . . . . . . . . .
-        . 5 5 5 5 5 5 . . . . . . . . .
-        . 5 5 5 5 5 5 . . . . . . . . .
-        . 5 5 5 5 5 5 . . . . . . . . .
-        . . 5 5 5 5 . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
+        . f f f f f f . . . . . . . . .
+        f f 5 5 5 5 f f . . . . . . . .
+        f 5 5 5 5 5 5 f . . . . . . . .
+        f 5 5 5 5 5 5 f . . . . . . . .
+        f 5 5 5 5 5 5 f . . . . . . . .
+        f 5 5 5 5 5 5 f . . . . . . . .
+        f f 5 5 5 5 f f . . . . . . . .
+        . f f f f f f . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -73,14 +73,14 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
     `;
     const only = img`
-        . . . . . . . . . . 7 7 7 7 . .
-        . . . . . . . . . 7 7 . . 7 7 .
-        . . . . . . . . 7 7 . . . . 7 7
-        . . . . . . . . 7 . . . . . . 7
-        . . . . . . . . 7 . . . . . . 7
-        . . . . . . . . 7 7 . . . . 7 7
-        . . . . . . . . . 7 7 . . 7 7 .
-        . . . . . . . . . . 7 7 7 7 . .
+        . . . . . . . . . f 7 7 7 7 f .
+        . . . . . . . . f 7 7 f f 7 7 f
+        . . . . . . . . 7 7 f f f f 7 7
+        . . . . . . . . 7 f f f f f f 7
+        . . . . . . . . 7 f f f f f f 7
+        . . . . . . . . 7 7 f f f f 7 7
+        . . . . . . . . f 7 7 f f 7 7 f
+        . . . . . . . . . f 7 7 7 7 f 1
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -523,6 +523,7 @@ namespace tileWorldEditor {
                 spr.setKind(i);
                 sprAttr.x = spr.x; sprAttr.y = spr.y;
                 x++;
+                if (i==this.manager.fixed().length-1) x++;
             });
             x = -2;
             attrsCentered.forEach((img,i) => {
@@ -568,6 +569,13 @@ namespace tileWorldEditor {
                            this.setAttr(this.menuItems[i], attrs[m.kind()]);
                        }
                     }
+                } else {
+                    if (val == AttrType.Include)
+                        // all other fixed must be exclude
+                        this.setMovableOther(m, AttrType.Exclude);
+                    else if (val == AttrType.Only || val == AttrType.OneOf)
+                        // all other non-exclude fixed transition to only
+                        this.setMovableOther(m, val, true);
                 }
                 this.setAttr(m, val);
             }
@@ -578,9 +586,7 @@ namespace tileWorldEditor {
             if (item == undefined) {
                 let attrs: AttrType[] = [];
                 // default mapping
-                for (let i = 0; i < this.manager.all().length; i++) {
-                    attrs.push(i == 0 ? AttrType.Only : AttrType.Exclude)
-                }
+                this.manager.all().forEach(s => { attrs.push(AttrType.Only) });
                 item = { col: col, row: row, attrs: attrs }
                 this.attrMap.push(item)
             }
@@ -589,6 +595,15 @@ namespace tileWorldEditor {
         
         private setFixedOther(m: Sprite, val: AttrType, nonExclude: boolean = false) {
             for(let i =0; i<this.manager.fixed().length; i++) {
+                let o = this.menuItems[i];
+                if (o != m) {
+                    if (!nonExclude || o.data.image != exclude)
+                        this.setAttr(o, val);
+                }
+            }
+        }
+        private setMovableOther(m: Sprite, val: AttrType, nonExclude: boolean = false) {
+            for (let i = this.manager.fixed().length; i< this.manager.all().length; i++) {
                 let o = this.menuItems[i];
                 if (o != m) {
                     if (!nonExclude || o.data.image != exclude)
