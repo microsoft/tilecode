@@ -537,14 +537,25 @@ namespace tileWorldEditor {
             if (m) {
                 let val = this.attrSelected.kind();
                 if (m.kind() < this.manager.fixed().length) {
-                    if (val == AttrType.Include)
+                    if (val == AttrType.Include) 
+                       // all other fixed must be exclude
                        this.setFixedOther(m, AttrType.Exclude);
-                    else if (val == AttrType.Only)
-                       this.setFixedOther(m, AttrType.Only,true);
-                    else if (val == AttrType.OneOf)
-                        this.setFixedOther(m, AttrType.OneOf,true);
+                    else if (val == AttrType.Only || val == AttrType.OneOf)
+                       // all other non-exclude fixed transition to only
+                       this.setFixedOther(m, val,true);
                     else {
-
+                       // not allowed to set all to exclude
+                       let cnt = 0;
+                       let i = 0;
+                       for(;i<this.manager.fixed().length;i++) {
+                           if (this.menuItems[i].data.image == exclude) {
+                               cnt++; if (cnt == 2) break;
+                           }
+                       }
+                       if (cnt == 2) {
+                           let attrs = this.getAttrs(this.tileSaved.x >> 4, this.tileSaved.y >> 4);
+                           this.setAttr(this.menuItems[i], attrs[m.kind()]);
+                       }
                     }
                 }
                 this.setAttr(m, val);
