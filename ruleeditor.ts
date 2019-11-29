@@ -72,7 +72,7 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
     `;
-    export const only = img`
+    const only = img`
         . . . . . . . . . . 7 7 7 7 . .
         . . . . . . . . . 7 7 . . 7 7 .
         . . . . . . . . 7 7 . . . . 7 7
@@ -90,7 +90,7 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
     `;
-    export const excludeCenter = img`
+    const excludeCenter = img`
         . . . . . . . . . . . . . . . .
         . d d d d d d d d d d d d d d .
         . d . . . . . . . . . . . . d .
@@ -108,7 +108,7 @@ namespace tileWorldEditor {
         . d d d d d d d d d d d d d d .
         . . . . . . . . . . . . . . . .
     `;
-    export const includeCenter = img`
+    const includeCenter = img`
         . . . . . . . . . . . . . . . .
         . d d d d d d d d d d d d d d .
         . d . . . . . . . . . . . . d .
@@ -126,7 +126,7 @@ namespace tileWorldEditor {
         . d d d d d d d d d d d d d d .
         . . . . . . . . . . . . . . . .
     `;
-    export const oneofCenter = img`
+    const oneofCenter = img`
         . . . . . . . . . . . . . . . .
         . d d d d d d d d d d d d d d .
         . d . . . . . . . . . . . . d .
@@ -144,7 +144,7 @@ namespace tileWorldEditor {
         . d d d d d d d d d d d d d d .
         . . . . . . . . . . . . . . . .
     `;
-    export const onlyCenter = img`
+    const onlyCenter = img`
         . . . . . . . . . . . . . . . .
         . d d d d d d d d d d d d d d .
         . d . . . . . . . . . . . . d .
@@ -252,19 +252,29 @@ namespace tileWorldEditor {
         . . . . . . . . . 5 . . . . . .
         . . . . . . . . . . . . . . . .
     `;
-    export const arrowImages = [leftArrow, rightArrow, upArrow, downArrow];
-    // export const arrowNames = ["Left", "Right", "Up", "Down"];
-    export const arrowValues = [TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down];
-
+    const arrowImages = [leftArrow, rightArrow, upArrow, downArrow];
+    const arrowValues = [TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down];
     const attrsCentered = [onlyCenter, oneofCenter, excludeCenter, includeCenter];
     const attrImages = [only, oneof, exclude, include];
     const attrValues = [AttrType.Only, AttrType.OneOf, AttrType.Exclude, AttrType.Include];
 
     enum RuleEditorMenus { RuleTypeMenu, PropositionMenu, None };
 
-    function projectAttrs(a: AttrsAt) {
-        // if only one positive, then use image
-        // 
+    // default options: maximize exclude
+    // - show include, exclude, oneof
+    // - if exactly one include, show that
+    function projectAttrs(a: AttrType[]): number[] {
+        let res: number[] = [];
+        let excludeCnt = a.filter(v => v == AttrType.Exclude).length;
+        let onlyCnt = a.filter(v => v == AttrType.Only).length;
+        let IncludeOneofCnt = a.length - excludeCnt - onlyCnt;
+        // possible sets
+        // { Exclude, Include, OneOf }
+        // { Only, Include, OneOf }
+        if (excludeCnt < onlyCnt) {
+            return res;
+        }
+        return res;
     }
 
     export class RuleEditor {
@@ -545,6 +555,17 @@ namespace tileWorldEditor {
                 let row = this.tileSaved.y >> 4;
                 let item = this.attrMap.find(a => a.col == col && a.row == row);
                 item.attrs[m.kind()] = this.attrSelected.kind();
+                // TODO; constraints on fixed sprites?
+                // for fixed sprites:
+                // - there must be one from {include, oneof, ok}
+                // - include^1 => rest are exclude
+                // - ok^+ => rest are exclude
+                // - oneof^+ => rest are exclude
+                // - so:
+                //     - change to exclude always fine, except can't have all exclude
+                //     - change to include, sets others to exclude
+                //     - change to ok, sets non-exclude to ok
+                //     - change to oneof, sets non-exclude to oneof
             }
         }
 
