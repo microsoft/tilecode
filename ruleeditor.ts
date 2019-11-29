@@ -260,13 +260,6 @@ namespace tileWorldEditor {
 
     enum RuleEditorMenus { RuleTypeMenu, PropositionMenu, None };
 
-    // properties:
-    // - unique (positive) tile (UPT)
-    // - unique (positive) sprite (UPS)
-    // cases:
-    // - UPT & !UPS => show the tile
-    // - UPS & !UPT =? show the sprite
-
     function projectAttrs(a: AttrType[]): number[] {
         let res: number[] = [];
         let excludeCnt = a.filter(v => v == AttrType.Exclude).length;
@@ -334,9 +327,6 @@ namespace tileWorldEditor {
             this.background = image.create(160, 120)
             scene.setBackgroundImage(this.background)
             this.manager.setScene()            
-            this.makeContext();
-            this.showInDiamond(0,0,this.centerSprite.image, 10);
-            this.showSprites = [];
 
             // Control
             this.commands.push(mapSprite);
@@ -375,6 +365,7 @@ namespace tileWorldEditor {
                         this.menu = RuleEditorMenus.RuleTypeMenu
                     }
                     this.tileSaved.setFlag(SpriteFlag.Invisible, true);
+                    this.showSelected.setFlag(SpriteFlag.Invisible, true);
                 } else if (this.manhattanDistance2(2,2) <=2) {
                     this.menu = RuleEditorMenus.PropositionMenu;
                     this.tileSaved.x = this.cursor.x;
@@ -419,6 +410,9 @@ namespace tileWorldEditor {
             this.background.fillRect(0, 0, 80, 120, 12);
             this.background.print("When", 0, 0);
             this.background.print("Do", 80, 0);
+
+            this.makeContext();
+            this.showInDiamond(0, 0, this.centerSprite.image, 10);
 
             this.showRuleType(this.ruleType, this.ruleDir, 0, 0);
             if (this.menu == RuleEditorMenus.RuleTypeMenu) {
@@ -499,21 +493,25 @@ namespace tileWorldEditor {
                    if (dist <= 2) {
                        this.showInDiamond(i,j, spaceImg);
                        if (i!=0 || j!=0) {
-                            let item = this.attrMap.find(a => a.col == i && a.row == j);
-                            if (item) {
-                                let project = projectAttrs(item.attrs);
-                                let done: AttrType[] = [];
-                                project.forEach(index => {
-                                    let val = item.attrs[index];
-                                    if (done.indexOf(val) == -1) {
-                                        done.push(val);
-                                        this.showInDiamond(i,j,attrImages[val]);
-                                    }
-                                });
-                            }
+                            this.showAttributes(i,j);
                        }
                    }
                 }
+            }
+        }
+
+        private showAttributes(col: number, row: number) {
+            let item = this.attrMap.find(a => a.col == col +2 && a.row == row +2);
+            if (item) {
+                let project = projectAttrs(item.attrs);
+                let done: AttrType[] = [];
+                project.forEach(index => {
+                    let val = item.attrs[index];
+                    if (done.indexOf(val) == -1) {
+                        done.push(val);
+                        this.showInDiamond(col, row, attrImages[attrValues.indexOf(val)]);
+                    }
+                });
             }
         }
 
@@ -592,7 +590,7 @@ namespace tileWorldEditor {
             let item = this.attrMap.find(a => a.col == col && a.row == row)
             if (item == undefined) {
                 let attrs: AttrType[] = [];
-                // default mapping
+                // default mapping::everything is possible
                 this.manager.all().forEach(s => { attrs.push(AttrType.OK) });
                 item = { col: col, row: row, attrs: attrs }
                 this.attrMap.push(item)
