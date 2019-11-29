@@ -503,15 +503,22 @@ namespace tileWorldEditor {
         private showAttributes(col: number, row: number) {
             let item = this.attrMap.find(a => a.col == col +2 && a.row == row +2);
             if (item) {
-                let project = projectAttrs(item.attrs);
-                let done: AttrType[] = [];
-                project.forEach(index => {
-                    let val = item.attrs[index];
-                    if (done.indexOf(val) == -1) {
-                        done.push(val);
-                        this.showInDiamond(col, row, attrImages[attrValues.indexOf(val)]);
-                    }
-                });
+                // if there are includes, just show them (tile first then sprite)
+                let index = item.attrs.indexOf(AttrType.Include);
+                if (index != -1) {
+                    this.showInDiamond(col, row, this.manager.all()[index].image)
+                } else {
+                    // otherwise summarize
+                    let project = projectAttrs(item.attrs);
+                    let done: AttrType[] = [];
+                    project.forEach(index => {
+                        let val = item.attrs[index];
+                        if (done.indexOf(val) == -1) {
+                            done.push(val);
+                            this.showInDiamond(col, row, attrImages[attrValues.indexOf(val)]);
+                        }
+                    });
+                }
             }
         }
 
