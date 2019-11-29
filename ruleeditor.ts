@@ -334,8 +334,8 @@ namespace tileWorldEditor {
             this.background = image.create(160, 120)
             scene.setBackgroundImage(this.background)
             this.manager.setScene()            
-            this.makeContext(0, 0);
-            this.showInDiamond(0, 0, this.centerSprite.image, 10);
+            this.makeContext();
+            this.showInDiamond(0,0,this.centerSprite.image, 10);
             this.showSprites = [];
 
             // Control
@@ -491,19 +491,26 @@ namespace tileWorldEditor {
             return spr;
         }
 
-        private makeContext(col: number, row: number) {
+        private makeContext() {
             let spaceImg = this.manager.empty().image
             for (let i = -2; i <= 2; i++) {
                 for (let j = -2; j <= 2; j++) {
                    let dist = Math.abs(j) + Math.abs(i);
                    if (dist <= 2) {
                        this.showInDiamond(i,j, spaceImg);
-                       let item = this.attrMap.find(a => a.col == i && a.row == j);
-                       if (item) {
-                           let project = projectAttrs(item.attrs);
-                           // two things TODO
-                           // 1. show summary in tile
-                           // 2. show summary at bottom if no menu
+                       if (i!=0 || j!=0) {
+                            let item = this.attrMap.find(a => a.col == i && a.row == j);
+                            if (item) {
+                                let project = projectAttrs(item.attrs);
+                                let done: AttrType[] = [];
+                                project.forEach(index => {
+                                    let val = item.attrs[index];
+                                    if (done.indexOf(val) == -1) {
+                                        done.push(val);
+                                        this.showInDiamond(i,j,attrImages[val]);
+                                    }
+                                });
+                            }
                        }
                    }
                 }
