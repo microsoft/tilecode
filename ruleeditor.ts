@@ -276,13 +276,9 @@ namespace tileWorldEditor {
         private ruleDir: TileDir;
         // the attribution
         private attrMap: AttrsAt[];
-        // TODO: the commands
 
         private background: Image;
         private cursor: Sprite;
-        // the center of the diamond
-        private centerX: number;
-        private centerY: number;
 
         // in-world menus
         private menu: RuleEditorMenus;
@@ -302,14 +298,10 @@ namespace tileWorldEditor {
 
         constructor(private manager: SpriteManager, 
                     private centerSprite: Sprite) {  // optional rule
-            // the center of the diamond
-            this.centerX = 2 * 16 + 8
-            this.centerY = 2 * 16 + 8
-
             // rule Model
             this.ruleType = RuleType.Resting;
             this.ruleDir = TileDir.None;
-            this.attrMap = [];
+            this.attrMap = [{col:0, row:0, attrs:[], commands:[]}];
 
             // rule menu view
             this.ruleTypeMap = image.create(10,7);
@@ -486,10 +478,13 @@ namespace tileWorldEditor {
 
         private showSprites: Sprite[] = [];
         private showInDiamond(c: number, r: number, img: Image, z: number = 0) {
+            // the center of the diamond
+            let centerX = 2 * 16 + 8
+            let centerY = 2 * 16 + 8
             let spr = sprites.create(img);
             spr.z = z;
-            spr.x = this.centerX + c * 16;
-            spr.y = this.centerY + r * 16;
+            spr.x = centerX + c * 16;
+            spr.y = centerY + r * 16;
             this.showSprites.push(spr);
             return spr;
         }
@@ -509,6 +504,22 @@ namespace tileWorldEditor {
             }
         }
 
+        private posSpritePosition(attrs: AttrType[], begin: number) {
+            let index = attrs.indexOf(AttrType.Include);
+            return (index == -1) ? attrs.indexOf(AttrType.OneOf) : index;
+        }
+
+        private buildCommands(col: number, row: number) {
+            let item = this.attrMap.find(a => a.col == col + 2 && a.row == row + 2);
+            if (item) {
+                if (col == 0 && row == 0) {
+
+                } else {
+                   let posSprite = this.posSpritePosition(item.attrs, this.manager.fixed().length);
+                }
+            }
+        }
+
         private showAttributes(col: number, row: number) {
             let item = this.attrMap.find(a => a.col == col +2 && a.row == row +2);
             if (item) {
@@ -518,17 +529,17 @@ namespace tileWorldEditor {
                 let end = item.attrs.length-1;
                 if (index != -1) {
                     this.showInDiamond(col, row, this.manager.all()[index].image);
-                    // TODO: remove the include and associated excludes
                     if (index < this.manager.fixed().length) {
                         begin = this.manager.fixed().length;
                     } else {
                         end = this.manager.fixed().length-1;
                     }
-                } 
+                }
                 let project = projectAttrs(item.attrs, begin, end);
                 let done: AttrType[] = [];
                 project.forEach(index => {
                     let val = item.attrs[index];
+                    // eliminate duplicates
                     if (done.indexOf(val) == -1) {
                         done.push(val);
                         this.showInDiamond(col, row, attrImages[attrValues.indexOf(val)]);
@@ -614,7 +625,7 @@ namespace tileWorldEditor {
                 let attrs: AttrType[] = [];
                 // default mapping::everything is possible
                 this.manager.all().forEach(s => { attrs.push(AttrType.OK) });
-                item = { col: col, row: row, attrs: attrs }
+                item = { col: col, row: row, attrs: attrs, commands:[] }
                 this.attrMap.push(item)
             }
             return item.attrs;

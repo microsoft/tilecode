@@ -9,6 +9,8 @@ enum CommandType {
     None,
     Move,
     Paint,
+    Reverse,
+    Stop,
 }
 
 enum AttrType {
@@ -18,10 +20,16 @@ enum AttrType {
     OK        //
 }
 
+type CommandAt = {
+    inst: CommandType;
+    arg:  number;
+}
+
 type AttrsAt = {
     col: number;
     row: number;
     attrs: AttrType[];
+    commands: CommandAt[];
 }
 
 // deprecate all below
