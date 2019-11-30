@@ -414,6 +414,15 @@ namespace tileWorldEditor {
                 } else if (this.cursor.x >= 80 && this.cursor.y < 80) {
                     // compute mapping from right to left hand side
                     this.otherCursor.setFlag(SpriteFlag.Invisible, false);
+                    let row = this.cursor.y >> 4;
+                    if (row == 0 || row == 2 || row == 4)
+                        this.otherCursor.x = 40;
+                    else
+                        this.otherCursor.x = (row == 1) ? 24 : 56;
+                    if (1 <= row && row <=3)
+                        this.otherCursor.y = 40;
+                    else
+                        this.otherCursor.y = (row == 0) ? 8 : 56;
                 } else {
                     this.otherCursor.setFlag(SpriteFlag.Invisible, true);
                 }
