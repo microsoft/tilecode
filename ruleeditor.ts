@@ -404,6 +404,13 @@ namespace tileWorldEditor {
                 if (this.manhattanDistance2() <= 1) {
                     // compute mapping from left to right hand side
                     this.otherCursor.setFlag(SpriteFlag.Invisible, false);
+                    let col = this.cursor.x >> 4;
+                    let row = this.cursor.y >> 4;
+                    if (col == 1) this.otherCursor.y = 24;
+                    else if (col == 3) this.otherCursor.y = 56;
+                    else if (row == 1) this.otherCursor.y = 8;
+                    else if (row == 3) this.otherCursor.y = 72;
+                    else this.otherCursor.y = 40;   
                 } else if (this.cursor.x >= 80 && this.cursor.y < 80) {
                     // compute mapping from right to left hand side
                     this.otherCursor.setFlag(SpriteFlag.Invisible, false);
