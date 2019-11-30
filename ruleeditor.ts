@@ -5,13 +5,13 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
-        . . . . . 5 5 5 5 5 . . . . . .
-        . . . . 5 5 5 5 5 5 5 . . . . .
-        . . . . 5 5 5 5 5 5 5 . . . . .
-        . . . . 5 5 5 5 5 5 5 . . . . .
-        . . . . 5 5 5 5 5 5 5 . . . . .
-        . . . . 5 5 5 5 5 5 5 . . . . .
-        . . . . . 5 5 5 5 5 . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . c c c . . . . . .
+        . . . . . . c c c c c . . . . .
+        . . . . . . c c c c c . . . . .
+        . . . . . . c c c c c . . . . .
+        . . . . . . . c c c . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -406,6 +406,7 @@ namespace tileWorldEditor {
                     this.otherCursor.setFlag(SpriteFlag.Invisible, false);
                     let col = this.cursor.x >> 4;
                     let row = this.cursor.y >> 4;
+                    this.otherCursor.x = 88;
                     if (col == 1) this.otherCursor.y = 24;
                     else if (col == 3) this.otherCursor.y = 56;
                     else if (row == 1) this.otherCursor.y = 8;
@@ -422,7 +423,7 @@ namespace tileWorldEditor {
                     if (1 <= row && row <=3)
                         this.otherCursor.y = 40;
                     else
-                        this.otherCursor.y = (row == 0) ? 8 : 56;
+                        this.otherCursor.y = (row == 0) ? 24 : 56;
                 } else {
                     this.otherCursor.setFlag(SpriteFlag.Invisible, true);
                 }
@@ -573,7 +574,7 @@ namespace tileWorldEditor {
 
         private showCommandsAt(row: number, whendo: WhenDo, img: Image) {
             let spaceImg = this.manager.empty().image;
-            let img2 = whendo.witness == -1 ? img : 
+            let img2 = whendo.witness == -1 ? genericSprite : 
                 this.manager.all()[whendo.witness].image;
             this.showInDiamond(3, row-1, img2);
             // show the existing commands
