@@ -16,8 +16,8 @@
         "imageeditor.ts",
         "toolbox.ts",
         "ruleeditor.ts",
-        "paint.ts",
-        "test.ts"
+        "test.ts",
+        "rule.ts"
     ],
     "testFiles": [],
     "public": false,

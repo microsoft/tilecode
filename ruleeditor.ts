@@ -258,6 +258,16 @@ namespace tileWorldEditor {
     const attrImages = [ok, oneof, exclude, include];
     const attrValues = [AttrType.OK, AttrType.OneOf, AttrType.Exclude, AttrType.Include];
 
+    export function makeRestingRule(m: tileWorldEditor.SpriteManager, name: string): Rule {
+        let index = m.findName(name).kind();
+        return {
+            kind: [index],
+            rt: RuleType.Resting,
+            dir: TileDir.None,
+            whenDo: [{ col: 0, row: 0, attrs: [], witness: index, commands: [] }]
+        }
+    }
+
     enum RuleEditorMenus { RuleTypeMenu, PropositionMenu, None };
 
     function projectAttrs(a: AttrType[], begin: number, end: number): number[] {

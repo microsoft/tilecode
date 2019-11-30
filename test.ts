@@ -168,14 +168,8 @@ namespace boulder {
     })
 }
 
-let manager = new tileWorldEditor.SpriteManager(boulder.fixedSprites, boulder.movableSprites)
-let rule: Rule = {
-    kind: [4],
-    rt: RuleType.Resting,
-    dir: TileDir.None,
-    whenDo: [{ col: 0, row: 0, attrs: [], witness: 4, commands: []}]
-}
-
-let ruleEditor = new tileWorldEditor.RuleEditor(manager, rule)
+import tw = tileWorldEditor;
+let manager = new tw.SpriteManager(boulder.fixedSprites, boulder.movableSprites)
+let ruleEditor = new tw.RuleEditor(manager, tw.makeRestingRule(manager, "Boulder"))
 
 // let mapEditor = new tileWorldEditor.MapEditor(manager)
