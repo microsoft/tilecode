@@ -268,7 +268,7 @@ namespace tileWorldEditor {
         }
     }
 
-    enum RuleEditorMenus { RuleTypeMenu, PropositionMenu, None };
+    enum RuleEditorMenus { RuleTypeMenu, AttrTypeMenu, None };
 
     function projectAttrs(a: AttrType[], begin: number, end: number): number[] {
         let res: number[] = [];
@@ -328,7 +328,7 @@ namespace tileWorldEditor {
             this.cursor.z = 50;
 
             // refresh display
-            this.doit();
+            this.update();
 
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
                 if ((this.cursor.x >> 4) > 0)
@@ -347,22 +347,22 @@ namespace tileWorldEditor {
                     this.cursor.y += 16
             })
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                // if we are on center sprite, bring up the ruletype menu
                 if (this.manhattanDistance2(2,2) == 0) {
+                     // if we are on center sprite, bring up the ruletype menu
                     if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                         this.noMenu();
                     } else {
                         this.noMenu();
-                        this.menu = RuleEditorMenus.RuleTypeMenu
+                        this.menu = RuleEditorMenus.RuleTypeMenu;
+                        this.setTileSaved();
                     }
                 } else if (this.manhattanDistance2(2,2) <=2) {
-                    if (this.menu == RuleEditorMenus.PropositionMenu) {
+                     // otherwise if we are in the diamond, bring up attr menu
+                    if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                         this.noMenu();
                     } else {
-                        this.menu = RuleEditorMenus.PropositionMenu;
-                        this.tileSaved.x = this.cursor.x;
-                        this.tileSaved.y = this.cursor.y;
-                        this.tileSaved.setFlag(SpriteFlag.Invisible, false);
+                        this.menu = RuleEditorMenus.AttrTypeMenu;
+                        this.setTileSaved()
                     }
                 } else if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                     let col = this.cursor.x >> 4;
@@ -372,15 +372,22 @@ namespace tileWorldEditor {
                         this.rule.rt = rt;
                         this.rule.dir = this.dirMap.getPixel(col,row);
                     }
-                } else if (this.menu == RuleEditorMenus.PropositionMenu) {
-                    this.propositionUpdate();
+                } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
+                    this.attrUpdate();
                     return;
                 }
-                this.doit();
+                this.update();
             })
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 // TODO: toolbox menu
             })
+        }
+
+        private setTileSaved() {
+            this.tileSaved.x = this.cursor.x;
+            this.tileSaved.y = this.cursor.y;
+            this.tileSaved.z = 100;
+            this.tileSaved.setFlag(SpriteFlag.Invisible, false);
         }
 
         private noMenu() {
@@ -388,16 +395,17 @@ namespace tileWorldEditor {
             this.tileSaved.setFlag(SpriteFlag.Invisible, true);
             this.showSelected.setFlag(SpriteFlag.Invisible, true);
         }
+        
         private manhattanDistance2(dCol: number, dRow: number) {
             let row = this.cursor.y >> 4
             let col = this.cursor.x >> 4
             return (Math.abs(dCol - col) + Math.abs(dRow - row));
         }
 
-        private doit() {
+        private update() {
             this.menuItems.forEach(m => {
-                let s:Sprite = m.data;       // TODO: file a bug on this -
-                s.destroy();                 // TODO: m.data.destroy() failes
+                let s:Sprite = m.data;   // issue filed
+                s.destroy();             // 
             })
             this.showSprites.forEach(spr => { spr.destroy(); })
             this.showSprites = [];
@@ -417,8 +425,8 @@ namespace tileWorldEditor {
                 this.ruleTypeMap.fill(0xf);
                 this.dirMap.fill(0xf);
                 this.showRuleMenu(-2, 3);
-            } else if (this.menu == RuleEditorMenus.PropositionMenu) {
-                this.propositionMenu()
+            } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
+                this.attrMenu()
             } 
         }
 
@@ -490,25 +498,26 @@ namespace tileWorldEditor {
             return spr;
         }
 
+        private comms: WhenDo[];
         private makeContext() {
-            this.commList = [];
+            this.comms = [];
             let spaceImg = this.manager.empty().image
             for (let i = -2; i <= 2; i++) {
                 for (let j = -2; j <= 2; j++) {
-                   let dist = Math.abs(j) + Math.abs(i);
-                   if (dist <= 2) {
-                       this.showInDiamond(i,j, spaceImg);
-                       if (i!=0 || j!=0) {
+                    let dist = Math.abs(j) + Math.abs(i);
+                    if (dist <= 2) {
+                        this.showInDiamond(i,j, spaceImg);
+                        if (i!=0 || j!=0)
                             this.showAttributes(i,j);
-                       }
-                       if (dist <= 1)
-                        this.buildCommands(i,j);
-                   }
+                        if (dist <= 1)
+                            this.buildCommands(i,j);
+                    }
                 }
             }
-            this.commList.forEach((a,i) => {
+            this.comms.forEach((a,i) => {
                 // get the sprite
-                this.showInDiamond(4,i,spaceImg);
+                let img = this.manager.all()[a.witness].image
+                this.showInDiamond(3,i-1,img);
             })
         }
 
@@ -519,15 +528,18 @@ namespace tileWorldEditor {
 
         // what is ordering of sprites?
         // (0,0) always first
-        private commList: WhenDo[];
         private buildCommands(col: number, row: number) {
-            let item = this.rule.whenDo.find(a => a.col == col + 2 && a.row == row + 2);
+            let item = this.rule.whenDo.find(a => a.col == col && a.row == row);
             if (item) {
-                // TODO: pic witness sprite
                 if (col == 0 && row == 0) {
-                    this.commList.insertAt(0, item);
+                    // witness is already set
+                    this.comms.insertAt(0, item);
                 } else {
-                   let posSprite = this.posSpritePosition(item.attrs, this.manager.fixed().length);
+                   let witness = this.posSpritePosition(item.attrs, this.manager.fixed().length);
+                   if (witness != -1) {
+                        item.witness = witness;
+                        this.comms.push(item);
+                   }
                 }
             }
         }
@@ -561,7 +573,7 @@ namespace tileWorldEditor {
             }
         }
 
-        private propositionMenu() {
+        private attrMenu() {
             // which tile in the diamond are we attributing?
             let attrs = this.getAttrs(this.tileSaved.x >> 4, this.tileSaved.y >> 4);
             // for all user-defined sprites
@@ -593,7 +605,7 @@ namespace tileWorldEditor {
             this.showSelected.setFlag(SpriteFlag.Invisible, false)
         }
 
-        private propositionUpdate() {
+        private attrUpdate() {
             let a = this.attrs.find(a => this.cursor.overlapsWith(a));
             if (a)  this.selectAttr(a);
             let m = this.menuItems.find(m => this.cursor.overlapsWith(m));
