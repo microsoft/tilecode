@@ -29,6 +29,7 @@ type AttrsAt = {
     col: number;
     row: number;
     attrs: AttrType[];
+    witness: number;
     commands: CommandAt[];
 }
 

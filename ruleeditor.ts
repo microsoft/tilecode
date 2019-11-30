@@ -301,7 +301,7 @@ namespace tileWorldEditor {
             // rule Model
             this.ruleType = RuleType.Resting;
             this.ruleDir = TileDir.None;
-            this.attrMap = [{col:0, row:0, attrs:[], commands:[]}];
+            this.attrMap = [{col:0, row:0, attrs:[], witness: -1, commands:[]}];
 
             // rule menu view
             this.ruleTypeMap = image.create(10,7);
@@ -490,6 +490,7 @@ namespace tileWorldEditor {
         }
 
         private makeContext() {
+            this.commList = [];
             let spaceImg = this.manager.empty().image
             for (let i = -2; i <= 2; i++) {
                 for (let j = -2; j <= 2; j++) {
@@ -499,9 +500,15 @@ namespace tileWorldEditor {
                        if (i!=0 || j!=0) {
                             this.showAttributes(i,j);
                        }
+                       if (dist <= 1)
+                        this.buildCommands(i,j);
                    }
                 }
             }
+            this.commList.forEach((a,i) => {
+                // get the sprite
+                this.showInDiamond(4,i,spaceImg);
+            })
         }
 
         private posSpritePosition(attrs: AttrType[], begin: number) {
@@ -509,11 +516,15 @@ namespace tileWorldEditor {
             return (index == -1) ? attrs.indexOf(AttrType.OneOf) : index;
         }
 
+        // what is ordering of sprites?
+        // (0,0) always first
+        private commList: AttrsAt[];
         private buildCommands(col: number, row: number) {
             let item = this.attrMap.find(a => a.col == col + 2 && a.row == row + 2);
             if (item) {
+                // TODO: pic witness sprite
                 if (col == 0 && row == 0) {
-
+                    this.commList.insertAt(0, item);
                 } else {
                    let posSprite = this.posSpritePosition(item.attrs, this.manager.fixed().length);
                 }
@@ -523,8 +534,9 @@ namespace tileWorldEditor {
         private showAttributes(col: number, row: number) {
             let item = this.attrMap.find(a => a.col == col +2 && a.row == row +2);
             if (item) {
-                // if there are includes, just show them (tile first then sprite)
+                // if there are includes, show the first one
                 let index = item.attrs.indexOf(AttrType.Include);
+                // and skip to the other (if it exists)
                 let begin = 0;
                 let end = item.attrs.length-1;
                 if (index != -1) {
@@ -625,7 +637,7 @@ namespace tileWorldEditor {
                 let attrs: AttrType[] = [];
                 // default mapping::everything is possible
                 this.manager.all().forEach(s => { attrs.push(AttrType.OK) });
-                item = { col: col, row: row, attrs: attrs, commands:[] }
+                item = { col: col, row: row, attrs: attrs, witness: -1, commands:[] }
                 this.attrMap.push(item)
             }
             return item.attrs;
