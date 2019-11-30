@@ -516,18 +516,18 @@ namespace tileWorldEditor {
         }
 
         private showCommands() {
-            this.showCommandsAt(-1, this.getWhenDo(2, 2));
-            this.showCommandsAt(0, this.getWhenDo(1, 2));
-            this.showCommandsAt(1, this.getWhenDo(2, 1));
-            this.showCommandsAt(2, this.getWhenDo(3, 2));
-            this.showCommandsAt(3, this.getWhenDo(2, 3));
+            this.showCommandsAt(-1, this.getWhenDo(2, 2), null);
+            this.showCommandsAt(0, this.getWhenDo(1, 2), leftArrow);
+            this.showCommandsAt(1, this.getWhenDo(2, 1), upArrow);
+            this.showCommandsAt(2, this.getWhenDo(3, 2), rightArrow);
+            this.showCommandsAt(3, this.getWhenDo(2, 3), downArrow);
         }
 
-        private showCommandsAt(row: number, whendo: WhenDo) {
+        private showCommandsAt(row: number, whendo: WhenDo, img: Image) {
             let spaceImg = this.manager.empty().image;
-            let img = whendo.witness == -1 ? genericSprite : 
+            let img2 = whendo.witness == -1 ? img : 
                 this.manager.all()[whendo.witness].image;
-            this.showInDiamond(3, row-1, img);
+            this.showInDiamond(3, row-1, img2);
             // show the existing commands
             whendo.commands.forEach((c, j) => this.showCommand(c));
             // space for next command
@@ -539,14 +539,14 @@ namespace tileWorldEditor {
         }
 
         private posSpritePosition(attrs: AttrType[], begin: number) {
-            let index = attrs.indexOf(AttrType.Include);
-            return (index == -1) ? attrs.indexOf(AttrType.OneOf) : index;
+            let index = attrs.indexOf(AttrType.Include,begin);
+            return (index == -1) ? attrs.indexOf(AttrType.OneOf,begin) : index;
         }
 
         // what is ordering of sprites?
         // (0,0) always first
         private findWitness(col: number, row: number) {
-            let item = this.getWhenDo(col, row)
+            let item = this.getWhenDo(2+col, 2+row)
             if (col != 0 || row != 0) {
                 let witness = this.posSpritePosition(item.attrs, this.manager.fixed().length);
                 item.witness = witness;
