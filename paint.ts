@@ -20,21 +20,28 @@ enum AttrType {
     OK        //
 }
 
-type CommandAt = {
+type Command = {
     inst: CommandType;
     arg:  number;
 }
 
-type AttrsAt = {
+type WhenDo = {
     col: number;
     row: number;
     attrs: AttrType[];
-    witness: number;
-    commands: CommandAt[];
+    witness?: number;
+    commands?: Command[];
+}
+
+type Rule  = {
+    kind: number[];
+    rt: RuleType;
+    dir?: TileDir;
+    whenDo: WhenDo[];
 }
 
 // deprecate all below
-
+/*
 type Guard = {
     x: number;
     y: number;
@@ -152,3 +159,4 @@ let ruleAttr: Rule = {
     guards: [ ],
     commands: []
 }
+*/

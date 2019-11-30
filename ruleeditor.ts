@@ -271,12 +271,6 @@ namespace tileWorldEditor {
     }
 
     export class RuleEditor {
-        // the rule type and associated direction (if any)
-        private ruleType: RuleType;
-        private ruleDir: TileDir;
-        // the attribution
-        private attrMap: AttrsAt[];
-
         private background: Image;
         private cursor: Sprite;
 
@@ -296,14 +290,7 @@ namespace tileWorldEditor {
         private commands: Sprite[] = [];
         private toolBox: ToolboxMenu
 
-        constructor(private manager: SpriteManager, 
-                    private centerSprite: Sprite) {  // optional rule
-            // rule Model
-            this.ruleType = RuleType.Resting;
-            this.ruleDir = TileDir.None;
-            this.attrMap = [{col:0, row:0, attrs:[], witness: -1, commands:[]}];
-
-            // rule menu view
+        constructor(private manager: SpriteManager, private rule: Rule) {
             this.ruleTypeMap = image.create(10,7);
             this.dirMap = image.create(10,7);
 
@@ -372,8 +359,8 @@ namespace tileWorldEditor {
                     let row = this.cursor.y >> 4;
                     let rt = this.ruleTypeMap.getPixel(col, row); 
                     if (rt != 0xf) {
-                        this.ruleType = rt;
-                        this.ruleDir = this.dirMap.getPixel(col,row);
+                        this.rule.rt = rt;
+                        this.rule.dir = this.dirMap.getPixel(col,row);
                     }
                 } else if (this.menu == RuleEditorMenus.PropositionMenu) {
                     this.propositionUpdate();
@@ -413,9 +400,9 @@ namespace tileWorldEditor {
             this.background.print("Do", 80, 0);
 
             this.makeContext();
-            this.showInDiamond(0, 0, this.centerSprite.image, 10);
+            this.showInDiamond(0, 0, this.centerImage(), 10);
 
-            this.showRuleType(this.ruleType, this.ruleDir, 0, 0);
+            this.showRuleType(this.rule.rt, this.rule.dir, 0, 0);
             if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                 this.ruleTypeMap.fill(0xf);
                 this.dirMap.fill(0xf);
@@ -423,6 +410,10 @@ namespace tileWorldEditor {
             } else if (this.menu == RuleEditorMenus.PropositionMenu) {
                 this.propositionMenu()
             } 
+        }
+
+        private centerImage() {
+            return this.manager.all()[this.rule.kind[0]].image;
         }
 
         private showRuleMenu(x: number, y: number) {
@@ -442,12 +433,12 @@ namespace tileWorldEditor {
         }
 
         private showRuleType(rt: RuleType, rd: TileDir, x: number, y: number) {
-            let selected = rt == this.ruleType && (rt == RuleType.Resting || rd == this.ruleDir);
+            let selected = rt == this.rule.rt && (rt == RuleType.Resting || rd == this.rule.dir);
             let selCol = 13
             if (selected) {
                 this.background.fillRect((x+2) << 4, (y+2) << 4, 16, 16, selCol)
             }
-            this.showInDiamond(x, y, this.centerSprite.image);
+            this.showInDiamond(x, y, this.centerImage());
             this.ruleTypeMap.setPixel(x+2, y+2, rt);
             this.dirMap.setPixel(x+2, y+2, rd);
             if (rt == RuleType.Moving || rt == RuleType.Colliding) {
@@ -518,9 +509,9 @@ namespace tileWorldEditor {
 
         // what is ordering of sprites?
         // (0,0) always first
-        private commList: AttrsAt[];
+        private commList: WhenDo[];
         private buildCommands(col: number, row: number) {
-            let item = this.attrMap.find(a => a.col == col + 2 && a.row == row + 2);
+            let item = this.rule.whenDo.find(a => a.col == col + 2 && a.row == row + 2);
             if (item) {
                 // TODO: pic witness sprite
                 if (col == 0 && row == 0) {
@@ -532,7 +523,7 @@ namespace tileWorldEditor {
         }
 
         private showAttributes(col: number, row: number) {
-            let item = this.attrMap.find(a => a.col == col +2 && a.row == row +2);
+            let item = this.rule.whenDo.find(a => a.col == col +2 && a.row == row +2);
             if (item) {
                 // if there are includes, show the first one
                 let index = item.attrs.indexOf(AttrType.Include);
@@ -632,13 +623,13 @@ namespace tileWorldEditor {
         }
 
         private getAttrs(col: number, row: number) {
-            let item = this.attrMap.find(a => a.col == col && a.row == row)
+            let item = this.rule.whenDo.find(a => a.col == col && a.row == row)
             if (item == undefined) {
                 let attrs: AttrType[] = [];
                 // default mapping::everything is possible
                 this.manager.all().forEach(s => { attrs.push(AttrType.OK) });
                 item = { col: col, row: row, attrs: attrs, witness: -1, commands:[] }
-                this.attrMap.push(item)
+                this.rule.whenDo.push(item)
             }
             return item.attrs;
         }
@@ -690,7 +681,6 @@ namespace tileWorldEditor {
             this.toolBox = new ToolboxMenu(this.manager.all(), this.commands, (s: string) => { this.closeMenu(s) });
             this.toolBox.show();
         }
-
     } 
 }
 

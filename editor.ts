@@ -120,15 +120,15 @@ namespace tileWorldEditor {
         constructor(private fixedSprites: Sprite [], 
                     private movableSprites: Sprite []) {
 
-            this.fixedSprites.forEach((s, index) => { s.setKind(1+index) })
+            this.fixedSprites.forEach((s, index) => { s.setKind(index) })
             this.movableSprites.forEach((s, index) => {
-                s.setKind(1+index + this.fixedSprites.length)
+                s.setKind(index + this.fixedSprites.length)
             })
             this.allSprites = [];
             this.fixedSprites.forEach(s => { this.allSprites.push(s) })
             this.movableSprites.forEach(s => { this.allSprites.push(s) })
 
-            this.emptySprite = sprites.create(tile,0)
+            this.emptySprite = sprites.create(tile,this.allSprites.length())
             this.emptySprite.data = "Empty"
             this.emptySprite.setFlag(SpriteFlag.Invisible, true)
         }

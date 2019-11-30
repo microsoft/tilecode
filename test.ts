@@ -169,8 +169,13 @@ namespace boulder {
 }
 
 let manager = new tileWorldEditor.SpriteManager(boulder.fixedSprites, boulder.movableSprites)
-let rules = [ruleA, ruleB, ruleC, ruleC_Left, ruleG, ruleH, ruleI]
-let ruleEditor = new tileWorldEditor.RuleEditor(manager, boulder.movableSprites[1])
-//let paint = new tileWorldEditor.PaintRule(manager, ruleAttr);
+let rule: Rule = {
+    kind: [4],
+    rt: RuleType.Resting,
+    dir: TileDir.None,
+    whenDo: [{ col: 0, row: 0, attrs: [], witness: 4, commands: []}]
+}
 
-// let mapEditor = new tileWorldEditor.MapEditor(allSprites)
+let ruleEditor = new tileWorldEditor.RuleEditor(manager, rule)
+
+// let mapEditor = new tileWorldEditor.MapEditor(manager)
