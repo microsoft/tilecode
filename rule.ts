@@ -7,8 +7,8 @@ enum RuleType {
 
 enum CommandType {
     None,
-    Move,
-    Paint,
+    Move,     // arg (direction)
+    Paint,    // arg (tile kind)
     Reverse,
     Stop,
 }

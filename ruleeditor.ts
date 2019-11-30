@@ -4,16 +4,16 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
-        . . . . . 1 1 1 1 1 1 . . . . .
-        . . . . 1 5 5 5 5 5 5 5 . . . .
-        . . . 1 5 5 5 5 5 5 5 5 5 . . .
-        . . . 1 5 5 5 5 5 5 5 5 5 . . .
-        . . . 1 5 5 5 5 5 5 5 5 5 . . .
-        . . . 1 5 5 5 5 5 5 5 5 5 . . .
-        . . . 1 5 5 5 5 5 5 5 5 5 . . .
-        . . . 1 5 5 5 5 5 5 5 5 5 . . .
-        . . . . 5 5 5 5 5 5 5 5 . . . .
-        . . . . . 5 5 5 5 5 5 . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . 5 5 5 5 5 . . . . . .
+        . . . . 5 5 5 5 5 5 5 . . . . .
+        . . . . 5 5 5 5 5 5 5 . . . . .
+        . . . . 5 5 5 5 5 5 5 . . . . .
+        . . . . 5 5 5 5 5 5 5 . . . . .
+        . . . . 5 5 5 5 5 5 5 . . . . .
+        . . . . . 5 5 5 5 5 . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -264,7 +264,7 @@ namespace tileWorldEditor {
             kind: [index],
             rt: RuleType.Resting,
             dir: TileDir.None,
-            whenDo: [{ col: 0, row: 0, attrs: [], witness: index, commands: [] }]
+            whenDo: [{ col: 2, row: 2, attrs: [], witness: index, commands: [] }]
         }
     }
 
@@ -415,7 +415,7 @@ namespace tileWorldEditor {
             this.background.fill(11);
             this.background.fillRect(0, 0, 80, 120, 12);
             this.background.print("When", 0, 0);
-            this.background.print("Do", 80, 0);
+            this.background.print("Do", 65, 0);
 
             this.makeContext();
             this.showInDiamond(0, 0, this.centerImage(), 10);
@@ -498,9 +498,7 @@ namespace tileWorldEditor {
             return spr;
         }
 
-        private comms: WhenDo[];
         private makeContext() {
-            this.comms = [];
             let spaceImg = this.manager.empty().image
             for (let i = -2; i <= 2; i++) {
                 for (let j = -2; j <= 2; j++) {
@@ -510,15 +508,34 @@ namespace tileWorldEditor {
                         if (i!=0 || j!=0)
                             this.showAttributes(i,j);
                         if (dist <= 1)
-                            this.buildCommands(i,j);
+                            this.findWitness(i,j);
                     }
                 }
             }
-            this.comms.forEach((a,i) => {
-                // get the sprite
-                let img = this.manager.all()[a.witness].image
-                this.showInDiamond(3,i-1,img);
-            })
+            this.showCommands();
+        }
+
+        private showCommands() {
+            this.showCommandsAt(-1, this.getWhenDo(2, 2));
+            this.showCommandsAt(0, this.getWhenDo(1, 2));
+            this.showCommandsAt(1, this.getWhenDo(2, 1));
+            this.showCommandsAt(2, this.getWhenDo(3, 2));
+            this.showCommandsAt(3, this.getWhenDo(2, 3));
+        }
+
+        private showCommandsAt(row: number, whendo: WhenDo) {
+            let spaceImg = this.manager.empty().image;
+            let img = whendo.witness == -1 ? genericSprite : 
+                this.manager.all()[whendo.witness].image;
+            this.showInDiamond(3, row-1, img);
+            // show the existing commands
+            whendo.commands.forEach((c, j) => this.showCommand(c));
+            // space for next command
+            this.showInDiamond(4, row-1, spaceImg);
+        }
+
+        private showCommand(c: Command) {
+
         }
 
         private posSpritePosition(attrs: AttrType[], begin: number) {
@@ -528,19 +545,11 @@ namespace tileWorldEditor {
 
         // what is ordering of sprites?
         // (0,0) always first
-        private buildCommands(col: number, row: number) {
-            let item = this.rule.whenDo.find(a => a.col == col && a.row == row);
-            if (item) {
-                if (col == 0 && row == 0) {
-                    // witness is already set
-                    this.comms.insertAt(0, item);
-                } else {
-                   let witness = this.posSpritePosition(item.attrs, this.manager.fixed().length);
-                   if (witness != -1) {
-                        item.witness = witness;
-                        this.comms.push(item);
-                   }
-                }
+        private findWitness(col: number, row: number) {
+            let item = this.getWhenDo(col, row)
+            if (col != 0 || row != 0) {
+                let witness = this.posSpritePosition(item.attrs, this.manager.fixed().length);
+                item.witness = witness;
             }
         }
 
@@ -575,13 +584,13 @@ namespace tileWorldEditor {
 
         private attrMenu() {
             // which tile in the diamond are we attributing?
-            let attrs = this.getAttrs(this.tileSaved.x >> 4, this.tileSaved.y >> 4);
+            let whenDo = this.getWhenDo(this.tileSaved.x >> 4, this.tileSaved.y >> 4);
             // for all user-defined sprites
             let x = -2;
             this.manager.all().forEach((s, i) => {
                 let spr = this.showInDiamond(x, 4, s.image);
                 this.menuItems.push(spr);
-                let sprAttr = sprites.create(attrImages[attrValues.indexOf(attrs[i])]);
+                let sprAttr = sprites.create(attrImages[attrValues.indexOf(whenDo.attrs[i])]);
                 spr.data = sprAttr;
                 spr.setKind(i);
                 sprAttr.x = spr.x; sprAttr.y = spr.y;
@@ -628,8 +637,8 @@ namespace tileWorldEditor {
                            }
                        }
                        if (cnt == 2) {
-                           let attrs = this.getAttrs(this.tileSaved.x >> 4, this.tileSaved.y >> 4);
-                           this.setAttr(this.menuItems[i], attrs[m.kind()]);
+                           let whenDo = this.getWhenDo(this.tileSaved.x >> 4, this.tileSaved.y >> 4);
+                           this.setAttr(this.menuItems[i], whenDo.attrs[m.kind()]);
                        }
                     }
                 } else {
@@ -644,7 +653,7 @@ namespace tileWorldEditor {
             }
         }
 
-        private getAttrs(col: number, row: number) {
+        private getWhenDo(col: number, row: number) {
             let item = this.rule.whenDo.find(a => a.col == col && a.row == row)
             if (item == undefined) {
                 let attrs: AttrType[] = [];
@@ -653,7 +662,7 @@ namespace tileWorldEditor {
                 item = { col: col, row: row, attrs: attrs, witness: -1, commands:[] }
                 this.rule.whenDo.push(item)
             }
-            return item.attrs;
+            return item;
         }
         
         private setFixedOther(m: Sprite, val: AttrType, nonExclude: boolean = false) {
@@ -676,8 +685,8 @@ namespace tileWorldEditor {
         }
         private setAttr(m: Sprite, val: AttrType) {
             let i = attrValues.indexOf(val);
-            let attrs = this.getAttrs(this.tileSaved.x >> 4, this.tileSaved.y >> 4);
-            attrs[m.kind()] = val;
+            let whenDo = this.getWhenDo(this.tileSaved.x >> 4, this.tileSaved.y >> 4);
+            whenDo.attrs[m.kind()] = val;
             (<Sprite>(m.data)).setImage(attrImages[i]);
         }
 
