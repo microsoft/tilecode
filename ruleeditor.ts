@@ -275,14 +275,21 @@ namespace tileWorldEditor {
         let excludeCnt = a.filter((v,i) => v == AttrType.Exclude && begin <= i && i <=end).length;
         let okCnt = a.filter((v,i) => v == AttrType.OK && begin <= i && i <=end).length;
         let cnt = end - begin + 1;
-        let remove = (cnt == okCnt) ? -1 : excludeCnt < okCnt ? AttrType.OK : AttrType.Exclude;
-        a.forEach((v,i) => { if ((remove == -1 || v != remove) && begin <=i && i <=end) res.push(i); })
+        if (okCnt == a.length || excludeCnt == cnt)
+            return res;
+        let remove =
+            (okCnt != 0 && excludeCnt !=0) ? 
+               ((okCnt < excludeCnt) ? AttrType.Exclude : AttrType.OK) : -1; 
+        a.forEach((v,i) => { 
+            if (remove != v && begin <=i && i <=end) res.push(i); 
+        })
         return res;
     }
 
     export class RuleEditor {
         private background: Image;
         private cursor: Sprite;
+        private otherCursor: Sprite;
 
         // in-world menus
         private menu: RuleEditorMenus;
@@ -321,11 +328,16 @@ namespace tileWorldEditor {
             // Control
             this.commands.push(mapSprite);
             this.menu = RuleEditorMenus.None;
-            this.cursor = sprites.create(cursorIn, SpriteKind.Player)
+            this.cursor = sprites.create(cursorIn)
             this.cursor.setFlag(SpriteFlag.Invisible, false)
             this.cursor.x = 40
-            this.cursor.y = 56
+            this.cursor.y = 40
             this.cursor.z = 50;
+            this.otherCursor = sprites.create(cursorOut)
+            this.otherCursor.setFlag(SpriteFlag.Invisible, true)
+            this.otherCursor.x = 88
+            this.otherCursor.y = 40
+            this.otherCursor.z = 50;
 
             // refresh display
             this.update();
@@ -333,21 +345,25 @@ namespace tileWorldEditor {
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
                 if ((this.cursor.x >> 4) > 0)
                     this.cursor.x -= 16
+                this.cursorMove();
             })
             controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
                 if ((this.cursor.x >> 4) < 9)
                     this.cursor.x += 16
+                this.cursorMove();
             })
             controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
                 if ((this.cursor.y >> 4) > 0)
-                    this.cursor.y -= 16
+                    this.cursor.y -= 16;
+                this.cursorMove();
             })
             controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
                 if ((this.cursor.y >> 4) < 6)
-                    this.cursor.y += 16
+                    this.cursor.y += 16;
+                this.cursorMove();
             })
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.manhattanDistance2(2,2) == 0) {
+                if (this.manhattanDistance2() == 0) {
                      // if we are on center sprite, bring up the ruletype menu
                     if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                         this.noMenu();
@@ -356,7 +372,7 @@ namespace tileWorldEditor {
                         this.menu = RuleEditorMenus.RuleTypeMenu;
                         this.setTileSaved();
                     }
-                } else if (this.manhattanDistance2(2,2) <=2) {
+                } else if (this.manhattanDistance2() <=2) {
                      // otherwise if we are in the diamond, bring up attr menu
                     if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                         this.noMenu();
@@ -383,6 +399,22 @@ namespace tileWorldEditor {
             })
         }
 
+        private cursorMove() {
+            if (this.menu == RuleEditorMenus.None) {
+                if (this.manhattanDistance2() <= 1) {
+                    // compute mapping from left to right hand side
+                    this.otherCursor.setFlag(SpriteFlag.Invisible, false);
+                } else if (this.cursor.x >= 80 && this.cursor.y < 80) {
+                    // compute mapping from right to left hand side
+                    this.otherCursor.setFlag(SpriteFlag.Invisible, false);
+                } else {
+                    this.otherCursor.setFlag(SpriteFlag.Invisible, true);
+                }
+            } else {
+
+            }
+        }
+
         private setTileSaved() {
             this.tileSaved.x = this.cursor.x;
             this.tileSaved.y = this.cursor.y;
@@ -396,10 +428,10 @@ namespace tileWorldEditor {
             this.showSelected.setFlag(SpriteFlag.Invisible, true);
         }
         
-        private manhattanDistance2(dCol: number, dRow: number) {
+        private manhattanDistance2() {
             let row = this.cursor.y >> 4
             let col = this.cursor.x >> 4
-            return (Math.abs(dCol - col) + Math.abs(dRow - row));
+            return (Math.abs(2 - col) + Math.abs(2 - row));
         }
 
         private update() {
@@ -516,9 +548,9 @@ namespace tileWorldEditor {
         }
 
         private showCommands() {
-            this.showCommandsAt(-1, this.getWhenDo(2, 2), null);
+            this.showCommandsAt(-1, this.getWhenDo(2, 1), upArrow);
             this.showCommandsAt(0, this.getWhenDo(1, 2), leftArrow);
-            this.showCommandsAt(1, this.getWhenDo(2, 1), upArrow);
+            this.showCommandsAt(1, this.getWhenDo(2, 2), null);
             this.showCommandsAt(2, this.getWhenDo(3, 2), rightArrow);
             this.showCommandsAt(3, this.getWhenDo(2, 3), downArrow);
         }
@@ -534,6 +566,11 @@ namespace tileWorldEditor {
             this.showInDiamond(4, row-1, spaceImg);
         }
 
+        // TODO: editing model for commands
+        // - selecting first column - does it do anything?
+        // - selecting space shows menu options for the space
+        // - selecting existing command (...)
+        // - how to delete a command (or reset a row?)
         private showCommand(c: Command) {
 
         }
@@ -595,7 +632,6 @@ namespace tileWorldEditor {
                 spr.setKind(i);
                 sprAttr.x = spr.x; sprAttr.y = spr.y;
                 x++;
-                if (i==this.manager.fixed().length-1) x++;
             });
             x = -2;
             attrsCentered.forEach((img,i) => {
