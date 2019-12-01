@@ -398,6 +398,8 @@ namespace tileWorldEditor {
                 } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                     this.attrUpdate();
                     return;
+                } else if (this.menu == RuleEditorMenus.CommandMenu) {
+                    this.commandUpdate();
                 }
                 this.update(tryEdit);
             })
@@ -625,11 +627,6 @@ namespace tileWorldEditor {
             return col;
         }
 
-        // TODO: 1. essentially, we eliminate commands from menu that already appeared
-        // TODO: 2. click on move command, options are (change direction, delete)
-        // TODO: 3. click on paint command, options are delete (deletes argument)
-        // TODO: 4. click on tile of paint command, options are change
-
         private editCommand() {
             let overlapsCursor: Sprite = null;
             let tokensRemaining: CommandTokens[] = 
@@ -651,14 +648,14 @@ namespace tileWorldEditor {
             if (overlapsCursor.kind() == CommandTokens.SpaceTile && tokensRemaining.length > 0) {
                 this.makeCommandMenu(tokensRemaining);
             } else {
-                // we are editing existing command base on what we overlap
+                // we are editing existing command based on what we overlap
                 
             }
         }
 
+        private menuSprites: Sprite[];
         private makeCommandMenu(tokens: CommandTokens[]) {
-            // find the corresponding when-do
-            let whenDo = this.getWhenDo(this.otherCursor.x >> 4, this.otherCursor.y >> 4);
+            this.menuSprites = [];
             this.menu = RuleEditorMenus.CommandMenu;
             this.setTileSaved();
             let col = 3;
@@ -667,22 +664,49 @@ namespace tileWorldEditor {
             ) {
                 // show the available tiles for painting with
                 this.manager.fixed().forEach((s,i) => {
-                    let spr = this.showInDiamond(col+i, 3, s.image)
+                    let spr = this.showInDiamond(col+i, 3, s.image);
+                    spr.setKind(CommandTokens.PaintTile);
+                    this.menuSprites.push(spr);
                 })
             } else {
                 // show the commands
                 tokens.forEach(ct => {
                     if (ct == CommandTokens.MoveArrow) {
                         arrowValues.forEach((v, i) => {
-                            let spr = this.showInDiamond(col, 3, arrowImages[arrowValues.indexOf(v)])
+                            let spr = this.showInDiamond(col, 3, arrowImages[arrowValues.indexOf(v)]);
+                            spr.setKind(ct);
+                            this.menuSprites.push(spr);
                             col++ 
                         })
                     } else if (ct == CommandTokens.PaintBrush) {
-                        let spr = this.showInDiamond(col, 3, paintSprite.image)
+                        let spr = this.showInDiamond(col, 3, paintSprite.image);
+                        spr.setKind(ct);
+                        this.menuSprites.push(spr);
                         col++;
                     }
                 });
             }
+        }
+
+        private commandUpdate() {
+            // find the corresponding when-do
+            let whenDo = this.getWhenDo(this.otherCursor.x >> 4, this.otherCursor.y >> 4);
+            this.menuSprites.forEach(s => {
+                if (s.kind() == CommandTokens.MoveArrow) {
+                    whenDo.commands.push({
+                        inst: CommandType.Move,
+                        arg: arrowValues[arrowImages.indexOf(s.image)]
+                    })
+                } else if (s.kind() == CommandTokens.PaintBrush) {
+                    whenDo.commands.push({
+                        inst: CommandType.Paint,
+                        arg: -1
+                    })
+                } else {
+                    let paint = whenDo.commands.find(c => c.inst == CommandType.Paint);
+                    paint.arg = this.manager.fixed().find(f => f.image == s.image).kind();
+                }
+            })
         }
 
         private posSpritePosition(attrs: AttrType[], begin: number) {
