@@ -596,8 +596,10 @@ namespace tileWorldEditor {
             this.showInDiamond(3, row-1, img2);
             // show the existing commands
             let col = 4;
-            whendo.commands.forEach((c, j) => { col = this.showCommand(col, row-1, c) });
-            // space for next command
+            whendo.commands.forEach((c, j) => { 
+                col = this.showCommand(col, row-1, c) 
+            });
+            // space for next command (if there is one, may not be)
             let spr = this.showInDiamond(col, row-1, spaceImg);
             spr.setKind(CommandTokens.SpaceTile);
             this.commandSprites.push(spr);
@@ -674,7 +676,7 @@ namespace tileWorldEditor {
             } else {
                 // show the commands
                 tokens.forEach(ct => {
-                    if (ct == CommandTokens.MoveArrow) {
+                    if (ct == CommandTokens.MoveArrow && this.whenDo.witness != -1) {
                         arrowValues.forEach((v, i) => {
                             let spr = this.showInDiamond(col, 4, arrowImages[arrowValues.indexOf(v)]);
                             spr.setKind(ct);
