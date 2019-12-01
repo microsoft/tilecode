@@ -264,7 +264,9 @@ namespace tileWorldEditor {
             kind: [index],
             rt: RuleType.Resting,
             dir: TileDir.None,
-            whenDo: [{ col: 2, row: 2, attrs: [], witness: index, commands: [] }]
+            whenDo: [{ col: 2, row: 2, attrs: [], witness: index, 
+                    commands: [{inst: CommandType.Move, arg: TileDir.Down},
+                               {inst: CommandType.Paint, arg: 2 }] }]
         }
     }
 
@@ -293,10 +295,10 @@ namespace tileWorldEditor {
 
         // in-world menus
         private menu: RuleEditorMenus;
-        // rule type menu
+        // rule type state
         private ruleTypeMap: Image;
         private dirMap: Image;
-        // attribute menu
+        // whendo state
         private tileSaved: Sprite;
         private showSelected: Sprite;
         private attrSelected: Sprite;
@@ -310,7 +312,7 @@ namespace tileWorldEditor {
         constructor(private manager: SpriteManager, private rule: Rule) {
             this.ruleTypeMap = image.create(10,7);
             this.dirMap = image.create(10,7);
-
+            
             // attribute menu view
             this.attrSelected = null;
             this.attrs = [];
@@ -333,6 +335,7 @@ namespace tileWorldEditor {
             this.cursor.x = 40
             this.cursor.y = 40
             this.cursor.z = 50;
+            // linked cursor
             this.otherCursor = sprites.create(cursorOut)
             this.otherCursor.setFlag(SpriteFlag.Invisible, true)
             this.otherCursor.x = 88
@@ -399,36 +402,49 @@ namespace tileWorldEditor {
             })
         }
 
-        private cursorMove() {
-            if (this.menu == RuleEditorMenus.None) {
-                if (this.manhattanDistance2() <= 1) {
-                    // compute mapping from left to right hand side
-                    this.otherCursor.setFlag(SpriteFlag.Invisible, false);
-                    let col = this.cursor.x >> 4;
-                    let row = this.cursor.y >> 4;
-                    this.otherCursor.x = 88;
-                    if (col == 1) this.otherCursor.y = 24;
-                    else if (col == 3) this.otherCursor.y = 56;
-                    else if (row == 1) this.otherCursor.y = 8;
-                    else if (row == 3) this.otherCursor.y = 72;
-                    else this.otherCursor.y = 40;   
-                } else if (this.cursor.x >= 80 && this.cursor.y < 80) {
-                    // compute mapping from right to left hand side
-                    this.otherCursor.setFlag(SpriteFlag.Invisible, false);
-                    let row = this.cursor.y >> 4;
-                    if (row == 0 || row == 2 || row == 4)
-                        this.otherCursor.x = 40;
-                    else
-                        this.otherCursor.x = (row == 1) ? 24 : 56;
-                    if (1 <= row && row <=3)
-                        this.otherCursor.y = 40;
-                    else
-                        this.otherCursor.y = (row == 0) ? 24 : 56;
-                } else {
-                    this.otherCursor.setFlag(SpriteFlag.Invisible, true);
-                }
-            } else {
+        // TODO: editing model for commands
+        // - selecting first column - does it do anything? NO
+        // - selecting space shows menu options for the space
+        // - selecting existing command (...)
+        // - how to delete a command (or reset a row?)
 
+        private cursorMove() {
+            this.otherCursorMove();
+            if (this.menu == RuleEditorMenus.None) {
+                // TODO: show attributes instead of menu on hover
+                if (this.manhattanDistance2() <= 2) {
+                    let col = this.cursor.x >> 4;
+                    let row = this.cursor.y >> 4;                    
+                }
+            }
+        }
+
+        private otherCursorMove() {
+            if (this.manhattanDistance2() <= 1) {
+                // compute mapping from left to right hand side
+                this.otherCursor.setFlag(SpriteFlag.Invisible, false);
+                let col = this.cursor.x >> 4;
+                let row = this.cursor.y >> 4;
+                this.otherCursor.x = 88;
+                if (col == 1) this.otherCursor.y = 24;
+                else if (col == 3) this.otherCursor.y = 56;
+                else if (row == 1) this.otherCursor.y = 8;
+                else if (row == 3) this.otherCursor.y = 72;
+                else this.otherCursor.y = 40;
+            } else if (this.cursor.x >= 80 && this.cursor.y < 80) {
+                // compute mapping from right to left hand side
+                this.otherCursor.setFlag(SpriteFlag.Invisible, false);
+                let row = this.cursor.y >> 4;
+                if (row == 0 || row == 2 || row == 4)
+                    this.otherCursor.x = 40;
+                else
+                    this.otherCursor.x = (row == 1) ? 24 : 56;
+                if (1 <= row && row <= 3)
+                    this.otherCursor.y = 40;
+                else
+                    this.otherCursor.y = (row == 0) ? 24 : 56;
+            } else {
+                this.otherCursor.setFlag(SpriteFlag.Invisible, true);
             }
         }
 
@@ -536,13 +552,10 @@ namespace tileWorldEditor {
 
         private showSprites: Sprite[] = [];
         private showInDiamond(c: number, r: number, img: Image, z: number = 0) {
-            // the center of the diamond
-            let centerX = 2 * 16 + 8
-            let centerY = 2 * 16 + 8
             let spr = sprites.create(img);
             spr.z = z;
-            spr.x = centerX + c * 16;
-            spr.y = centerY + r * 16;
+            spr.x = 2*16 + c * 16 + 8;
+            spr.y = 2*16 + r * 16 + 8;
             this.showSprites.push(spr);
             return spr;
         }
@@ -565,31 +578,35 @@ namespace tileWorldEditor {
         }
 
         private showCommands() {
-            this.showCommandsAt(-1, this.getWhenDo(2, 1), upArrow);
-            this.showCommandsAt(0, this.getWhenDo(1, 2), leftArrow);
-            this.showCommandsAt(1, this.getWhenDo(2, 2), null);
-            this.showCommandsAt(2, this.getWhenDo(3, 2), rightArrow);
-            this.showCommandsAt(3, this.getWhenDo(2, 3), downArrow);
+            this.showCommandsAt(-1, this.getWhenDo(2, 1));
+            this.showCommandsAt(0, this.getWhenDo(1, 2));
+            this.showCommandsAt(1, this.getWhenDo(2, 2));
+            this.showCommandsAt(2, this.getWhenDo(3, 2));
+            this.showCommandsAt(3, this.getWhenDo(2, 3));
         }
 
-        private showCommandsAt(row: number, whendo: WhenDo, img: Image) {
+        private showCommandsAt(row: number, whendo: WhenDo) {
             let spaceImg = this.manager.empty().image;
             let img2 = whendo.witness == -1 ? genericSprite : 
                 this.manager.all()[whendo.witness].image;
             this.showInDiamond(3, row-1, img2);
             // show the existing commands
-            whendo.commands.forEach((c, j) => this.showCommand(c));
+            let col = 4;
+            whendo.commands.forEach((c, j) => { col = this.showCommand(col, row-1, c) });
             // space for next command
-            this.showInDiamond(4, row-1, spaceImg);
+            this.showInDiamond(col, row-1, spaceImg);
         }
 
-        // TODO: editing model for commands
-        // - selecting first column - does it do anything?
-        // - selecting space shows menu options for the space
-        // - selecting existing command (...)
-        // - how to delete a command (or reset a row?)
-        private showCommand(c: Command) {
-
+        private showCommand(col: number, row: number, c: Command) {
+            if (c.inst == CommandType.Move) {
+                this.showInDiamond(col, row, arrowImages[arrowValues.indexOf(c.arg)]);
+                col = col + 1;
+            } else if (c.inst == CommandType.Paint) {
+                this.showInDiamond(col, row, paintSprite.image);
+                this.showInDiamond(col+1, row, this.manager.fixed()[c.arg].image);
+                col = col + 2;
+            }
+            return col;
         }
 
         private posSpritePosition(attrs: AttrType[], begin: number) {

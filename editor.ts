@@ -1,7 +1,7 @@
 namespace tileWorldEditor {
 
     // world editing sprites
-    export const tile = img`
+    export const emptyTile = img`
         b b b b b b b b b b b b b b b c
         b f f f f f f f f f f f f f f c
         b f f f f f f f f f f f f f f c
@@ -128,7 +128,7 @@ namespace tileWorldEditor {
             this.fixedSprites.forEach(s => { this.allSprites.push(s) })
             this.movableSprites.forEach(s => { this.allSprites.push(s) })
 
-            this.emptySprite = sprites.create(tile,this.allSprites.length())
+            this.emptySprite = sprites.create(emptyTile,this.allSprites.length())
             this.emptySprite.data = "Empty"
             this.emptySprite.setFlag(SpriteFlag.Invisible, true)
         }
@@ -185,7 +185,7 @@ namespace tileWorldEditor {
             scene.cameraFollowSprite(this.cursor)
             this.cursorAnim = animation.createAnimation(0, 333)
             this.cursorAnim.frames.push(mapSprite.image)
-            this.cursorAnim.frames.push(tile)
+            this.cursorAnim.frames.push(emptyTile)
             animation.attachAnimation(this.cursor, this.cursorAnim)
             animation.setAction(this.cursor, 0)
 
