@@ -617,7 +617,7 @@ namespace tileWorldEditor {
                 this.commandSprites.push(spr);
                 col = col + 1;
                 if (c.arg != -1) {
-                    spr = this.showInDiamond(col+1, row, this.manager.fixed()[c.arg].image);
+                    spr = this.showInDiamond(col, row, this.manager.fixed()[c.arg].image);
                     spr.data = c;
                     spr.setKind(CommandTokens.PaintTile);
                     this.commandSprites.push(spr);
@@ -649,13 +649,16 @@ namespace tileWorldEditor {
                 this.makeCommandMenu(tokensRemaining);
             } else {
                 // we are editing existing command based on what we overlap
-                
+                this.modifyCommandMenu(overlapsCursor);
             }
         }
 
         private menuSprites: Sprite[];
+        private whenDo: WhenDo;
         private makeCommandMenu(tokens: CommandTokens[]) {
             this.menuSprites = [];
+            this.modifyCommand = null;
+            this.whenDo = this.getWhenDo(this.otherCursor.x >> 4, this.otherCursor.y >> 4);
             this.menu = RuleEditorMenus.CommandMenu;
             this.setTileSaved();
             let col = 3;
@@ -664,7 +667,7 @@ namespace tileWorldEditor {
             ) {
                 // show the available tiles for painting with
                 this.manager.fixed().forEach((s,i) => {
-                    let spr = this.showInDiamond(col+i, 3, s.image);
+                    let spr = this.showInDiamond(col+i, 4, s.image);
                     spr.setKind(CommandTokens.PaintTile);
                     this.menuSprites.push(spr);
                 })
@@ -673,13 +676,13 @@ namespace tileWorldEditor {
                 tokens.forEach(ct => {
                     if (ct == CommandTokens.MoveArrow) {
                         arrowValues.forEach((v, i) => {
-                            let spr = this.showInDiamond(col, 3, arrowImages[arrowValues.indexOf(v)]);
+                            let spr = this.showInDiamond(col, 4, arrowImages[arrowValues.indexOf(v)]);
                             spr.setKind(ct);
                             this.menuSprites.push(spr);
                             col++ 
                         })
                     } else if (ct == CommandTokens.PaintBrush) {
-                        let spr = this.showInDiamond(col, 3, paintSprite.image);
+                        let spr = this.showInDiamond(col, 4, paintSprite.image);
                         spr.setKind(ct);
                         this.menuSprites.push(spr);
                         col++;
@@ -688,25 +691,43 @@ namespace tileWorldEditor {
             }
         }
 
+        private modifyCommand: Sprite;
+        private modifyCommandMenu(s: Sprite) {
+            this.modifyCommand = s;
+            this.whenDo = null;
+            if (s.kind() == CommandTokens.MoveArrow) {
+
+            } else if (s.kind() == CommandTokens.PaintBrush) {
+
+            } else if (s.kind() == CommandTokens.PaintTile) {
+
+            }
+        }
+
         private commandUpdate() {
-            // find the corresponding when-do
-            let whenDo = this.getWhenDo(this.otherCursor.x >> 4, this.otherCursor.y >> 4);
+            if (this.menu != RuleEditorMenus.CommandMenu)
+                return;
+            this.noMenu();
             this.menuSprites.forEach(s => {
-                if (s.kind() == CommandTokens.MoveArrow) {
-                    whenDo.commands.push({
-                        inst: CommandType.Move,
-                        arg: arrowValues[arrowImages.indexOf(s.image)]
-                    })
-                } else if (s.kind() == CommandTokens.PaintBrush) {
-                    whenDo.commands.push({
-                        inst: CommandType.Paint,
-                        arg: -1
-                    })
-                } else {
-                    let paint = whenDo.commands.find(c => c.inst == CommandType.Paint);
-                    paint.arg = this.manager.fixed().find(f => f.image == s.image).kind();
+                if (this.cursor.overlapsWith(s)) {
+                    if (s.kind() == CommandTokens.MoveArrow) {
+                        this.whenDo.commands.push({
+                            inst: CommandType.Move,
+                            arg: arrowValues[arrowImages.indexOf(s.image)]
+                        })
+                    } else if (s.kind() == CommandTokens.PaintBrush) {
+                        // TODO: combine the two into one?
+                        this.whenDo.commands.push({
+                            inst: CommandType.Paint,
+                            arg: -1
+                        })
+                    } else {
+                        let paint = this.whenDo.commands.find(c => c.inst == CommandType.Paint);
+                        paint.arg = this.manager.fixed().find(f => f.image == s.image).kind();
+                    }
                 }
             })
+            // TODO: refresh and move cursor to the right
         }
 
         private posSpritePosition(attrs: AttrType[], begin: number) {
