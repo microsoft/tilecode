@@ -594,8 +594,15 @@ namespace tileWorldEditor {
             let col = 4;
             whendo.commands.forEach((c, j) => { col = this.showCommand(col, row-1, c) });
             // space for next command
+            // TODO: record this for editing (add command)
             this.showInDiamond(col, row-1, spaceImg);
         }
+
+        // TODO: options for space depend on what comes before
+        // Need a little state machine here
+        // TODO: 2. click on move command, options are (change direction, delete)
+        // TODO: 3. click on paint command, options are delete (deletes argument)
+        // TODO: 4. click on tile of paint command, options are change
 
         private showCommand(col: number, row: number, c: Command) {
             if (c.inst == CommandType.Move) {
