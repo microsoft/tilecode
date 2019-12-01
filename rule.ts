@@ -33,10 +33,17 @@ type WhenDo = {
     commands?: Command[];
 }
 
+enum Generalize {
+    None,
+    TwoWay,
+    FourWay
+}
+
 type Rule = {
     kind: number[];
     rt: RuleType;
     dir?: TileDir;
+    generalize: Generalize;
     whenDo: WhenDo[];
 }
 
