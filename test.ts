@@ -145,7 +145,8 @@ namespace boulder {
         f f f f f f f f f c c c c c c f
     `
 
-    // readable names are the keys to sprites (not kinds)
+    // names are just here for convenience - they are not used
+    // for 
     let movableNames = ["Player", "Boulder", "Diamond", "Enemy"]
     let movable = [player, boulder, diamond, enemy]
     let fixedNames = ["Wall", "Dirt", "Space"]

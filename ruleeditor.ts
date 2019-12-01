@@ -264,10 +264,8 @@ namespace tileWorldEditor {
             kind: [index],
             rt: RuleType.Resting,
             dir: TileDir.None,
-            generalize: Generalize.None,
+            generalize: [],
             whenDo: [{ col: 2, row: 2, attrs: [], witness: index, commands: []}]
-            //        commands: [{inst: CommandType.Move, arg: TileDir.Down},
-            //                   {inst: CommandType.Paint, arg: 2 }] }]
         }
     }
 
