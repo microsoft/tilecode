@@ -270,7 +270,8 @@ namespace tileWorldEditor {
         }
     }
 
-    enum RuleEditorMenus { RuleTypeMenu, AttrTypeMenu, None };
+    enum RuleEditorMenus { RuleTypeMenu, AttrTypeMenu, CommandMenu, None };
+    enum CommandTokens { MoveArrow, PaintBrush, PaintTile, SpaceTile };
 
     function projectAttrs(a: AttrType[], begin: number, end: number): number[] {
         let res: number[] = [];
@@ -383,9 +384,9 @@ namespace tileWorldEditor {
                         this.menu = RuleEditorMenus.AttrTypeMenu;
                         this.setTileSaved()
                     }
-                } else if (this.cursor.x >= 80 && this.cursor.y < 80) {
+                } else if (this.cursor.x >= 96 && this.cursor.y < 80) {
                     // inside the coding area
-                    this.startCoding(); 
+                    this.editCommand(); 
                 } else if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                     let col = this.cursor.x >> 4;
                     let row = this.cursor.y >> 4;
@@ -574,7 +575,9 @@ namespace tileWorldEditor {
             this.showCommands();
         }
 
+        private commandSprites: Sprite[];
         private showCommands() {
+            this.commandSprites = []
             this.showCommandsAt(-1, this.getWhenDo(2, 1));
             this.showCommandsAt(0, this.getWhenDo(1, 2));
             this.showCommandsAt(1, this.getWhenDo(2, 2));
@@ -591,26 +594,90 @@ namespace tileWorldEditor {
             let col = 4;
             whendo.commands.forEach((c, j) => { col = this.showCommand(col, row-1, c) });
             // space for next command
-            // TODO: record this for editing (add command)
-            this.showInDiamond(col, row-1, spaceImg);
+            let spr = this.showInDiamond(col, row-1, spaceImg);
+            spr.setKind(CommandTokens.SpaceTile);
+            this.commandSprites.push(spr);
+        }
+
+        private showCommand(col: number, row: number, c: Command) {
+            if (c.inst == CommandType.Move) {
+                let spr = this.showInDiamond(col, row, arrowImages[arrowValues.indexOf(c.arg)]);
+                spr.setKind(CommandTokens.MoveArrow);
+                spr.data = c;
+                this.commandSprites.push(spr);
+                col = col + 1;
+            } else if (c.inst == CommandType.Paint) {
+                let spr = this.showInDiamond(col, row, paintSprite.image);
+                spr.setKind(CommandTokens.PaintBrush);
+                spr.data = c;
+                this.commandSprites.push(spr);
+                col = col + 1;
+                if (c.arg != -1) {
+                    spr = this.showInDiamond(col+1, row, this.manager.fixed()[c.arg].image);
+                    spr.data = c;
+                    spr.setKind(CommandTokens.PaintTile);
+                    this.commandSprites.push(spr);
+                    col = col + 1;
+                }
+            }
+            return col;
         }
 
         // TODO: options for space depend on what comes before
-        // Need a little state machine here
+        // TODO: 1. essentially, we eliminate commands from menu that already appeared
         // TODO: 2. click on move command, options are (change direction, delete)
         // TODO: 3. click on paint command, options are delete (deletes argument)
         // TODO: 4. click on tile of paint command, options are change
 
-        private showCommand(col: number, row: number, c: Command) {
-            if (c.inst == CommandType.Move) {
-                this.showInDiamond(col, row, arrowImages[arrowValues.indexOf(c.arg)]);
-                col = col + 1;
-            } else if (c.inst == CommandType.Paint) {
-                this.showInDiamond(col, row, paintSprite.image);
-                this.showInDiamond(col+1, row, this.manager.fixed()[c.arg].image);
-                col = col + 2;
+        private editCommand() {
+            // read off the sprites from left to right in the row
+            let overlapsCursor: Sprite = null;
+            let tokensRemaining: CommandTokens[] = 
+                [CommandTokens.MoveArrow, CommandTokens.PaintBrush, CommandTokens.PaintTile,
+                 CommandTokens.SpaceTile
+                ];
+            this.commandSprites.forEach(c => {
+                if (c.y == this.cursor.y) {
+                    tokensRemaining.removeElement(c.kind());
+                    if (c.x == this.cursor.x) {
+                        overlapsCursor = c;
+                    }
+                }
+            })
+            // nothing to do here
+            if (overlapsCursor == null)
+                return;
+            if (overlapsCursor.kind() == CommandTokens.SpaceTile) {
+                // find the corresponding when-do
+                let whenDo = this.getWhenDo(this.otherCursor.x >> 4, this.otherCursor.y >> 4);
+                if (tokensRemaining.indexOf(CommandTokens.PaintTile) != -1 && 
+                    tokensRemaining.indexOf(CommandTokens.PaintBrush) == -1
+                    ) {
+                    this.menu = RuleEditorMenus.CommandMenu;
+                    // show the available tiles for painting with
+                } else {
+                    if (tokensRemaining.length == 0)
+                        return;
+                    this.menu = RuleEditorMenus.CommandMenu;
+                    // show the commands
+                    tokensRemaining.forEach(ct => {
+                        // make the menu 
+                    });
+                }
+            } else {
+                // we are editing existing command base on what we overlap
+                this.menu = RuleEditorMenus.CommandMenu;
             }
-            return col;
+
+            // create the menu based on position
+            arrowValues.forEach((v,i) => {
+                // create arrows for move 
+            })
+            // paintSprite;
+            this.manager.fixed().forEach(s => {
+                // paint tiles
+            })
+            // delete
         }
 
         private posSpritePosition(attrs: AttrType[], begin: number) {
@@ -763,10 +830,6 @@ namespace tileWorldEditor {
             let whenDo = this.getWhenDo(this.tileSaved.x >> 4, this.tileSaved.y >> 4);
             whenDo.attrs[m.kind()] = val;
             (<Sprite>(m.data)).setImage(attrImages[i]);
-        }
-
-        private startCoding() {
-
         }
         
         private closeMenu(command: string) {
