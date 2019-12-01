@@ -383,6 +383,9 @@ namespace tileWorldEditor {
                         this.menu = RuleEditorMenus.AttrTypeMenu;
                         this.setTileSaved()
                     }
+                } else if (this.cursor.x >= 80 && this.cursor.y < 80) {
+                    // inside the coding area
+                    this.startCoding(); 
                 } else if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                     let col = this.cursor.x >> 4;
                     let row = this.cursor.y >> 4;
@@ -401,12 +404,6 @@ namespace tileWorldEditor {
                 // TODO: toolbox menu
             })
         }
-
-        // TODO: editing model for commands
-        // - selecting first column - does it do anything? NO
-        // - selecting space shows menu options for the space
-        // - selecting existing command (...)
-        // - how to delete a command (or reset a row?)
 
         private cursorMove() {
             this.otherCursorMove();
@@ -760,6 +757,7 @@ namespace tileWorldEditor {
                 }
             }
         }
+
         private setAttr(m: Sprite, val: AttrType) {
             let i = attrValues.indexOf(val);
             let whenDo = this.getWhenDo(this.tileSaved.x >> 4, this.tileSaved.y >> 4);
@@ -767,6 +765,10 @@ namespace tileWorldEditor {
             (<Sprite>(m.data)).setImage(attrImages[i]);
         }
 
+        private startCoding() {
+
+        }
+        
         private closeMenu(command: string) {
             if (this.toolBox) {
                 this.toolBox.dispose();
