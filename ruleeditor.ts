@@ -344,7 +344,7 @@ namespace tileWorldEditor {
             this.otherCursor.z = 50;
 
             // refresh display
-            this.update();
+            this.update(false);
 
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
                 if ((this.cursor.x >> 4) > 0)
@@ -367,6 +367,7 @@ namespace tileWorldEditor {
                 this.cursorMove();
             })
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
+                let tryEdit = false;
                 if (this.manhattanDistance2() == 0) {
                      // if we are on center sprite, bring up the ruletype menu
                     if (this.menu == RuleEditorMenus.RuleTypeMenu) {
@@ -385,8 +386,7 @@ namespace tileWorldEditor {
                         this.setTileSaved()
                     }
                 } else if (this.cursor.x >= 96 && this.cursor.y < 80) {
-                    // inside the coding area
-                    this.editCommand(); 
+                    tryEdit = true;
                 } else if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                     let col = this.cursor.x >> 4;
                     let row = this.cursor.y >> 4;
@@ -399,7 +399,7 @@ namespace tileWorldEditor {
                     this.attrUpdate();
                     return;
                 }
-                this.update();
+                this.update(tryEdit);
             })
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 // TODO: toolbox menu
@@ -465,7 +465,7 @@ namespace tileWorldEditor {
             return (Math.abs(2 - col) + Math.abs(2 - row));
         }
 
-        private update() {
+        private update(tryEdit: boolean) {
             this.menuItems.forEach(m => {
                 let s:Sprite = m.data;   // issue filed
                 s.destroy();             // 
@@ -484,7 +484,9 @@ namespace tileWorldEditor {
             this.showInDiamond(0, 0, this.centerImage(), 10);
 
             this.showRuleType(this.rule.rt, this.rule.dir, 0, 0);
-            if (this.menu == RuleEditorMenus.RuleTypeMenu) {
+            if (tryEdit) {
+                this.editCommand();
+            } if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                 this.ruleTypeMap.fill(0xf);
                 this.dirMap.fill(0xf);
                 this.showRuleMenu(-2, 3);
@@ -659,7 +661,7 @@ namespace tileWorldEditor {
             let whenDo = this.getWhenDo(this.otherCursor.x >> 4, this.otherCursor.y >> 4);
             this.menu = RuleEditorMenus.CommandMenu;
             this.setTileSaved();
-            let col = 7;
+            let col = 3;
             if (tokens.indexOf(CommandTokens.PaintTile) != -1 &&
                 tokens.indexOf(CommandTokens.PaintBrush) == -1
             ) {
