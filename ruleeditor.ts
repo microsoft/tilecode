@@ -405,7 +405,7 @@ namespace tileWorldEditor {
                 this.update(tryEdit);
             })
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
-                // TODO: toolbox menu
+                this.showMenu();
             })
         }
 
@@ -922,7 +922,7 @@ namespace tileWorldEditor {
         private showMenu() {
             if (this.toolBox) return;
             game.pushScene();
-            this.toolBox = new ToolboxMenu(this.manager.all(), this.commands, (s: string) => { this.closeMenu(s) });
+            this.toolBox = new ToolboxMenu([], this.commands, (s: string) => { this.closeMenu(s) });
             this.toolBox.show();
         }
     } 
