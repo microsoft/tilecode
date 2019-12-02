@@ -253,7 +253,8 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
     `;
     const arrowImages = [leftArrow, rightArrow, upArrow, downArrow];
-    const arrowValues = [TileDir.Left, TileDir.Right, TileDir.Up, TileDir.Down];
+    const arrowValues = [MoveDirection.Left, MoveDirection.Right, 
+        MoveDirection.Up, MoveDirection.Down];
     const attrsCentered = [okCenter, oneofCenter, excludeCenter, includeCenter];
     const attrImages = [ok, oneof, exclude, include];
     const attrValues = [AttrType.OK, AttrType.OneOf, AttrType.Exclude, AttrType.Include];
@@ -263,7 +264,7 @@ namespace tileWorldEditor {
         return {
             kind: [index],
             rt: RuleType.Resting,
-            dir: TileDir.None,
+            dir: MoveDirection.None,
             generalize: [],
             whenDo: [{ col: 2, row: 2, attrs: [], witness: index, commands: []}]
         }
@@ -502,21 +503,21 @@ namespace tileWorldEditor {
 
         private showRuleMenu(x: number, y: number) {
             this.showRuleType(RuleType.Resting, 0, x, y-1);
-            this.showRuleType(RuleType.Moving, TileDir.Left, x, y);
-            this.showRuleType(RuleType.Moving, TileDir.Right, x + 1, y);
-            this.showRuleType(RuleType.Moving, TileDir.Up, x, y + 1);
-            this.showRuleType(RuleType.Moving, TileDir.Down, x + 1, y + 1);
-            this.showRuleType(RuleType.Pushing, TileDir.Right, x + 3, y);
-            this.showRuleType(RuleType.Pushing, TileDir.Left, x + 2, y+1);
-            this.showRuleType(RuleType.Pushing, TileDir.Down, x + 4, y+1);
-            this.showRuleType(RuleType.Pushing, TileDir.Up, x + 5, y);
-            this.showRuleType(RuleType.Colliding, TileDir.Right, x + 6, y);
-            this.showRuleType(RuleType.Colliding, TileDir.Left, x + 7, y + 1);
-            this.showRuleType(RuleType.Colliding, TileDir.Down, x + 9, y);
-            this.showRuleType(RuleType.Colliding, TileDir.Up, x + 8, y+1);
+            this.showRuleType(RuleType.Moving, MoveDirection.Left, x, y);
+            this.showRuleType(RuleType.Moving, MoveDirection.Right, x + 1, y);
+            this.showRuleType(RuleType.Moving, MoveDirection.Up, x, y + 1);
+            this.showRuleType(RuleType.Moving, MoveDirection.Down, x + 1, y + 1);
+            this.showRuleType(RuleType.Pushing, MoveDirection.Right, x + 3, y);
+            this.showRuleType(RuleType.Pushing, MoveDirection.Left, x + 2, y+1);
+            this.showRuleType(RuleType.Pushing, MoveDirection.Down, x + 4, y+1);
+            this.showRuleType(RuleType.Pushing, MoveDirection.Up, x + 5, y);
+            this.showRuleType(RuleType.Colliding, MoveDirection.Right, x + 6, y);
+            this.showRuleType(RuleType.Colliding, MoveDirection.Left, x + 7, y + 1);
+            this.showRuleType(RuleType.Colliding, MoveDirection.Down, x + 9, y);
+            this.showRuleType(RuleType.Colliding, MoveDirection.Up, x + 8, y+1);
         }
 
-        private showRuleType(rt: RuleType, rd: TileDir, x: number, y: number) {
+        private showRuleType(rt: RuleType, rd: MoveDirection, x: number, y: number) {
             let selected = rt == this.rule.rt && (rt == RuleType.Resting || rd == this.rule.dir);
             let selCol = 13
             if (selected) {
@@ -531,8 +532,8 @@ namespace tileWorldEditor {
             }
             if (rt == RuleType.Pushing || rt == RuleType.Colliding) {
                 let indexOf = arrowValues.indexOf(rd);
-                let ax = rd == TileDir.Left ? 1 : (rd == TileDir.Right ? -1 : 0)
-                let ay = rd == TileDir.Down ? -1 : (rd == TileDir.Up ? 1 : 0)
+                let ax = rd == MoveDirection.Left ? 1 : (rd == MoveDirection.Right ? -1 : 0)
+                let ay = rd == MoveDirection.Down ? -1 : (rd == MoveDirection.Up ? 1 : 0)
                 if (rt == RuleType.Pushing) {
                     this.showInDiamond(x+ax, y+ay, arrowImages[indexOf], 10)
                     this.ruleTypeMap.setPixel(x+ax+2, y+ay+2, rt);

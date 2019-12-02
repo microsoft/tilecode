@@ -5,8 +5,12 @@ enum RuleType {
     Colliding    // a moving sprite about to collide with another sprite
 }
 
+enum MoveDirection {
+    None, Left, Right, Up, Down
+}
+
 enum CommandType {
-    Move,     // arg (TileDir)
+    Move,     // arg (MoveDirection)
     Paint,    // arg (index of fixed sprite)
     Reverse,
     Stop,
@@ -35,8 +39,8 @@ type WhenDo = {
 type Rule = {
     kind: number[]; // the indices of movable sprite kinds this rule is defined over
     rt: RuleType;
-    dir?: TileDir;
-    generalize: TileDir[];  // the other directions to generalize this rule to 
+    dir?: MoveDirection;
+    generalize: MoveDirection[];  // the other directions to generalize this rule to 
     whenDo: WhenDo[];
 }
 
