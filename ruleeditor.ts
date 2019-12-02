@@ -1,5 +1,12 @@
 namespace tileWorldEditor {
 
+    const smallSprite=img`
+        . 5 5 5 .
+        5 5 5 5 5
+        5 5 5 5 5
+        5 5 5 5 5
+        . 5 5 5 .
+    `;
     const genericSprite = img`
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -409,13 +416,15 @@ namespace tileWorldEditor {
         }
 
         private cursorMove() {
-            this.otherCursorMove();
             if (this.menu == RuleEditorMenus.None) {
+                this.otherCursorMove();
                 // TODO: show attributes instead of menu on hover
                 if (this.manhattanDistance2() <= 2) {
                     let col = this.cursor.x >> 4;
                     let row = this.cursor.y >> 4;                    
                 }
+            } else {
+                this.otherCursor.setFlag(SpriteFlag.Invisible, true);
             }
         }
 
@@ -542,7 +551,7 @@ namespace tileWorldEditor {
                         this.background.fillRect((x + ax + 2) << 4, (y + ay + 2) << 4, 16, 16, selCol)
                     }
                 } else {
-                    this.showInDiamond(x - ax, y - ay, explode, 10);
+                    this.showCollisionSprite(x - ax, y - ay, rd);
                     this.ruleTypeMap.setPixel(x - ax + 2, y - ay + 2, rt);
                     this.dirMap.setPixel(x - ax + 2, y - ay + 2, rd);
                     if (selected) {
@@ -550,6 +559,12 @@ namespace tileWorldEditor {
                     }
                 }
             }
+        }
+
+        private showCollisionSprite(col:number, row:number, dir: MoveDirection) {
+            let spr = this.showInDiamond(col, row, smallSprite)
+            spr.x += (dir == MoveDirection.Left) ? 4 : (dir == MoveDirection.Right) ? -4 : 0;
+            spr.y += (dir == MoveDirection.Up) ? 4 : (dir == MoveDirection.Down) ? -4 : 0; 
         }
 
         private showSprites: Sprite[] = [];
