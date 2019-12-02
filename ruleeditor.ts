@@ -395,13 +395,7 @@ namespace tileWorldEditor {
                 } else if (this.cursor.x >= 96 && this.cursor.y < 80) {
                     tryEdit = true;
                 } else if (this.menu == RuleEditorMenus.RuleTypeMenu) {
-                    let col = this.cursor.x >> 4;
-                    let row = this.cursor.y >> 4;
-                    let rt = this.ruleTypeMap.getPixel(col, row); 
-                    if (rt != 0xf) {
-                        this.rule.rt = rt;
-                        this.rule.dir = this.dirMap.getPixel(col,row);
-                    }
+                    this.menu = RuleEditorMenus.None;
                 } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                     this.attrUpdate();
                     return;
@@ -425,6 +419,16 @@ namespace tileWorldEditor {
                 }
             } else {
                 this.otherCursor.setFlag(SpriteFlag.Invisible, true);
+                if (this.menu == RuleEditorMenus.RuleTypeMenu) {
+                    let col = this.cursor.x >> 4;
+                    let row = this.cursor.y >> 4;
+                    let rt = this.ruleTypeMap.getPixel(col, row);
+                    if (rt != 0xf) {
+                        this.rule.rt = rt;
+                        this.rule.dir = this.dirMap.getPixel(col, row);
+                        this.update(false);
+                    }
+                }
             }
         }
 
