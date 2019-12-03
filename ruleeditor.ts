@@ -262,9 +262,9 @@ namespace tileWorldEditor {
     const arrowImages = [leftArrow, rightArrow, upArrow, downArrow];
     const arrowValues = [MoveDirection.Left, MoveDirection.Right, 
         MoveDirection.Up, MoveDirection.Down];
-    const attrsCentered = [okCenter, oneofCenter, excludeCenter, includeCenter];
-    const attrImages = [ok, oneof, exclude, include];
-    const attrValues = [AttrType.OK, AttrType.OneOf, AttrType.Exclude, AttrType.Include];
+    const attrsCentered = [includeCenter, excludeCenter, okCenter, oneofCenter];
+    const attrImages = [include, exclude, ok, oneof];
+    const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, AttrType.OneOf];
 
     export function makeRestingRule(m: tileWorldEditor.SpriteManager, name: string): Rule {
         let index = m.findName(name).kind();
@@ -285,7 +285,7 @@ namespace tileWorldEditor {
         let excludeCnt = a.filter((v,i) => v == AttrType.Exclude && begin <= i && i <=end).length;
         let okCnt = a.filter((v,i) => v == AttrType.OK && begin <= i && i <=end).length;
         let cnt = end - begin + 1;
-        if (okCnt == a.length || okCnt == cnt || excludeCnt == cnt)
+        if (okCnt == a.length || excludeCnt == cnt || (begin == 0 && okCnt == cnt))
             return res;
         let remove =
             (okCnt != 0 && excludeCnt !=0) ? 
@@ -398,7 +398,6 @@ namespace tileWorldEditor {
                     this.menu = RuleEditorMenus.None;
                 } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                     this.attrUpdate();
-                    return;
                 } else if (this.menu == RuleEditorMenus.CommandMenu) {
                     this.commandUpdate();
                 }
@@ -469,6 +468,7 @@ namespace tileWorldEditor {
         }
 
         private noMenu() {
+            this.attrSelected = null;
             this.menu = RuleEditorMenus.None;
             this.tileSaved.setFlag(SpriteFlag.Invisible, true);
             this.showSelected.setFlag(SpriteFlag.Invisible, true);
@@ -775,8 +775,16 @@ namespace tileWorldEditor {
         private showAttributes(col: number, row: number) {
             let item = this.rule.whenDo.find(a => a.col == col +2 && a.row == row +2);
             if (item) {
-                // if there are includes, show the first one
+                // if there is an include or single oneOf, show it.
                 let index = item.attrs.indexOf(AttrType.Include);
+                if (index == -1) {
+                    index = item.attrs.indexOf(AttrType.OneOf);
+                    if (index != -1) {
+                        let index2 = item.attrs.indexOf(AttrType.OneOf,index+1);
+                        if (index2 != -1)
+                            index = -1;
+                    }
+                }
                 // and skip to the other (if it exists)
                 let begin = 0;
                 let end = item.attrs.length-1;
@@ -822,7 +830,8 @@ namespace tileWorldEditor {
                 this.attrs.push(attrSpr);
                 x++;
             });
-            this.selectAttr(this.attrs[0]);
+            if (this.attrSelected == null)
+              this.selectAttr(this.attrs[0]);
         }
 
         private selectAttr(a: Sprite) {
