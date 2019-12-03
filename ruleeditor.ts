@@ -289,7 +289,7 @@ namespace tileWorldEditor {
             return res;
         let remove =
             (okCnt != 0 && excludeCnt !=0) ? 
-               ((okCnt < excludeCnt) ? AttrType.Exclude : AttrType.OK) : -1; 
+               ((excludeCnt < okCnt) ? AttrType.OK : AttrType.Exclude) : -1; 
         a.forEach((v,i) => { 
             if (remove != v && begin <=i && i <=end) res.push(i); 
         })
@@ -415,10 +415,13 @@ namespace tileWorldEditor {
                 // TODO: show attributes instead of menu on hover
                 if (this.manhattanDistance2() <= 2) {
                     let col = this.cursor.x >> 4;
-                    let row = this.cursor.y >> 4;                    
+                    let row = this.cursor.y >> 4;
+                    if (col != 0 || row != 0) {
+                        // look up attribute, 
+                        // if not null then update
+                    }                   
                 }
             } else {
-                this.otherCursor.setFlag(SpriteFlag.Invisible, true);
                 if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                     let col = this.cursor.x >> 4;
                     let row = this.cursor.y >> 4;
@@ -436,8 +439,8 @@ namespace tileWorldEditor {
 
         private otherCursorMove() {
             if (this.manhattanDistance2() <= 1) {
-                // compute mapping from left to right hand side
                 this.otherCursor.setFlag(SpriteFlag.Invisible, false);
+                // compute mapping from left to right hand side
                 let col = this.cursor.x >> 4;
                 let row = this.cursor.y >> 4;
                 this.otherCursor.x = 88;
@@ -447,8 +450,8 @@ namespace tileWorldEditor {
                 else if (row == 3) this.otherCursor.y = 72;
                 else this.otherCursor.y = 40;
             } else if (this.cursor.x >= 80 && this.cursor.y < 80) {
-                // compute mapping from right to left hand side
                 this.otherCursor.setFlag(SpriteFlag.Invisible, false);
+                // compute mapping from right to left hand side
                 let row = this.cursor.y >> 4;
                 if (row == 0 || row == 2 || row == 4)
                     this.otherCursor.x = 40;
@@ -625,7 +628,7 @@ namespace tileWorldEditor {
             whendo.commands.forEach((c, j) => { 
                 col = this.showCommand(col, row-1, c) 
             });
-            // space for next command (if there is one, may not be)
+            // TODO: space for next command (if there is one, may not be)
             let spr = this.showInDiamond(col, row-1, spaceImg);
             spr.setKind(CommandTokens.SpaceTile);
             this.commandSprites.push(spr);
@@ -727,7 +730,11 @@ namespace tileWorldEditor {
         private modifyCommandMenu(s: Sprite) {
             this.modifyCommand = s;
             let command = s.data;
-            this.makeCommandMenu([s.kind()], true);
+            if (s.kind() != CommandTokens.PaintBrush) {
+                this.makeCommandMenu([s.kind()], true);
+            } else {
+                // deletion of paint brush
+            }
         }
 
         private commandUpdate() {
