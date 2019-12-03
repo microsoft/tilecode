@@ -832,34 +832,32 @@ namespace tileWorldEditor {
             let m = this.menuItems.find(m => this.cursor.overlapsWith(m));
             if (m) {
                 let val = this.attrSelected.kind();
-                if (m.kind() < this.manager.fixed().length) {
-                    if (val == AttrType.Include) 
-                       // all other fixed must be exclude
-                       this.setFixedOther(m, AttrType.Exclude);
-                    else if (val == AttrType.OK || val == AttrType.OneOf)
-                       // all other non-exclude fixed transition to only
-                       this.setFixedOther(m, val,true);
-                    else {
-                       // not allowed to set all to exclude
-                       let cnt = 0;
-                       let i = 0;
-                       for(;i<this.manager.fixed().length;i++) {
-                           if (this.menuItems[i].data.image == exclude) {
-                               cnt++; if (cnt == 2) break;
-                           }
-                       }
-                       if (cnt == 2) {
-                           let whenDo = this.getWhenDo(this.tileSaved.x >> 4, this.tileSaved.y >> 4);
-                           this.setAttr(this.menuItems[i], whenDo.attrs[m.kind()]);
-                       }
+                if (val == AttrType.Include) { 
+                    if (m.kind() < this.manager.fixed().length) {
+                        this.setFixedOther(m, null, AttrType.Exclude);
+                        this.setMovableOther(m, include, AttrType.OK);
+                        this.setMovableOther(m, oneof, AttrType.OK);
+                    } else {
+                        this.setMovableOther(m, null, AttrType.Exclude);
+                        this.setFixedOther(m, include, AttrType.OK);
+                        this.setFixedOther(m, oneof, AttrType.OK);
                     }
-                } else {
-                    if (val == AttrType.Include)
-                        // all other fixed must be exclude
-                        this.setMovableOther(m, AttrType.Exclude);
-                    else if (val == AttrType.OK || val == AttrType.OneOf)
-                        // all other non-exclude fixed transition to only
-                        this.setMovableOther(m, val, true);
+                } else if (val == AttrType.OneOf) {
+                    this.setFixedOther(m, include, AttrType.OneOf);
+                    this.setMovableOther(m, include, AttrType.OneOf);
+                } else if (m.kind() < this.manager.fixed().length) {
+                    // not allowed to set all to exclude
+                    let cnt = 0;
+                    let i = 0;
+                    for(;i<this.manager.fixed().length;i++) {
+                        if (this.menuItems[i].data.image == exclude) {
+                            cnt++; if (cnt == 2) break;
+                        }
+                    }
+                    if (cnt == 2) {
+                        let whenDo = this.getWhenDo(this.tileSaved.x >> 4, this.tileSaved.y >> 4);
+                        this.setAttr(this.menuItems[i], whenDo.attrs[m.kind()]);
+                    }
                 }
                 this.setAttr(m, val);
             }
@@ -877,20 +875,20 @@ namespace tileWorldEditor {
             return item;
         }
         
-        private setFixedOther(m: Sprite, val: AttrType, nonExclude: boolean = false) {
+        private setFixedOther(m: Sprite, src: Image, val: number) {
             for(let i =0; i<this.manager.fixed().length; i++) {
                 let o = this.menuItems[i];
                 if (o != m) {
-                    if (!nonExclude || o.data.image != exclude)
+                    if (src == null || o.data.image == src)
                         this.setAttr(o, val);
                 }
             }
         }
-        private setMovableOther(m: Sprite, val: AttrType, nonExclude: boolean = false) {
+        private setMovableOther(m: Sprite, src: Image, val: number) {
             for (let i = this.manager.fixed().length; i< this.manager.all().length; i++) {
                 let o = this.menuItems[i];
                 if (o != m) {
-                    if (!nonExclude || o.data.image != exclude)
+                    if (src == null || o.data.image == src)
                         this.setAttr(o, val);
                 }
             }
