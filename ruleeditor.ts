@@ -397,7 +397,8 @@ namespace tileWorldEditor {
                 } else if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                     this.menu = RuleEditorMenus.None;
                 } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
-                    this.attrUpdate();
+                    let yes = this.attrUpdate();
+                    if (!yes) this.noMenu();
                 } else if (this.menu == RuleEditorMenus.CommandMenu) {
                     this.commandUpdate();
                 }
@@ -843,7 +844,7 @@ namespace tileWorldEditor {
 
         private attrUpdate() {
             let a = this.attrs.find(a => this.cursor.overlapsWith(a));
-            if (a)  this.selectAttr(a);
+            if (a) { this.selectAttr(a); return true; }
             let m = this.menuItems.find(m => this.cursor.overlapsWith(m));
             if (m) {
                 let val = this.attrSelected.kind();
@@ -873,7 +874,9 @@ namespace tileWorldEditor {
                     }
                 }
                 this.setAttr(m, val);
+                return true;
             }
+            return false;
         }
 
         private getWhenDo(col: number, row: number) {
