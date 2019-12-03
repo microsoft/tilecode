@@ -285,7 +285,7 @@ namespace tileWorldEditor {
         let excludeCnt = a.filter((v,i) => v == AttrType.Exclude && begin <= i && i <=end).length;
         let okCnt = a.filter((v,i) => v == AttrType.OK && begin <= i && i <=end).length;
         let cnt = end - begin + 1;
-        if (okCnt == a.length || excludeCnt == cnt)
+        if (okCnt == a.length || okCnt == cnt || excludeCnt == cnt)
             return res;
         let remove =
             (okCnt != 0 && excludeCnt !=0) ? 
