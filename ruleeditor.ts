@@ -7,6 +7,24 @@ namespace tileWorldEditor {
         5 5 5 5 5
         . 5 5 5 .
     `;
+    const deleteIcon = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . 2 . . . . . . . . 2 . . .
+        . . . 2 2 . . . . . . 2 2 . . .
+        . . . . 2 2 . . . . 2 2 . . . .
+        . . . . . 2 2 . . 2 2 . . . . .
+        . . . . . . 2 2 2 2 . . . . . .
+        . . . . . . . 2 2 . . . . . . .
+        . . . . . . 2 2 2 2 . . . . . .
+        . . . . . 2 2 . . 2 2 . . . . .
+        . . . . 2 2 . . . . 2 2 . . . .
+        . . . 2 2 . . . . . . 2 2 . . .
+        . . . 2 . . . . . . . . 2 . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `;
     const genericSprite = img`
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -608,6 +626,11 @@ namespace tileWorldEditor {
             this.showCommands();
         }
 
+        // TODOs
+        // 1. dynamically show command
+        // 2. show selected command
+        // 3. jump cursor to selected on start of menu ???
+        // 4. delete icon
         private commandSprites: Sprite[];
         private showCommands() {
             this.commandSprites = []
@@ -687,12 +710,12 @@ namespace tileWorldEditor {
         private menuSprites: Sprite[];
         private whenDo: WhenDo;
         private makeCommandMenu(tokens: CommandTokens[], fromModify: boolean = false) {
+            this.menu = RuleEditorMenus.CommandMenu;
             this.menuSprites = [];
             if (!fromModify) {
                  this.modifyCommand = null;
             }
             this.whenDo = this.getWhenDo(this.otherCursor.x >> 4, this.otherCursor.y >> 4);
-            this.menu = RuleEditorMenus.CommandMenu;
             this.setTileSaved();
             let col = 3;
             if (tokens.indexOf(CommandTokens.PaintTile) != -1 &&
@@ -733,6 +756,7 @@ namespace tileWorldEditor {
             if (s.kind() != CommandTokens.PaintBrush) {
                 this.makeCommandMenu([s.kind()], true);
             } else {
+                this.noMenu();
                 // deletion of paint brush
             }
         }
