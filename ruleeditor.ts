@@ -428,6 +428,8 @@ namespace tileWorldEditor {
                         this.rule.dir = this.dirMap.getPixel(col, row);
                         this.update(false);
                     }
+                } else if (this.menu == RuleEditorMenus.CommandMenu) {
+                    // this.commandUpdate()
                 }
             }
         }
@@ -681,9 +683,11 @@ namespace tileWorldEditor {
 
         private menuSprites: Sprite[];
         private whenDo: WhenDo;
-        private makeCommandMenu(tokens: CommandTokens[]) {
+        private makeCommandMenu(tokens: CommandTokens[], fromModify: boolean = false) {
             this.menuSprites = [];
-            this.modifyCommand = null;
+            if (!fromModify) {
+                 this.modifyCommand = null;
+            }
             this.whenDo = this.getWhenDo(this.otherCursor.x >> 4, this.otherCursor.y >> 4);
             this.menu = RuleEditorMenus.CommandMenu;
             this.setTileSaved();
@@ -722,27 +726,27 @@ namespace tileWorldEditor {
         private modifyCommand: Sprite;
         private modifyCommandMenu(s: Sprite) {
             this.modifyCommand = s;
-            this.whenDo = null;
-            if (s.kind() == CommandTokens.MoveArrow) {
-
-            } else if (s.kind() == CommandTokens.PaintBrush) {
-
-            } else if (s.kind() == CommandTokens.PaintTile) {
-
-            }
+            let command = s.data;
+            this.makeCommandMenu([s.kind()], true);
         }
 
         private commandUpdate() {
+            // TODO: are we updating command, or adding new command?
             if (this.menu != RuleEditorMenus.CommandMenu)
                 return;
             this.noMenu();
             this.menuSprites.forEach(s => {
                 if (this.cursor.overlapsWith(s)) {
                     if (s.kind() == CommandTokens.MoveArrow) {
-                        this.whenDo.commands.push({
-                            inst: CommandType.Move,
-                            arg: arrowValues[arrowImages.indexOf(s.image)]
-                        })
+                        if (this.modifyCommand) {
+                            let c: Command = this.modifyCommand.data
+                            c.arg = arrowValues[arrowImages.indexOf(s.image)];
+                        } else {
+                            this.whenDo.commands.push({
+                                inst: CommandType.Move,
+                                arg: arrowValues[arrowImages.indexOf(s.image)]
+                            })
+                        }
                     } else if (s.kind() == CommandTokens.PaintBrush) {
                         // TODO: combine the two into one?
                         this.whenDo.commands.push({
