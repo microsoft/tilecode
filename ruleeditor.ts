@@ -581,6 +581,10 @@ namespace tileWorldEditor {
             return spr;
         }
 
+        private drawOutline(c: number, r: number) {
+            this.background.drawRect(2*16+c*16,2*16+r*16,17,17,12)
+        }
+
         private makeContext() {
             let spaceImg = this.manager.empty().image
             for (let i = -2; i <= 2; i++) {
@@ -697,12 +701,14 @@ namespace tileWorldEditor {
                 tokens.forEach(ct => {
                     if (ct == CommandTokens.MoveArrow && this.whenDo.witness != -1) {
                         arrowValues.forEach((v, i) => {
+                            this.drawOutline(col, 4);
                             let spr = this.showInDiamond(col, 4, arrowImages[arrowValues.indexOf(v)]);
                             spr.setKind(ct);
                             this.menuSprites.push(spr);
                             col++ 
                         })
                     } else if (ct == CommandTokens.PaintBrush) {
+                        this.drawOutline(col, 4);
                         let spr = this.showInDiamond(col, 4, paintSprite.image);
                         spr.setKind(ct);
                         this.menuSprites.push(spr);
@@ -835,12 +841,10 @@ namespace tileWorldEditor {
                 if (val == AttrType.Include) { 
                     if (m.kind() < this.manager.fixed().length) {
                         this.setFixedOther(m, null, AttrType.Exclude);
-                        this.setMovableOther(m, include, AttrType.OK);
-                        this.setMovableOther(m, oneof, AttrType.OK);
+                        this.setMovableOther(m, null, AttrType.Exclude);
                     } else {
                         this.setMovableOther(m, null, AttrType.Exclude);
-                        this.setFixedOther(m, include, AttrType.OK);
-                        this.setFixedOther(m, oneof, AttrType.OK);
+                        this.setFixedOther(m, null, AttrType.OK);
                     }
                 } else if (val == AttrType.OneOf) {
                     this.setFixedOther(m, include, AttrType.OneOf);
