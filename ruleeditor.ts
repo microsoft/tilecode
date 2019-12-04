@@ -317,7 +317,6 @@ namespace tileWorldEditor {
     export class RuleEditor {
         private background: Image;
         private cursor: Sprite;
-        private otherCursor: Sprite;
 
         // in-world menus
         private menu: RuleEditorMenus;  // which menu is active?
@@ -332,7 +331,8 @@ namespace tileWorldEditor {
         private attrs: Sprite[];
         private attrItems: Sprite[];
         // for editing commands
-        private commandSprites: Sprite[];
+        private otherCursor: Sprite;      // show correspondence between left and right
+        private commandSprites: Sprite[]; // the commands created so far
         private commandMenuSprites: Sprite[];
         private whenDo: WhenDo;           // which WhenDo is being edited
         private currentCommand: Command;  // the current command (potentially null)
@@ -496,7 +496,6 @@ namespace tileWorldEditor {
         }
 
         private noMenu() {
-            this.commandCommit();
             this.whenDo = null;
             this.currentCommand = null;
             this.attrSelected = null;
@@ -653,22 +652,24 @@ namespace tileWorldEditor {
                 this.manager.all()[whendo.witness].image;
             this.showInDiamond(3, row, img2);
             // show the existing commands
+            if (whendo.commands.length == 0) {
+                // lazy initialization
+                whendo.commands.push({inst: -1, arg: -1});
+            }
             let col = 4;
             whendo.commands.forEach((c, j) => { 
                 col = this.showCommand(col, row, c) 
             });
-            // the last one may be a space or a command currently being created
-            if (this.tileSaved && (this.tileSaved.y >> 4) == row+2 && this.currentCommand) {
-                this.showCommand(col, row, this.currentCommand);
-            } else {
-                let spr = this.showInDiamond(col, row , spaceImg);
-                spr.setKind(CommandTokens.SpaceTile);
-                this.commandSprites.push(spr);
-            }
         }
 
         private showCommand(col: number, row: number, c: Command) {
-            if (c.inst == CommandType.Move) {
+            if (c == null || c.inst == -1) {
+                let spaceImg = this.manager.empty().image;
+                let spr = this.showInDiamond(col, row, spaceImg);
+                spr.setKind(CommandTokens.SpaceTile);
+                spr.data = c;
+                this.commandSprites.push(spr);
+            } else if (c.inst == CommandType.Move) {
                 let spr = this.showInDiamond(col, row, arrowImages[arrowValues.indexOf(c.arg)]);
                 spr.setKind(CommandTokens.MoveArrow);
                 spr.data = c;
@@ -691,22 +692,27 @@ namespace tileWorldEditor {
             return col;
         }
 
+        // TODO: update lagging
+        // TODO: remove menu
+        // TODO: start new menu
+        // TODO: add new element at end...
         private tryEditCommand() {
-            this.tokens = [CommandTokens.MoveArrow, CommandTokens.PaintBrush,
-                CommandTokens.PaintTile, CommandTokens.SpaceTile];
-            let overlapsCursor: Sprite = this.getTokens(this.cursor, this.tokens);
+            let whendo = this.getWhenDo(this.otherCursor.x >> 4, this.otherCursor.y >> 4);
+            this.tokens = [CommandTokens.PaintBrush, CommandTokens.PaintTile];
+            if (whendo.witness != -1) 
+                this.tokens.insertAt(0, CommandTokens.MoveArrow);
+            let overlapsCursor: Sprite = this.removeTokens(this.cursor, this.tokens);
             // nothing to do here
             if (overlapsCursor == null)
                 return;
             // set up the state
             this.setTileSaved();
-            this.whenDo = this.getWhenDo(this.otherCursor.x >> 4, this.otherCursor.y >> 4);
-            if (overlapsCursor.kind() == CommandTokens.SpaceTile && this.tokens.length > 0) {
-                this.currentCommand = { inst: -1, arg: -1 };
-                this.makeCommandMenu(this.tokens);
+            this.whenDo = whendo;
+            this.currentCommand = overlapsCursor.data;
+            if (overlapsCursor.kind() == CommandTokens.SpaceTile) {
+                // editing the tail command
+                this.makeCommandMenu();
             } else {
-                this.currentCommand = overlapsCursor.data;
-                // we are editing existing command based on what we overlap
                 this.modifyCommandMenu();
             }
         }
@@ -715,12 +721,12 @@ namespace tileWorldEditor {
             this.modifyCommandMenu();
         }
 
-        private getTokens(cursor: Sprite, tokens: CommandTokens[]): Sprite {
+        private removeTokens(cursor: Sprite, tokens: CommandTokens[]): Sprite {
             // remove the tokens already present in the command list
             let ret: Sprite = null;
             this.commandSprites.forEach(c => {
                 if (c.y == cursor.y) {
-                    tokens.removeElement(c.kind());
+                    if (ret == null) tokens.removeElement(c.kind());
                     if (c.x == cursor.x) {
                         ret = c;
                     }
@@ -729,12 +735,12 @@ namespace tileWorldEditor {
             return ret;
         }
 
-        private makeCommandMenu(tokens: CommandTokens[]) {
+        private makeCommandMenu() {
             this.menu = RuleEditorMenus.CommandMenu;
             this.commandMenuSprites = [];
             let col = 3;
-            if (tokens.indexOf(CommandTokens.PaintTile) != -1 &&
-                tokens.indexOf(CommandTokens.PaintBrush) == -1
+            if (this.tokens.indexOf(CommandTokens.PaintTile) != -1 &&
+                this.tokens.indexOf(CommandTokens.PaintBrush) == -1
             ) {
                 // show the available tiles for painting with
                 this.manager.fixed().forEach((s,i) => {
@@ -744,7 +750,7 @@ namespace tileWorldEditor {
                 })
             } else {
                 // show the commands
-                tokens.forEach(ct => {
+                this.tokens.forEach(ct => {
                     if (ct == CommandTokens.MoveArrow && this.whenDo.witness != -1) {
                         arrowValues.forEach((v, i) => {
                             this.drawOutline(col, 4);
@@ -767,21 +773,14 @@ namespace tileWorldEditor {
         private modifyCommandMenu() {
             if (this.menu != RuleEditorMenus.CommandMenu)
                 return;
-            if (this.currentCommand.inst == -1) {
-                this.makeCommandMenu(this.tokens);
+            if (this.currentCommand.inst == -1 || this.tokens.length > 0) {
+                this.makeCommandMenu();
             } else if (this.currentCommand.inst == CommandType.Move) {
-                this.makeCommandMenu([CommandTokens.MoveArrow]);
+                this.tokens = [CommandTokens.MoveArrow];
+                this.makeCommandMenu();
             } else {
                 this.noMenu();
                 // deletion of paint brush
-            }
-        }
-
-        private commandCommit() {
-            if (this.menu == RuleEditorMenus.CommandMenu) {
-                // TODO: if this command is not in the list, add it at the end
-                if (this.whenDo.commands.indexOf(this.currentCommand) == -1)
-                    this.whenDo.commands.push(this.currentCommand);
             }
         }
 
