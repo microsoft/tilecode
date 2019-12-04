@@ -417,12 +417,15 @@ namespace tileWorldEditor {
                         this.setTileSaved()
                     }
                 } else if (this.cursor.x >= 96 && this.cursor.y < 80) {
-                    this.tryEditCommand();
+                    let yes = this.tryEditCommand();
+                    if (!yes) this.noMenu();
                 } else if (this.menu == RuleEditorMenus.RuleTypeMenu) {
-                    this.menu = RuleEditorMenus.None;
+                    this.noMenu();
                 } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                     let yes = this.attrUpdate();
                     if (!yes) this.noMenu();
+                } else if (this.menu == RuleEditorMenus.CommandMenu) {
+                    this.noMenu();
                 }
                 this.update();
             })
@@ -454,6 +457,7 @@ namespace tileWorldEditor {
                         this.update();
                     }
                 } else if (this.menu == RuleEditorMenus.CommandMenu) {
+                    this.commandUpdate();
                     this.update();
                 }
             }
@@ -696,9 +700,7 @@ namespace tileWorldEditor {
             return col;
         }
 
-        // TODO: update lagging
-        // TODO: remove menu
-        // TODO: start new menu
+        // TODO: start new menu on existing command
         // TODO: add new element at end...
         private tryEditCommand() {
             let row = this.cursor.y >> 4;
@@ -710,7 +712,7 @@ namespace tileWorldEditor {
             let overlapsCursor: Sprite = this.removeTokens(this.cursor, this.tokens);
             // nothing to do here
             if (overlapsCursor == null)
-                return;
+                return false;
             // set up the state
             this.setTileSaved();
             this.whenDo = whendo;
@@ -721,6 +723,7 @@ namespace tileWorldEditor {
             } else {
                 this.modifyCommandMenu();
             }
+            return true;
         }
 
         private commandMenu() {
