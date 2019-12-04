@@ -320,16 +320,23 @@ namespace tileWorldEditor {
         private otherCursor: Sprite;
 
         // in-world menus
-        private menu: RuleEditorMenus;
+        private menu: RuleEditorMenus;  // which menu is active?
+        private tileSaved: Sprite;      // remember the tile that we are editing
+        private showSprites: Sprite[] = [];  // all sprites created
         // rule type state
-        private ruleTypeMap: Image;
-        private dirMap: Image;
+        private ruleTypeMap: Image;     // mapping of tile to rule type
+        private dirMap: Image;          // mapping of tile to direction
         // whendo state
-        private tileSaved: Sprite;
-        private showSelected: Sprite;
+        private attrCursor: Sprite;
         private attrSelected: Sprite;
         private attrs: Sprite[];
-        private menuItems: Sprite[];
+        private attrItems: Sprite[];
+        // for editing commands
+        private commandSprites: Sprite[];
+        private commandMenuSprites: Sprite[];
+        private whenDo: WhenDo;           // which WhenDo is being edited
+        private currentCommand: Command;  // the current command (potentially null)
+        private tokens: CommandTokens[];
 
         // toolbox menu
         private commands: Sprite[] = [];
@@ -342,12 +349,12 @@ namespace tileWorldEditor {
             // attribute menu view
             this.attrSelected = null;
             this.attrs = [];
-            this.menuItems = [];
+            this.attrItems = [];
             this.tileSaved = sprites.create(cursorOut)
             this.tileSaved.setFlag(SpriteFlag.Invisible, true)
             this.tileSaved.z = 10;
-            this.showSelected = sprites.create(cursorOut)
-            this.showSelected.setFlag(SpriteFlag.Invisible, true)
+            this.attrCursor = sprites.create(cursorOut)
+            this.attrCursor.setFlag(SpriteFlag.Invisible, true)
 
             this.background = image.create(160, 120)
             scene.setBackgroundImage(this.background)
@@ -495,7 +502,7 @@ namespace tileWorldEditor {
             this.attrSelected = null;
             this.menu = RuleEditorMenus.None;
             this.tileSaved.setFlag(SpriteFlag.Invisible, true);
-            this.showSelected.setFlag(SpriteFlag.Invisible, true);
+            this.attrCursor.setFlag(SpriteFlag.Invisible, true);
         }
         
         private manhattanDistance2() {
@@ -505,14 +512,14 @@ namespace tileWorldEditor {
         }
 
         private update() {
-            this.menuItems.forEach(m => {
+            this.attrItems.forEach(m => {
                 let s:Sprite = m.data;   // issue filed
                 s.destroy();             // 
             })
             this.showSprites.forEach(spr => { spr.destroy(); })
             this.showSprites = [];
             this.attrs = [];
-            this.menuItems = [];
+            this.attrItems = [];
 
             this.background.fill(11);
             this.background.fillRect(0, 0, 80, 120, 12);
@@ -596,7 +603,6 @@ namespace tileWorldEditor {
             spr.y += (dir == MoveDirection.Up) ? 4 : (dir == MoveDirection.Down) ? -4 : 0; 
         }
 
-        private showSprites: Sprite[] = [];
         private showInDiamond(c: number, r: number, img: Image, z: number = 0) {
             let spr = sprites.create(img);
             spr.z = z;
@@ -632,7 +638,6 @@ namespace tileWorldEditor {
         // 2. show selected command
         // 3. jump cursor to selected on start of menu ???
         // 4. delete icon
-        private commandSprites: Sprite[];
         private showCommands() {
             this.commandSprites = []
             this.showCommandsAt(-2, this.getWhenDo(2, 1));
@@ -686,11 +691,6 @@ namespace tileWorldEditor {
             return col;
         }
 
-        // state to remember for editing commands
-        private menuSprites: Sprite[];
-        private whenDo: WhenDo;           // which WhenDo is being edited
-        private currentCommand: Command;  // the current command (potentially null)
-        private tokens: CommandTokens[];
         private tryEditCommand() {
             this.tokens = [CommandTokens.MoveArrow, CommandTokens.PaintBrush,
                 CommandTokens.PaintTile, CommandTokens.SpaceTile];
@@ -731,7 +731,7 @@ namespace tileWorldEditor {
 
         private makeCommandMenu(tokens: CommandTokens[]) {
             this.menu = RuleEditorMenus.CommandMenu;
-            this.menuSprites = [];
+            this.commandMenuSprites = [];
             let col = 3;
             if (tokens.indexOf(CommandTokens.PaintTile) != -1 &&
                 tokens.indexOf(CommandTokens.PaintBrush) == -1
@@ -740,7 +740,7 @@ namespace tileWorldEditor {
                 this.manager.fixed().forEach((s,i) => {
                     let spr = this.showInDiamond(col+i, 4, s.image);
                     spr.setKind(CommandTokens.PaintTile);
-                    this.menuSprites.push(spr);
+                    this.commandMenuSprites.push(spr);
                 })
             } else {
                 // show the commands
@@ -750,14 +750,14 @@ namespace tileWorldEditor {
                             this.drawOutline(col, 4);
                             let spr = this.showInDiamond(col, 4, arrowImages[arrowValues.indexOf(v)]);
                             spr.setKind(ct);
-                            this.menuSprites.push(spr);
+                            this.commandMenuSprites.push(spr);
                             col++ 
                         })
                     } else if (ct == CommandTokens.PaintBrush) {
                         this.drawOutline(col, 4);
                         let spr = this.showInDiamond(col, 4, paintSprite.image);
                         spr.setKind(ct);
-                        this.menuSprites.push(spr);
+                        this.commandMenuSprites.push(spr);
                         col++;
                     }
                 });
@@ -788,7 +788,7 @@ namespace tileWorldEditor {
         private commandUpdate() {
             if (this.menu != RuleEditorMenus.CommandMenu)
                 return;
-            this.menuSprites.forEach(s => {
+            this.commandMenuSprites.forEach(s => {
                 if (this.cursor.overlapsWith(s)) {
                     if (s.kind() == CommandTokens.MoveArrow) {
                         this.currentCommand.inst = CommandType.Move;
@@ -864,7 +864,7 @@ namespace tileWorldEditor {
             let x = -2;
             this.manager.all().forEach((s, i) => {
                 let spr = this.showInDiamond(x, 4, s.image);
-                this.menuItems.push(spr);
+                this.attrItems.push(spr);
                 let sprAttr = sprites.create(attrImages[attrValues.indexOf(whenDo.attrs[i])]);
                 spr.data = sprAttr;
                 spr.setKind(i);
@@ -884,15 +884,15 @@ namespace tileWorldEditor {
 
         private selectAttr(a: Sprite) {
             this.attrSelected = a;
-            this.showSelected.x = a.x
-            this.showSelected.y = a.y
-            this.showSelected.setFlag(SpriteFlag.Invisible, false)
+            this.attrCursor.x = a.x
+            this.attrCursor.y = a.y
+            this.attrCursor.setFlag(SpriteFlag.Invisible, false)
         }
 
         private attrUpdate() {
             let a = this.attrs.find(a => this.cursor.overlapsWith(a));
             if (a) { this.selectAttr(a); return true; }
-            let m = this.menuItems.find(m => this.cursor.overlapsWith(m));
+            let m = this.attrItems.find(m => this.cursor.overlapsWith(m));
             if (m) {
                 let val = this.attrSelected.kind();
                 if (val == AttrType.Include) { 
@@ -911,13 +911,13 @@ namespace tileWorldEditor {
                     let cnt = 0;
                     let i = 0;
                     for(;i<this.manager.fixed().length;i++) {
-                        if (this.menuItems[i].data.image == exclude) {
+                        if (this.attrItems[i].data.image == exclude) {
                             cnt++; if (cnt == 2) break;
                         }
                     }
                     if (cnt == 2) {
                         let whenDo = this.getWhenDo(this.tileSaved.x >> 4, this.tileSaved.y >> 4);
-                        this.setAttr(this.menuItems[i], whenDo.attrs[m.kind()]);
+                        this.setAttr(this.attrItems[i], whenDo.attrs[m.kind()]);
                     }
                 }
                 this.setAttr(m, val);
@@ -940,7 +940,7 @@ namespace tileWorldEditor {
         
         private setFixedOther(m: Sprite, src: Image, val: number) {
             for(let i =0; i<this.manager.fixed().length; i++) {
-                let o = this.menuItems[i];
+                let o = this.attrItems[i];
                 if (o != m) {
                     if (src == null || o.data.image == src)
                         this.setAttr(o, val);
@@ -949,7 +949,7 @@ namespace tileWorldEditor {
         }
         private setMovableOther(m: Sprite, src: Image, val: number) {
             for (let i = this.manager.fixed().length; i< this.manager.all().length; i++) {
-                let o = this.menuItems[i];
+                let o = this.attrItems[i];
                 if (o != m) {
                     if (src == null || o.data.image == src)
                         this.setAttr(o, val);
