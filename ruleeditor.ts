@@ -540,7 +540,7 @@ namespace tileWorldEditor {
             } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                 this.attrMenu()
             } else if (this.menu == RuleEditorMenus.CommandMenu) {
-                this.commandMenu();
+                this.modifyCommandMenu();
                 this.commandUpdate();
             } 
         }
@@ -714,6 +714,7 @@ namespace tileWorldEditor {
             if (overlapsCursor == null)
                 return false;
             // set up the state
+            this.menu = RuleEditorMenus.CommandMenu;
             this.setTileSaved();
             this.whenDo = whendo;
             this.currentCommand = overlapsCursor.data;
@@ -724,10 +725,6 @@ namespace tileWorldEditor {
                 this.modifyCommandMenu();
             }
             return true;
-        }
-
-        private commandMenu() {
-            this.modifyCommandMenu();
         }
 
         private removeTokens(cursor: Sprite, tokens: CommandTokens[]): Sprite {
@@ -745,7 +742,6 @@ namespace tileWorldEditor {
         }
 
         private makeCommandMenu() {
-            this.menu = RuleEditorMenus.CommandMenu;
             this.commandMenuSprites = [];
             let col = 3;
             if (this.tokens.indexOf(CommandTokens.PaintTile) != -1 &&
@@ -782,7 +778,7 @@ namespace tileWorldEditor {
         private modifyCommandMenu() {
             if (this.menu != RuleEditorMenus.CommandMenu)
                 return;
-            if (this.currentCommand.inst == -1 || this.tokens.length > 0) {
+            if (this.currentCommand.inst == -1) {
                 this.makeCommandMenu();
             } else if (this.currentCommand.inst == CommandType.Move) {
                 this.tokens = [CommandTokens.MoveArrow];
