@@ -681,42 +681,47 @@ namespace tileWorldEditor {
             return col;
         }
 
-        private editCommand() {
-            let overlapsCursor: Sprite = null;
-            let tokensRemaining: CommandTokens[] = 
-                [CommandTokens.MoveArrow, CommandTokens.PaintBrush, CommandTokens.PaintTile,
-                 CommandTokens.SpaceTile
-                ];
-            // read off the sprites from left to right in the row
-            this.commandSprites.forEach(c => {
-                if (c.y == this.cursor.y) {
-                    tokensRemaining.removeElement(c.kind());
-                    if (c.x == this.cursor.x) {
-                        overlapsCursor = c;
-                    }
-                }
-            })
+        // state to remember for editing commands
+        private menuSprites: Sprite[];
+        private whenDo: WhenDo;
+        private modifyCommand: Sprite;
+        private editCommand() {;
+            let tokens = [CommandTokens.MoveArrow, CommandTokens.PaintBrush,
+                CommandTokens.PaintTile, CommandTokens.SpaceTile];
+            let overlapsCursor: Sprite = this.getTokens(this.cursor, tokens);
             // nothing to do here
             if (overlapsCursor == null)
                 return;
-            if (overlapsCursor.kind() == CommandTokens.SpaceTile && tokensRemaining.length > 0) {
-                this.makeCommandMenu(tokensRemaining);
+            // set up the state
+            this.setTileSaved();
+            this.whenDo = this.getWhenDo(this.otherCursor.x >> 4, this.otherCursor.y >> 4);
+            if (overlapsCursor.kind() == CommandTokens.SpaceTile && tokens.length > 0) {
+                this.modifyCommand = null;
+                this.makeCommandMenu(tokens);
             } else {
+                this.modifyCommand = overlapsCursor;
                 // we are editing existing command based on what we overlap
-                this.modifyCommandMenu(overlapsCursor);
+                this.modifyCommandMenu();
             }
         }
 
-        private menuSprites: Sprite[];
-        private whenDo: WhenDo;
-        private makeCommandMenu(tokens: CommandTokens[], fromModify: boolean = false) {
+        private getTokens(cursor: Sprite, tokens: CommandTokens[]): Sprite {
+            // remove the tokens already present in the command list
+            let ret: Sprite = null;
+            this.commandSprites.forEach(c => {
+                if (c.y == cursor.y) {
+                    tokens.removeElement(c.kind());
+                    if (c.x == cursor.x) {
+                        ret = c;
+                    }
+                }
+            })
+            return ret;
+        }
+
+        private makeCommandMenu(tokens: CommandTokens[]) {
             this.menu = RuleEditorMenus.CommandMenu;
             this.menuSprites = [];
-            if (!fromModify) {
-                 this.modifyCommand = null;
-            }
-            this.whenDo = this.getWhenDo(this.otherCursor.x >> 4, this.otherCursor.y >> 4);
-            this.setTileSaved();
             let col = 3;
             if (tokens.indexOf(CommandTokens.PaintTile) != -1 &&
                 tokens.indexOf(CommandTokens.PaintBrush) == -1
@@ -749,12 +754,9 @@ namespace tileWorldEditor {
             }
         }
 
-        private modifyCommand: Sprite;
-        private modifyCommandMenu(s: Sprite) {
-            this.modifyCommand = s;
-            let command = s.data;
-            if (s.kind() != CommandTokens.PaintBrush) {
-                this.makeCommandMenu([s.kind()], true);
+        private modifyCommandMenu() {
+            if (this.modifyCommand.kind() != CommandTokens.PaintBrush) {
+                this.makeCommandMenu([this.modifyCommand.kind()]);
             } else {
                 this.noMenu();
                 // deletion of paint brush
