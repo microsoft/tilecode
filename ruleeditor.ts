@@ -637,13 +637,17 @@ namespace tileWorldEditor {
         // 2. show selected command
         // 3. jump cursor to selected on start of menu ???
         // 4. delete icon
+        private rowToCoord = [ 
+            { lr: -2, col: 2, row: 1}, 
+            { lr: -1, col: 1, row: 2 },
+            { lr: 0, col: 2, row: 2 }, 
+            { lr: 1, col: 3, row: 2 },
+            { lr: 2, col: 2, row: 3 } ];
         private showCommands() {
-            this.commandSprites = []
-            this.showCommandsAt(-2, this.getWhenDo(2, 1));
-            this.showCommandsAt(-1, this.getWhenDo(1, 2));
-            this.showCommandsAt(0, this.getWhenDo(2, 2));
-            this.showCommandsAt(1, this.getWhenDo(3, 2));
-            this.showCommandsAt(2, this.getWhenDo(2, 3));
+            this.commandSprites = [];
+            this.rowToCoord.forEach(r => {
+                this.showCommandsAt(r.lr, this.getWhenDo(r.col, r.row));
+            })
         }
 
         private showCommandsAt(row: number, whendo: WhenDo) {
@@ -697,7 +701,9 @@ namespace tileWorldEditor {
         // TODO: start new menu
         // TODO: add new element at end...
         private tryEditCommand() {
-            let whendo = this.getWhenDo(this.otherCursor.x >> 4, this.otherCursor.y >> 4);
+            let row = this.cursor.y >> 4;
+            let r = this.rowToCoord.find(r => r.lr == row - 2);
+            let whendo = this.getWhenDo(r.col, r.row);
             this.tokens = [CommandTokens.PaintBrush, CommandTokens.PaintTile];
             if (whendo.witness != -1) 
                 this.tokens.insertAt(0, CommandTokens.MoveArrow);
