@@ -637,8 +637,11 @@ namespace tileWorldEditor {
         }
 
         // TODOs
+        // bugs: space at end
         // 3. jump cursor to selected on start of menu ???
         // 4. delete icon
+        // TODO: paint logic
+        // TODO: start new menu on existing command (paint, etc.)
         private rowToCoord = [ 
             { lr: -2, col: 2, row: 1}, 
             { lr: -1, col: 1, row: 2 },
@@ -718,8 +721,6 @@ namespace tileWorldEditor {
             return tokens;
         }
 
-        // TODO: paint logic
-        // TODO: start new menu on existing command (paint, etc.)
         private tryEditCommand() {
             let commandSprite = this.findCommand(this.cursor);
             // nothing to do here
@@ -731,12 +732,14 @@ namespace tileWorldEditor {
             this.whenDo = this.getWhenDo(r.col, r.row);
             this.menu = RuleEditorMenus.CommandMenu;
             this.setTileSaved();
-            this.currentCommand = commandSprite.data.c;
             if (commandSprite.kind() == CommandTokens.SpaceTile) {
                 // editing the tail command
+                this.currentCommand = commandSprite.data.c;
                 this.tokens = commandSprite.data.t;
                 this.makeCommandMenu();
             } else {
+                this.currentCommand = commandSprite.data;
+                this.tokens = [];
                 this.modifyCommandMenu();
             }
             return true;
@@ -790,7 +793,7 @@ namespace tileWorldEditor {
         private modifyCommandMenu() {
             if (this.menu != RuleEditorMenus.CommandMenu)
                 return;
-            if (this.currentCommand.inst == -1) {
+            if (this.tokens.length > 0) {
                 this.makeCommandMenu();
             } else if (this.currentCommand.inst == CommandType.Move) {
                 this.tokens = [CommandTokens.MoveArrow];
