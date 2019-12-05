@@ -296,7 +296,7 @@ namespace tileWorldEditor {
     }
 
     enum RuleEditorMenus { RuleTypeMenu, AttrTypeMenu, CommandMenu, None };
-    enum CommandTokens { MoveArrow, PaintBrush, PaintTile, SpaceTile };
+    enum CommandTokens { MoveArrow, PaintBrush, PaintTile, SpaceTile, Delete };
 
     function projectAttrs(a: AttrType[], begin: number, end: number): number[] {
         let res: number[] = [];
@@ -637,11 +637,9 @@ namespace tileWorldEditor {
         }
 
         // TODOs
-        // bugs: space at end
-        // 3. jump cursor to selected on start of menu ???
-        // 4. delete icon
-        // TODO: paint logic
-        // TODO: start new menu on existing command (paint, etc.)
+        // - bugs: space at end
+        // - jump cursor to selected on start of menu ???
+        // - delete icon
         private rowToCoord = [ 
             { lr: -2, col: 2, row: 1}, 
             { lr: -1, col: 1, row: 2 },
@@ -661,11 +659,11 @@ namespace tileWorldEditor {
             let img2 = whendo.witness == -1 ? genericSprite : 
                 this.manager.all()[whendo.witness].image;
             this.showInDiamond(3, row, img2);
-            // show the existing commands
             if (whendo.commands.length == 0) {
                 // lazy initialization
-                whendo.commands.push({inst: -1, arg: -1});
+                whendo.commands.push({ inst: -1, arg: -1 });
             }
+            // show the existing commands
             let col = 4;
             let tokens = this.getTokens(whendo);
             whendo.commands.forEach(c => { 
@@ -723,10 +721,10 @@ namespace tileWorldEditor {
             if (commandSprite == null)
                 return false;
             // set up the state
+            this.menu = RuleEditorMenus.CommandMenu;
             let row = this.cursor.y >> 4;
             let r = this.rowToCoord.find(r => r.lr == row - 2);
             this.whenDo = this.getWhenDo(r.col, r.row);
-            this.menu = RuleEditorMenus.CommandMenu;
             this.setTileSaved();
             if (commandSprite.kind() == CommandTokens.SpaceTile) {
                 // editing the tail command
@@ -752,37 +750,37 @@ namespace tileWorldEditor {
             return ret;
         }
 
-        private makeCommandMenu() {
+        private makeCommandMenu(deleteOption: boolean = false) {
             this.commandMenuSprites = [];
             let col = 3;
+            let worker = (img: Image, tok: CommandTokens) => {
+                this.drawOutline(col, 4);
+                let spr = this.showInDiamond(col, 4, img);
+                spr.setKind(tok);
+                this.commandMenuSprites.push(spr);
+                col++;
+            };
             if (this.tokens.indexOf(CommandTokens.PaintTile) != -1 &&
                 this.tokens.indexOf(CommandTokens.PaintBrush) == -1
             ) {
                 // show the available tiles for painting with
                 this.manager.fixed().forEach((s,i) => {
-                    let spr = this.showInDiamond(col+i, 4, s.image);
-                    spr.setKind(CommandTokens.PaintTile);
-                    this.commandMenuSprites.push(spr);
+                    worker(s.image, CommandTokens.PaintTile);
                 })
             } else {
                 // show the commands
                 this.tokens.forEach(ct => {
                     if (ct == CommandTokens.MoveArrow && this.whenDo.witness != -1) {
                         arrowValues.forEach((v, i) => {
-                            this.drawOutline(col, 4);
-                            let spr = this.showInDiamond(col, 4, arrowImages[arrowValues.indexOf(v)]);
-                            spr.setKind(ct);
-                            this.commandMenuSprites.push(spr);
-                            col++ 
+                            worker(arrowImages[arrowValues.indexOf(v)], ct);
                         })
                     } else if (ct == CommandTokens.PaintBrush) {
-                        this.drawOutline(col, 4);
-                        let spr = this.showInDiamond(col, 4, paintSprite.image);
-                        spr.setKind(ct);
-                        this.commandMenuSprites.push(spr);
-                        col++;
+                        worker(paintSprite.image, ct);
                     }
                 });
+            }
+            if (deleteOption) {
+                worker(deleteIcon, CommandTokens.Delete);
             }
         }
 
@@ -793,13 +791,12 @@ namespace tileWorldEditor {
                 this.makeCommandMenu();
             } else if (this.currentCommand.inst == CommandType.Move) {
                 this.tokens = [CommandTokens.MoveArrow];
-                this.makeCommandMenu();
+                this.makeCommandMenu(true);
             } else if (this.currentCommand.inst == CommandType.Paint) { 
                 this.tokens = [CommandTokens.PaintTile];
-                this.makeCommandMenu();
+                this.makeCommandMenu(true);
             } else {
                 this.noMenu();
-                // deletion of paint brush
             }
         }
 
