@@ -425,7 +425,8 @@ namespace tileWorldEditor {
                     let yes = this.attrUpdate();
                     if (!yes) this.noMenu();
                 } else if (this.menu == RuleEditorMenus.CommandMenu) {
-                    this.noMenu();
+                    // look for deletion
+                    this.exitCommandMenu();
                 }
                 this.update();
             })
@@ -639,7 +640,6 @@ namespace tileWorldEditor {
         // TODOs
         // - bugs: space at end
         // - jump cursor to selected on start of menu ???
-        // - delete icon
         private rowToCoord = [ 
             { lr: -2, col: 2, row: 1}, 
             { lr: -1, col: 1, row: 2 },
@@ -786,7 +786,12 @@ namespace tileWorldEditor {
             }
         }
 
-        private commandUpdate() {
+        private exitCommandMenu() {
+            this.commandUpdate(true);
+            this.noMenu();
+        }
+
+        private commandUpdate(exit: boolean = false) {
             if (this.menu != RuleEditorMenus.CommandMenu)
                 return;
             this.commandMenuSprites.forEach(s => {
@@ -800,10 +805,8 @@ namespace tileWorldEditor {
                     } else if (s.kind() == CommandTokens.PaintTile) {
                         let paint = this.whenDo.commands.find(c => c.inst == CommandType.Paint);
                         paint.arg = this.manager.fixed().find(f => f.image == s.image).kind();
-                    } else if (s.kind() == CommandTokens.Delete) {
-                        // TODO: only on button press
-                        // this.whenDo.commands.removeElement(this.currentCommand);
-                        // this.noMenu();
+                    } else if (s.kind() == CommandTokens.Delete && exit) {
+                        this.whenDo.commands.removeElement(this.currentCommand);
                     }
                 }
             })
