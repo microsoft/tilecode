@@ -513,13 +513,13 @@ namespace tileWorldEditor {
             this.background.print("Do", 65, 0);
 
             this.makeContext();
-            this.showInDiamond(0, 0, this.centerImage(), 10);
+            this.showImage(2, 2, this.centerImage(), 10);
 
-            this.showRuleType(this.rule.rt, this.rule.dir, 0, 0);
+            this.showRuleType(this.rule.rt, this.rule.dir, 2, 2);
             if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                 this.ruleTypeMap.fill(0xf);
                 this.dirMap.fill(0xf);
-                this.showRuleMenu(-2, 3);
+                this.showRuleMenu(0, 5);
             } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                 this.attrMenu()
             } else if (this.menu == RuleEditorMenus.CommandMenu) {
@@ -552,63 +552,63 @@ namespace tileWorldEditor {
             let selected = rt == this.rule.rt && (rt == RuleType.Resting || rd == this.rule.dir);
             let selCol = 13
             if (selected) {
-                this.background.fillRect((x+2) << 4, (y+2) << 4, 16, 16, selCol)
+                this.background.fillRect(x << 4, y << 4, 16, 16, selCol)
             }
-            this.showInDiamond(x, y, this.centerImage());
-            this.ruleTypeMap.setPixel(x+2, y+2, rt);
-            this.dirMap.setPixel(x+2, y+2, rd);
+            this.showImage(x, y, this.centerImage());
+            this.ruleTypeMap.setPixel(x, y, rt);
+            this.dirMap.setPixel(x, y, rd);
             if (rt == RuleType.Moving || rt == RuleType.Colliding) {
                 let indexOf = arrowValues.indexOf(rd);
-                this.showInDiamond(x, y, arrowImages[indexOf], 10)
+                this.showImage(x, y, arrowImages[indexOf], 10)
             }
             if (rt == RuleType.Pushing || rt == RuleType.Colliding) {
                 let indexOf = arrowValues.indexOf(rd);
                 let ax = rd == MoveDirection.Left ? 1 : (rd == MoveDirection.Right ? -1 : 0)
                 let ay = rd == MoveDirection.Down ? -1 : (rd == MoveDirection.Up ? 1 : 0)
                 if (rt == RuleType.Pushing) {
-                    this.showInDiamond(x+ax, y+ay, arrowImages[indexOf], 10)
-                    this.ruleTypeMap.setPixel(x+ax+2, y+ay+2, rt);
-                    this.dirMap.setPixel(x+ax+2, y+ay+2, rd);
+                    this.showImage(x+ax, y+ay, arrowImages[indexOf], 10)
+                    this.ruleTypeMap.setPixel(x+ax, y+ay, rt);
+                    this.dirMap.setPixel(x+ax, y+ay, rd);
                     if (selected) {
-                        this.background.fillRect((x + ax + 2) << 4, (y + ay + 2) << 4, 16, 16, selCol)
+                        this.background.fillRect((x + ax) << 4, (y + ay) << 4, 16, 16, selCol)
                     }
                 } else {
                     this.showCollisionSprite(x - ax, y - ay, rd);
-                    this.ruleTypeMap.setPixel(x - ax + 2, y - ay + 2, rt);
-                    this.dirMap.setPixel(x - ax + 2, y - ay + 2, rd);
+                    this.ruleTypeMap.setPixel(x - ax, y - ay , rt);
+                    this.dirMap.setPixel(x - ax, y - ay, rd);
                     if (selected) {
-                        this.background.fillRect((x - ax + 2) << 4, (y - ay + 2) << 4, 16, 16, selCol)
+                        this.background.fillRect((x - ax) << 4, (y - ay) << 4, 16, 16, selCol)
                     }
                 }
             }
         }
 
         private showCollisionSprite(col:number, row:number, dir: MoveDirection) {
-            let spr = this.showInDiamond(col, row, smallSprite)
+            let spr = this.showImage(col, row, smallSprite)
             spr.x += (dir == MoveDirection.Left) ? 4 : (dir == MoveDirection.Right) ? -4 : 0;
             spr.y += (dir == MoveDirection.Up) ? 4 : (dir == MoveDirection.Down) ? -4 : 0; 
         }
 
-        private showInDiamond(c: number, r: number, img: Image, z: number = 0) {
+        private showImage(c: number, r: number, img: Image, z: number = 0) {
             let spr = sprites.create(img);
             spr.z = z;
-            spr.x = 2*16 + c * 16 + 8;
-            spr.y = 2*16 + r * 16 + 8;
+            spr.x = c * 16 + 8;
+            spr.y = r * 16 + 8;
             this.showSprites.push(spr);
             return spr;
         }
 
         private drawOutline(c: number, r: number) {
-            this.background.drawRect(2*16+c*16,2*16+r*16,17,17,12)
+            this.background.drawRect(c*16,r*16,17,17,12)
         }
 
         private makeContext() {
             let spaceImg = this.manager.empty().image
-            for (let i = -2; i <= 2; i++) {
-                for (let j = -2; j <= 2; j++) {
-                    let dist = Math.abs(j) + Math.abs(i);
+            for (let i = 0; i <= 4; i++) {
+                for (let j = 0; j <= 4; j++) {
+                    let dist = Math.abs(2-j) + Math.abs(2-i);
                     if (dist <= 2) {
-                        this.showInDiamond(i,j, spaceImg);
+                        this.showImage(i,j, spaceImg);
                         if (i!=0 || j!=0)
                             this.showAttributes(i,j);
                         if (dist <= 1)
@@ -621,11 +621,11 @@ namespace tileWorldEditor {
 
         // - jump cursor to selected on start of menu ???
         private rowToCoord = [ 
-            { lr: -2, col: 2, row: 1}, 
-            { lr: -1, col: 1, row: 2 },
-            { lr: 0, col: 2, row: 2 }, 
-            { lr: 1, col: 3, row: 2 },
-            { lr: 2, col: 2, row: 3 } ];
+            { lr: 0, col: 2, row: 1}, 
+            { lr: 1, col: 1, row: 2 },
+            { lr: 2, col: 2, row: 2 }, 
+            { lr: 3, col: 3, row: 2 },
+            { lr: 4, col: 2, row: 3 } ];
         
         private showCommands() {
             this.commandSprites = [];
@@ -638,13 +638,13 @@ namespace tileWorldEditor {
             let spaceImg = this.manager.empty().image;
             let img2 = whendo.witness == -1 ? genericSprite : 
                 this.manager.all()[whendo.witness].image;
-            this.showInDiamond(3, row, img2);
+            this.showImage(5, row, img2);
             if (whendo.commands.length == 0) {
                 // lazy initialization
                 whendo.commands.push({ inst: -1, arg: -1 });
             }
             // show the existing commands
-            let col = 4;
+            let col = 6;
             let tokens = this.getTokens(whendo);
             whendo.commands.forEach(c => { 
                 col = this.showCommand(col, row, c, tokens);
@@ -670,18 +670,18 @@ namespace tileWorldEditor {
             };
             if (c.inst == -1) {
                 let spaceImg = this.manager.empty().image;
-                let spr = this.showInDiamond(col, row, spaceImg);       
+                let spr = this.showImage(col, row, spaceImg);       
                 spr.setKind(CommandTokens.SpaceTile);
                 spr.data = { c: c, t: tokens };
                 this.commandSprites.push(spr);
             } else if (c.inst == CommandType.Move) {
-                let spr = this.showInDiamond(col, row, arrowImages[arrowValues.indexOf(c.arg)]);
+                let spr = this.showImage(col, row, arrowImages[arrowValues.indexOf(c.arg)]);
                 worker(spr, CommandTokens.MoveArrow);
             } else if (c.inst == CommandType.Paint) {
-                //let spr = this.showInDiamond(col, row, paintSprite.image);
+                //let spr = this.showImage(col, row, paintSprite.image);
                 //worker(spr, CommandTokens.PaintBrush);
                 //if (c.arg != -1) {
-                    let spr = this.showInDiamond(col, row, this.manager.fixed()[c.arg].image);
+                    let spr = this.showImage(col, row, this.manager.fixed()[c.arg].image);
                     worker(spr, CommandTokens.PaintTile);
                 //}
             }
@@ -704,7 +704,7 @@ namespace tileWorldEditor {
             // set up the state
             this.menu = RuleEditorMenus.CommandMenu;
             let row = this.cursor.y >> 4;
-            let r = this.rowToCoord.find(r => r.lr == row - 2);
+            let r = this.rowToCoord.find(r => r.lr == row);
             this.whenDo = this.getWhenDo(r.col, r.row);
             this.setTileSaved();
             if (commandSprite.kind() == CommandTokens.SpaceTile) {
@@ -722,11 +722,11 @@ namespace tileWorldEditor {
 
         private makeCommandMenu() {
             this.commandMenuSprites = [];
-            let col = 3;
-            let row = 3;
+            let col = 5;
+            let row = 5;
             let worker = (img: Image, tok: CommandTokens) => {
                 this.drawOutline(col, row);
-                let spr = this.showInDiamond(col, row, img);
+                let spr = this.showImage(col, row, img);
                 spr.setKind(tok);
                 this.commandMenuSprites.push(spr);
                 col++;
@@ -742,7 +742,7 @@ namespace tileWorldEditor {
                     worker(paintSprite.image, ct);
                     brush = true;
                 } else if (!brush && ct == CommandTokens.PaintTile) {
-                    col = 3; row = 4;
+                    col = 5; row = 6;
                     this.manager.fixed().forEach(s => {
                         worker(s.image, CommandTokens.PaintTile);
                     })
@@ -803,15 +803,15 @@ namespace tileWorldEditor {
         // what is ordering of sprites?
         // (0,0) always first
         private findWitness(col: number, row: number) {
-            let item = this.getWhenDo(2+col, 2+row)
-            if (col != 0 || row != 0) {
+            let item = this.getWhenDo(col, row)
+            if (col != 2 || row != 2) {
                 let witness = this.posSpritePosition(item.attrs, this.manager.fixed().length);
                 item.witness = witness;
             }
         }
 
         private showAttributes(col: number, row: number) {
-            let item = this.rule.whenDo.find(a => a.col == col +2 && a.row == row +2);
+            let item = this.rule.whenDo.find(a => a.col == col && a.row == row);
             if (item) {
                 // if there is an include or single oneOf, show it.
                 let index = item.attrs.indexOf(AttrType.Include);
@@ -827,7 +827,7 @@ namespace tileWorldEditor {
                 let begin = 0;
                 let end = item.attrs.length-1;
                 if (index != -1) {
-                    this.showInDiamond(col, row, this.manager.all()[index].image);
+                    this.showImage(col, row, this.manager.all()[index].image);
                     if (index < this.manager.fixed().length) {
                         begin = this.manager.fixed().length;
                     } else {
@@ -841,7 +841,7 @@ namespace tileWorldEditor {
                     // eliminate duplicates
                     if (done.indexOf(val) == -1) {
                         done.push(val);
-                        this.showInDiamond(col, row, attrImages[attrValues.indexOf(val)]);
+                        this.showImage(col, row, attrImages[attrValues.indexOf(val)]);
                     }
                 });
             }
@@ -851,9 +851,9 @@ namespace tileWorldEditor {
             // which tile in the diamond are we attributing?
             let whenDo = this.getWhenDo(this.tileSaved.x >> 4, this.tileSaved.y >> 4);
             // for all user-defined sprites
-            let x = -2;
+            let x = 0;
             this.manager.all().forEach((s, i) => {
-                let spr = this.showInDiamond(x, 4, s.image);
+                let spr = this.showImage(x, 6, s.image);
                 this.attrItems.push(spr);
                 let sprAttr = sprites.create(attrImages[attrValues.indexOf(whenDo.attrs[i])]);
                 spr.data = sprAttr;
@@ -861,9 +861,9 @@ namespace tileWorldEditor {
                 sprAttr.x = spr.x; sprAttr.y = spr.y;
                 x++;
             });
-            x = -2;
+            x = 0;
             attrsCentered.forEach((img,i) => {
-                let attrSpr = this.showInDiamond(x, 3, img);
+                let attrSpr = this.showImage(x, 5, img);
                 attrSpr.setKind(attrValues[i]);
                 this.attrs.push(attrSpr);
                 x++;
