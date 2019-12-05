@@ -637,8 +637,6 @@ namespace tileWorldEditor {
         }
 
         // TODOs
-        // 1. dynamically show command
-        // 2. show selected command
         // 3. jump cursor to selected on start of menu ???
         // 4. delete icon
         private rowToCoord = [ 
@@ -733,11 +731,10 @@ namespace tileWorldEditor {
             this.whenDo = this.getWhenDo(r.col, r.row);
             this.menu = RuleEditorMenus.CommandMenu;
             this.setTileSaved();
-            this.currentCommand = commandSprite.data;
+            this.currentCommand = commandSprite.data.c;
             if (commandSprite.kind() == CommandTokens.SpaceTile) {
                 // editing the tail command
                 this.tokens = commandSprite.data.t;
-                commandSprite.data = commandSprite.data.c;
                 this.makeCommandMenu();
             } else {
                 this.modifyCommandMenu();
