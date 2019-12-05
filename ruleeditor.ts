@@ -638,7 +638,7 @@ namespace tileWorldEditor {
         }
 
         // TODOs
-        // - bugs: space at end
+        // - bugs: arrows showing after paint, space square
         // - jump cursor to selected on start of menu ???
         private rowToCoord = [ 
             { lr: -2, col: 2, row: 1}, 
@@ -698,18 +698,18 @@ namespace tileWorldEditor {
                 let spr = this.showInDiamond(col, row, arrowImages[arrowValues.indexOf(c.arg)]);
                 worker(spr, CommandTokens.MoveArrow);
             } else if (c.inst == CommandType.Paint) {
-                let spr = this.showInDiamond(col, row, paintSprite.image);
-                worker(spr, CommandTokens.PaintBrush);
-                if (c.arg != -1) {
-                    spr = this.showInDiamond(col, row, this.manager.fixed()[c.arg].image);
+                //let spr = this.showInDiamond(col, row, paintSprite.image);
+                //worker(spr, CommandTokens.PaintBrush);
+                //if (c.arg != -1) {
+                    let spr = this.showInDiamond(col, row, this.manager.fixed()[c.arg].image);
                     worker(spr, CommandTokens.PaintTile);
-                }
+                //}
             }
             return col;
         }
 
         private getTokens(whendo: WhenDo) {
-            let tokens = [CommandTokens.PaintBrush, CommandTokens.PaintTile];
+            let tokens = [CommandTokens.PaintTile];
             if (whendo.witness != -1)
                 tokens.insertAt(0, CommandTokens.MoveArrow);
             return tokens;
@@ -743,9 +743,10 @@ namespace tileWorldEditor {
         private makeCommandMenu() {
             this.commandMenuSprites = [];
             let col = 3;
+            let row = 3;
             let worker = (img: Image, tok: CommandTokens) => {
-                this.drawOutline(col, 4);
-                let spr = this.showInDiamond(col, 4, img);
+                this.drawOutline(col, row);
+                let spr = this.showInDiamond(col, row, img);
                 spr.setKind(tok);
                 this.commandMenuSprites.push(spr);
                 col++;
@@ -761,6 +762,7 @@ namespace tileWorldEditor {
                     worker(paintSprite.image, ct);
                     brush = true;
                 } else if (!brush && ct == CommandTokens.PaintTile) {
+                    col = 3; row = 4;
                     this.manager.fixed().forEach(s => {
                         worker(s.image, CommandTokens.PaintTile);
                     })
@@ -803,8 +805,9 @@ namespace tileWorldEditor {
                         this.currentCommand.inst = CommandType.Paint;
                         this.currentCommand.arg = -1;
                     } else if (s.kind() == CommandTokens.PaintTile) {
-                        let paint = this.whenDo.commands.find(c => c.inst == CommandType.Paint);
-                        paint.arg = this.manager.fixed().find(f => f.image == s.image).kind();
+                        //let paint = this.whenDo.commands.find(c => c.inst == CommandType.Paint);
+                        this.currentCommand.inst = CommandType.Paint;
+                        this.currentCommand.arg = this.manager.fixed().find(f => f.image == s.image).kind();
                     } else if (s.kind() == CommandTokens.Delete && exit) {
                         this.whenDo.commands.removeElement(this.currentCommand);
                     }
