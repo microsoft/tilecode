@@ -180,12 +180,12 @@ function includeAttr(n: number, i: number) {
     return res;
 }
 
-function SpaceAt(col: number, row: number): WhenDo {
-    return { col: col, row: row, attrs: includeAttr(7, 2), witness: -1, commands: [] }
+function TileAt(name: string, col: number, row: number): WhenDo {
+    return { col: col, row: row, attrs: includeAttr(7, manager.findName(name).kind()), witness: -1, commands: [] }
 }
 
-function BoulderAt(col: number, row: number): WhenDo {
-    let attrs = includeAttr(7, 4);
+function SpriteAt(name:string, col: number, row: number): WhenDo {
+    let attrs = includeAttr(7, manager.findName(name).kind());
     attrs[0] = attrs[1] = attrs[2] = AttrType.OK;
     return { col: col, row: row, attrs:attrs , witness: 4, commands: [] }
 }
@@ -197,7 +197,7 @@ let boulderFallDown: Rule = {
     dir: MoveDirection.None,
     generalize: [],
     whenDo: [ { col:2, row:2, attrs: [], witness:4, commands:[{inst: CommandType.Move, arg: MoveDirection.Down}]},
-               SpaceAt(2,3)
+               TileAt("Space",2,3)
     ]
 }
 
@@ -207,7 +207,7 @@ let boulderFallLeft: Rule = {
     dir: MoveDirection.None,
     generalize: [],
     whenDo: [{ col: 2, row: 2, attrs: [], witness: 4, commands: [{ inst: CommandType.Move, arg: MoveDirection.Left }] },
-                BoulderAt(2,3), SpaceAt(1,2), SpaceAt(1,3)]
+        SpriteAt("Boulder", 2, 3), TileAt("Space", 1, 2), TileAt("Space",1,3)]
 }
 
 // let ruleEditor = new tw.RuleEditor(manager, tw.makeRestingRule(manager, "Boulder"))
