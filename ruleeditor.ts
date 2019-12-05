@@ -648,6 +648,7 @@ namespace tileWorldEditor {
             { lr: 0, col: 2, row: 2 }, 
             { lr: 1, col: 3, row: 2 },
             { lr: 2, col: 2, row: 3 } ];
+        
         private showCommands() {
             this.commandSprites = [];
             this.rowToCoord.forEach(r => {
@@ -682,6 +683,13 @@ namespace tileWorldEditor {
         }
 
         private showCommand(col: number, row: number, c: Command, tokens: CommandTokens[]) {
+            let worker = (spr: Sprite, tok: CommandTokens) => {
+                spr.setKind(tok);
+                spr.data = c;
+                this.commandSprites.push(spr);
+                tokens.removeElement(tok);
+                col = col + 1;
+            };
             if (c.inst == -1) {
                 let spaceImg = this.manager.empty().image;
                 let spr = this.showInDiamond(col, row, spaceImg);       
@@ -690,25 +698,13 @@ namespace tileWorldEditor {
                 this.commandSprites.push(spr);
             } else if (c.inst == CommandType.Move) {
                 let spr = this.showInDiamond(col, row, arrowImages[arrowValues.indexOf(c.arg)]);
-                spr.setKind(CommandTokens.MoveArrow);
-                spr.data = c;
-                this.commandSprites.push(spr);
-                tokens.removeElement(CommandTokens.MoveArrow);
-                col = col + 1;
+                worker(spr, CommandTokens.MoveArrow);
             } else if (c.inst == CommandType.Paint) {
                 let spr = this.showInDiamond(col, row, paintSprite.image);
-                spr.setKind(CommandTokens.PaintBrush);
-                spr.data = c;
-                this.commandSprites.push(spr);
-                tokens.removeElement(CommandTokens.PaintBrush);
-                col = col + 1;
+                worker(spr, CommandTokens.PaintBrush);
                 if (c.arg != -1) {
                     spr = this.showInDiamond(col, row, this.manager.fixed()[c.arg].image);
-                    spr.data = c;
-                    spr.setKind(CommandTokens.PaintTile);
-                    this.commandSprites.push(spr);
-                    tokens.removeElement(CommandTokens.PaintTile);
-                    col = col + 1;
+                    worker(spr, CommandTokens.PaintTile);
                 }
             }
             return col;
@@ -797,6 +793,9 @@ namespace tileWorldEditor {
                 this.makeCommandMenu();
             } else if (this.currentCommand.inst == CommandType.Move) {
                 this.tokens = [CommandTokens.MoveArrow];
+                this.makeCommandMenu();
+            } else if (this.currentCommand.inst == CommandType.Paint) { 
+                this.tokens = [CommandTokens.PaintTile];
                 this.makeCommandMenu();
             } else {
                 this.noMenu();
