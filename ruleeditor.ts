@@ -716,7 +716,8 @@ namespace tileWorldEditor {
         }
 
         private tryEditCommand() {
-            let commandSprite = this.findCommand(this.cursor);
+            let commandSprite = 
+                this.commandSprites.find(c => (c.y == this.cursor.y && c.x == this.cursor.x));
             // nothing to do here
             if (commandSprite == null)
                 return false;
@@ -739,17 +740,6 @@ namespace tileWorldEditor {
             return true;
         }
 
-        private findCommand(cursor: Sprite): Sprite {
-            // remove the tokens already present in the command list
-            let ret: Sprite = null;
-            this.commandSprites.forEach(c => {
-                if (c.y == cursor.y && c.x == cursor.x) {
-                    ret = c;
-                }
-            })
-            return ret;
-        }
-
         private makeCommandMenu(deleteOption: boolean = false) {
             this.commandMenuSprites = [];
             let col = 3;
@@ -764,14 +754,14 @@ namespace tileWorldEditor {
                 this.tokens.indexOf(CommandTokens.PaintBrush) == -1
             ) {
                 // show the available tiles for painting with
-                this.manager.fixed().forEach((s,i) => {
+                this.manager.fixed().forEach(s => {
                     worker(s.image, CommandTokens.PaintTile);
                 })
             } else {
                 // show the commands
                 this.tokens.forEach(ct => {
                     if (ct == CommandTokens.MoveArrow && this.whenDo.witness != -1) {
-                        arrowValues.forEach((v, i) => {
+                        arrowValues.forEach(v => {
                             worker(arrowImages[arrowValues.indexOf(v)], ct);
                         })
                     } else if (ct == CommandTokens.PaintBrush) {
@@ -815,12 +805,12 @@ namespace tileWorldEditor {
                         let paint = this.whenDo.commands.find(c => c.inst == CommandType.Paint);
                         paint.arg = this.manager.fixed().find(f => f.image == s.image).kind();
                     } else if (s.kind() == CommandTokens.Delete) {
-                        this.whenDo.commands.removeElement(this.currentCommand);
-                        this.noMenu();
+                        // TODO: only on button press
+                        // this.whenDo.commands.removeElement(this.currentCommand);
+                        // this.noMenu();
                     }
                 }
             })
-            // TODO: refresh and move cursor to the right
         }
 
         private posSpritePosition(attrs: AttrType[], begin: number) {
