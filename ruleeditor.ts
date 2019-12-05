@@ -259,24 +259,6 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
     `;
-    const explode = img`
-        . . . . . . . . . . . . . . . .
-        . . . . 4 4 5 . . . . . . . . .
-        . . . . 4 4 5 5 4 4 . . 5 5 5 .
-        . . . 4 5 4 4 5 4 4 . 5 5 5 . .
-        . . 5 5 4 4 5 4 4 2 5 5 . . . .
-        . 5 5 5 2 4 4 5 2 2 4 4 4 . . .
-        . 5 5 5 2 2 2 2 4 4 4 4 4 . . .
-        . . 4 4 4 2 2 4 4 2 4 5 5 5 . .
-        . . 4 4 4 4 4 4 5 2 2 2 5 5 5 .
-        . . 5 4 2 4 5 4 4 2 2 2 4 4 5 .
-        . . 4 2 2 2 2 2 2 2 2 4 5 4 . .
-        . . . 4 5 2 4 4 2 4 2 4 4 . . .
-        . . 5 5 5 . 4 5 5 4 . . 4 . . .
-        . . 5 . . . 4 . 5 5 . . . . . .
-        . . . . . . . . . 5 . . . . . .
-        . . . . . . . . . . . . . . . .
-    `;
     const arrowImages = [leftArrow, rightArrow, upArrow, downArrow];
     const arrowValues = [MoveDirection.Left, MoveDirection.Right, 
         MoveDirection.Up, MoveDirection.Down];
@@ -637,8 +619,6 @@ namespace tileWorldEditor {
             this.showCommands();
         }
 
-        // TODOs
-        // - bugs: arrows showing after paint, space square
         // - jump cursor to selected on start of menu ???
         private rowToCoord = [ 
             { lr: -2, col: 2, row: 1}, 
