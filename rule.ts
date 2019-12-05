@@ -32,14 +32,14 @@ type WhenDo = {
     col: number;            // the guards and commands associated with a tile in the neighborhood
     row: number;            // (2,2) is the center of neighborhood, graphics coordinate system.
     attrs: AttrType[];      // the guard, one attribute per fixed/movable sprite
-    witness?: number;       // does the guard identify a witness (index of movable sprite)
-    commands?: Command[];   // the commands
+    witness: number;       // does the guard identify a witness (index of movable sprite)
+    commands: Command[];   // the commands
 }
 
 type Rule = {
     kind: number[];                 // the indices of movable sprite kinds this rule is defined over
     rt: RuleType;
-    dir?: MoveDirection;            // the direction associated with rule type (Moving, Colliding, Pushing)
+    dir: MoveDirection;            // the direction associated with rule type (Moving, Colliding, Pushing)
     generalize: MoveDirection[];    // the other directions to generalize this rule to 
     whenDo: WhenDo[];               // guarded commands
 }
