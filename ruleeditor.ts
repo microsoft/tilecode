@@ -750,27 +750,24 @@ namespace tileWorldEditor {
                 this.commandMenuSprites.push(spr);
                 col++;
             };
-            if (this.tokens.indexOf(CommandTokens.PaintTile) != -1 &&
-                this.tokens.indexOf(CommandTokens.PaintBrush) == -1
-            ) {
-                // show the available tiles for painting with
-                this.manager.fixed().forEach(s => {
-                    worker(s.image, CommandTokens.PaintTile);
-                })
-            } else {
-                // show the commands
-                this.tokens.forEach(ct => {
-                    if (ct == CommandTokens.MoveArrow && this.whenDo.witness != -1) {
-                        arrowValues.forEach(v => {
-                            worker(arrowImages[arrowValues.indexOf(v)], ct);
-                        })
-                    } else if (ct == CommandTokens.PaintBrush) {
-                        worker(paintSprite.image, ct);
-                    } else if (ct == CommandTokens.Delete) {
-                        worker(deleteIcon, ct);
-                    }
-                });
-            }
+            // show the commands
+            let brush = false;
+            this.tokens.forEach(ct => {
+                if (ct == CommandTokens.MoveArrow && this.whenDo.witness != -1) {
+                    arrowValues.forEach(v => {
+                        worker(arrowImages[arrowValues.indexOf(v)], ct);
+                    })
+                } else if (ct == CommandTokens.PaintBrush) {
+                    worker(paintSprite.image, ct);
+                    brush = true;
+                } else if (!brush && ct == CommandTokens.PaintTile) {
+                    this.manager.fixed().forEach(s => {
+                        worker(s.image, CommandTokens.PaintTile);
+                    })
+                } else if (ct == CommandTokens.Delete) {
+                    worker(deleteIcon, ct);
+                }
+            });
         }
 
         private modifyCommandMenu() {
