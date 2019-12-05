@@ -811,9 +811,12 @@ namespace tileWorldEditor {
                     } else if (s.kind() == CommandTokens.PaintBrush) {
                         this.currentCommand.inst = CommandType.Paint;
                         this.currentCommand.arg = -1;
-                    } else {
+                    } else if (s.kind() == CommandTokens.PaintTile) {
                         let paint = this.whenDo.commands.find(c => c.inst == CommandType.Paint);
                         paint.arg = this.manager.fixed().find(f => f.image == s.image).kind();
+                    } else if (s.kind() == CommandTokens.Delete) {
+                        this.whenDo.commands.removeElement(this.currentCommand);
+                        this.noMenu();
                     }
                 }
             })
