@@ -740,7 +740,7 @@ namespace tileWorldEditor {
             return true;
         }
 
-        private makeCommandMenu(deleteOption: boolean = false) {
+        private makeCommandMenu() {
             this.commandMenuSprites = [];
             let col = 3;
             let worker = (img: Image, tok: CommandTokens) => {
@@ -766,11 +766,10 @@ namespace tileWorldEditor {
                         })
                     } else if (ct == CommandTokens.PaintBrush) {
                         worker(paintSprite.image, ct);
+                    } else if (ct == CommandTokens.Delete) {
+                        worker(deleteIcon, ct);
                     }
                 });
-            }
-            if (deleteOption) {
-                worker(deleteIcon, CommandTokens.Delete);
             }
         }
 
@@ -780,11 +779,11 @@ namespace tileWorldEditor {
             if (this.tokens.length > 0) {
                 this.makeCommandMenu();
             } else if (this.currentCommand.inst == CommandType.Move) {
-                this.tokens = [CommandTokens.MoveArrow];
-                this.makeCommandMenu(true);
+                this.tokens = [CommandTokens.MoveArrow, CommandTokens.Delete];
+                this.makeCommandMenu();
             } else if (this.currentCommand.inst == CommandType.Paint) { 
-                this.tokens = [CommandTokens.PaintTile];
-                this.makeCommandMenu(true);
+                this.tokens = [CommandTokens.PaintTile, CommandTokens.Delete];
+                this.makeCommandMenu();
             } else {
                 this.noMenu();
             }
