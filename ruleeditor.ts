@@ -665,61 +665,79 @@ namespace tileWorldEditor {
                 whendo.commands.push({inst: -1, arg: -1});
             }
             let col = 4;
-            whendo.commands.forEach((c, j) => { 
-                col = this.showCommand(col, row, c) 
+            let tokens = this.getTokens(whendo);
+            whendo.commands.forEach(c => { 
+                col = this.showCommand(col, row, c, tokens);
             });
+            if (tokens.length > 0 ) {
+                // lookup the last sprite 
+                let command = this.commandSprites[this.commandSprites.length-1];
+                if (command.kind() != CommandTokens.SpaceTile) {
+                    let c = { inst: -1, arg: -1 };
+                    whendo.commands.push(c);
+                    this.showCommand(col, row, c, tokens);
+                }
+            }
         }
 
-        private showCommand(col: number, row: number, c: Command) {
-            if (c == null || c.inst == -1) {
+        private showCommand(col: number, row: number, c: Command, tokens: CommandTokens[]) {
+            if (c.inst == -1) {
                 let spaceImg = this.manager.empty().image;
-                let spr = this.showInDiamond(col, row, spaceImg);
+                let spr = this.showInDiamond(col, row, spaceImg);       
                 spr.setKind(CommandTokens.SpaceTile);
-                spr.data = c;
+                spr.data = { c: c, t: tokens };
                 this.commandSprites.push(spr);
             } else if (c.inst == CommandType.Move) {
                 let spr = this.showInDiamond(col, row, arrowImages[arrowValues.indexOf(c.arg)]);
                 spr.setKind(CommandTokens.MoveArrow);
                 spr.data = c;
                 this.commandSprites.push(spr);
+                tokens.removeElement(CommandTokens.MoveArrow);
                 col = col + 1;
             } else if (c.inst == CommandType.Paint) {
                 let spr = this.showInDiamond(col, row, paintSprite.image);
                 spr.setKind(CommandTokens.PaintBrush);
                 spr.data = c;
                 this.commandSprites.push(spr);
+                tokens.removeElement(CommandTokens.PaintBrush);
                 col = col + 1;
                 if (c.arg != -1) {
                     spr = this.showInDiamond(col, row, this.manager.fixed()[c.arg].image);
                     spr.data = c;
                     spr.setKind(CommandTokens.PaintTile);
                     this.commandSprites.push(spr);
+                    tokens.removeElement(CommandTokens.PaintTile);
                     col = col + 1;
                 }
             }
             return col;
         }
 
-        // TODO: start new menu on existing command
-        // TODO: add new element at end...
+        private getTokens(whendo: WhenDo) {
+            let tokens = [CommandTokens.PaintBrush, CommandTokens.PaintTile];
+            if (whendo.witness != -1)
+                tokens.insertAt(0, CommandTokens.MoveArrow);
+            return tokens;
+        }
+
+        // TODO: paint logic
+        // TODO: start new menu on existing command (paint, etc.)
         private tryEditCommand() {
-            let row = this.cursor.y >> 4;
-            let r = this.rowToCoord.find(r => r.lr == row - 2);
-            let whendo = this.getWhenDo(r.col, r.row);
-            this.tokens = [CommandTokens.PaintBrush, CommandTokens.PaintTile];
-            if (whendo.witness != -1) 
-                this.tokens.insertAt(0, CommandTokens.MoveArrow);
-            let overlapsCursor: Sprite = this.removeTokens(this.cursor, this.tokens);
+            let commandSprite = this.findCommand(this.cursor);
             // nothing to do here
-            if (overlapsCursor == null)
+            if (commandSprite == null)
                 return false;
             // set up the state
+            let row = this.cursor.y >> 4;
+            let r = this.rowToCoord.find(r => r.lr == row - 2);
+            this.whenDo = this.getWhenDo(r.col, r.row);
             this.menu = RuleEditorMenus.CommandMenu;
             this.setTileSaved();
-            this.whenDo = whendo;
-            this.currentCommand = overlapsCursor.data;
-            if (overlapsCursor.kind() == CommandTokens.SpaceTile) {
+            this.currentCommand = commandSprite.data;
+            if (commandSprite.kind() == CommandTokens.SpaceTile) {
                 // editing the tail command
+                this.tokens = commandSprite.data.t;
+                commandSprite.data = commandSprite.data.c;
                 this.makeCommandMenu();
             } else {
                 this.modifyCommandMenu();
@@ -727,15 +745,12 @@ namespace tileWorldEditor {
             return true;
         }
 
-        private removeTokens(cursor: Sprite, tokens: CommandTokens[]): Sprite {
+        private findCommand(cursor: Sprite): Sprite {
             // remove the tokens already present in the command list
             let ret: Sprite = null;
             this.commandSprites.forEach(c => {
-                if (c.y == cursor.y) {
-                    if (ret == null) tokens.removeElement(c.kind());
-                    if (c.x == cursor.x) {
-                        ret = c;
-                    }
+                if (c.y == cursor.y && c.x == cursor.x) {
+                    ret = c;
                 }
             })
             return ret;
