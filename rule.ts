@@ -75,7 +75,7 @@ function makeRestingRule(m: tileWorldEditor.SpriteManager, name: string): Rule {
 interface RuleGetter {
     getKinds(rid: number): number[];  // at most 4
     getType(rid: number): RuleType;
-    getDir(rid: number): MoveDirection;
+    getDirections(rid: number): MoveDirection[]; // first,
     getWhenDo(rid: number, col: number, row: number): number; // wdid
     getAttrs(rid: number, wdid: number): AttrType[]; // exactly fixed + movable
     getWitness(rid: number, wdid: number): number;

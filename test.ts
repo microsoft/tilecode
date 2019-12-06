@@ -272,6 +272,6 @@ let boulderFallRight: Rule = {
 }
 
 // let ruleEditor = new tw.RuleEditor(manager, tw.makeRestingRule(manager, "Boulder"))
-let ruleEditor = new tw.RuleEditor(manager, boulderFallingDown);
+let ruleEditor = new tw.RuleEditor(manager, boulderFallDown);
 
 //let mapEditor = new tileWorldEditor.MapEditor(manager, manager.findName("Space"))
