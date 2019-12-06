@@ -87,7 +87,18 @@ namespace tileWorldEditor {
                 this.userSpriteIndex = this.row();
                 this.updateSelection();
             } else if (this.col() == 0) {
-                // commands
+                if (this.row() == 0) {
+                    // map icon brings us to home in world
+                    this.offsetX = 0;
+                    this.offsetY = 0;
+                    this.update();
+                } else if (this.row() == 1) {
+                    // paint
+                } else if (this.row() == 2) {
+                    // rule editor
+                } else if (this.row() == 3) {
+                    // run the game
+                }
             } else {
                 if (this.userSpriteIndex >= 0) {
                     let x = this.offsetX + this.col() - 2;
@@ -110,7 +121,7 @@ namespace tileWorldEditor {
 
         private update() {
             this.screen.fill(12);
-            this.screen.fillRect(32, yoff, 160-32, 16*7, 11);
+            this.screen.fillRect(0, yoff, 16, 16, 11);
             this.manager.all().forEach((s, row) => {
                 this.drawImage(s.image, 1, row);
             });
