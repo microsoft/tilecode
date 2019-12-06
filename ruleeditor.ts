@@ -299,10 +299,7 @@ namespace tileWorldEditor {
         private ruleTypeMap: Image;     // mapping of tile to rule type
         private dirMap: Image;          // mapping of tile to direction
         // whendo state
-        private attrCursor: Sprite;
-        private attrSelected: Sprite;
-        private attrs: Sprite[];
-        private attrItems: Sprite[];
+        private attrSelected: number;
         // for editing commands
         private otherCursor: Sprite;      // show correspondence between left and right
         private commandSprites: Sprite[]; // the commands created so far
@@ -320,15 +317,10 @@ namespace tileWorldEditor {
             this.dirMap = image.create(10,7);
             
             // attribute menu view
-            this.attrSelected = null;
-            this.attrs = [];
-            this.attrItems = [];
+            this.attrSelected = -1;
             this.tileSaved = sprites.create(cursorOut)
             this.tileSaved.setFlag(SpriteFlag.Invisible, true)
             this.tileSaved.z = 10;
-            this.attrCursor = sprites.create(cursorOut)
-            this.attrCursor.setFlag(SpriteFlag.Invisible, true)
-
             this.background = image.create(160, 120)
             scene.setBackgroundImage(this.background)
             this.manager.setScene()            
@@ -408,8 +400,12 @@ namespace tileWorldEditor {
             })
         }
 
-        private col() { return this.cursor.x >> 4; }
-        private row() { return (this.cursor.y - yoff) >> 4; }
+        private col(curr: boolean = true) { 
+            return curr ? this.cursor.x >> 4 : this.tileSaved.x >> 4; 
+        }
+        private row(curr: boolean = true) { 
+            return curr ? (this.cursor.y - yoff) >> 4: (this.tileSaved.y - yoff) >> 4; 
+        }
 
         private cursorMove() {
             if (this.menu == RuleEditorMenus.None) {
@@ -467,10 +463,9 @@ namespace tileWorldEditor {
         private noMenu() {
             this.whenDo = null;
             this.currentCommand = null;
-            this.attrSelected = null;
+            this.attrSelected = -1;
             this.menu = RuleEditorMenus.None;
             this.tileSaved.setFlag(SpriteFlag.Invisible, true);
-            this.attrCursor.setFlag(SpriteFlag.Invisible, true);
         }
         
         private manhattanDistance2() {
@@ -478,14 +473,8 @@ namespace tileWorldEditor {
         }
 
         private update() {
-            this.attrItems.forEach(m => {
-                let s:Sprite = m.data;   // issue filed
-                s.destroy();             // 
-            })
             this.showSprites.forEach(spr => { spr.destroy(); })
             this.showSprites = [];
-            this.attrs = [];
-            this.attrItems = [];
 
             this.background.fill(11);
             this.background.fillRect(0, 0, 80, 120, 12);
@@ -500,6 +489,7 @@ namespace tileWorldEditor {
                 this.dirMap.fill(0xf);
                 this.showRuleMenu(0, 5);
             } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
+                this.dirMap.fill(0xf);
                 this.attrMenu()
             } else if (this.menu == RuleEditorMenus.CommandMenu) {
                 this.modifyCommandMenu();
@@ -572,7 +562,6 @@ namespace tileWorldEditor {
             spr.x += (dir == MoveDirection.Left) ? 4 : (dir == MoveDirection.Right) ? -4 : 0;
             spr.y += (dir == MoveDirection.Up) ? 4 : (dir == MoveDirection.Down) ? -4 : 0; 
         }
-
 
         private drawImage(c: number, r: number, img: Image, z: number = 0) {
             this.background.drawTransparentImage(img, c << 4, yoff + (r << 4));
@@ -836,65 +825,55 @@ namespace tileWorldEditor {
 
         private attrMenu() {
             // which tile in the diamond are we attributing?
-            let whenDo = this.getWhenDo(this.tileSaved.x >> 4, (this.tileSaved.y - yoff) >> 4);
+            let whenDo = this.getWhenDo(this.col(false), this.row(false));
             // for all user-defined sprites
-            let x = 0;
+            attrsCentered.forEach((img, i) => {
+                this.drawImage(i, 5, img);
+            });
             this.manager.all().forEach((s, i) => {
-                let spr = this.showImage(x, 6, s.image);
-                this.attrItems.push(spr);
-                let sprAttr = sprites.create(attrImages[attrValues.indexOf(whenDo.attrs[i])]);
-                spr.data = sprAttr;
-                spr.setKind(i);
-                sprAttr.x = spr.x; sprAttr.y = spr.y;
-                x++;
+                this.drawImage(i, 6, s.image);
+                this.drawImage(i, 6, attrImages[attrValues.indexOf(whenDo.attrs[i])]);
+                this.dirMap.setPixel(i,6,whenDo.attrs[i]);
             });
-            x = 0;
-            attrsCentered.forEach((img,i) => {
-                let attrSpr = this.showImage(x, 5, img);
-                attrSpr.setKind(attrValues[i]);
-                this.attrs.push(attrSpr);
-                x++;
-            });
-            if (this.attrSelected == null)
-              this.selectAttr(this.attrs[0]);
+            if (this.attrSelected == -1)
+              this.selectAttr(0);
         }
 
-        private selectAttr(a: Sprite) {
+        private selectAttr(a: number) {
             this.attrSelected = a;
-            this.attrCursor.x = a.x
-            this.attrCursor.y = a.y
-            this.attrCursor.setFlag(SpriteFlag.Invisible, false)
+            this.drawImage(a, 5, cursorOut);
         }
 
         private attrUpdate() {
-            let a = this.attrs.find(a => this.cursor.overlapsWith(a));
-            if (a) { this.selectAttr(a); return true; }
-            let m = this.attrItems.find(m => this.cursor.overlapsWith(m));
-            if (m) {
-                let val = this.attrSelected.kind();
+            let a = this.row() == 5 ? (this.col() < 4 ? this.col() : -1) : -1;
+            if (a != -1) { this.selectAttr(a); return true; }
+            let m = this.row() == 6 ? 
+                (this.col() < this.manager.all().length ? this.col() : -1) : -1;
+            if (m != -1) { 
+                let val = attrValues[a];
                 if (val == AttrType.Include) { 
-                    if (m.kind() < this.manager.fixed().length) {
-                        this.setFixedOther(m, null, AttrType.Exclude);
-                        this.setMovableOther(m, null, AttrType.Exclude);
+                    if (m < this.manager.fixed().length) {
+                        this.setFixedOther(m, -1, AttrType.Exclude);
+                        this.setMovableOther(m, -1, AttrType.Exclude);
                     } else {
-                        this.setMovableOther(m, null, AttrType.Exclude);
-                        this.setFixedOther(m, null, AttrType.OK);
+                        this.setMovableOther(m, -1, AttrType.Exclude);
+                        this.setFixedOther(m, -1, AttrType.OK);
                     }
                 } else if (val == AttrType.OneOf) {
-                    this.setFixedOther(m, include, AttrType.OneOf);
-                    this.setMovableOther(m, include, AttrType.OneOf);
-                } else if (m.kind() < this.manager.fixed().length) {
+                    this.setFixedOther(m, AttrType.Include, AttrType.OneOf);
+                    this.setMovableOther(m, AttrType.Include, AttrType.OneOf);
+                } else if (m < this.manager.fixed().length) {
                     // not allowed to set all to exclude
                     let cnt = 0;
                     let i = 0;
                     for(;i<this.manager.fixed().length;i++) {
-                        if (this.attrItems[i].data.image == exclude) {
+                        if (this.dirMap.getPixel(6,i) == AttrType.Exclude) {
                             cnt++; if (cnt == 2) break;
                         }
                     }
                     if (cnt == 2) {
-                        let whenDo = this.getWhenDo(this.tileSaved.x >> 4, (this.tileSaved.y - yoff) >> 4);
-                        this.setAttr(this.attrItems[i], whenDo.attrs[m.kind()]);
+                        let whenDo = this.getWhenDo(this.col(false), this.row(false));
+                        this.setAttr(i, whenDo.attrs[m]);
                     }
                 }
                 this.setAttr(m, val);
@@ -915,30 +894,28 @@ namespace tileWorldEditor {
             return item;
         }
         
-        private setFixedOther(m: Sprite, src: Image, val: number) {
-            for(let i =0; i<this.manager.fixed().length; i++) {
-                let o = this.attrItems[i];
+        private setFixedOther(m: number, src: number, val: number) {
+            let whenDo = this.getWhenDo(this.col(false), this.row(false));
+            for(let o =0; o<this.manager.fixed().length; o++) {
                 if (o != m) {
-                    if (src == null || o.data.image == src)
+                    if (src == -1 || whenDo.attrs[o] == src)
                         this.setAttr(o, val);
                 }
             }
         }
-        private setMovableOther(m: Sprite, src: Image, val: number) {
-            for (let i = this.manager.fixed().length; i< this.manager.all().length; i++) {
-                let o = this.attrItems[i];
+        private setMovableOther(m: number, src: number, val: number) {
+            let whenDo = this.getWhenDo(this.col(false), this.row(false));
+            for (let o = this.manager.fixed().length; o< this.manager.all().length; o++) {
                 if (o != m) {
-                    if (src == null || o.data.image == src)
+                    if (src == -1 || whenDo.attrs[o] == src)
                         this.setAttr(o, val);
                 }
             }
         }
 
-        private setAttr(m: Sprite, val: AttrType) {
-            let i = attrValues.indexOf(val);
-            let whenDo = this.getWhenDo(this.tileSaved.x >> 4, (this.tileSaved.y - yoff) >> 4);
-            whenDo.attrs[m.kind()] = val;
-            (<Sprite>(m.data)).setImage(attrImages[i]);
+        private setAttr(m: number, val: AttrType) {
+            let whenDo = this.getWhenDo(this.col(false), this.row(false));
+            whenDo.attrs[m] = val;
         }
         
         private closeMenu(command: string) {
