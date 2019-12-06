@@ -830,13 +830,13 @@ namespace tileWorldEditor {
             attrsCentered.forEach((img, i) => {
                 this.drawImage(i, 5, img);
             });
-            this.manager.all().forEach((s, i) => {
+            this.manager.all().forEach((s, i ) => {
                 this.drawImage(i, 6, s.image);
                 this.drawImage(i, 6, attrImages[attrValues.indexOf(whenDo.attrs[i])]);
                 this.dirMap.setPixel(i,6,whenDo.attrs[i]);
             });
             if (this.attrSelected == -1)
-              this.selectAttr(0);
+                this.selectAttr(0);
         }
 
         private selectAttr(a: number) {
@@ -845,12 +845,13 @@ namespace tileWorldEditor {
         }
 
         private attrUpdate() {
-            let a = this.row() == 5 ? (this.col() < 4 ? this.col() : -1) : -1;
-            if (a != -1) { this.selectAttr(a); return true; }
-            let m = this.row() == 6 ? 
-                (this.col() < this.manager.all().length ? this.col() : -1) : -1;
-            if (m != -1) { 
-                let val = attrValues[a];
+            let a = this.row() == 5 ? this.col() : -1
+            if (a != -1 && a < attrValues.length) { 
+                this.selectAttr(a); return true; 
+            }
+            let m = this.row() == 6 ? this.col() : -1; 
+            if (m != -1 && m < this.manager.all().length) { 
+                let val = attrValues[this.attrSelected];
                 if (val == AttrType.Include) { 
                     if (m < this.manager.fixed().length) {
                         this.setFixedOther(m, -1, AttrType.Exclude);
