@@ -121,9 +121,9 @@ namespace tileWorldEditor {
         private cursor: Sprite;
         private cursorAnim: animation.Animation;
         private currentTileSprite: Sprite;
-        constructor(private manager: SpriteManager) {
+        constructor(private manager: SpriteManager, defaultTile: Sprite) {
             this.tileMap = image.create(30, 30)
-            this.tileMap.fill(1)
+            this.tileMap.fill(defaultTile.kind());
             scene.setTileMap(this.tileMap)
             this.manager.setScene()
 

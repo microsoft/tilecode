@@ -199,8 +199,6 @@ let enemyId = manager.findName("Enemy").kind()
 let boulderId = manager.findName("Boulder").kind()
 let diamondId = manager.findName("Diamond").kind()
 
-// let mapEditor = new tileWorldEditor.MapEditor(manager)
-
 let tp = TileAt("Space", 2, 3)
 tp.attrs[playerId] = AttrType.OK;
 tp.attrs[enemyId] = AttrType.OK;
@@ -274,4 +272,6 @@ let boulderFallRight: Rule = {
 }
 
 // let ruleEditor = new tw.RuleEditor(manager, tw.makeRestingRule(manager, "Boulder"))
-let ruleEditor = new tw.RuleEditor(manager, makeRestingRule(manager,"Boulder"))
+//let ruleEditor = new tw.RuleEditor(manager, makeRestingRule(manager,"Boulder"))
+
+let mapEditor = new tileWorldEditor.MapEditor(manager, manager.findName("Space"))

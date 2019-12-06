@@ -1,45 +1,48 @@
-enum RuleType {
+enum RuleType {  // [4]
     Resting,     // a sprite at rest 
     Moving,      // a sprite moving in a given direction
     Pushing,     // a sprite being pushed in a given direction
     Colliding    // a moving sprite about to collide with another sprite
 }
 
-enum MoveDirection {
+enum MoveDirection { // [4]
     None, Left, Right, Up, Down
 }
 
-enum CommandType {
+enum CommandType { // [8]
     Move,     // arg (MoveDirection)
     Paint,    // arg (index of fixed sprite)
     Reverse,
     Stop,
+    // Score+1
+    // Destroy
+    // Life-1
 }
 
-enum AttrType {
+enum AttrType {  // [2]
     Exclude,  // tile cannot contain this kind
     Include,  // tile must contain this kind
     OneOf,    // tile must contain at least one labelled thusly
     OK        // tile may contain this kind
 }
 
-type Command = {
+type Command = { // [8] + [8]
     inst: CommandType;
     arg: number;
 }
 
 type WhenDo = {
-    col: number;            // the guards and commands associated with a tile in the neighborhood
-    row: number;            // (2,2) is the center of neighborhood, graphics coordinate system.
-    attrs: AttrType[];      // the guard, one attribute per fixed/movable sprite
+    col: number;            // [4] the guards and commands associated with a tile in the neighborhood
+    row: number;            // [4] (2,2) is the center of neighborhood, graphics coordinate system.
+    attrs: AttrType[];      // [2]*N the guard, one attribute per fixed/movable sprite
     witness: number;       // does the guard identify a witness (index of movable sprite)
     commands: Command[];   // the commands
 }
 
 type Rule = {
-    kind: number[];                 // the indices of movable sprite kinds this rule is defined over
+    kind: number[];                 // [4*4] the indices of movable sprite kinds this rule is defined over
     rt: RuleType;
-    dir: MoveDirection;            // the direction associated with rule type (Moving, Colliding, Pushing)
+    dir: MoveDirection;             // the direction associated with rule type (Moving, Colliding, Pushing)
     generalize: MoveDirection[];    // the other directions to generalize this rule to 
     whenDo: WhenDo[];               // guarded commands
 }
