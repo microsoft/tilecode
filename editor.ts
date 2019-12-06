@@ -17,7 +17,7 @@ namespace tileWorldEditor {
         private cursor: Sprite;
         private selected: Sprite;
         private userSpriteIndex: number;
-        constructor(private manager: SpriteManager, defaultTile: Sprite) {
+        constructor(private manager: SpriteManager, private defaultTile: Sprite) {
             this.manager.setScene()
             // this is the world
             this.world = image.create(30, 30);
@@ -111,8 +111,6 @@ namespace tileWorldEditor {
         private update() {
             this.screen.fill(12);
             this.screen.fillRect(32, yoff, 160-32, 16*7, 11);
-            // this.screen.fillRect(0, 0, 0, 0, 12)
-            // paint it ourselves 
             this.manager.all().forEach((s, row) => {
                 this.drawImage(s.image, 1, row);
             });
@@ -122,10 +120,15 @@ namespace tileWorldEditor {
             for(let x = this.offsetX; x<this.offsetX+8; x++) {
                 for (let y = this.offsetY; y < this.offsetY + 7; y++) {
                     let index = 0 <= x && x < this.world.width && 0 <= y && y < this.world.height ? this.world.getPixel(x,y) : -1;
+                    let col = 2 + (x - this.offsetX);
+                    let row = (y - this.offsetY);
+                    if (index >= 0)
+                        this.drawImage(this.defaultTile.image, col, row)
                     this.drawImage(index >= 0 ? this.manager.all()[index].image : emptyTile, 
-                        2+(x-this.offsetX), (y-this.offsetY));
+                        col, row);
                 }    
             }
+            this.screen.drawLine(32, yoff, 32, 119, 11)
         }
 
         private executeCommand(command: string, s: Sprite) {
