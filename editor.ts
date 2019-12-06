@@ -94,6 +94,9 @@ namespace tileWorldEditor {
                     this.update();
                 } else if (this.row() == 1) {
                     // paint
+                    game.pushScene();
+                    let spriteEditor = new ImageEditor(this.manager, 
+                        this.manager.all()[this.userSpriteIndex])
                 } else if (this.row() == 2) {
                     // rule editor
                 } else if (this.row() == 3) {
@@ -140,15 +143,6 @@ namespace tileWorldEditor {
                 }    
             }
             this.screen.drawLine(32, yoff, 32, 119, 11)
-        }
-
-        private executeCommand(command: string, s: Sprite) {
-            game.pushScene();
-            if (command == "Paint") {
-                let spriteEditor = new ImageEditor(this.manager, s)
-            } else {
-                // let ruleEditor = new RuleEditor(this.manager, s)
-            }
         }
     } 
  }
