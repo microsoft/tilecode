@@ -17,7 +17,8 @@
         "ruleeditor.ts",
         "test.ts",
         "rule.ts",
-        "manager.ts"
+        "manager.ts",
+        "runner.ts"
     ],
     "testFiles": [],
     "public": false,

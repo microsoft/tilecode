@@ -266,17 +266,6 @@ namespace tileWorldEditor {
     const attrImages = [include, exclude, ok, oneof];
     const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, AttrType.OneOf];
 
-    export function makeRestingRule(m: tileWorldEditor.SpriteManager, name: string): Rule {
-        let index = m.findName(name).kind();
-        return {
-            kind: [index],
-            rt: RuleType.Resting,
-            dir: MoveDirection.None,
-            generalize: [],
-            whenDo: [{ col: 2, row: 2, attrs: [], witness: index, commands: []}]
-        }
-    }
-
     enum RuleEditorMenus { RuleTypeMenu, AttrTypeMenu, CommandMenu, None };
     enum CommandTokens { MoveArrow, PaintBrush, PaintTile, SpaceTile, Delete };
 

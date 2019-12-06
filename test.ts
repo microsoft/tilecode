@@ -172,46 +172,104 @@ namespace boulder {
 import tw = tileWorldEditor;
 let manager = new tw.SpriteManager(boulder.fixedSprites, boulder.movableSprites)
 
-function includeAttr(n: number, i: number) {
+function fillAttr(f: number, n: number, i: number, g: number) {
     let res: AttrType[] = [];
     for(let j=0;j<n;j++) {
-        res.push(j == i ? AttrType.Include : AttrType.Exclude);
+        res.push(j == i ? g : f);
     }
     return res;
 }
 
 function TileAt(name: string, col: number, row: number): WhenDo {
-    return { col: col, row: row, attrs: includeAttr(7, manager.findName(name).kind()), witness: -1, commands: [] }
+    let id = manager.findName(name).kind();
+    return { col: col, row: row, attrs: fillAttr(AttrType.Exclude, 7, id, AttrType.Include), witness: -1, commands: [] }
 }
 
 function SpriteAt(name:string, col: number, row: number): WhenDo {
-    let attrs = includeAttr(7, manager.findName(name).kind());
+    let id = manager.findName(name).kind();
+    let attrs = fillAttr(AttrType.Exclude, 7, id, AttrType.Include);
     attrs[0] = attrs[1] = attrs[2] = AttrType.OK;
-    return { col: col, row: row, attrs:attrs , witness: 4, commands: [] }
+    return { col: col, row: row, attrs:attrs , witness: id, commands: [] }
 }
 
+let wallId = manager.findName("Wall").kind()
+let playerId = manager.findName("Player").kind()
+let enemyId = manager.findName("Enemy").kind()
+let boulderId = manager.findName("Boulder").kind()
+let diamondId = manager.findName("Diamond").kind()
+
 // let mapEditor = new tileWorldEditor.MapEditor(manager)
+
+let tp = TileAt("Space", 2, 3)
+tp.attrs[playerId] = AttrType.OK;
+tp.attrs[enemyId] = AttrType.OK;
+let playerMove = fillAttr(AttrType.OK, 7, boulderId, AttrType.Exclude);
+playerMove[wallId] = AttrType.Exclude;
+
+let playerMoveRight: Rule =
+    {
+        kind: [playerId],
+        rt: RuleType.Pushing,
+        dir: MoveDirection.Right,
+        generalize: [],
+        whenDo: [{ col: 2, row: 2, attrs: [], witness: playerId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Right }] },
+                 { col: 3, row: 2, attrs: playerMove, witness: -1, commands: [] } ]
+    }
+
+let moveRight = [{ inst: CommandType.Move, arg: MoveDirection.Right }]
+let boulderRight = SpriteAt("Boulder", 3, 2)
+boulderRight.commands = [{ inst: CommandType.Move, arg: MoveDirection.Right }]
+
+let playerMoveBoulder: Rule =
+    {
+        kind: [playerId],
+        rt: RuleType.Pushing,
+        dir: MoveDirection.Right,
+        generalize: [],
+        whenDo: [{ col: 2, row: 2, attrs: [], witness: playerId, commands: moveRight },
+            boulderRight, TileAt("Space", 4, 2)
+        ]
+    }
+
 let boulderFallDown: Rule = {
-    kind: [4],
+    kind: [boulderId],
     rt: RuleType.Resting,
     dir: MoveDirection.None,
     generalize: [],
-    whenDo: [ { col:2, row:2, attrs: [], witness:4, commands:[{inst: CommandType.Move, arg: MoveDirection.Down}]},
-               TileAt("Space",2,3)
+    whenDo: [{ col: 2, row: 2, attrs: [], witness: boulderId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Down }] },
+    TileAt("Space", 2, 3)
     ]
+}
+let boulderFallingDown: Rule = 
+{
+    kind: [boulderId],
+    rt: RuleType.Moving,
+    dir: MoveDirection.Down,
+    generalize: [],
+    whenDo: [{ col: 2, row: 2, attrs: [], witness: boulderId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Down }] },
+                tp]
 }
 
 let boulderFallLeft: Rule = {
-    kind: [4],
+    kind: [boulderId],
     rt: RuleType.Resting,
     dir: MoveDirection.None,
     generalize: [],
-    whenDo: [{ col: 2, row: 2, attrs: [], witness: 4, commands: [{ inst: CommandType.Move, arg: MoveDirection.Left }] },
+    whenDo: [{ col: 2, row: 2, attrs: [], witness: boulderId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Left }] },
         SpriteAt("Boulder", 2, 3), TileAt("Space", 1, 2), TileAt("Space",1,3)]
 }
 
+let boulderFallRight: Rule = {
+    kind: [boulderId],
+    rt: RuleType.Resting,
+    dir: MoveDirection.None,
+    generalize: [],
+    whenDo: [{ col: 2, row: 2, attrs: [], witness: boulderId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Right }] },
+    SpriteAt("Boulder", 2, 3), TileAt("Space", 3, 2), TileAt("Space", 3, 3)]
+}
+
 // let ruleEditor = new tw.RuleEditor(manager, tw.makeRestingRule(manager, "Boulder"))
-let ruleEditor = new tw.RuleEditor(manager, boulderFallLeft)
+let ruleEditor = new tw.RuleEditor(manager, playerMoveBoulder)
 
 
 
