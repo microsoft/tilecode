@@ -7,12 +7,12 @@ namespace tileWorldEditor {
         private world: Image;
         private screen: Image;
         private cursor: Sprite;
-        private currentTileSprite: Sprite;
-        private menuSelected: Sprite;
+        private selected: Sprite;
         private offsetX: number; // where are we in the world?
         private offsetY: number; 
         private tileCnt: number;
         constructor(private manager: SpriteManager, defaultTile: Sprite) {
+            this.manager.setScene()
             // this is the world
             this.world = image.create(30, 30);
             this.world.fill(defaultTile.kind());
@@ -20,15 +20,16 @@ namespace tileWorldEditor {
             this.screen = image.create(160, 120);
             let empty = this.manager.empty()
             scene.setBackgroundImage(this.screen)
-            this.manager.setScene()
-            this.update();
-
-            // the color code of selected tile/sprite
-            this.currentTileSprite = undefined;
-            // cursor
-            this.cursor = sprites.create(cursorIn)
+            // cursors
+            this.selected = sprites.create(cursorOut);
+            this.selected.x = 24;
+            this.selected.y = 8 + yoff;
+            this.cursor = sprites.create(cursorIn);
             this.cursor.x = 40
             this.cursor.y = 56 + yoff;
+
+            this.offsetX = this.offsetY = 0;
+            this.update();
 
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.col() > 0)
@@ -47,23 +48,18 @@ namespace tileWorldEditor {
                     this.cursor.y += 16
             })
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (!this.currentTileSprite)
-                    return;
                 let row = this.row();
                 let col = this.col();
-                if (row >= 0 && row < this.world.height && col >= 0 && col < this.world.width) {
-                    this.world.setPixel(col, row, this.currentTileSprite.kind())
-                }
             })
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                
             })
         }
 
-        private col() {
+        private col(current: boolean = true) {
             return this.cursor.x >> 4;
         }
-        private row() {
+        private row(current: boolean = true) {
             return (this.cursor.y - yoff) >> 4;
         }
 
@@ -74,7 +70,6 @@ namespace tileWorldEditor {
         private update() {
             this.screen.fill(12);
             this.screen.fillRect(48, yoff, 160-48, 16*7, 11);
-
             // this.screen.fillRect(0, 0, 0, 0, 12)
             // paint it ourselves 
             this.manager.all().forEach((s, row) => {
@@ -87,6 +82,12 @@ namespace tileWorldEditor {
             commandImages.forEach((img, row) => {
                 this.drawImage(img, 0, row);
             })
+            for(let x = this.offsetX; x<this.offsetX+7; x++) {
+                for (let y = this.offsetY; y < this.offsetY + 7; y++) {
+                    let index = 0 <= x && x < this.world.width && 0 <= y && y < this.world.height ? this.world.getPixel(x,y) : -1;
+                    this.drawImage(index >= 0 ? this.manager.all()[index].image : emptyTile, 3+(x-this.offsetX), (y-this.offsetY));
+                }    
+            }
         }
 
         private executeCommand(command: string, s: Sprite) {
@@ -95,26 +96,6 @@ namespace tileWorldEditor {
                 let spriteEditor = new ImageEditor(this.manager, s)
             } else {
                 // let ruleEditor = new RuleEditor(this.manager, s)
-            }
-        }
-
-        private closeMenu(command: string) {
-            if (command) {
-                // look up name of sprite and get code
-                let  s = this.manager.findName(command)
-                if (s) {
-                    this.currentTileSprite = s;
-                } else if (command == "Paint" || command == "Program") {
-                    if (this.currentTileSprite && this.currentTileSprite.data != "Empty")
-                        this.executeCommand(command, this.currentTileSprite)
-                    else {
-                        let row = this.cursor.y >> 4
-                        let col = this.cursor.x >> 4
-                        let s = this.manager.findKind(this.world.getPixel(col, row))
-                        if (s.data != "Empty")
-                            this.executeCommand(command, s)
-                    }
-                }
             }
         }
     } 
