@@ -1,10 +1,13 @@
 namespace tileWorldEditor {
+    const yoff = 4;
     const colorSize = 8;
     const paintSize = 6;
     const colorsY = 30;
     const colorsX = 5;
+    enum CursorType {Regular, Color, Paint};
     export class ImageEditor {
-        private color: boolean;
+        private cursorType: CursorType;         // are we selecting a color or painting?
+        private cursor: Sprite;
         private colorCursor: Sprite;
         private paintCursor: Sprite;
         private selectedColor: number;
@@ -12,10 +15,15 @@ namespace tileWorldEditor {
         private image: Image;    // 16x16
         private screen: Image;  // whole screen
         constructor(private manager: SpriteManager, s: Sprite) {
-            this.color = true;
+            this.cursorType= CursorType.Color;
+            this.cursor = sprites.create(cursorIn);
+            this.cursor.x = colorsX + 8;
+            this.cursor.y = yoff + 16 + 8;
+            this.cursor.setFlag(SpriteFlag.Invisible, true);
+
             this.colorCursor = sprites.create(colorCursor)
-            this.colorCursor.x = colorsX + colorSize >> 1
-            this.colorCursor.y = colorsY + colorSize << 1
+            this.colorCursor.x = colorsX  + (colorSize>>1);
+            this.colorCursor.y = colorsY + colorSize*8;
             this.selectedColor = 0;
             this.paintCursor = sprites.create(paintCursor)
             this.paintCursor.x = paintSize * 5 + 2 
@@ -26,76 +34,100 @@ namespace tileWorldEditor {
             this.screen = image.create(160, 120)
             scene.setBackgroundImage(this.screen)
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.color) {
+                if (this.cursorType== CursorType.Color) {
                     if (this.colorCursor.x > colorsX + colorSize)
                         this.colorCursor.x -= colorSize
-                } else {
+                } else if (this.cursorType== CursorType.Paint) {
                     if (this.paintCursor.x > paintSize * 6 - 1)
                         this.paintCursor.x -= paintSize
                     else {
                         // transition cursor to color editor
-                        this.setColorCursor(true);
+                        this.setCursor(CursorType.Color);
                     }
-                }
+                } 
             })
             controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.color) {
+                if (this.cursorType== CursorType.Color) {
                     if (this.colorCursor.x < colorsX + colorSize)
                         this.colorCursor.x += colorSize
                     else {
                         // transition cursor to paint editor
-                        this.setColorCursor(false);
+                        this.setCursor(CursorType.Paint);
                     }
-                } else {
+                } else if (this.cursorType== CursorType.Paint) {
                     if (this.paintCursor.x < (paintSize*5 +2) + paintSize * 15)
                         this.paintCursor.x += paintSize
+                } else {
+                    this.setCursor(CursorType.Paint);
                 }
             })
             controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.color) {
+                if (this.cursorType== CursorType.Color) {
                     if (this.colorCursor.y > colorsY + (colorSize << 1) + (colorSize-1))
                         this.colorCursor.y -= colorSize
-                } else {
+                    else {
+                        this.setCursor(CursorType.Regular);
+                    }
+                } else if (this.cursorType== CursorType.Paint) { 
                     if (this.paintCursor.y > (paintSize * 3 + 1))
                         this.paintCursor.y -= paintSize
+                } else {
+                    if (this.cursor.y > yoff + 16)
+                        this.cursor.y -= 16;
                 }
-            })
+            });
             controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.color) {
+                if (this.cursorType== CursorType.Color) {
                     if (this.colorCursor.y < colorsY + (colorSize << 1) + colorSize * (colorSize-1))
                         this.colorCursor.y += colorSize
-                } else {
+                } else if (this.cursorType== CursorType.Paint) {
                     if (this.paintCursor.y < (paintSize*2) + 2 + paintSize * 15)
                         this.paintCursor.y += paintSize
+                } else {
+                    if (this.cursor.y < yoff + 17)
+                        this.cursor.y += 16;
+                    else 
+                        this.setCursor(CursorType.Color);
                 }
-            })
+            });
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.color) {
-                    let col = ((this.colorCursor.x) / colorSize ) | 0x0
-                    let row = ((this.colorCursor.y - (colorSize << 1)) / colorSize) | 0x0
+                if (this.cursorType== CursorType.Color) {
+                    let col = ((this.colorCursor.x - colorsX) / colorSize ) | 0x0
+                    let row = ((this.colorCursor.y - (colorSize << 1) - colorsY) / colorSize) | 0x0
                     this.selectedColor = row * 2 + col
                     this.update()
-                } else {
+                } else if (this.cursorType== CursorType.Paint) {
                     let col = ((this.paintCursor.x - (paintSize*5 + 2)) / paintSize) | 0x0
                     let row = ((this.paintCursor.y - (paintSize*2 + 2)) / paintSize) | 0x0
                     this.image.setPixel(col, row, this.selectedColor)
                     this.update()
+                } else {
+                    let row = (this.cursor.y - yoff) >> 16;
+                    if (row == 0)
+                        game.popScene();
                 }
-            })
+            });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
-                
-            })
+                if (this.cursorType== CursorType.Color) 
+                    this.setCursor(CursorType.Paint);
+                else if (this.cursorType== CursorType.Paint)
+                    this.setCursor(CursorType.Color)
+            });
             this.update()
         }
-        private setColorCursor(color: boolean) {
-            this.colorCursor.setFlag(SpriteFlag.Invisible, !color)
-            this.paintCursor.setFlag(SpriteFlag.Invisible, color)
-            this.color = color;
+
+        private setCursor(ct: CursorType) {
+            this.cursor.setFlag(SpriteFlag.Invisible, ct != CursorType.Regular);
+            this.colorCursor.setFlag(SpriteFlag.Invisible, ct != CursorType.Color);
+            this.paintCursor.setFlag(SpriteFlag.Invisible, ct != CursorType.Paint);
+            this.cursorType= ct;
         }
+
         private update() {
             this.screen.fill(12);
-            this.screen.fillRect(0, 0, 16, 16, 11);
-            this.screen.drawTransparentImage(paint, 0, 0)
+            this.screen.fillRect(colorsX, yoff+16, 16, 16, 11);
+            this.screen.drawTransparentImage(map, colorsX, yoff);
+            this.screen.drawTransparentImage(paint, colorsX, yoff+16)
             //this.screen.fill(0)
             // draw the 16 colors
             for (let row = 0; row < 8; row++) {
@@ -109,8 +141,8 @@ namespace tileWorldEditor {
                 }
             }
             // take care of transparent
-            this.screen.fillRect(1, 13, 3, 3, 13)
-            this.screen.fillRect(4, 16, 3, 3, 13)
+            this.screen.fillRect(colorsX + 1, colorsY+13, 3, 3, 13)
+            this.screen.fillRect(colorsX + 4, colorsY+16, 3, 3, 13)
             // frame the sprite editor
             this.screen.drawRect(28, 10, paintSize * 16 + (paintSize - 2), paintSize * 16 + (paintSize -2), 1)
             // draw the sprite editor
@@ -128,17 +160,7 @@ namespace tileWorldEditor {
             }
             // draw the sprite
             this.screen.drawImage(this.image, 134, 12)
-        }
-        private closeMenu(command: string) {
-            if (command) {
-                if (command == "Map")
-                    game.popScene();
-                else if (command == "Paint") {
-                    this.setColorCursor(!this.color);
-                    this.update();
-                }
-            }
+            this.screen.drawRect(133, 11, 18, 18, 1)
         }
     }
-
 }
