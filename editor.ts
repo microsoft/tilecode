@@ -1,122 +1,9 @@
 namespace tileWorldEditor {
 
-    // world editing sprites
-    export const emptyTile = img`
-        b b b b b b b b b b b b b b b c
-        b f f f f f f f f f f f f f f c
-        b f f f f f f f f f f f f f f c
-        b f f f f f f f f f f f f f f c
-        b f f f f f f f f f f f f f f c
-        b f f f f f f f f f f f f f f c
-        b f f f f f f f f f f f f f f c
-        b f f f f f f f f f f f f f f c
-        b f f f f f f f f f f f f f f c
-        b f f f f f f f f f f f f f f c
-        b f f f f f f f f f f f f f f c
-        b f f f f f f f f f f f f f f c
-        b f f f f f f f f f f f f f f c
-        b f f f f f f f f f f f f f f c
-        b f f f f f f f f f f f f f f c
-        c c c c c c c c c c c c c c c c
-    `;
-
-    
-     export const cursorIn = img`
-         . . . . . . . . . . . . . . . .
-         . . 1 1 1 1 1 1 1 1 1 1 1 1 . .
-         . 1 1 . . . . . . . . . . 1 1 .
-         . 1 . . . . . . . . . . . . 1 .
-         . 1 . . . . . . . . . . . . 1 .
-         . 1 . . . . . . . . . . . . 1 .
-         . 1 . . . . . . . . . . . . 1 .
-         . 1 . . . . . 1 1 . . . . . 1 .
-         . 1 . . . . . 1 1 . . . . . 1 .
-         . 1 . . . . . . . . . . . . 1 .
-         . 1 . . . . . . . . . . . . 1 .
-         . 1 . . . . . . . . . . . . 1 .
-         . 1 . . . . . . . . . . . . 1 .
-         . 1 1 . . . . . . . . . . 1 1 .
-         . . 1 1 1 1 1 1 1 1 1 1 1 1 . .
-         . . . . . . . . . . . . . . . .
-     `
-
-     export const cursorOut = img`
-         . 1 1 1 1 1 1 1 1 1 1 1 1 1 1 .
-         1 1 . . . . . . . . . . . . 1 1
-         1 . . . . . . . . . . . . . . 1
-         1 . . . . . . . . . . . . . . 1
-         1 . . . . . . . . . . . . . . 1
-         1 . . . . . . . . . . . . . . 1
-         1 . . . . . . . . . . . . . . 1
-         1 . . . . . . . . . . . . . . 1
-         1 . . . . . . . . . . . . . . 1
-         1 . . . . . . . . . . . . . . 1
-         1 . . . . . . . . . . . . . . 1
-         1 . . . . . . . . . . . . . . 1
-         1 . . . . . . . . . . . . . . 1
-         1 . . . . . . . . . . . . . . 1
-         1 1 . . . . . . . . . . . . 1 1
-         . 1 1 1 1 1 1 1 1 1 1 1 1 1 1 .
-     `;
-
-     // TODO: map expansion???
-     const editorMap = img`
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . 4 4 4 4 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . 5 . . . 4 . . 4 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . 4 . . 4 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . 4 4 4 4 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-         . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-     `;
+    const yoff = 4;
 
     // the root of the editing experience is creating a (shared) tile map
     export class MapEditor {
-        private commands: Sprite[] = [];
-        private toolBox: ToolboxMenu;
         private world: Image;
         private screen: Image;
         private cursor: Sprite;
@@ -124,34 +11,24 @@ namespace tileWorldEditor {
         private menuSelected: Sprite;
         private offsetX: number; // where are we in the world?
         private offsetY: number; 
+        private tileCnt: number;
         constructor(private manager: SpriteManager, defaultTile: Sprite) {
             // this is the world
             this.world = image.create(30, 30);
             this.world.fill(defaultTile.kind());
             // this is the screen (under our control)
-            this.screen = image.create(10,8);
+            this.screen = image.create(160, 120);
             let empty = this.manager.empty()
-            this.screen.fill(empty.kind())
-            scene.setTileMap(this.screen)
+            scene.setBackgroundImage(this.screen)
             this.manager.setScene()
-            this.manager.all().forEach((s,row) => {
-                scene.setTile(s.kind(), s.image)
-                this.screen.setPixel(1,row,s.kind())
-            });
-            scene.setTile(empty.kind(), empty.image)
-            // commands
-            this.commands.push(mapSprite);
-            this.commands.push(paintSprite);
-            this.commands.push(playSprite);
-            this.commands.push(editSprite);
-
+            this.update();
 
             // the color code of selected tile/sprite
             this.currentTileSprite = undefined;
             // cursor
             this.cursor = sprites.create(cursorIn)
             this.cursor.x = 40
-            this.cursor.y = 56
+            this.cursor.y = 56 + yoff;
 
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.col() > 0)
@@ -179,7 +56,7 @@ namespace tileWorldEditor {
                 }
             })
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
-                this.showMenu()
+               
             })
         }
 
@@ -187,8 +64,31 @@ namespace tileWorldEditor {
             return this.cursor.x >> 4;
         }
         private row() {
-            return this.cursor.y >> 4;
+            return (this.cursor.y - yoff) >> 4;
         }
+
+        private drawImage(img: Image, col: number, row: number) {
+            this.screen.drawTransparentImage(img, col << 4, (row << 4)+yoff);
+        }
+
+        private update() {
+            this.screen.fill(12);
+            this.screen.fillRect(48, yoff, 160-48, 16*7, 11);
+
+            // this.screen.fillRect(0, 0, 0, 0, 12)
+            // paint it ourselves 
+            this.manager.all().forEach((s, row) => {
+                this.drawImage(s.image, 1, row);
+            });
+            // arrows
+            arrowImages.forEach((img, row) => {
+                this.drawImage(img, 2, row);
+            });
+            commandImages.forEach((img, row) => {
+                this.drawImage(img, 0, row);
+            })
+        }
+
         private executeCommand(command: string, s: Sprite) {
             game.pushScene();
             if (command == "Paint") {
@@ -198,18 +98,7 @@ namespace tileWorldEditor {
             }
         }
 
-        private update() {
-            // show menu on left
-
-        }
-
         private closeMenu(command: string) {
-            if (this.toolBox) {
-                this.toolBox.dispose();
-                this.toolBox = undefined;
-                controller._setUserEventsEnabled(true);
-                game.popScene();
-            }
             if (command) {
                 // look up name of sprite and get code
                 let  s = this.manager.findName(command)
@@ -228,13 +117,5 @@ namespace tileWorldEditor {
                 }
             }
         }
-
-        private showMenu() {
-            if (this.toolBox) return;
-            game.pushScene();
-            this.toolBox = new ToolboxMenu(this.manager.all(), this.commands, (s: string) => { this.closeMenu(s) });
-            this.toolBox.show();
-        }
-
     } 
  }

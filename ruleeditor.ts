@@ -1,271 +1,5 @@
 namespace tileWorldEditor {
 
-    const smallSprite=img`
-        . 5 5 5 .
-        5 5 5 5 5
-        5 5 5 5 5
-        5 5 5 5 5
-        . 5 5 5 .
-    `;
-    const deleteIcon = img`
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . 2 . . . . . . . . 2 . . .
-        . . . 2 2 . . . . . . 2 2 . . .
-        . . . . 2 2 . . . . 2 2 . . . .
-        . . . . . 2 2 . . 2 2 . . . . .
-        . . . . . . 2 2 2 2 . . . . . .
-        . . . . . . . 2 2 . . . . . . .
-        . . . . . . 2 2 2 2 . . . . . .
-        . . . . . 2 2 . . 2 2 . . . . .
-        . . . . 2 2 . . . . 2 2 . . . .
-        . . . 2 2 . . . . . . 2 2 . . .
-        . . . 2 . . . . . . . . 2 . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-    `;
-    const genericSprite = img`
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . c c c . . . . . .
-        . . . . . . c c c c c . . . . .
-        . . . . . . c c c c c . . . . .
-        . . . . . . c c c c c . . . . .
-        . . . . . . . c c c . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-    `;
-    const exclude = img`
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . f 2 2 2 2 f .
-        . . . . . . . . f 2 2 f f 2 2 f
-        . . . . . . . . 2 2 2 2 f f 2 2
-        . . . . . . . . 2 f 2 2 2 f f 2
-        . . . . . . . . 2 f f 2 2 2 f 2
-        . . . . . . . . 2 2 f f 2 2 2 2
-        . . . . . . . . f 2 2 f f 2 2 f
-        . . . . . . . . . f 2 2 2 2 f .
-    `;
-    const include = img`
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . f f . . . . . . .
-        . . . . . . f f 7 . . . . . . .
-        . . . . . f f 7 6 . . . . . . .
-        . . . . . f 7 7 6 . . . . . . .
-        f f . . f f 7 6 f . . . . . . .
-        7 f f . f 7 7 6 f . . . . . . .
-        7 7 f f f 7 6 f . . . . . . . .
-        f 7 7 f 7 7 6 f . . . . . . . .
-        f f 7 7 7 6 f . . . . . . . . .
-        . f f 7 6 f . . . . . . . . . .
-    `;
-    const oneof = img`
-        . f f f f f f . . . . . . . . .
-        f f 5 5 5 5 f f . . . . . . . .
-        f 5 5 5 5 5 5 f . . . . . . . .
-        f 5 5 5 5 5 5 f . . . . . . . .
-        f 5 5 5 5 5 5 f . . . . . . . .
-        f 5 5 5 5 5 5 f . . . . . . . .
-        f f 5 5 5 5 f f . . . . . . . .
-        . f f f f f f . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-    `;
-    const ok = img`
-        . . . . . . . . . f 7 7 7 7 f .
-        . . . . . . . . f 7 7 f f 7 7 f
-        . . . . . . . . 7 7 f f f f 7 7
-        . . . . . . . . 7 f f f f f f 7
-        . . . . . . . . 7 f f f f f f 7
-        . . . . . . . . 7 7 f f f f 7 7
-        . . . . . . . . f 7 7 f f 7 7 f
-        . . . . . . . . . f 7 7 7 7 f 1
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-    `;
-    const excludeCenter = img`
-        . . . . . . . . . . . . . . . .
-        . d d d d d d d d d d d d d d .
-        . d . . . . . . . . . . . . d .
-        . d . . . . . . . . . . . . d .
-        . d . . . . 2 2 2 2 . . . . d .
-        . d . . . 2 2 . . 2 2 . . . d .
-        . d . . 2 2 2 2 . . 2 2 . . d .
-        . d . . 2 . 2 2 2 . . 2 . . d .
-        . d . . 2 . . 2 2 2 . 2 . . d .
-        . d . . 2 2 . . 2 2 2 2 . . d .
-        . d . . . 2 2 . . 2 2 . . . d .
-        . d . . . . 2 2 2 2 . . . . d .
-        . d . . . . . . . . . . . . d .
-        . d . . . . . . . . . . . . d .
-        . d d d d d d d d d d d d d d .
-        . . . . . . . . . . . . . . . .
-    `;
-    const includeCenter = img`
-        . . . . . . . . . . . . . . . .
-        . d d d d d d d d d d d d d d .
-        . d . . . . . . . . . . . . d .
-        . d . . . . . . . . . . 7 . d .
-        . d . . . . . . . . . 7 6 . d .
-        . d . . . . . . . . 7 7 6 . d .
-        . d . . . . . . . . 7 6 . . d .
-        . d . . 7 . . . . 7 7 6 . . d .
-        . d . . 7 7 . . . 7 6 . . . d .
-        . d . . . 7 7 . 7 7 6 . . . d .
-        . d . . . . 7 7 7 6 . . . . d .
-        . d . . . . . 7 6 . . . . . d .
-        . d . . . . . . . . . . . . d .
-        . d . . . . . . . . . . . . d .
-        . d d d d d d d d d d d d d d .
-        . . . . . . . . . . . . . . . .
-    `;
-    const oneofCenter = img`
-        . . . . . . . . . . . . . . . .
-        . d d d d d d d d d d d d d d .
-        . d . . . . . . . . . . . . d .
-        . d . . . . . . . . . . . . d .
-        . d . . . . . . . . . . . . d .
-        . d . . . . 5 5 5 5 . . . . d .
-        . d . . . 5 5 5 5 5 5 . . . d .
-        . d . . . 5 5 5 5 5 5 . . . d .
-        . d . . . 5 5 5 5 5 5 . . . d .
-        . d . . . 5 5 5 5 5 5 . . . d .
-        . d . . . . 5 5 5 5 . . . . d .
-        . d . . . . . . . . . . . . d .
-        . d . . . . . . . . . . . . d .
-        . d . . . . . . . . . . . . d .
-        . d d d d d d d d d d d d d d .
-        . . . . . . . . . . . . . . . .
-    `;
-    const okCenter = img`
-        . . . . . . . . . . . . . . . .
-        . d d d d d d d d d d d d d d .
-        . d . . . . . . . . . . . . d .
-        . d . . . . . . . . . . . . d .
-        . d . . . . 7 7 7 7 . . . . d .
-        . d . . . 7 7 . . 7 7 . . . d .
-        . d . . 7 7 . . . . 7 7 . . d .
-        . d . . 7 . . . . . . 7 . . d .
-        . d . . 7 . . . . . . 7 . . d .
-        . d . . 7 7 . . . . 7 7 . . d .
-        . d . . . 7 7 . . 7 7 . . . d .
-        . d . . . . 7 7 7 7 . . . . d .
-        . d . . . . . . . . . . . . d .
-        . d . . . . . . . . . . . . d .
-        . d d d d d d d d d d d d d d .
-        . . . . . . . . . . . . . . . .
-    `;
-    const downArrow = img`
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . f f f f f . . . . . .
-        . . . . . f 9 9 9 f . . . . . .
-        . . . . . f 9 9 9 f . . . . . .
-        . . . . . f 9 9 9 f . . . . . .
-        . . . . . f 9 9 9 f . . . . . .
-        . . . f f f 9 9 9 f f f . . . .
-        . . . f 9 9 9 9 9 9 9 f . . . .
-        . . . . f 9 9 9 9 9 f . . . . .
-        . . . . . f 9 9 9 f . . . . . .
-        . . . . . . f 9 f . . . . . . .
-        . . . . . . . f . . . . . . . .
-        . . . . . . . . . . . . . . . .
-    `;
-    const upArrow = img`
-        . . . . . . . . . . . . . . . .
-        . . . . . . . f . . . . . . . .
-        . . . . . . f 9 f . . . . . . .
-        . . . . . f 9 9 9 f . . . . . .
-        . . . . f 9 9 9 9 9 f . . . . .
-        . . . f 9 9 9 9 9 9 9 f . . . .
-        . . . f f f 9 9 9 f f f . . . .
-        . . . . . f 9 9 9 f . . . . . .
-        . . . . . f 9 9 9 f . . . . . .
-        . . . . . f 9 9 9 f . . . . . .
-        . . . . . f 9 9 9 f . . . . . .
-        . . . . . f f f f f . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-    `;
-    const rightArrow = img`
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . f f . . . . .
-        . . . . . . . . . f 9 f . . . .
-        . . . . f f f f f f 9 9 f . . .
-        . . . . f 9 9 9 9 9 9 9 9 f . .
-        . . . . f 9 9 9 9 9 9 9 9 9 f .
-        . . . . f 9 9 9 9 9 9 9 9 6 . .
-        . . . . f f f f f f 9 9 f . . .
-        . . . . . . . . . f 9 f . . . .
-        . . . . . . . . . f f . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-    `;
-    const leftArrow = img`
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . f f . . . . . . . . .
-        . . . . f 9 f . . . . . . . . .
-        . . . f 9 9 f f f f f f . . . .
-        . . f 9 9 9 9 9 9 9 9 f . . . .
-        . f 9 9 9 9 9 9 9 9 9 f . . . .
-        . . f 9 9 9 9 9 9 9 9 f . . . .
-        . . . f 9 9 f f f f f f . . . .
-        . . . . f 9 f . . . . . . . . .
-        . . . . . f f . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-    `;
-    const arrowImages = [leftArrow, rightArrow, upArrow, downArrow];
-    const arrowValues = [MoveDirection.Left, MoveDirection.Right, 
-        MoveDirection.Up, MoveDirection.Down];
-    const attrsCentered = [includeCenter, excludeCenter, okCenter, oneofCenter];
-    const attrImages = [include, exclude, ok, oneof];
-    const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, AttrType.OneOf];
-
     enum RuleEditorMenus { RuleTypeMenu, AttrTypeMenu, CommandMenu, None };
     enum CommandTokens { MoveArrow, PaintBrush, PaintTile, SpaceTile, Delete };
 
@@ -308,10 +42,6 @@ namespace tileWorldEditor {
         private currentCommand: Command;  // the current command (potentially null)
         private tokens: CommandTokens[];
 
-        // toolbox menu
-        private commands: Sprite[] = [];
-        private toolBox: ToolboxMenu
-
         constructor(private manager: SpriteManager, private rule: Rule) {
             this.ruleTypeMap = image.create(10,7);
             this.dirMap = image.create(10,7);
@@ -326,7 +56,6 @@ namespace tileWorldEditor {
             this.manager.setScene()            
 
             // Control
-            this.commands.push(mapSprite);
             this.menu = RuleEditorMenus.None;
             this.cursor = sprites.create(cursorIn)
             this.cursor.setFlag(SpriteFlag.Invisible, false)
@@ -396,7 +125,7 @@ namespace tileWorldEditor {
                 this.update();
             })
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
-                this.showMenu();
+                
             })
         }
 
@@ -715,8 +444,8 @@ namespace tileWorldEditor {
                         worker(arrowImages[arrowValues.indexOf(v)], ct);
                     })
                 } else if (ct == CommandTokens.PaintBrush) {
-                    worker(paintSprite.image, ct);
-                    brush = true;
+                    //worker(paintSprite.image, ct);
+                    //brush = true;
                 } else if (!brush && ct == CommandTokens.PaintTile) {
                     col = 5; row = 6;
                     this.manager.fixed().forEach(s => {
@@ -920,12 +649,6 @@ namespace tileWorldEditor {
         }
         
         private closeMenu(command: string) {
-            if (this.toolBox) {
-                this.toolBox.dispose();
-                this.toolBox = undefined;
-                controller._setUserEventsEnabled(true);
-                game.popScene();
-            }
             if (command) {
                 // look up name of sprite and get code
                 let s = this.manager.findName(command)
@@ -933,13 +656,6 @@ namespace tileWorldEditor {
                     game.popScene();
                 }
             }
-        }
-
-        private showMenu() {
-            if (this.toolBox) return;
-            game.pushScene();
-            this.toolBox = new ToolboxMenu([], this.commands, (s: string) => { this.closeMenu(s) });
-            this.toolBox.show();
         }
     } 
 }

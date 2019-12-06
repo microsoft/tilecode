@@ -1,27 +1,7 @@
 namespace tileWorldEditor {
-    const colorCursor = img`
-        5 5 5 5 5 5 5 5
-        5 . . . . . . 5
-        5 . . . . . . 5
-        5 . . . . . . 5
-        5 . . . . . . 5
-        5 . . . . . . 5
-        5 . . . . . . 5
-        5 5 5 5 5 5 5 5
-    `
-    const paintCursor = img`
-        5 5 5 5 5 5
-        5 . . . . 5
-        5 . . . . 5
-        5 . . . . 5
-        5 . . . . 5
-        5 5 5 5 5 5
-    `
     const colorSize = 8;
     const paintSize = 6;
     export class ImageEditor {
-        private toolBox: ToolboxMenu;
-        private commands: Sprite[] = [];
         private color: boolean;
         private colorCursor: Sprite;
         private paintCursor: Sprite;
@@ -30,8 +10,6 @@ namespace tileWorldEditor {
         private image: Image;    // 16x16
         private tileMap: Image;  // whole screen
         constructor(private manager: SpriteManager, s: Sprite) {
-            this.commands.push(mapSprite);
-            this.commands.push(paintSprite);
             this.color = true;
             this.colorCursor = sprites.create(colorCursor)
             this.colorCursor.x = colorSize >> 1
@@ -103,7 +81,7 @@ namespace tileWorldEditor {
                 }
             })
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
-                this.showMenu() 
+                
             })
             this.update()
         }
@@ -114,7 +92,7 @@ namespace tileWorldEditor {
         }
         private update() {
             this.tileMap.fill(0)
-            this.tileMap.drawImage(paintSprite.image, 0, 100)
+            this.tileMap.drawImage(paint, 0, 100)
             // draw the 16 colors
             for (let row = 0; row < 8; row++) {
                 for (let col = 0; col < 2; col++) {
@@ -148,12 +126,6 @@ namespace tileWorldEditor {
             this.tileMap.drawImage(this.image, 134, 12)
         }
         private closeMenu(command: string) {
-            if (this.toolBox) {
-                this.toolBox.dispose();
-                this.toolBox = undefined;
-                controller._setUserEventsEnabled(true);
-                game.popScene();
-            }
             if (command) {
                 if (command == "Map")
                     game.popScene();
@@ -162,12 +134,6 @@ namespace tileWorldEditor {
                     this.update();
                 }
             }
-        }
-        private showMenu() {
-            if (this.toolBox) return;
-            game.pushScene();
-            this.toolBox = new ToolboxMenu([], this.commands, (s: string) => { this.closeMenu(s) });
-            this.toolBox.show();
         }
     }
 
