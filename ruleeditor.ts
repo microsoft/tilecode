@@ -192,32 +192,32 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . 9 9 9 6 . . . . . .
-        . . . . . . 9 9 9 6 . . . . . .
-        . . . . . . 9 9 9 6 . . . . . .
-        . . . . . . 9 9 9 6 . . . . . .
-        . . . . . . 9 9 9 6 . . . . . .
-        . . . . 9 9 9 9 9 9 9 6 . . . .
-        . . . . . 9 9 9 9 9 6 . . . . .
-        . . . . . . 9 9 9 6 . . . . . .
-        . . . . . . . 9 6 . . . . . . .
-        . . . . . . . . . . . . . . . .
+        . . . . . f f f f f . . . . . .
+        . . . . . f 9 9 9 f . . . . . .
+        . . . . . f 9 9 9 f . . . . . .
+        . . . . . f 9 9 9 f . . . . . .
+        . . . . . f 9 9 9 f . . . . . .
+        . . . f f f 9 9 9 f f f . . . .
+        . . . f 9 9 9 9 9 9 9 f . . . .
+        . . . . f 9 9 9 9 9 f . . . . .
+        . . . . . f 9 9 9 f . . . . . .
+        . . . . . . f 9 f . . . . . . .
+        . . . . . . . f . . . . . . . .
         . . . . . . . . . . . . . . . .
     `;
     const upArrow = img`
         . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . 9 6 . . . . . . .
-        . . . . . . 9 9 9 6 . . . . . .
-        . . . . . 9 9 9 9 9 6 . . . . .
-        . . . . 9 9 9 9 9 9 9 6 . . . .
-        . . . . . . 9 9 9 6 . . . . . .
-        . . . . . . 9 9 9 6 . . . . . .
-        . . . . . . 9 9 9 6 . . . . . .
-        . . . . . . 9 9 9 6 . . . . . .
-        . . . . . . 9 9 9 6 . . . . . .
-        . . . . . . . . . . . . . . . .
+        . . . . . . . f . . . . . . . .
+        . . . . . . f 9 f . . . . . . .
+        . . . . . f 9 9 9 f . . . . . .
+        . . . . f 9 9 9 9 9 f . . . . .
+        . . . f 9 9 9 9 9 9 9 f . . . .
+        . . . f f f 9 9 9 f f f . . . .
+        . . . . . f 9 9 9 f . . . . . .
+        . . . . . f 9 9 9 f . . . . . .
+        . . . . . f 9 9 9 f . . . . . .
+        . . . . . f 9 9 9 f . . . . . .
+        . . . . . f f f f f . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -227,15 +227,15 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . . . . . . 9 . . . . .
-        . . . . . . . . . . 9 9 . . . .
-        . . . . . 9 9 9 9 9 9 9 9 . . .
-        . . . . . 9 9 9 9 9 9 9 9 9 . .
-        . . . . . 9 9 9 9 9 9 9 9 6 . .
-        . . . . . 6 6 6 6 6 9 9 6 . . .
-        . . . . . . . . . . 9 6 . . . .
-        . . . . . . . . . . 6 . . . . .
+        . . . . . . . . . f f . . . . .
+        . . . . . . . . . f 9 f . . . .
+        . . . . f f f f f f 9 9 f . . .
+        . . . . f 9 9 9 9 9 9 9 9 f . .
+        . . . . f 9 9 9 9 9 9 9 9 9 f .
+        . . . . f 9 9 9 9 9 9 9 9 6 . .
+        . . . . f f f f f f 9 9 f . . .
+        . . . . . . . . . f 9 f . . . .
+        . . . . . . . . . f f . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -245,15 +245,15 @@ namespace tileWorldEditor {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
-        . . . . . . . . . . . . . . . .
-        . . . . . 9 . . . . . . . . . .
-        . . . . 9 9 . . . . . . . . . .
-        . . . 9 9 9 9 9 9 9 9 . . . . .
-        . . 9 9 9 9 9 9 9 9 9 . . . . .
-        . . 6 9 9 9 9 9 9 9 9 . . . . .
-        . . . 6 9 9 6 6 6 6 6 . . . . .
-        . . . . 6 9 . . . . . . . . . .
-        . . . . . 6 . . . . . . . . . .
+        . . . . . f f . . . . . . . . .
+        . . . . f 9 f . . . . . . . . .
+        . . . f 9 9 f f f f f f . . . .
+        . . f 9 9 9 9 9 9 9 9 f . . . .
+        . f 9 9 9 9 9 9 9 9 9 f . . . .
+        . . f 9 9 9 9 9 9 9 9 f . . . .
+        . . . f 9 9 f f f f f f . . . .
+        . . . . f 9 f . . . . . . . . .
+        . . . . . f f . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
@@ -502,9 +502,7 @@ namespace tileWorldEditor {
             this.background.print("Do", 65, 0);
 
             this.makeContext();
-            this.showImage(2, 2, this.centerImage(), 10);
 
-            this.showRuleType(this.rule.rt, this.rule.dir, 2, 2);
             if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                 this.ruleTypeMap.fill(0xf);
                 this.dirMap.fill(0xf);
@@ -543,19 +541,19 @@ namespace tileWorldEditor {
             if (selected) {
                 this.background.fillRect(x << 4, y << 4, 16, 16, selCol)
             }
-            this.showImage(x, y, this.centerImage());
+            this.drawImage(x, y, this.centerImage());
             this.ruleTypeMap.setPixel(x, y, rt);
             this.dirMap.setPixel(x, y, rd);
             if (rt == RuleType.Moving || rt == RuleType.Colliding) {
                 let indexOf = arrowValues.indexOf(rd);
-                this.showImage(x, y, arrowImages[indexOf], 10)
+                this.drawImage(x, y, arrowImages[indexOf], 10)
             }
             if (rt == RuleType.Pushing || rt == RuleType.Colliding) {
                 let indexOf = arrowValues.indexOf(rd);
                 let ax = rd == MoveDirection.Left ? 1 : (rd == MoveDirection.Right ? -1 : 0)
                 let ay = rd == MoveDirection.Down ? -1 : (rd == MoveDirection.Up ? 1 : 0)
                 if (rt == RuleType.Pushing) {
-                    this.showImage(x+ax, y+ay, arrowImages[indexOf], 10)
+                    this.drawImage(x+ax, y+ay, arrowImages[indexOf], 10)
                     this.ruleTypeMap.setPixel(x+ax, y+ay, rt);
                     this.dirMap.setPixel(x+ax, y+ay, rd);
                     if (selected) {
@@ -578,17 +576,23 @@ namespace tileWorldEditor {
             spr.y += (dir == MoveDirection.Up) ? 4 : (dir == MoveDirection.Down) ? -4 : 0; 
         }
 
+
+        private drawImage(c: number, r: number, img: Image, z: number = 0) {
+            this.background.drawTransparentImage(img, c << 4, r << 4);
+        }
+
         private showImage(c: number, r: number, img: Image, z: number = 0) {
+            // this.background.drawTransparentImage(img, c*16, r*16)
             let spr = sprites.create(img);
             spr.z = z;
-            spr.x = c * 16 + 8;
-            spr.y = r * 16 + 8;
+            spr.x = (c << 4) + 8;
+            spr.y = (r << 4) + 8;
             this.showSprites.push(spr);
             return spr;
         }
 
         private drawOutline(c: number, r: number) {
-            this.background.drawRect(c*16,r*16,17,17,12)
+            this.background.drawRect(c << 4,r << 4,17,17,12)
         }
 
         private makeContext() {
@@ -597,7 +601,7 @@ namespace tileWorldEditor {
                 for (let j = 0; j <= 4; j++) {
                     let dist = Math.abs(2-j) + Math.abs(2-i);
                     if (dist <= 2) {
-                        this.showImage(i,j, spaceImg);
+                        this.drawImage(i,j, spaceImg);
                         if (i!=0 || j!=0)
                             this.showAttributes(i,j);
                         if (dist <= 1)
@@ -605,6 +609,7 @@ namespace tileWorldEditor {
                     }
                 }
             }
+            this.showRuleType(this.rule.rt, this.rule.dir, 2, 2);
             this.showCommands();
         }
 
@@ -627,7 +632,7 @@ namespace tileWorldEditor {
             let spaceImg = this.manager.empty().image;
             let img2 = whendo.witness == -1 ? genericSprite : 
                 this.manager.all()[whendo.witness].image;
-            this.showImage(5, row, img2);
+            this.drawImage(5, row, img2);
             if (whendo.commands.length == 0) {
                 // lazy initialization
                 whendo.commands.push({ inst: -1, arg: -1 });
@@ -816,7 +821,7 @@ namespace tileWorldEditor {
                 let begin = 0;
                 let end = item.attrs.length-1;
                 if (index != -1) {
-                    this.showImage(col, row, this.manager.all()[index].image);
+                    this.drawImage(col, row, this.manager.all()[index].image);
                     if (index < this.manager.fixed().length) {
                         begin = this.manager.fixed().length;
                     } else {
@@ -830,7 +835,7 @@ namespace tileWorldEditor {
                     // eliminate duplicates
                     if (done.indexOf(val) == -1) {
                         done.push(val);
-                        this.showImage(col, row, attrImages[attrValues.indexOf(val)]);
+                        this.drawImage(col, row, attrImages[attrValues.indexOf(val)]);
                     }
                 });
             }
