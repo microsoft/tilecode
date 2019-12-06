@@ -69,3 +69,15 @@ function makeRestingRule(m: tileWorldEditor.SpriteManager, name: string): Rule {
         whenDo: [{ col: 2, row: 2, attrs: [], witness: index, commands: [] }]
     }
 }
+
+// new API for access to low-level representation
+
+interface RuleGetter {
+    getKinds(rid: number): number[];  // at most 4
+    getType(rid: number): RuleType;
+    getDir(rid: number): MoveDirection;
+    getWhenDo(rid: number, col: number, row: number): number; // wdid
+    getAttrs(rid: number, wdid: number): AttrType[]; // exactly fixed + movable
+    getWitness(rid: number, wdid: number): number;
+    getCommands(rid: number, wdid: number): Command[]; // at most 4
+}
