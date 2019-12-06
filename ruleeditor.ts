@@ -558,7 +558,7 @@ namespace tileWorldEditor {
         }
 
         private showCollisionSprite(col:number, row:number, dir: MoveDirection) {
-            let spr = this.showImage(col, row, smallSprite)
+            let spr = this.showSprite(col, row, smallSprite)
             spr.x += (dir == MoveDirection.Left) ? 4 : (dir == MoveDirection.Right) ? -4 : 0;
             spr.y += (dir == MoveDirection.Up) ? 4 : (dir == MoveDirection.Down) ? -4 : 0; 
         }
@@ -567,7 +567,7 @@ namespace tileWorldEditor {
             this.background.drawTransparentImage(img, c << 4, yoff + (r << 4));
         }
 
-        private showImage(c: number, r: number, img: Image, z: number = 0) {
+        private showSprite(c: number, r: number, img: Image, z: number = 0) {
             let spr = sprites.create(img);
             spr.z = z;
             spr.x = (c << 4) + 8;
@@ -647,18 +647,18 @@ namespace tileWorldEditor {
             };
             if (c.inst == -1) {
                 let spaceImg = this.manager.empty().image;
-                let spr = this.showImage(col, row, spaceImg);       
+                let spr = this.showSprite(col, row, spaceImg);       
                 spr.setKind(CommandTokens.SpaceTile);
                 spr.data = { c: c, t: tokens };
                 this.commandSprites.push(spr);
             } else if (c.inst == CommandType.Move) {
-                let spr = this.showImage(col, row, arrowImages[arrowValues.indexOf(c.arg)]);
+                let spr = this.showSprite(col, row, arrowImages[arrowValues.indexOf(c.arg)]);
                 worker(spr, CommandTokens.MoveArrow);
             } else if (c.inst == CommandType.Paint) {
-                //let spr = this.showImage(col, row, paintSprite.image);
+                //let spr = this.showSprite(col, row, paintSprite.image);
                 //worker(spr, CommandTokens.PaintBrush);
                 //if (c.arg != -1) {
-                    let spr = this.showImage(col, row, this.manager.fixed()[c.arg].image);
+                    let spr = this.showSprite(col, row, this.manager.fixed()[c.arg].image);
                     worker(spr, CommandTokens.PaintTile);
                 //}
             }
@@ -702,7 +702,7 @@ namespace tileWorldEditor {
             let row = 5;
             let worker = (img: Image, tok: CommandTokens) => {
                 this.drawOutline(col, row);
-                let spr = this.showImage(col, row, img);
+                let spr = this.showSprite(col, row, img);
                 spr.setKind(tok);
                 this.commandMenuSprites.push(spr);
                 col++;
@@ -837,11 +837,11 @@ namespace tileWorldEditor {
             });
             if (this.attrSelected == -1)
                 this.selectAttr(0);
+            this.drawImage(this.attrSelected, 5, cursorOut);
         }
 
         private selectAttr(a: number) {
             this.attrSelected = a;
-            this.drawImage(a, 5, cursorOut);
         }
 
         private attrUpdate() {
