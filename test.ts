@@ -149,8 +149,8 @@ namespace boulder {
     // for 
     let movableNames = ["Player", "Boulder", "Diamond", "Enemy"]
     let movable = [player, boulder, diamond, enemy]
-    let fixedNames = ["Wall", "Dirt", "Space"]
-    let fixed = [wall, dirt, space]
+    let fixedNames = ["Space", "Wall", "Dirt"]
+    let fixed = [space, wall, dirt]
 
     export let movableSprites: Sprite[] = []
     movable.forEach((img, i) => {
@@ -211,24 +211,22 @@ let moveRight = [{ inst: CommandType.Move, arg: MoveDirection.Right }]
 let boulderRight = SpriteAt("Boulder", 3, 2)
 boulderRight.commands = [{ inst: CommandType.Move, arg: MoveDirection.Right }]
 
-let playerPaint: Rule =
-    {
-        kind: [playerId],
-        rt: RuleType.Resting,
-        dir: MoveDirection.None,
-        generalize: [],
-        whenDo: [{ col: 2, row: 2, attrs: [], witness: playerId, commands: [{ inst: CommandType.Paint, arg: spaceId }] }]
-    }
+let playerPaint: Rule = {
+    kind: [playerId],
+    rt: RuleType.Resting,
+    dir: MoveDirection.None,
+    generalize: [],
+    whenDo: [{ col: 2, row: 2, attrs: [], witness: playerId, commands: [{ inst: CommandType.Paint, arg: spaceId }] }]
+}
 
-let playerMoveRight: Rule =
-    {
-        kind: [playerId],
-        rt: RuleType.Pushing,
-        dir: MoveDirection.Right,
-        generalize: [],
-        whenDo: [{ col: 2, row: 2, attrs: [], witness: playerId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Right }] },
-                 { col: 3, row: 2, attrs: playerMove, witness: -1, commands: [] } ]
-    }
+let playerMoveRight: Rule ={
+    kind: [playerId],
+    rt: RuleType.Pushing,
+    dir: MoveDirection.Right,
+    generalize: [],
+    whenDo: [{ col: 2, row: 2, attrs: [], witness: playerId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Right }] },
+                { col: 3, row: 2, attrs: playerMove, witness: -1, commands: [] } ]
+}
 
 let playerMoveBoulder: Rule = {
     kind: [playerId],
@@ -276,4 +274,4 @@ let boulderFallRight: Rule = {
 }
 
 // let ruleEditor = new tw.RuleEditor(manager, tw.makeRestingRule(manager, "Boulder"))
-let ruleEditor = new tw.RuleEditor(manager, playerPaint)
+let ruleEditor = new tw.RuleEditor(manager, makeRestingRule(manager,"Boulder"))

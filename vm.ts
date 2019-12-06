@@ -19,13 +19,16 @@ namespace tileWorldEditor {
     // debugger interface
 
     export class TileWorldVM<T> {
-
-        constructor(private world: Image, 
-                    private prog: Program,
+        private world: Image;
+        constructor(private prog: Program,
+                    private manager: SpriteManager, 
                     private engine: GameEngine<T>) {
-            // initialize movable sprites and replace with default tile
         }
 
+        public setWorld(w: Image, defaultFixed: number = 0) {
+            this.world = w.clone();
+            // initialize movable sprites and replace with default tile
+        }
         public run() {
             
         }
