@@ -285,6 +285,8 @@ namespace tileWorldEditor {
         return res;
     }
 
+    const yoff = 6;
+
     export class RuleEditor {
         private background: Image;
         private cursor: Sprite;
@@ -337,35 +339,35 @@ namespace tileWorldEditor {
             this.cursor = sprites.create(cursorIn)
             this.cursor.setFlag(SpriteFlag.Invisible, false)
             this.cursor.x = 40
-            this.cursor.y = 40
+            this.cursor.y = yoff+40
             this.cursor.z = 50;
             // linked cursor
             this.otherCursor = sprites.create(cursorOut)
             this.otherCursor.setFlag(SpriteFlag.Invisible, true)
             this.otherCursor.x = 88
-            this.otherCursor.y = 40
+            this.otherCursor.y = yoff+40
             this.otherCursor.z = 50;
 
             // refresh display
             this.update();
 
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
-                if ((this.cursor.x >> 4) > 0)
+                if (this.col() > 0)
                     this.cursor.x -= 16
                 this.cursorMove();
             })
             controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
-                if ((this.cursor.x >> 4) < 9)
+                if (this.col() < 9)
                     this.cursor.x += 16
                 this.cursorMove();
             })
             controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
-                if ((this.cursor.y >> 4) > 0)
+                if (this.row() > 0)
                     this.cursor.y -= 16;
                 this.cursorMove();
             })
             controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
-                if ((this.cursor.y >> 4) < 6)
+                if (this.row() < 6)
                     this.cursor.y += 16;
                 this.cursorMove();
             })
@@ -387,7 +389,7 @@ namespace tileWorldEditor {
                         this.menu = RuleEditorMenus.AttrTypeMenu;
                         this.setTileSaved()
                     }
-                } else if (this.cursor.x >= 96 && this.cursor.y < 80) {
+                } else if (this.cursor.x >= 96 && (this.cursor.y -yoff) < 80) {
                     let yes = this.tryEditCommand();
                     if (!yes) this.noMenu();
                 } else if (this.menu == RuleEditorMenus.RuleTypeMenu) {
@@ -406,26 +408,18 @@ namespace tileWorldEditor {
             })
         }
 
+        private col() { return this.cursor.x >> 4; }
+        private row() { return (this.cursor.y - yoff) >> 4; }
+
         private cursorMove() {
             if (this.menu == RuleEditorMenus.None) {
                 this.otherCursorMove();
-                // TODO: show attributes instead of menu on hover
-                if (this.manhattanDistance2() <= 2) {
-                    let col = this.cursor.x >> 4;
-                    let row = this.cursor.y >> 4;
-                    if (col != 0 || row != 0) {
-                        // look up attribute, 
-                        // if not null then update
-                    }                   
-                }
             } else {
                 if (this.menu == RuleEditorMenus.RuleTypeMenu) {
-                    let col = this.cursor.x >> 4;
-                    let row = this.cursor.y >> 4;
-                    let rt = this.ruleTypeMap.getPixel(col, row);
+                    let rt = this.ruleTypeMap.getPixel(this.col(), this.row());
                     if (rt != 0xf) {
                         this.rule.rt = rt;
-                        this.rule.dir = this.dirMap.getPixel(col, row);
+                        this.rule.dir = this.dirMap.getPixel(this.col(), this.row());
                         this.update();
                     }
                 } else if (this.menu == RuleEditorMenus.CommandMenu) {
@@ -436,29 +430,28 @@ namespace tileWorldEditor {
         }
 
         private otherCursorMove() {
+            let col = this.col();
+            let row = this.row();
             if (this.manhattanDistance2() <= 1) {
                 this.otherCursor.setFlag(SpriteFlag.Invisible, false);
                 // compute mapping from left to right hand side
-                let col = this.cursor.x >> 4;
-                let row = this.cursor.y >> 4;
                 this.otherCursor.x = 88;
-                if (col == 1) this.otherCursor.y = 24;
-                else if (col == 3) this.otherCursor.y = 56;
-                else if (row == 1) this.otherCursor.y = 8;
-                else if (row == 3) this.otherCursor.y = 72;
-                else this.otherCursor.y = 40;
-            } else if (this.cursor.x >= 80 && this.cursor.y < 80) {
+                if (col == 1) this.otherCursor.y = yoff+24;
+                else if (col == 3) this.otherCursor.y = yoff+56;
+                else if (row == 1) this.otherCursor.y = yoff+8;
+                else if (row == 3) this.otherCursor.y = yoff+72;
+                else this.otherCursor.y = yoff+40;
+            } else if (this.cursor.x >= 80 && (this.cursor.y - yoff) < 80) {
                 this.otherCursor.setFlag(SpriteFlag.Invisible, false);
                 // compute mapping from right to left hand side
-                let row = this.cursor.y >> 4;
                 if (row == 0 || row == 2 || row == 4)
                     this.otherCursor.x = 40;
                 else
                     this.otherCursor.x = (row == 1) ? 24 : 56;
                 if (1 <= row && row <= 3)
-                    this.otherCursor.y = 40;
+                    this.otherCursor.y = yoff+40;
                 else
-                    this.otherCursor.y = (row == 0) ? 24 : 56;
+                    this.otherCursor.y = yoff + ((row == 0) ? 24 : 56);
             } else {
                 this.otherCursor.setFlag(SpriteFlag.Invisible, true);
             }
@@ -481,9 +474,7 @@ namespace tileWorldEditor {
         }
         
         private manhattanDistance2() {
-            let row = this.cursor.y >> 4
-            let col = this.cursor.x >> 4
-            return (Math.abs(2 - col) + Math.abs(2 - row));
+            return (Math.abs(2 - this.col()) + Math.abs(2 - this.row()));
         }
 
         private update() {
@@ -499,9 +490,10 @@ namespace tileWorldEditor {
             this.background.fill(11);
             this.background.fillRect(0, 0, 80, 120, 12);
             this.background.print("When", 0, 0);
-            this.background.print("Do", 65, 0);
+            this.background.print("Do", 80, 0);
 
             this.makeContext();
+            this.showCommands(); 
 
             if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                 this.ruleTypeMap.fill(0xf);
@@ -512,7 +504,9 @@ namespace tileWorldEditor {
             } else if (this.menu == RuleEditorMenus.CommandMenu) {
                 this.modifyCommandMenu();
                 this.commandUpdate();
-            } 
+            }
+            this.showRuleType(this.rule.rt, this.rule.dir, 2, 2, false);
+
         }
 
         private centerImage() {
@@ -535,11 +529,12 @@ namespace tileWorldEditor {
             this.showRuleType(RuleType.Colliding, MoveDirection.Up, x + 8, y+1);
         }
 
-        private showRuleType(rt: RuleType, rd: MoveDirection, x: number, y: number) {
-            let selected = rt == this.rule.rt && (rt == RuleType.Resting || rd == this.rule.dir);
+        private showRuleType(rt: RuleType, rd: MoveDirection, x: number, y: number, 
+                showSelected: boolean = true) {
+            let selected = showSelected && rt == this.rule.rt && (rt == RuleType.Resting || rd == this.rule.dir);
             let selCol = 13
             if (selected) {
-                this.background.fillRect(x << 4, y << 4, 16, 16, selCol)
+                this.background.fillRect(x << 4, (y << 4) + yoff, 16, 16, selCol)
             }
             this.drawImage(x, y, this.centerImage());
             this.ruleTypeMap.setPixel(x, y, rt);
@@ -553,19 +548,21 @@ namespace tileWorldEditor {
                 let ax = rd == MoveDirection.Left ? 1 : (rd == MoveDirection.Right ? -1 : 0)
                 let ay = rd == MoveDirection.Down ? -1 : (rd == MoveDirection.Up ? 1 : 0)
                 if (rt == RuleType.Pushing) {
+                    if (selected) {
+                        this.background.fillRect((x + ax) << 4, ((y + ay) << 4) + yoff, 
+                            16, 16, selCol)
+                    }
                     this.drawImage(x+ax, y+ay, arrowImages[indexOf], 10)
                     this.ruleTypeMap.setPixel(x+ax, y+ay, rt);
                     this.dirMap.setPixel(x+ax, y+ay, rd);
-                    if (selected) {
-                        this.background.fillRect((x + ax) << 4, (y + ay) << 4, 16, 16, selCol)
-                    }
                 } else {
+                    if (selected) {
+                        this.background.fillRect((x - ax) << 4, ((y - ay) << 4) + yoff,
+                            16, 16, selCol)
+                    }
                     this.showCollisionSprite(x - ax, y - ay, rd);
                     this.ruleTypeMap.setPixel(x - ax, y - ay , rt);
                     this.dirMap.setPixel(x - ax, y - ay, rd);
-                    if (selected) {
-                        this.background.fillRect((x - ax) << 4, (y - ay) << 4, 16, 16, selCol)
-                    }
                 }
             }
         }
@@ -578,21 +575,20 @@ namespace tileWorldEditor {
 
 
         private drawImage(c: number, r: number, img: Image, z: number = 0) {
-            this.background.drawTransparentImage(img, c << 4, r << 4);
+            this.background.drawTransparentImage(img, c << 4, yoff + (r << 4));
         }
 
         private showImage(c: number, r: number, img: Image, z: number = 0) {
-            // this.background.drawTransparentImage(img, c*16, r*16)
             let spr = sprites.create(img);
             spr.z = z;
             spr.x = (c << 4) + 8;
-            spr.y = (r << 4) + 8;
+            spr.y = yoff + (r << 4) + 8;
             this.showSprites.push(spr);
             return spr;
         }
 
         private drawOutline(c: number, r: number) {
-            this.background.drawRect(c << 4,r << 4,17,17,12)
+            this.background.drawRect(c << 4,yoff + (r << 4),17,17,12)
         }
 
         private makeContext() {
@@ -609,8 +605,6 @@ namespace tileWorldEditor {
                     }
                 }
             }
-            this.showRuleType(this.rule.rt, this.rule.dir, 2, 2);
-            this.showCommands();
         }
 
         // - jump cursor to selected on start of menu ???
@@ -697,8 +691,7 @@ namespace tileWorldEditor {
                 return false;
             // set up the state
             this.menu = RuleEditorMenus.CommandMenu;
-            let row = this.cursor.y >> 4;
-            let r = this.rowToCoord.find(r => r.lr == row);
+            let r = this.rowToCoord.find(r => r.lr == this.row());
             this.whenDo = this.getWhenDo(r.col, r.row);
             this.setTileSaved();
             if (commandSprite.kind() == CommandTokens.SpaceTile) {
@@ -843,7 +836,7 @@ namespace tileWorldEditor {
 
         private attrMenu() {
             // which tile in the diamond are we attributing?
-            let whenDo = this.getWhenDo(this.tileSaved.x >> 4, this.tileSaved.y >> 4);
+            let whenDo = this.getWhenDo(this.tileSaved.x >> 4, (this.tileSaved.y - yoff) >> 4);
             // for all user-defined sprites
             let x = 0;
             this.manager.all().forEach((s, i) => {
@@ -900,7 +893,7 @@ namespace tileWorldEditor {
                         }
                     }
                     if (cnt == 2) {
-                        let whenDo = this.getWhenDo(this.tileSaved.x >> 4, this.tileSaved.y >> 4);
+                        let whenDo = this.getWhenDo(this.tileSaved.x >> 4, (this.tileSaved.y - yoff) >> 4);
                         this.setAttr(this.attrItems[i], whenDo.attrs[m.kind()]);
                     }
                 }
@@ -943,7 +936,7 @@ namespace tileWorldEditor {
 
         private setAttr(m: Sprite, val: AttrType) {
             let i = attrValues.indexOf(val);
-            let whenDo = this.getWhenDo(this.tileSaved.x >> 4, this.tileSaved.y >> 4);
+            let whenDo = this.getWhenDo(this.tileSaved.x >> 4, (this.tileSaved.y - yoff) >> 4);
             whenDo.attrs[m.kind()] = val;
             (<Sprite>(m.data)).setImage(attrImages[i]);
         }
