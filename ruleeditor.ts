@@ -3,22 +3,6 @@ namespace tileworld {
     enum RuleEditorMenus { RuleTypeMenu, AttrTypeMenu, CommandMenu, None };
     enum CommandTokens { MoveArrow, PaintBrush, PaintTile, SpaceTile, Delete };
 
-    function projectAttrs(a: AttrType[], begin: number, end: number): number[] {
-        let res: number[] = [];
-        let excludeCnt = a.filter((v,i) => v == AttrType.Exclude && begin <= i && i <=end).length;
-        let okCnt = a.filter((v,i) => v == AttrType.OK && begin <= i && i <=end).length;
-        let cnt = end - begin + 1;
-        if (okCnt == a.length || excludeCnt == cnt || (begin == 0 && okCnt == cnt))
-            return res;
-        let remove =
-            (okCnt != 0 && excludeCnt !=0) ? 
-               ((excludeCnt < okCnt) ? AttrType.OK : AttrType.Exclude) : -1; 
-        a.forEach((v,i) => { 
-            if (remove != v && begin <=i && i <=end) res.push(i); 
-        })
-        return res;
-    }
-
     const yoff = 6;
 
     // TODO: get rid of sprites for commands
@@ -41,11 +25,11 @@ namespace tileworld {
         private otherCursor: Sprite;      // show correspondence between left and right
         private commandSprites: Sprite[]; // the commands created so far
         private commandMenuSprites: Sprite[];
-        private whenDo: WhenDo;           // which WhenDo is being edited
+        private whenDo: number;           // which WhenDo is being edited
         private currentCommand: Command;  // the current command (potentially null)
         private tokens: CommandTokens[];
 
-        constructor(private manager: ImageManager, private rule: Rule) {
+        constructor(private manager: ImageManager, private rule: number) {
             this.ruleTypeMap = image.create(10,7);
             this.dirMap = image.create(10,7);
             
@@ -145,8 +129,8 @@ namespace tileworld {
                 if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                     let rt = this.ruleTypeMap.getPixel(this.col(), this.row());
                     if (rt != 0xf) {
-                        this.rule.rt = rt;
-                        this.rule.dir = this.dirMap.getPixel(this.col(), this.row());
+                        setType(this.rule,rt);
+                        setDir(this.rule,this.dirMap.getPixel(this.col(), this.row()));
                         this.update();
                     }
                 } else if (this.menu == RuleEditorMenus.CommandMenu) {
@@ -226,12 +210,12 @@ namespace tileworld {
                 this.modifyCommandMenu();
                 this.commandUpdate();
             }
-            this.showRuleType(this.rule.rt, this.rule.dir, 2, 2, false);
+            this.showRuleType(getType(this.rule), getDir(this.rule), 2, 2, false);
 
         }
 
         private centerImage() {
-            return this.manager.getImage(this.rule.kind[0]);
+            return this.manager.getImage(getKinds(this.rule)[0]);
         }
 
         private showRuleMenu(x: number, y: number) {
@@ -252,7 +236,8 @@ namespace tileworld {
 
         private showRuleType(rt: RuleType, rd: MoveDirection, x: number, y: number, 
                 showSelected: boolean = true) {
-            let selected = showSelected && rt == this.rule.rt && (rt == RuleType.Resting || rd == this.rule.dir);
+            let selected = showSelected && rt == getType(this.rule) && 
+                    (rt == RuleType.Resting || rd == getDir(this.rule));
             let selCol = 13
             if (selected) {
                 this.background.fillRect(x << 4, (y << 4) + yoff, 16, 16, selCol)
@@ -342,28 +327,25 @@ namespace tileworld {
             })
         }
 
-        private showCommandsAt(row: number, whendo: WhenDo) {
+        private showCommandsAt(row: number, whendo: number) {
             let spaceImg = this.manager.empty();
-            let img2 = whendo.witness == -1 ? genericSprite : 
-                this.manager.getImage(whendo.witness);
+            let img2 = getWitness(this.rule, whendo) == -1 ? genericSprite : 
+                this.manager.getImage(getWitness(this.rule, whendo));
             this.drawImage(5, row, img2);
-            if (whendo.commands.length == 0) {
-                // lazy initialization
-                whendo.commands.push({ inst: -1, arg: -1 });
-            }
             // show the existing commands
             let col = 6;
             let tokens = this.getTokens(whendo);
-            whendo.commands.forEach(c => { 
-                col = this.showCommand(col, row, c, tokens);
-            });
-            if (tokens.length > 0 ) {
-                // lookup the last sprite 
-                let command = this.commandSprites[this.commandSprites.length-1];
-                if (command.kind() != CommandTokens.SpaceTile) {
-                    let c = { inst: -1, arg: -1 };
-                    whendo.commands.push(c);
+            for(let cid = 0; cid < 4; cid++) {
+                let c = getCommand(this.rule,whendo,cid);
+                if (c.inst != -1) {
                     this.showCommand(col, row, c, tokens);
+                } else {
+                    if (tokens.length > 0) {
+                        let command = this.commandSprites[this.commandSprites.length - 1];
+                        if (command.kind() != CommandTokens.SpaceTile)
+                            this.showCommand(col, row, c, tokens);
+                    }
+                    break;
                 }
             }
         }
@@ -386,19 +368,15 @@ namespace tileworld {
                 let spr = this.showSprite(col, row, arrowImages[arrowValues.indexOf(c.arg)]);
                 worker(spr, CommandTokens.MoveArrow);
             } else if (c.inst == CommandType.Paint) {
-                //let spr = this.showSprite(col, row, paintSprite.image);
-                //worker(spr, CommandTokens.PaintBrush);
-                //if (c.arg != -1) {
-                    let spr = this.showSprite(col, row, this.manager.fixed()[c.arg]);
-                    worker(spr, CommandTokens.PaintTile);
-                //}
+                let spr = this.showSprite(col, row, this.manager.fixed()[c.arg]);
+                worker(spr, CommandTokens.PaintTile);
             }
             return col;
         }
 
-        private getTokens(whendo: WhenDo) {
+        private getTokens(whendo: number) {
             let tokens = [CommandTokens.PaintTile];
-            if (whendo.witness != -1)
+            if (getWitness(this.rule, whendo) != -1)
                 tokens.insertAt(0, CommandTokens.MoveArrow);
             return tokens;
         }
@@ -441,7 +419,7 @@ namespace tileworld {
             // show the commands
             let brush = false;
             this.tokens.forEach(ct => {
-                if (ct == CommandTokens.MoveArrow && this.whenDo.witness != -1) {
+                if (ct == CommandTokens.MoveArrow && getWitness(this.rule,this.whenDo) != -1) {
                     arrowValues.forEach(v => {
                         worker(arrowImages[arrowValues.indexOf(v)], ct);
                     })
@@ -496,43 +474,52 @@ namespace tileworld {
                         this.currentCommand.inst = CommandType.Paint;
                         this.currentCommand.arg = this.manager.getKind(s.image); // TODO 
                     } else if (s.kind() == CommandTokens.Delete && exit) {
-                        this.whenDo.commands.removeElement(this.currentCommand);
+                        // TODO: index of the command
+                        // this.whenDo.commands.removeElement(this.currentCommand);
                     }
                 }
             })
         }
 
-        private posSpritePosition(attrs: AttrType[], begin: number) {
-            let index = attrs.indexOf(AttrType.Include,begin);
-            return (index == -1) ? attrs.indexOf(AttrType.OneOf,begin) : index;
+        private posSpritePosition(whendo: number, begin: number) {
+            let index = this.attrIndex(whendo, AttrType.Include, begin);
+            return (index == -1) ? this.attrIndex(whendo, AttrType.OneOf,begin) : index;
         }
 
         // what is ordering of sprites?
         // (0,0) always first
         private findWitness(col: number, row: number) {
-            let item = this.getWhenDo(col, row)
+            let whendo = this.getWhenDo(col, row)
             if (col != 2 || row != 2) {
-                let witness = this.posSpritePosition(item.attrs, this.manager.fixed().length);
-                item.witness = witness;
+                let witness = this.posSpritePosition(whendo, this.manager.fixed().length);
+                setWitness(this.rule, whendo, witness);
             }
         }
 
+        private attrIndex(whendo: number, a: AttrType, begin: number = 0) {
+            for(let i = begin; i<this.manager.all().length; i++) {
+                if (getAttr(this.rule, whendo, i) == a) 
+                    return i;
+            }
+            return -1;
+        }
+
         private showAttributes(col: number, row: number) {
-            let item = this.rule.whenDo.find(a => a.col == col && a.row == row);
-            if (item) {
+            let whendo = getWhenDo(this.rule, col, row);
+            if (whendo >= 0) {
                 // if there is an include or single oneOf, show it.
-                let index = item.attrs.indexOf(AttrType.Include);
+                let index = this.attrIndex(whendo, AttrType.Include);
                 if (index == -1) {
-                    index = item.attrs.indexOf(AttrType.OneOf);
+                    index = this.attrIndex(whendo, AttrType.OneOf);
                     if (index != -1) {
-                        let index2 = item.attrs.indexOf(AttrType.OneOf,index+1);
+                        let index2 = this.attrIndex(whendo, AttrType.OneOf,index+1);
                         if (index2 != -1)
                             index = -1;
                     }
                 }
                 // and skip to the other (if it exists)
                 let begin = 0;
-                let end = item.attrs.length-1;
+                let end = this.manager.all().length-1;
                 if (index != -1) {
                     this.drawImage(col, row, this.manager.getImage(index));
                     if (index < this.manager.fixed().length) {
@@ -541,10 +528,10 @@ namespace tileworld {
                         end = this.manager.fixed().length-1;
                     }
                 }
-                let project = projectAttrs(item.attrs, begin, end);
+                let project = this.projectAttrs(this.rule, this.whenDo, begin, end);
                 let done: AttrType[] = [];
                 project.forEach(index => {
-                    let val = item.attrs[index];
+                    let val = getAttr(this.rule, this.whenDo, index);
                     // eliminate duplicates
                     if (done.indexOf(val) == -1) {
                         done.push(val);
@@ -552,6 +539,29 @@ namespace tileworld {
                     }
                 });
             }
+        }
+
+        private projectAttrs(rid: number, whendo: number, begin: number, end: number): number[] {
+            let attrCnt = (a: AttrType) => {
+                let cnt = 0;
+                for (let i = begin; i <= end; i++) {
+                    if (getAttr(rid, whendo, i) == a) cnt++;
+                }
+                return cnt;
+            }
+            let res: number[] = [];
+            let excludeCnt = attrCnt(AttrType.Exclude);
+            let okCnt = attrCnt(AttrType.OK);
+            let cnt = end - begin + 1;
+            if (okCnt == this.manager.all().length || excludeCnt == cnt || (begin == 0 && okCnt == cnt))
+                return res;
+            let remove =
+                (okCnt != 0 && excludeCnt != 0) ?
+                    ((excludeCnt < okCnt) ? AttrType.OK : AttrType.Exclude) : -1;
+            for (let i = begin; i <= end; i++) {
+                if (getAttr(rid, whendo, i) != remove) res.push(i);
+            }
+            return res;
         }
 
         private attrMenu() {
@@ -562,9 +572,10 @@ namespace tileworld {
                 this.drawImage(i, 5, img);
             });
             this.manager.all().forEach((image, i ) => {
+                let a = getAttr(this.rule, whenDo, i);
                 this.drawImage(i, 6, image);
-                this.drawImage(i, 6, attrImages[attrValues.indexOf(whenDo.attrs[i])]);
-                this.dirMap.setPixel(i,6,whenDo.attrs[i]);
+                this.drawImage(i, 6, attrImages[attrValues.indexOf(a)]);
+                this.dirMap.setPixel(i,6,a);
             });
             if (this.attrSelected == -1)
                 this.selectAttr(0);
@@ -605,7 +616,7 @@ namespace tileworld {
                     }
                     if (cnt == 2) {
                         let whenDo = this.getWhenDo(this.col(false), this.row(false));
-                        this.setAttr(i, whenDo.attrs[m]);
+                        this.setAttr(i, getAttr(this.rule, whenDo, m));
                     }
                 }
                 this.setAttr(m, val);
@@ -615,22 +626,22 @@ namespace tileworld {
         }
 
         private getWhenDo(col: number, row: number) {
-            let item = this.rule.whenDo.find(a => a.col == col && a.row == row)
-            if (item == undefined) {
-                let attrs: AttrType[] = [];
+            let whendo = getWhenDo(this.rule, col, row);
+            if (whendo == -1) {
+                whendo = makeWhenDo(this.rule, col, row);
                 // default mapping::everything is possible
-                this.manager.all().forEach(s => { attrs.push(AttrType.OK) });
-                item = { col: col, row: row, attrs: attrs, witness: -1, commands:[] }
-                this.rule.whenDo.push(item)
+                this.manager.all().forEach((img,i) => { 
+                    setAttr(this.rule, whendo, i, AttrType.OK);
+                });
             }
-            return item;
+            return whendo;
         }
         
         private setFixedOther(m: number, src: number, val: number) {
             let whenDo = this.getWhenDo(this.col(false), this.row(false));
             for(let o =0; o<this.manager.fixed().length; o++) {
                 if (o != m) {
-                    if (src == -1 || whenDo.attrs[o] == src)
+                    if (src == -1 || getAttr(this.rule, whenDo, o) == src)
                         this.setAttr(o, val);
                 }
             }
@@ -639,7 +650,7 @@ namespace tileworld {
             let whenDo = this.getWhenDo(this.col(false), this.row(false));
             for (let o = this.manager.fixed().length; o< this.manager.all().length; o++) {
                 if (o != m) {
-                    if (src == -1 || whenDo.attrs[o] == src)
+                    if (src == -1 || getAttr(this.rule, whenDo, o) == src)
                         this.setAttr(o, val);
                 }
             }
@@ -647,7 +658,7 @@ namespace tileworld {
 
         private setAttr(m: number, val: AttrType) {
             let whenDo = this.getWhenDo(this.col(false), this.row(false));
-            whenDo.attrs[m] = val;
+            setAttr(this.rule, whenDo, m, val)
         }
     } 
 }

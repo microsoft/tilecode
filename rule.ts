@@ -139,12 +139,12 @@ namespace tileworld {
         getRule(rid).dir = dir;
     }
 
-    export function getGeneral(rid: number): MoveDirection[] {
-        return getRule(rid).generalize;
+    export function getGeneral(rid: number, gid: number): MoveDirection {
+        return getRule(rid).generalize[gid];
     }
     
-    export function setGeneral(rid: number, general: MoveDirection[]) {
-        getRule(rid).generalize = general;
+    export function setGeneral(rid: number, gid: number, general: MoveDirection) {
+        getRule(rid).generalize[gid] = general;
     }
 
     export function getWhenDo(rid: number, col: number, row: number) {
@@ -159,11 +159,11 @@ namespace tileworld {
         return 0;
     }
 
-    export function getAttrs(rid: number, wdid: number): AttrType[] {
-        return [];
+    export function getAttr(rid: number, wdid: number, aid: number): AttrType {
+        return 0;
     }
 
-    export function setAttrs(rid: number, wdid: number, attrs: AttrType[]) {
+    export function setAttr(rid: number, wdid: number, aid: number, attrs: AttrType) {
 
     }
 
@@ -175,11 +175,11 @@ namespace tileworld {
 
     }
 
-    export function getCommands(rid: number, wdid: number): Command[] {
-        return [];
+    export function getCommand(rid: number, wdid: number, cid: number): Command {
+        return { inst: -1, arg: -1 };
     }
 
-    export function setCommands(rid: number, wdid: number, c: Command[]) {
+    export function setCommand(rid: number, wdid: number, cid: number, c: Command) {
         
     }
 }
