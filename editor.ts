@@ -8,8 +8,10 @@ namespace tileWorldEditor {
 
     const yoff = 4;
 
+    // TODO: grey out edit option for fixed tiles
     // TODO: some indication of motion of the world when scrolling
     // TODO: painting of tiles and sprites separately
+    // TODO: zoom-out (to 8x8 tiles rather than 16x16) and zoom-in
     // the root of the editing experience is creating a (shared) tile map
     export class MapEditor {
         private world: Image;

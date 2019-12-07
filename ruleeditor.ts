@@ -21,6 +21,9 @@ namespace tileWorldEditor {
 
     const yoff = 6;
 
+    // TODO: get rid of sprites for commands
+    // TODO: consistency of A pressed for menus, etc.
+    // TODO: opportunities for some abstraction???
     export class RuleEditor {
         private background: Image;
         private cursor: Sprite;

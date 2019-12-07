@@ -213,7 +213,7 @@ let playerMoveBoulder: Rule = {
 }
 
 let boulderFallDown: Rule = {
-    kind: [boulderId],
+    kind: [boulderId, diamondId],
     rt: RuleType.Resting,
     dir: MoveDirection.None,
     generalize: [],
@@ -222,7 +222,7 @@ let boulderFallDown: Rule = {
 }
 
 let boulderFallingDown: Rule = {
-    kind: [boulderId],
+    kind: [boulderId, diamondId],
     rt: RuleType.Moving,
     dir: MoveDirection.Down,
     generalize: [],
@@ -231,21 +231,12 @@ let boulderFallingDown: Rule = {
 }
 
 let boulderFallLeft: Rule = {
-    kind: [boulderId],
+    kind: [boulderId, diamondId],
     rt: RuleType.Resting,
     dir: MoveDirection.None,
     generalize: [MoveDirection.Right],
     whenDo: [{ col: 2, row: 2, attrs: [], witness: boulderId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Left }] },
              SpriteAt(boulderId, 2, 3), TileAt(spaceId, 1, 2), TileAt(spaceId,1,3)]
-}
-
-let boulderFallRight: Rule = {
-    kind: [boulderId],
-    rt: RuleType.Resting,
-    dir: MoveDirection.None,
-    generalize: [],
-    whenDo: [{ col: 2, row: 2, attrs: [], witness: boulderId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Right }] },
-        SpriteAt(boulderId, 2, 3), TileAt(spaceId, 3, 2), TileAt(spaceId, 3, 3)]
 }
 
 function makeIds(rules: Rule[]): IdRule[] {
