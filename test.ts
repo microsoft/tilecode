@@ -250,7 +250,7 @@ let program: Program = {
 }
 
 // let ruleEditor = new tw.RuleEditor(manager, makeRestingRule(manager, boulderId))
-// let ruleEditor = new tw.RuleEditor(manager, boulderFallDown);
+let ruleEditor = new tw.RuleEditor(manager, boulderFallDown);
 
-let mapEditor = new tileWorldEditor.MapEditor(manager, spaceId, program)
+//let mapEditor = new tileWorldEditor.MapEditor(manager, spaceId, program)
 

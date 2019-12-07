@@ -262,7 +262,7 @@ namespace tileWorldEditor {
             this.dirMap.setPixel(x, y, rd);
             if (rt == RuleType.Moving || rt == RuleType.Colliding) {
                 let indexOf = arrowValues.indexOf(rd);
-                this.drawImage(x, y, arrowImages[indexOf], 10)
+                this.drawImage(x, y, arrowImages[indexOf])
             }
             if (rt == RuleType.Pushing || rt == RuleType.Colliding) {
                 let indexOf = arrowValues.indexOf(rd);
@@ -273,7 +273,7 @@ namespace tileWorldEditor {
                         this.background.fillRect((x + ax) << 4, ((y + ay) << 4) + yoff, 
                             16, 16, selCol)
                     }
-                    this.drawImage(x+ax, y+ay, arrowImages[indexOf], 10)
+                    this.drawImage(x+ax, y+ay, arrowImages[indexOf])
                     this.ruleTypeMap.setPixel(x+ax, y+ay, rt);
                     this.dirMap.setPixel(x+ax, y+ay, rd);
                 } else {
