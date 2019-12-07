@@ -111,6 +111,11 @@ namespace tileworld {
         return lastRule.rule;
     }
 
+    export function setProgram(p: Program) {
+        prog = p;
+        lastRule = null;
+    }
+
     export function getRuleIds(): number[] {
         return prog.rules.map(r => r.id);
     }
@@ -156,30 +161,32 @@ namespace tileworld {
     }
 
     export function makeWhenDo(rid: number, col: number, row: number) {
-        return 0;
+        let whenDo: WhenDo = { col: col, row: row, witness:-1, attrs:[], commands:[]}
+        getRule(rid).whenDo.push(whenDo);
+        return getRule(rid).whenDo.length-1;
     }
 
     export function getAttr(rid: number, wdid: number, aid: number): AttrType {
-        return 0;
+        return getRule(rid).whenDo[wdid].attrs[aid];
     }
 
-    export function setAttr(rid: number, wdid: number, aid: number, attrs: AttrType) {
-
+    export function setAttr(rid: number, wdid: number, aid: number, attr: AttrType) {
+        getRule(rid).whenDo[wdid].attrs[aid] = attr;
     }
 
     export function getWitness(rid: number, wdid: number) {
-        return 0;
+        return getRule(rid).whenDo[wdid].witness;
     }
 
     export function setWitness(rid: number, wdid: number, wit: number) {
-
+        getRule(rid).whenDo[wdid].witness = wit;
     }
 
     export function getCommand(rid: number, wdid: number, cid: number): Command {
-        return { inst: -1, arg: -1 };
+        return getRule(rid).whenDo[wdid].commands[cid];
     }
 
     export function setCommand(rid: number, wdid: number, cid: number, c: Command) {
-        
+        getRule(rid).whenDo[wdid].commands[cid] = c;
     }
 }

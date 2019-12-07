@@ -7,7 +7,8 @@ namespace tileworld {
 
     // TODO: get rid of sprites for commands
     // TODO: consistency of A pressed for menus, etc.
-    // TODO: opportunities for some abstraction???
+    // TODO: opportunities for some abstraction
+    //  - need to pull out code for displaying diamond.
     export class RuleEditor {
         private background: Image;
         private cursor: Sprite;
