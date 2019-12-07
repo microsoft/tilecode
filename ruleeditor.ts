@@ -42,7 +42,7 @@ namespace tileWorldEditor {
         private currentCommand: Command;  // the current command (potentially null)
         private tokens: CommandTokens[];
 
-        constructor(private manager: SpriteManager, private rule: Rule) {
+        constructor(private manager: ImageManager, private rule: Rule) {
             this.ruleTypeMap = image.create(10,7);
             this.dirMap = image.create(10,7);
             
@@ -52,8 +52,7 @@ namespace tileWorldEditor {
             this.tileSaved.setFlag(SpriteFlag.Invisible, true)
             this.tileSaved.z = 10;
             this.background = image.create(160, 120)
-            scene.setBackgroundImage(this.background)
-            this.manager.setScene()            
+            scene.setBackgroundImage(this.background)           
 
             // Control
             this.menu = RuleEditorMenus.None;
@@ -229,7 +228,7 @@ namespace tileWorldEditor {
         }
 
         private centerImage() {
-            return this.manager.all()[this.rule.kind[0]].image;
+            return this.manager.getImage(this.rule.kind[0]);
         }
 
         private showRuleMenu(x: number, y: number) {
@@ -310,7 +309,7 @@ namespace tileWorldEditor {
         }
 
         private makeContext() {
-            let spaceImg = this.manager.empty().image
+            let spaceImg = this.manager.empty();
             for (let i = 0; i <= 4; i++) {
                 for (let j = 0; j <= 4; j++) {
                     let dist = Math.abs(2-j) + Math.abs(2-i);
@@ -341,9 +340,9 @@ namespace tileWorldEditor {
         }
 
         private showCommandsAt(row: number, whendo: WhenDo) {
-            let spaceImg = this.manager.empty().image;
+            let spaceImg = this.manager.empty();
             let img2 = whendo.witness == -1 ? genericSprite : 
-                this.manager.all()[whendo.witness].image;
+                this.manager.getImage(whendo.witness);
             this.drawImage(5, row, img2);
             if (whendo.commands.length == 0) {
                 // lazy initialization
@@ -375,7 +374,7 @@ namespace tileWorldEditor {
                 col = col + 1;
             };
             if (c.inst == -1) {
-                let spaceImg = this.manager.empty().image;
+                let spaceImg = this.manager.empty();
                 let spr = this.showSprite(col, row, spaceImg);       
                 spr.setKind(CommandTokens.SpaceTile);
                 spr.data = { c: c, t: tokens };
@@ -387,7 +386,7 @@ namespace tileWorldEditor {
                 //let spr = this.showSprite(col, row, paintSprite.image);
                 //worker(spr, CommandTokens.PaintBrush);
                 //if (c.arg != -1) {
-                    let spr = this.showSprite(col, row, this.manager.fixed()[c.arg].image);
+                    let spr = this.showSprite(col, row, this.manager.fixed()[c.arg]);
                     worker(spr, CommandTokens.PaintTile);
                 //}
             }
@@ -448,8 +447,8 @@ namespace tileWorldEditor {
                     //brush = true;
                 } else if (!brush && ct == CommandTokens.PaintTile) {
                     col = 5; row = 6;
-                    this.manager.fixed().forEach(s => {
-                        worker(s.image, CommandTokens.PaintTile);
+                    this.manager.fixed().forEach(image => {
+                        worker(image, CommandTokens.PaintTile);
                     })
                 } else if (ct == CommandTokens.Delete) {
                     worker(deleteIcon, ct);
@@ -492,7 +491,7 @@ namespace tileWorldEditor {
                     } else if (s.kind() == CommandTokens.PaintTile) {
                         //let paint = this.whenDo.commands.find(c => c.inst == CommandType.Paint);
                         this.currentCommand.inst = CommandType.Paint;
-                        this.currentCommand.arg = this.manager.fixed().find(f => f.image == s.image).kind();
+                        this.currentCommand.arg = this.manager.getKind(s.image); // TODO 
                     } else if (s.kind() == CommandTokens.Delete && exit) {
                         this.whenDo.commands.removeElement(this.currentCommand);
                     }
@@ -532,7 +531,7 @@ namespace tileWorldEditor {
                 let begin = 0;
                 let end = item.attrs.length-1;
                 if (index != -1) {
-                    this.drawImage(col, row, this.manager.all()[index].image);
+                    this.drawImage(col, row, this.manager.getImage(index));
                     if (index < this.manager.fixed().length) {
                         begin = this.manager.fixed().length;
                     } else {
@@ -559,8 +558,8 @@ namespace tileWorldEditor {
             attrsCentered.forEach((img, i) => {
                 this.drawImage(i, 5, img);
             });
-            this.manager.all().forEach((s, i ) => {
-                this.drawImage(i, 6, s.image);
+            this.manager.all().forEach((image, i ) => {
+                this.drawImage(i, 6, image);
                 this.drawImage(i, 6, attrImages[attrValues.indexOf(whenDo.attrs[i])]);
                 this.dirMap.setPixel(i,6,whenDo.attrs[i]);
             });
@@ -646,16 +645,6 @@ namespace tileWorldEditor {
         private setAttr(m: number, val: AttrType) {
             let whenDo = this.getWhenDo(this.col(false), this.row(false));
             whenDo.attrs[m] = val;
-        }
-        
-        private closeMenu(command: string) {
-            if (command) {
-                // look up name of sprite and get code
-                let s = this.manager.findName(command)
-                if (command == "Map") {
-                    game.popScene();
-                }
-            }
         }
     } 
 }

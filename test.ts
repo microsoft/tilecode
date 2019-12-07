@@ -1,6 +1,6 @@
-namespace boulder {
+namespace bd {
 
-    let player = img`
+    export const player = img`
         . . . . . . f f f f . . . . . .
         . . . . f f f 2 2 f f f . . . .
         . . . f f f 2 3 2 2 f f f . . .
@@ -18,7 +18,7 @@ namespace boulder {
         . . . . . f f f f f f . . . . .
         . . . . . f f . . f f . . . . .
     `
-    let diamond = img`
+    export const diamond = img`
         . . . . . . . . . . . . . . . .
         . . . . 8 8 8 8 8 8 8 8 . . . .
         . . . 8 8 8 8 9 9 9 1 1 . . . .
@@ -36,7 +36,7 @@ namespace boulder {
         . . . . . . . 9 1 . . . . . . .
         . . . . . . . . . . . . . . . .
     `
-    let boulder = img`
+    export const boulder = img`
         . . . . . c c b b b . . . . . .
         . . . . c b d d d d b . . . . .
         . . . . c d d d d d d b b . . .
@@ -54,7 +54,7 @@ namespace boulder {
         . . . . . . c c b b b b c c . .
         . . . . . . . . c c c c . . . .
     `
-    let rock = img`
+    export const rock = img`
         . . . . . . . . . . . . . . . .
         . . . . 8 8 8 8 d d b . . . . .
         . . . 8 8 8 8 9 d d d b b . . .
@@ -72,7 +72,7 @@ namespace boulder {
         . . . . . . . 9 b b b b . . . .
         . . . . . . . . . . . . . . . .
     `
-    let enemy = img`
+    export const enemy = img`
         . . . . . . . f f f f . . . . .
         . . . . . f f 1 1 1 1 f f . . .
         . . . . f b 1 1 1 1 1 1 b f . .
@@ -90,7 +90,7 @@ namespace boulder {
         . f d f d f d f f f f f . . . .
         . . f . f . f . . . . . . . . .
     `
-    let wall = img`
+    export const wall = img`
         d d d d d d d d d d d d d d d 8
         d 6 6 6 8 8 8 6 6 6 6 6 6 6 8 8
         d 6 6 8 6 6 6 8 6 6 6 6 6 6 8 8
@@ -108,7 +108,7 @@ namespace boulder {
         d 6 6 6 6 6 6 6 8 8 6 6 6 8 6 8
         8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
     `
-    let dirt = img`
+    export const dirt = img`
         f e e e e e f e e e e 4 4 4 4 e
         e e 4 4 e e e f f f e e e e e e
         e 4 4 4 4 4 e e f f f f f e e e
@@ -126,7 +126,7 @@ namespace boulder {
         e e f e 4 4 4 e f e 4 4 4 4 e e
         f e e f e e e f e 4 4 4 4 4 4 e
     `
-    let space = img`
+    export const space = img`
         f f f f f f f f f f f c c c c f
         f f c c f f f f f f f f f f f f
         f c c c c c f f f f f f f f f f
@@ -144,33 +144,12 @@ namespace boulder {
         f f f f c c c f f f c c c c f f
         f f f f f f f f f c c c c c c f
     `
-
-    // names are just here for convenience - they are not used
-    // for 
-    let movableNames = ["Player", "Boulder", "Diamond", "Enemy"]
-    let movable = [player, boulder, diamond, enemy]
-    let fixedNames = ["Space", "Wall", "Dirt"]
-    let fixed = [space, wall, dirt]
-
-    export let movableSprites: Sprite[] = []
-    movable.forEach((img, i) => {
-        let foo = sprites.create(img)
-        foo.setFlag(SpriteFlag.Invisible, true)
-        foo.data = movableNames[i]
-        movableSprites.push(foo)
-    })
-
-    export let fixedSprites: Sprite[] = []
-    fixed.forEach((img, i) => {
-        let foo = sprites.create(img)
-        foo.setFlag(SpriteFlag.Invisible, true)
-        foo.data = fixedNames[i]
-        fixedSprites.push(foo)
-    })
+    export const movable = [player, boulder, diamond, enemy]
+    export const fixed = [space, wall, dirt]
 }
 
 import tw = tileWorldEditor;
-let manager = new tw.SpriteManager(boulder.fixedSprites, boulder.movableSprites)
+let manager = new tw.ImageManager(bd.fixed, bd.movable)
 
 function fillAttr(f: number, n: number, i: number, g: number) {
     let res: AttrType[] = [];
@@ -180,33 +159,31 @@ function fillAttr(f: number, n: number, i: number, g: number) {
     return res;
 }
 
-function TileAt(name: string, col: number, row: number): WhenDo {
-    let id = manager.findName(name).kind();
+function TileAt(id: number, col: number, row: number): WhenDo {
     return { col: col, row: row, attrs: fillAttr(AttrType.Exclude, 7, id, AttrType.Include), witness: -1, commands: [] }
 }
 
-function SpriteAt(name:string, col: number, row: number): WhenDo {
-    let id = manager.findName(name).kind();
+function SpriteAt(id: number, col: number, row: number): WhenDo {
     let attrs = fillAttr(AttrType.Exclude, 7, id, AttrType.Include);
     attrs[0] = attrs[1] = attrs[2] = AttrType.OK;
     return { col: col, row: row, attrs:attrs , witness: id, commands: [] }
 }
 
-let wallId = manager.findName("Wall").kind()
-let spaceId = manager.findName("Space").kind()
-let playerId = manager.findName("Player").kind()
-let enemyId = manager.findName("Enemy").kind()
-let boulderId = manager.findName("Boulder").kind()
-let diamondId = manager.findName("Diamond").kind()
+let wallId = manager.getKind(bd.wall);
+let spaceId = manager.getKind(bd.space);
+let playerId = manager.getKind(bd.player);
+let enemyId = manager.getKind(bd.enemy);
+let boulderId = manager.getKind(bd.boulder);
+let diamondId = manager.getKind(bd.diamond);
 
-let tp = TileAt("Space", 2, 3)
+let tp = TileAt(spaceId, 2, 3)
 tp.attrs[playerId] = AttrType.OK;
 tp.attrs[enemyId] = AttrType.OK;
 let playerMove = fillAttr(AttrType.OK, 7, boulderId, AttrType.Exclude);
 playerMove[wallId] = AttrType.Exclude;
 
 let moveRight = [{ inst: CommandType.Move, arg: MoveDirection.Right }]
-let boulderRight = SpriteAt("Boulder", 3, 2)
+let boulderRight = SpriteAt(boulderId, 3, 2)
 boulderRight.commands = [{ inst: CommandType.Move, arg: MoveDirection.Right }]
 
 let playerPaint: Rule = {
@@ -232,7 +209,7 @@ let playerMoveBoulder: Rule = {
     dir: MoveDirection.Right,
     generalize: [],
     whenDo: [{ col: 2, row: 2, attrs: [], witness: playerId, commands: moveRight },
-             boulderRight, TileAt("Space", 4, 2)]
+        boulderRight, TileAt(spaceId, 4, 2)]
 }
 
 let boulderFallDown: Rule = {
@@ -241,7 +218,7 @@ let boulderFallDown: Rule = {
     dir: MoveDirection.None,
     generalize: [],
     whenDo: [{ col: 2, row: 2, attrs: [], witness: boulderId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Down }] },
-             TileAt("Space", 2, 3)]
+             TileAt(spaceId, 2, 3)]
 }
 
 let boulderFallingDown: Rule = {
@@ -259,7 +236,7 @@ let boulderFallLeft: Rule = {
     dir: MoveDirection.None,
     generalize: [],
     whenDo: [{ col: 2, row: 2, attrs: [], witness: boulderId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Left }] },
-             SpriteAt("Boulder", 2, 3), TileAt("Space", 1, 2), TileAt("Space",1,3)]
+             SpriteAt(boulderId, 2, 3), TileAt(spaceId, 1, 2), TileAt(spaceId,1,3)]
 }
 
 let boulderFallRight: Rule = {
@@ -268,10 +245,11 @@ let boulderFallRight: Rule = {
     dir: MoveDirection.None,
     generalize: [],
     whenDo: [{ col: 2, row: 2, attrs: [], witness: boulderId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Right }] },
-             SpriteAt("Boulder", 2, 3), TileAt("Space", 3, 2), TileAt("Space", 3, 3)]
+        SpriteAt(boulderId, 2, 3), TileAt(spaceId, 3, 2), TileAt(spaceId, 3, 3)]
 }
 
 // let ruleEditor = new tw.RuleEditor(manager, tw.makeRestingRule(manager, "Boulder"))
 // let ruleEditor = new tw.RuleEditor(manager, boulderFallDown);
 
-let mapEditor = new tileWorldEditor.MapEditor(manager, manager.findName("Space"))
+let mapEditor = new tileWorldEditor.MapEditor(manager, spaceId)
+

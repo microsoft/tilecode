@@ -21,7 +21,7 @@ namespace tileWorldEditor {
     export class TileWorldVM<T> {
         private world: Image;
         constructor(private prog: Program,
-                    private manager: SpriteManager, 
+                    private manager: ImageManager, 
                     private engine: GameEngine<T>) {
         }
 

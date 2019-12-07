@@ -1,46 +1,27 @@
 namespace tileWorldEditor {
 
-    // consistent management of (user-defined) sprite kinds and names
-    export class SpriteManager {
-        private allSprites: Sprite[];
-        private emptySprite: Sprite;
-        constructor(private fixedSprites: Sprite[],
-            private movableSprites: Sprite[]) {
-
-            this.fixedSprites.forEach((s, index) => { s.setKind(index) })
-            this.movableSprites.forEach((s, index) => {
-                s.setKind(index + this.fixedSprites.length)
-            })
-            this.allSprites = [];
-            this.fixedSprites.forEach(s => { this.allSprites.push(s) })
-            this.movableSprites.forEach(s => { this.allSprites.push(s) })
-
-            this.emptySprite = sprites.create(emptyTile, this.allSprites.length())
-            this.emptySprite.data = "Empty"
-            this.emptySprite.setFlag(SpriteFlag.Invisible, true)
+    // consistent management of (user-defined) images for fixed and movable sprites
+    export class ImageManager {
+        private allImages: Image[];
+        private emptyImage: Image;
+        constructor(private fixedImages: Image[], private movableImages: Image[]) {
+            this.allImages = [];
+            this.fixedImages.forEach(s => { this.allImages.push(s) })
+            this.movableImages.forEach(s => { this.allImages.push(s) })
         }
 
-        setScene() {
-            this.fixedSprites.forEach(s => { scene.setTile(s.kind(), s.image) })
-            this.movableSprites.forEach(s => { scene.setTile(s.kind(), s.image) })
+        getImage(kind: number) {
+            return 0<=kind && kind < this.allImages.length ? this.allImages[kind] : null;
+        }
+        
+        getKind(img: Image) {
+            return this.allImages.indexOf(img);
         }
 
-        findName(name: string) {
-            let s = this.fixedSprites.find(s => s.data == name)
-            if (!s) s = this.movableSprites.find(s => s.data == name)
-            return s;
-        }
-
-        findKind(kind: number) {
-            let s = this.fixedSprites.find(s => s.kind() == kind)
-            if (!s) s = this.movableSprites.find(s => s.kind() == kind)
-            return s;
-        }
-
-        fixed() { return this.fixedSprites; }
-        movable() { return this.movableSprites; }
-        all() { return this.allSprites; }
-        empty() { return this.emptySprite; }
+        fixed() { return this.fixedImages; }
+        movable() { return this.movableImages; }
+        all() { return this.allImages; }
+        empty() { return emptyTile; }
     }
 
 }

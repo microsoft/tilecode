@@ -14,7 +14,7 @@ namespace tileWorldEditor {
         private original: Image; // 16x16
         private image: Image;    // 16x16
         private screen: Image;  // whole screen
-        constructor(private manager: SpriteManager, s: Sprite) {
+        constructor(private manager: ImageManager, private kind: number) {
             this.cursorType= CursorType.Color;
             this.cursor = sprites.create(cursorIn);
             this.cursor.x = colorsX + 8;
@@ -29,8 +29,8 @@ namespace tileWorldEditor {
             this.paintCursor.x = paintSize * 5 + 2 
             this.paintCursor.y = paintSize * 2 + 2
             this.paintCursor.setFlag(SpriteFlag.Invisible, true)
-            this.original = s.image;
-            this.image = s.image; // i.clone();
+            this.original = manager.getImage(kind);
+            this.image = this.original // i.clone();
             this.screen = image.create(160, 120)
             scene.setBackgroundImage(this.screen)
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {

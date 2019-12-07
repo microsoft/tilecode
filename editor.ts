@@ -19,11 +19,10 @@ namespace tileWorldEditor {
         private cursor: Sprite;
         private selected: Sprite;
         private userSpriteIndex: number;
-        constructor(private manager: SpriteManager, private defaultTile: Sprite) {
-            this.manager.setScene()
+        constructor(private manager: ImageManager, private defaultTile: number) {
             // this is the world
             this.world = image.create(30, 30);
-            this.world.fill(defaultTile.kind());
+            this.world.fill(defaultTile);
             // this is the screen (under our control)
             this.screen = image.create(160, 120);
             let empty = this.manager.empty()
@@ -100,8 +99,7 @@ namespace tileWorldEditor {
                 } else if (this.row() == 1) {
                     // paint
                     game.pushScene();
-                    let spriteEditor = new ImageEditor(this.manager, 
-                        this.manager.all()[this.userSpriteIndex])
+                    let spriteEditor = new ImageEditor(this.manager, this.userSpriteIndex);
                 } else if (this.row() == 2) {
                     // rule editor
                 } else if (this.row() == 3) {
@@ -130,8 +128,8 @@ namespace tileWorldEditor {
         private update() {
             this.screen.fill(12);
             this.screen.fillRect(0, yoff, 16, 16, 11);
-            this.manager.all().forEach((s, row) => {
-                this.drawImage(s.image, 1, row);
+            this.manager.all().forEach((img, row) => {
+                this.drawImage(img, 1, row);
             });
             commandImages.forEach((img, row) => {
                 this.drawImage(img, 0, row);
@@ -142,8 +140,8 @@ namespace tileWorldEditor {
                     let col = 2 + (x - this.offsetX);
                     let row = (y - this.offsetY);
                     if (index >= 0)
-                        this.drawImage(this.defaultTile.image, col, row)
-                    this.drawImage(index >= 0 ? this.manager.all()[index].image : emptyTile, 
+                        this.drawImage(this.manager.getImage(this.defaultTile), col, row)
+                    this.drawImage(index >= 0 ? this.manager.getImage(index) : emptyTile, 
                         col, row);
                 }    
             }

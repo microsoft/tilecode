@@ -59,14 +59,13 @@ type Program = {
     rules: IdRule[];    // the rules
 }
 
-function makeRestingRule(m: tileWorldEditor.SpriteManager, name: string): Rule {
-    let index = m.findName(name).kind();
+function makeRestingRule(m: tileWorldEditor.ImageManager, kind: number): Rule {
     return {
-        kind: [index],
+        kind: [kind],
         rt: RuleType.Resting,
         dir: MoveDirection.None,
         generalize: [],
-        whenDo: [{ col: 2, row: 2, attrs: [], witness: index, commands: [] }]
+        whenDo: [{ col: 2, row: 2, attrs: [], witness: kind, commands: [] }]
     }
 }
 
