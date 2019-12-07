@@ -1,4 +1,4 @@
-namespace tileWorldEditor {
+namespace tileworld {
 
 // all sprites go here
 export const colorCursor = img`

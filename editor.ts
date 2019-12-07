@@ -1,4 +1,4 @@
-namespace tileWorldEditor {
+namespace tileworld {
 
     // TODO: base class for tile-based editors
     // - drawing

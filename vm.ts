@@ -2,7 +2,7 @@
 // this VM is independent of the underlying game engine, which
 // is abstracted by an interface. 
 
-namespace tileWorldEditor {
+namespace tileworld {
 
     // TODO: animation???
     export interface GameEngine<T> {

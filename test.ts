@@ -147,7 +147,7 @@ namespace bd {
     export const fixed = [space, wall, dirt]
 }
 
-import tw = tileWorldEditor;
+import tw = tileworld;
 let manager = new tw.ImageManager(bd.fixed, bd.movable)
 
 function fillAttr(f: number, n: number, i: number, g: number) {

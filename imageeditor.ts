@@ -1,4 +1,4 @@
-namespace tileWorldEditor {
+namespace tileworld {
     const yoff = 4;
     const colorSize = 8;
     const paintSize = 6;

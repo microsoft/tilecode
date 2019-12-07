@@ -1,4 +1,4 @@
-namespace tileWorldEditor {
+namespace tileworld {
 
     // consistent management of (user-defined) images for fixed and movable sprites
     export class ImageManager {

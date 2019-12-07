@@ -67,7 +67,7 @@ type Program = {
     rules: IdRule[];    // the rules
 }
 
-function makeRestingRule(m: tileWorldEditor.ImageManager, kind: number): Rule {
+function makeRestingRule(m: tileworld.ImageManager, kind: number): Rule {
     return {
         kind: [kind],
         rt: RuleType.Resting,

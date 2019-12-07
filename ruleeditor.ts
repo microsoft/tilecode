@@ -1,4 +1,4 @@
-namespace tileWorldEditor {
+namespace tileworld {
 
     enum RuleEditorMenus { RuleTypeMenu, AttrTypeMenu, CommandMenu, None };
     enum CommandTokens { MoveArrow, PaintBrush, PaintTile, SpaceTile, Delete };
