@@ -18,7 +18,8 @@
         "editor.ts",
         "tileworld.ts",
         "main.ts",
-        "test.ts"
+        "test.ts",
+        "spriteRules.ts"
     ],
     "testFiles": [],
     "public": false,

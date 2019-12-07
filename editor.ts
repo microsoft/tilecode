@@ -8,6 +8,8 @@ namespace tileWorldEditor {
 
     const yoff = 4;
 
+    // TODO: some indication of motion of the world when scrolling
+    // TODO: painting of tiles and sprites separately
     // the root of the editing experience is creating a (shared) tile map
     export class MapEditor {
         private world: Image;
@@ -72,6 +74,9 @@ namespace tileWorldEditor {
             })
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 this.cursorAction();
+                this.update();
+            })
+            game.addScenePopHandler(() => {
                 this.update();
             })
         }

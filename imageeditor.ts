@@ -102,9 +102,11 @@ namespace tileWorldEditor {
                     this.image.setPixel(col, row, this.selectedColor)
                     this.update()
                 } else {
-                    let row = (this.cursor.y - yoff) >> 16;
+                    let row = (this.cursor.y - yoff) >> 4;
                     if (row == 0)
                         game.popScene();
+                    else
+                        this.setCursor(CursorType.Paint)
                 }
             });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
