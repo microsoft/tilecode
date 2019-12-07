@@ -234,7 +234,7 @@ let boulderFallLeft: Rule = {
     kind: [boulderId],
     rt: RuleType.Resting,
     dir: MoveDirection.None,
-    generalize: [],
+    generalize: [MoveDirection.Right],
     whenDo: [{ col: 2, row: 2, attrs: [], witness: boulderId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Left }] },
              SpriteAt(boulderId, 2, 3), TileAt(spaceId, 1, 2), TileAt(spaceId,1,3)]
 }
@@ -248,8 +248,18 @@ let boulderFallRight: Rule = {
         SpriteAt(boulderId, 2, 3), TileAt(spaceId, 3, 2), TileAt(spaceId, 3, 3)]
 }
 
-// let ruleEditor = new tw.RuleEditor(manager, tw.makeRestingRule(manager, "Boulder"))
+function makeIds(rules: Rule[]): IdRule[] {
+    return rules.map((r,i) => { return { id:i, rule: r} })
+}
+
+let program: Program = {
+    fixed: 3,
+    movable: 4,
+    rules: makeIds([boulderFallDown, boulderFallLeft])
+}
+
+// let ruleEditor = new tw.RuleEditor(manager, makeRestingRule(manager, boulderId))
 // let ruleEditor = new tw.RuleEditor(manager, boulderFallDown);
 
-let mapEditor = new tileWorldEditor.MapEditor(manager, spaceId)
+let mapEditor = new tileWorldEditor.MapEditor(manager, spaceId, program)
 
