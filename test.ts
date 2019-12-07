@@ -1,5 +1,4 @@
 namespace bd {
-
     export const player = img`
         . . . . . . f f f f . . . . . .
         . . . . f f f 2 2 f f f . . . .
