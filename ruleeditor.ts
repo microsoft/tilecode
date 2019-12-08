@@ -336,15 +336,13 @@ namespace tileworld {
             // show the existing commands
             let col = 6;
             let tokens = this.getTokens(whendo);
-            for(let cid = 0; cid < 4; cid++) {
-                let c = getCommand(this.rule,whendo,cid);
+            for(let cid = 0; cid < 4; cid++, col++) {
+                let c = getCommand(this.rule, whendo, cid);
                 if (c.inst != -1) {
                     this.showCommand(col, row, c, tokens);
                 } else {
                     if (tokens.length > 0) {
-                        let command = this.commandSprites[this.commandSprites.length - 1];
-                        if (command == null || command.kind() != CommandTokens.SpaceTile)
-                            this.showCommand(col, row, c, tokens);
+                        this.showCommand(col, row, c, tokens);
                     }
                     break;
                 }
