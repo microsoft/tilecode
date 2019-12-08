@@ -5,6 +5,9 @@ namespace tileworld {
 
     const yoff = 6;
 
+    // TODO: Main Menu
+    // TODO: - map, pencil, play icons on the left
+    // TODO: - previous rule, new rule, next rule on the right 
     // TODO: get rid of sprites for commands
     // TODO: consistency of A pressed for menus, etc.
     // TODO: opportunities for some abstraction
@@ -98,8 +101,12 @@ namespace tileworld {
                         this.setTileSaved()
                     }
                 } else if (this.cursor.x >= 96 && (this.cursor.y -yoff) < 80) {
-                    let yes = this.tryEditCommand();
-                    if (!yes) this.noMenu();
+                    if (this.menu == RuleEditorMenus.CommandMenu) {
+                        this.noMenu();
+                    } else {
+                        let yes = this.tryEditCommand();
+                        if (!yes) this.noMenu();
+                    }
                 } else if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                     this.noMenu();
                 } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
@@ -460,7 +467,6 @@ namespace tileworld {
         private commandUpdate(exit: boolean = false) {
             if (this.menu != RuleEditorMenus.CommandMenu)
                 return;
-            // TODO: call to update data structure
             this.commandMenuSprites.forEach(s => {
                 if (this.cursor.overlapsWith(s)) {
                     if (s.kind() == CommandTokens.MoveArrow) {
@@ -469,8 +475,7 @@ namespace tileworld {
                     } else if (s.kind() == CommandTokens.PaintTile) {
                         this.setCommand(CommandType.Paint, this.manager.getKind(s.image));
                     } else if (s.kind() == CommandTokens.Delete && exit) {
-                        this.setCommand(-1,-1);
-                        // TODO: shift commands down
+                        removeCommand(this.rule, this.whenDo, this.currentCommand);
                     }
                 }
             })

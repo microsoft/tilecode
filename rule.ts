@@ -95,16 +95,23 @@ interface ProgramInterface {
     setAttrs(rid: number, wdid: number, attrs: AttrType[]): void;
     getWitness(rid: number, wdid: number): number;
     setWitness(rid: number, wdid: number, wit: number): void;
-    getInst(rid: number, wdid: number): number;
-    setInst(rid: number, wdid: number, inst: number): void;
-    getArg(rid: number, wdid: number): number;
-    setArg(rid: number, wdid: number, inst: number): void;
+    getInst(rid: number, wdid: number, cid: number): number;
+    setInst(rid: number, wdid: number, cid: number, inst: number): void;
+    getArg(rid: number, wdid: number, cid: number): number;
+    setArg(rid: number, wdid: number, cid:number, inst: number): void;
+    removeCommand(rid: number, wdid: number, cid: number): void;
 }
 
 namespace tileworld {
 
     let lastRule: IdRule = null;
     let prog: Program = null;
+    let rule: number = -1;
+    let whendo: number = -1;
+    let command: number = -1;
+
+    // packed 16-bit representation managed here
+    // (10 bits for rule, 4 for whendo, 2 for command)
 
     function getRule(rid: number) {
         if (lastRule == null || lastRule.id != rid) {
@@ -194,6 +201,8 @@ namespace tileworld {
         return (c == null) ? -1 : c.arg;
     }
 
+    // 16 bits to specify command:
+    // rid: [10], wdid: [4], cid:[2]
     export function setInst(rid: number, wdid: number, cid: number, n: number) {
         let commands = getRule(rid).whenDo[wdid].commands;
         while (cid >= commands.length && cid < 4) {
@@ -203,6 +212,17 @@ namespace tileworld {
     }
     
     export function setArg(rid: number, wdid: number, cid: number, n: number) {
-        getRule(rid).whenDo[wdid].commands[cid].arg = n;
+        let commands = getRule(rid).whenDo[wdid].commands;
+        while (cid >= commands.length && cid < 4) {
+            commands.push({ inst: -1, arg: -1 });
+        }
+        commands[cid].arg = n;
+    }
+
+    export function removeCommand(rid: number, wdid: number, cid: number) {
+        let commands = getRule(rid).whenDo[wdid].commands;
+        if (cid < commands.length) {
+            commands.removeAt(cid);
+        }
     }
 }
