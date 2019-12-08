@@ -22,8 +22,7 @@ namespace tileworld {
         private selected: Sprite;
         private userSpriteIndex: number;
         constructor(private manager: ImageManager, 
-                    private defaultTile: number, 
-                    private program: Program) {
+                    private defaultTile: number) {
             // this is the world
             this.world = image.create(30, 30);
             this.world.fill(defaultTile);

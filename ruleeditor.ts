@@ -177,7 +177,7 @@ namespace tileworld {
         }
 
         private noMenu() {
-            this.whenDo = null;
+            this.whenDo = -1;
             this.currentCommand = null;
             this.attrSelected = -1;
             this.menu = RuleEditorMenus.None;
@@ -304,7 +304,7 @@ namespace tileworld {
                     let dist = Math.abs(2-j) + Math.abs(2-i);
                     if (dist <= 2) {
                         this.drawImage(i,j, spaceImg);
-                        if (i!=0 || j!=0)
+                        if (i != 2 || j != 2)
                             this.showAttributes(i,j);
                         if (dist <= 1)
                             this.findWitness(i,j);
@@ -513,7 +513,7 @@ namespace tileworld {
                 if (index == -1) {
                     index = this.attrIndex(whendo, AttrType.OneOf);
                     if (index != -1) {
-                        let index2 = this.attrIndex(whendo, AttrType.OneOf,index+1);
+                        let index2 = this.attrIndex(whendo, AttrType.OneOf, index+1);
                         if (index2 != -1)
                             index = -1;
                     }
@@ -529,10 +529,10 @@ namespace tileworld {
                         end = this.manager.fixed().length-1;
                     }
                 }
-                let project = this.projectAttrs(this.rule, this.whenDo, begin, end);
+                let project = this.projectAttrs(this.rule, whendo, begin, end);
                 let done: AttrType[] = [];
                 project.forEach(index => {
-                    let val = getAttr(this.rule, this.whenDo, index);
+                    let val = getAttr(this.rule, whendo, index);
                     // eliminate duplicates
                     if (done.indexOf(val) == -1) {
                         done.push(val);
@@ -556,8 +556,7 @@ namespace tileworld {
             let cnt = end - begin + 1;
             if (okCnt == this.manager.all().length || excludeCnt == cnt || (begin == 0 && okCnt == cnt))
                 return res;
-            let remove =
-                (okCnt != 0 && excludeCnt != 0) ?
+            let remove = (okCnt != 0 && excludeCnt != 0) ?
                     ((excludeCnt < okCnt) ? AttrType.OK : AttrType.Exclude) : -1;
             for (let i = begin; i <= end; i++) {
                 if (getAttr(rid, whendo, i) != remove) res.push(i);

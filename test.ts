@@ -248,8 +248,8 @@ let program: Program = {
     rules: makeIds([boulderFallDown, boulderFallLeft])
 }
 
-// let ruleEditor = new tw.RuleEditor(manager, makeRestingRule(manager, boulderId))
-// let ruleEditor = new tw.RuleEditor(manager, boulderFallDown);
+tw.setProgram(program);
+let ruleEditor = new tw.RuleEditor(manager, 0);
 
-//let mapEditor = new tileWorldEditor.MapEditor(manager, spaceId, program)
+//let mapEditor = new tileWorldEditor.MapEditor(manager, spaceId)
 

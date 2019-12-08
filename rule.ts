@@ -1,13 +1,13 @@
 // bytecode representation
 
-enum RuleType {  // [4]
+enum RuleType {  // [4], could be [2]
     Resting,     // a sprite at rest 
     Moving,      // a sprite moving in a given direction
     Pushing,     // a sprite being pushed in a given direction
     Colliding    // a moving sprite about to collide with another sprite
 }
 
-enum MoveDirection { // [4]
+enum MoveDirection { // [4], could be[2]
     None, Left, Right, Up, Down
 }
 
@@ -28,7 +28,7 @@ enum AttrType {  // [2]
     OK        // tile may contain this kind
 }
 
-type Command = { // [8] + [8]
+type Command = { // [4] + [4]
     inst: CommandType;
     arg: number;
 }
@@ -42,10 +42,10 @@ type WhenDo = {
 }
 
 // kinds: 4*[4]  16
-// rt:    [4]    20
-// dir:   [4]    24
-// gen:   4*[4]  40
-// whendo: [1-12]*[4+4+N*2+4+4*8]  = [1-12]*[12+32+N*2]= [1-12]*[48+32]
+// rt:    [2]    18
+// dir:   [2]    20
+// gen:   4*[2]  28
+// whendo: [1-12]*[2+2+N*2+4+4*8]  = [1-12]*[40+N*2]= [1-12]*[40+16]
 
 type Rule = {
     kind: number[];                 // the indices of movable sprite kinds this rule is defined over
@@ -154,7 +154,7 @@ namespace tileworld {
 
     export function getWhenDo(rid: number, col: number, row: number) {
         let whendo = getRule(rid).whenDo.find(wd => wd.col == col && wd.row == row);
-        if (whendo == undefined)
+        if (whendo == null)
             return -1;
         else
             return getRule(rid).whenDo.indexOf(whendo);
