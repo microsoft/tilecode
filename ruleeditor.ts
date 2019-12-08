@@ -1,6 +1,6 @@
 namespace tileworld {
 
-    enum RuleEditorMenus { RuleTypeMenu, AttrTypeMenu, CommandMenu, None };
+    enum RuleEditorMenus { MainMenu, RuleTypeMenu, AttrTypeMenu, CommandMenu, None };
     enum CommandTokens { MoveArrow, PaintTile, SpaceTile, Delete };
 
     const yoff = 6;
@@ -464,19 +464,21 @@ namespace tileworld {
             this.commandMenuSprites.forEach(s => {
                 if (this.cursor.overlapsWith(s)) {
                     if (s.kind() == CommandTokens.MoveArrow) {
-                        setInst(this.rule, this.whenDo, this.currentCommand, CommandType.Move);
-                        setArg(this.rule, this.whenDo, this.currentCommand,
+                        this.setCommand(CommandType.Move, 
                             arrowValues[arrowImages.indexOf(s.image)]);
                     } else if (s.kind() == CommandTokens.PaintTile) {
-                        setInst(this.rule, this.whenDo, this.currentCommand, CommandType.Paint);
-                        setArg(this.rule, this.whenDo, this.currentCommand,
-                           this.manager.getKind(s.image));
+                        this.setCommand(CommandType.Paint, this.manager.getKind(s.image));
                     } else if (s.kind() == CommandTokens.Delete && exit) {
-                        // TODO: index of the command
-                        // this.whenDo.commands.removeElement(this.currentCommand);
+                        this.setCommand(-1,-1);
+                        // TODO: shift commands down
                     }
                 }
             })
+        }
+
+        private setCommand(inst: number, arg: number) {
+            setInst(this.rule, this.whenDo, this.currentCommand, inst);
+            setArg(this.rule, this.whenDo, this.currentCommand, arg);
         }
 
         private posSpritePosition(whendo: number, begin: number) {

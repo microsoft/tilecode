@@ -195,7 +195,11 @@ namespace tileworld {
     }
 
     export function setInst(rid: number, wdid: number, cid: number, n: number) {
-        getRule(rid).whenDo[wdid].commands[cid].inst = n;
+        let commands = getRule(rid).whenDo[wdid].commands;
+        while (cid >= commands.length && cid < 4) {
+            commands.push({inst: -1, arg: -1});
+        }
+        commands[cid].inst = n;
     }
     
     export function setArg(rid: number, wdid: number, cid: number, n: number) {
