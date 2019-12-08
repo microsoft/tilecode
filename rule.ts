@@ -95,8 +95,10 @@ interface ProgramInterface {
     setAttrs(rid: number, wdid: number, attrs: AttrType[]): void;
     getWitness(rid: number, wdid: number): number;
     setWitness(rid: number, wdid: number, wit: number): void;
-    getCommands(rid: number, wdid: number): Command[]; // at most 4
-    setCommands(rid: number, wdid: number, c: Command[]): void;
+    getInst(rid: number, wdid: number): number;
+    setInst(rid: number, wdid: number, inst: number): void;
+    getArg(rid: number, wdid: number): number;
+    setArg(rid: number, wdid: number, inst: number): void;
 }
 
 namespace tileworld {
@@ -182,15 +184,21 @@ namespace tileworld {
         getRule(rid).whenDo[wdid].witness = wit;
     }
 
-    export function getCommand(rid: number, wdid: number, cid: number): Command {
+    export function getInst(rid: number, wdid: number, cid: number) {
         let c = getRule(rid).whenDo[wdid].commands[cid];
-        if (c == null) {
-            c = { inst: -1, arg: -1};
-        }
-        return c;
+        return (c == null) ? -1: c.inst;
     }
 
-    export function setCommand(rid: number, wdid: number, cid: number, c: Command) {
-        getRule(rid).whenDo[wdid].commands[cid] = c;
+    export function getArg(rid: number, wdid: number, cid: number) {
+        let c = getRule(rid).whenDo[wdid].commands[cid];
+        return (c == null) ? -1 : c.arg;
+    }
+
+    export function setInst(rid: number, wdid: number, cid: number, n: number) {
+        getRule(rid).whenDo[wdid].commands[cid].inst = n;
+    }
+    
+    export function setArg(rid: number, wdid: number, cid: number, n: number) {
+        getRule(rid).whenDo[wdid].commands[cid].arg = n;
     }
 }

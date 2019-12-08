@@ -1,7 +1,7 @@
 namespace tileworld {
 
     enum RuleEditorMenus { RuleTypeMenu, AttrTypeMenu, CommandMenu, None };
-    enum CommandTokens { MoveArrow, PaintBrush, PaintTile, SpaceTile, Delete };
+    enum CommandTokens { MoveArrow, PaintTile, SpaceTile, Delete };
 
     const yoff = 6;
 
@@ -27,7 +27,7 @@ namespace tileworld {
         private commandSprites: Sprite[]; // the commands created so far
         private commandMenuSprites: Sprite[];
         private whenDo: number;           // which WhenDo is being edited
-        private currentCommand: Command;  // the current command (potentially null)
+        private currentCommand: number;   // the current command (potentially null)
         private tokens: CommandTokens[];
 
         constructor(private manager: ImageManager, private rule: number) {
@@ -337,37 +337,39 @@ namespace tileworld {
             let col = 6;
             let tokens = this.getTokens(whendo);
             for(let cid = 0; cid < 4; cid++, col++) {
-                let c = getCommand(this.rule, whendo, cid);
-                if (c.inst != -1) {
-                    this.showCommand(col, row, c, tokens);
+                let inst = getInst(this.rule, whendo, cid);
+                if (inst != -1) {
+                    this.showCommand(col, row, whendo, cid, tokens);
                 } else {
                     if (tokens.length > 0) {
-                        this.showCommand(col, row, c, tokens);
+                        this.showCommand(col, row, whendo, cid, tokens);
                     }
                     break;
                 }
             }
         }
 
-        private showCommand(col: number, row: number, c: Command, tokens: CommandTokens[]) {
+        private showCommand(col: number, row: number, whendo: number, cid: number, tokens: CommandTokens[]) {
             let worker = (spr: Sprite, tok: CommandTokens) => {
                 spr.setKind(tok);
-                spr.data = c;
+                spr.data = cid;
                 this.commandSprites.push(spr);
                 tokens.removeElement(tok);
                 col = col + 1;
             };
-            if (c.inst == -1) {
+            let inst = getInst(this.rule, whendo, cid);
+            let arg = getArg(this.rule, whendo, cid);
+            if (inst == -1) {
                 let spaceImg = this.manager.empty();
                 let spr = this.showSprite(col, row, spaceImg);       
                 spr.setKind(CommandTokens.SpaceTile);
-                spr.data = { c: c, t: tokens };
+                spr.data = { c: cid, t: tokens };
                 this.commandSprites.push(spr);
-            } else if (c.inst == CommandType.Move) {
-                let spr = this.showSprite(col, row, arrowImages[arrowValues.indexOf(c.arg)]);
+            } else if (inst == CommandType.Move) {
+                let spr = this.showSprite(col, row, arrowImages[arrowValues.indexOf(arg)]);
                 worker(spr, CommandTokens.MoveArrow);
-            } else if (c.inst == CommandType.Paint) {
-                let spr = this.showSprite(col, row, this.manager.fixed()[c.arg]);
+            } else if (inst == CommandType.Paint) {
+                let spr = this.showSprite(col, row, this.manager.fixed()[arg]);
                 worker(spr, CommandTokens.PaintTile);
             }
             return col;
@@ -422,9 +424,6 @@ namespace tileworld {
                     arrowValues.forEach(v => {
                         worker(arrowImages[arrowValues.indexOf(v)], ct);
                     })
-                } else if (ct == CommandTokens.PaintBrush) {
-                    //worker(paintSprite.image, ct);
-                    //brush = true;
                 } else if (!brush && ct == CommandTokens.PaintTile) {
                     col = 5; row = 6;
                     this.manager.fixed().forEach(image => {
@@ -439,12 +438,13 @@ namespace tileworld {
         private modifyCommandMenu() {
             if (this.menu != RuleEditorMenus.CommandMenu)
                 return;
+            let inst = getInst(this.rule, this.whenDo, this.currentCommand)
             if (this.tokens.length > 0) {
                 this.makeCommandMenu();
-            } else if (this.currentCommand.inst == CommandType.Move) {
+            } else if (inst == CommandType.Move) {
                 this.tokens = [CommandTokens.MoveArrow, CommandTokens.Delete];
                 this.makeCommandMenu();
-            } else if (this.currentCommand.inst == CommandType.Paint) { 
+            } else if (inst == CommandType.Paint) { 
                 this.tokens = [CommandTokens.PaintTile, CommandTokens.Delete];
                 this.makeCommandMenu();
             } else {
@@ -460,18 +460,17 @@ namespace tileworld {
         private commandUpdate(exit: boolean = false) {
             if (this.menu != RuleEditorMenus.CommandMenu)
                 return;
+            // TODO: call to update data structure
             this.commandMenuSprites.forEach(s => {
                 if (this.cursor.overlapsWith(s)) {
                     if (s.kind() == CommandTokens.MoveArrow) {
-                        this.currentCommand.inst = CommandType.Move;
-                        this.currentCommand.arg = arrowValues[arrowImages.indexOf(s.image)];
-                    } else if (s.kind() == CommandTokens.PaintBrush) {
-                        this.currentCommand.inst = CommandType.Paint;
-                        this.currentCommand.arg = -1;
+                        setInst(this.rule, this.whenDo, this.currentCommand, CommandType.Move);
+                        setArg(this.rule, this.whenDo, this.currentCommand,
+                            arrowValues[arrowImages.indexOf(s.image)]);
                     } else if (s.kind() == CommandTokens.PaintTile) {
-                        //let paint = this.whenDo.commands.find(c => c.inst == CommandType.Paint);
-                        this.currentCommand.inst = CommandType.Paint;
-                        this.currentCommand.arg = this.manager.getKind(s.image); // TODO 
+                        setInst(this.rule, this.whenDo, this.currentCommand, CommandType.Paint);
+                        setArg(this.rule, this.whenDo, this.currentCommand,
+                           this.manager.getKind(s.image));
                     } else if (s.kind() == CommandTokens.Delete && exit) {
                         // TODO: index of the command
                         // this.whenDo.commands.removeElement(this.currentCommand);
