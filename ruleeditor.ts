@@ -27,7 +27,7 @@ namespace tileworld {
         private attrSelected: number;
         // for editing commands
         private otherCursor: Sprite;      // show correspondence between left and right
-        private commandSprites: Sprite[]; // the commands created so far
+        private commandLengths: number[];
         private commandMenuSprites: Sprite[];
         private whenDo: number;           // which WhenDo is being edited
         private currentCommand: number;   // the current command (potentially null)
@@ -329,9 +329,10 @@ namespace tileworld {
             { lr: 4, col: 2, row: 3 } ];
         
         private showCommands() {
-            this.commandSprites = [];
+            this.commandLengths = [];
             this.rowToCoord.forEach(r => {
-                this.showCommandsAt(r.lr, this.getWhenDo(r.col, r.row));
+                let len = this.showCommandsAt(r.lr, this.getWhenDo(r.col, r.row));
+                this.commandLengths.push(len);
             })
         }
 
@@ -343,41 +344,36 @@ namespace tileworld {
             // show the existing commands
             let col = 6;
             let tokens = this.getTokens(whendo);
-            for(let cid = 0; cid < 4; cid++, col++) {
+            let cid = 0
+            for(; cid < 4; cid++, col++) {
                 let inst = getInst(this.rule, whendo, cid);
                 if (inst != -1) {
                     this.showCommand(col, row, whendo, cid, tokens);
                 } else {
                     if (tokens.length > 0) {
                         this.showCommand(col, row, whendo, cid, tokens);
+                        return -(cid+1);
                     }
                     break;
                 }
             }
+            return cid+1;
         }
 
-        private showCommand(col: number, row: number, whendo: number, cid: number, tokens: CommandTokens[]) {
-            let worker = (spr: Sprite, tok: CommandTokens) => {
-                spr.setKind(tok);
-                spr.data = cid;
-                this.commandSprites.push(spr);
-                tokens.removeElement(tok);
-                col = col + 1;
-            };
+        private showCommand(col: number, row: number, 
+                            whendo: number, cid: number, tokens: CommandTokens[]) {
             let inst = getInst(this.rule, whendo, cid);
             let arg = getArg(this.rule, whendo, cid);
             if (inst == -1) {
-                let spaceImg = this.manager.empty();
-                let spr = this.showSprite(col, row, spaceImg);       
-                spr.setKind(CommandTokens.SpaceTile);
-                spr.data = { c: cid, t: tokens };
-                this.commandSprites.push(spr);
+                this.drawImage(col, row, this.manager.empty());
             } else if (inst == CommandType.Move) {
-                let spr = this.showSprite(col, row, arrowImages[arrowValues.indexOf(arg)]);
-                worker(spr, CommandTokens.MoveArrow);
+                this.drawImage(col, row, arrowImages[arrowValues.indexOf(arg)]);
+                tokens.removeElement(CommandTokens.MoveArrow);
+                col++
             } else if (inst == CommandType.Paint) {
-                let spr = this.showSprite(col, row, this.manager.fixed()[arg]);
-                worker(spr, CommandTokens.PaintTile);
+                this.drawImage(col, row, this.manager.fixed()[arg]);
+                tokens.removeElement(CommandTokens.PaintTile);
+                col++;
             }
             return col;
         }
@@ -390,23 +386,22 @@ namespace tileworld {
         }
 
         private tryEditCommand() {
-            let commandSprite = 
-                this.commandSprites.find(c => (c.y == this.cursor.y && c.x == this.cursor.x));
-            // nothing to do here
-            if (commandSprite == null)
-                return false;
+            // TODO: just need a count of occupied tiles for each row here
+            let row = this.row();
+            if (row > 4) return false;
+            let col = this.col() - 5;  // 1 based
+            if (col > Math.abs(this.commandLengths[row])) return false;
             // set up the state
             this.menu = RuleEditorMenus.CommandMenu;
-            let r = this.rowToCoord.find(r => r.lr == this.row());
+            let r = this.rowToCoord.find(r => r.lr == row);
             this.whenDo = this.getWhenDo(r.col, r.row);
             this.setTileSaved();
-            if (commandSprite.kind() == CommandTokens.SpaceTile) {
+            this.currentCommand = col - 1;
+            if (this.commandLengths[row] < 0) {
                 // editing the tail command
-                this.currentCommand = commandSprite.data.c;
-                this.tokens = commandSprite.data.t;
+                this.tokens = []; // TODO: commandSprite.data.t;
                 this.makeCommandMenu();
             } else {
-                this.currentCommand = commandSprite.data;
                 this.tokens = [];
                 this.modifyCommandMenu();
             }
