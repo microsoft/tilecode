@@ -343,7 +343,7 @@ namespace tileworld {
                 } else {
                     if (tokens.length > 0) {
                         let command = this.commandSprites[this.commandSprites.length - 1];
-                        if (command.kind() != CommandTokens.SpaceTile)
+                        if (command == null || command.kind() != CommandTokens.SpaceTile)
                             this.showCommand(col, row, c, tokens);
                     }
                     break;

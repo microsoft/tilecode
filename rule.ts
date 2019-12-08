@@ -183,7 +183,11 @@ namespace tileworld {
     }
 
     export function getCommand(rid: number, wdid: number, cid: number): Command {
-        return getRule(rid).whenDo[wdid].commands[cid];
+        let c = getRule(rid).whenDo[wdid].commands[cid];
+        if (c == null) {
+            c = { inst: -1, arg: -1};
+        }
+        return c;
     }
 
     export function setCommand(rid: number, wdid: number, cid: number, c: Command) {
