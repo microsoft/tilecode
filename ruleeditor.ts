@@ -1,6 +1,6 @@
 namespace tileworld {
 
-    enum RuleEditorMenus { MainMenu, RuleTypeMenu, AttrTypeMenu, CommandMenu, None };
+    enum RuleEditorMenus { MainMenu, RuleTypeMenu, AttrTypeMenu, CommandMenu };
     enum CommandTokens { MoveArrow, PaintTile, SpaceTile, Delete };
 
     const yoff = 6;
@@ -8,24 +8,23 @@ namespace tileworld {
     // TODO: Main Menu
     // TODO: - map, pencil, play icons on the left
     // TODO: - previous rule, new rule, next rule on the right 
-    // TODO: get rid of sprites for commands
     // TODO: consistency of A pressed for menus, etc.
     // TODO: opportunities for some abstraction
     //  - need to pull out code for displaying diamond.
     export class RuleEditor {
         private background: Image;
         private cursor: Sprite;
+        private tileSaved: Sprite;      // remember the tile that we are editing
+        private otherCursor: Sprite;      // show correspondence between left and right
 
         // in-world menus
         private menu: RuleEditorMenus;  // which menu is active?
-        private tileSaved: Sprite;      // remember the tile that we are editing
         // rule type state
         private ruleTypeMap: Image;     // mapping of tile to rule type
         private dirMap: Image;          // mapping of tile to direction
         // whendo state
         private attrSelected: number;
         // for editing commands
-        private otherCursor: Sprite;      // show correspondence between left and right
         private commandLengths: number[];
         private whenDo: number;           // which WhenDo is being edited
         private currentCommand: number;   // the current command (potentially null)
@@ -43,7 +42,7 @@ namespace tileworld {
             scene.setBackgroundImage(this.background)           
 
             // Control
-            this.menu = RuleEditorMenus.None;
+            this.menu = RuleEditorMenus.MainMenu;
             this.cursor = sprites.create(cursorIn)
             this.cursor.setFlag(SpriteFlag.Invisible, false)
             this.cursor.x = 40
@@ -112,11 +111,12 @@ namespace tileworld {
                 } else if (this.menu == RuleEditorMenus.CommandMenu) {
                     // look for deletion
                     this.exitCommandMenu();
+                } else if (this.menu == RuleEditorMenus.MainMenu) {
+                    if (this.col() == 0 && this.row() == 6) {
+                        game.popScene();
+                    }
                 }
                 this.update();
-            })
-            controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
-                
             })
         }
 
@@ -128,7 +128,7 @@ namespace tileworld {
         }
 
         private cursorMove() {
-            if (this.menu == RuleEditorMenus.None) {
+            if (this.menu == RuleEditorMenus.MainMenu) {
                 this.otherCursorMove();
             } else {
                 if (this.menu == RuleEditorMenus.RuleTypeMenu) {
@@ -184,7 +184,7 @@ namespace tileworld {
             this.whenDo = -1;
             this.currentCommand = -1;
             this.attrSelected = -1;
-            this.menu = RuleEditorMenus.None;
+            this.menu = RuleEditorMenus.MainMenu;
             this.tileSaved.setFlag(SpriteFlag.Invisible, true);
         }
         
@@ -201,7 +201,9 @@ namespace tileworld {
             this.makeContext();
             this.showCommands(); 
 
-            if (this.menu == RuleEditorMenus.RuleTypeMenu) {
+            if (this.menu == RuleEditorMenus.MainMenu) {
+                this.showMainMenu();
+            } else if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                 this.ruleTypeMap.fill(0xf);
                 this.dirMap.fill(0xf);
                 this.showRuleMenu(0, 5);
@@ -218,6 +220,28 @@ namespace tileworld {
 
         private centerImage() {
             return this.manager.getImage(getKinds(this.rule)[0]);
+        }
+
+        private drawImage(c: number, r: number, img: Image, z: number = 0) {
+            this.background.drawTransparentImage(img, c << 4, yoff + (r << 4));
+        }
+
+        private drawOutline(c: number, r: number) {
+            this.background.drawRect(c << 4, yoff + (r << 4), 17, 17, 12)
+        }
+
+        private fillTile(c: number, r:number, col: color) {
+            this.background.fillRect(c << 4, yoff + (r << 4), 16, 16, col);
+        }
+
+        private showMainMenu() {
+            this.drawImage(0, 6, map);
+            this.fillTile(1, 6, 11);
+            this.drawImage(1, 6, pencil);
+            this.drawImage(2, 6, play)
+            this.drawImage(9, 6, rightArrow);
+            this.drawImage(8, 6, this.centerImage());
+            this.drawImage(7, 6, leftArrow);
         }
 
         private showRuleMenu(x: number, y: number) {
@@ -281,14 +305,6 @@ namespace tileworld {
             x += (dir == MoveDirection.Left) ? 4 : (dir == MoveDirection.Right) ? -4 : 0;
             y += (dir == MoveDirection.Up) ? 4 : (dir == MoveDirection.Down) ? -4 : 0;
             this.background.drawTransparentImage(smallSprite, x, y);
-        }
-
-        private drawImage(c: number, r: number, img: Image, z: number = 0) {
-            this.background.drawTransparentImage(img, c << 4, yoff + (r << 4));
-        }
-
-        private drawOutline(c: number, r: number) {
-            this.background.drawRect(c << 4,yoff + (r << 4),17,17,12)
         }
 
         private makeContext() {
@@ -378,7 +394,6 @@ namespace tileworld {
         }
 
         private tryEditCommand() {
-            // TODO: just need a count of occupied tiles for each row here
             let row = this.row();
             if (row > 4) return false;
             let col = this.col() - 5;  // 1 based
@@ -457,7 +472,7 @@ namespace tileworld {
             let arg = this.dirMap.getPixel(this.col(), this.row());
             // find coordinate and look up.
             if (tok == CommandTokens.MoveArrow) {
-                this.setCommand(CommandType.Move, arrowValues.indexOf(arg));
+                this.setCommand(CommandType.Move, arg);
             } else if (tok == CommandTokens.PaintTile) {
                 this.setCommand(CommandType.Paint, arg);
             } else if (tok == CommandTokens.Delete && exit) {

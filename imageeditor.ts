@@ -103,9 +103,9 @@ namespace tileworld {
                     this.update()
                 } else {
                     let row = (this.cursor.y - yoff) >> 4;
-                    if (row == 0)
+                    if (row == 0) {
                         game.popScene();
-                    else
+                    } else
                         this.setCursor(CursorType.Paint)
                 }
             });

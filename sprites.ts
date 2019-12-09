@@ -406,8 +406,7 @@ export const leftArrow = img`
 `;
 
 export const arrowImages = [leftArrow, rightArrow, upArrow, downArrow];
-export const arrowValues = [MoveDirection.Left, MoveDirection.Right,
-MoveDirection.Up, MoveDirection.Down];
+export const arrowValues = [MoveDirection.Left, MoveDirection.Right, MoveDirection.Up, MoveDirection.Down];
 export const attrsCentered = [includeCenter, excludeCenter, okCenter, oneofCenter];
 export const attrImages = [include, exclude, ok, oneof];
 export const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, AttrType.OneOf];
