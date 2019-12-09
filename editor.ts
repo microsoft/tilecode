@@ -21,11 +21,10 @@ namespace tileworld {
         private cursor: Sprite;
         private selected: Sprite;
         private userSpriteIndex: number;
-        constructor(private manager: ImageManager, 
-                    private defaultTile: number) {
+        constructor(private manager: ImageManager) {
             // this is the world
             this.world = image.create(30, 30);
-            this.world.fill(defaultTile);
+            this.world.fill(manager.defaultTile);
             // this is the screen (under our control)
             this.screen = image.create(160, 120);
             let empty = this.manager.empty()
@@ -150,7 +149,7 @@ namespace tileworld {
                     let col = 2 + (x - this.offsetX);
                     let row = (y - this.offsetY);
                     if (index >= 0)
-                        this.drawImage(this.manager.getImage(this.defaultTile), col, row)
+                        this.drawImage(this.manager.getImage(this.manager.defaultTile), col, row)
                     this.drawImage(index >= 0 ? this.manager.getImage(index) : emptyTile, 
                         col, row);
                 }    

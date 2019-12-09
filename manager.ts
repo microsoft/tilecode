@@ -4,7 +4,7 @@ namespace tileworld {
     export class ImageManager {
         private allImages: Image[];
         private emptyImage: Image;
-        constructor(private fixedImages: Image[], private movableImages: Image[]) {
+        constructor(private fixedImages: Image[], private movableImages: Image[], public defaultTile: number) {
             this.allImages = [];
             this.fixedImages.forEach(s => { this.allImages.push(s) })
             this.movableImages.forEach(s => { this.allImages.push(s) })

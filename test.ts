@@ -148,7 +148,14 @@ namespace bd {
 }
 
 import tw = tileworld;
-let manager = new tw.ImageManager(bd.fixed, bd.movable)
+
+let manager = new tw.ImageManager(bd.fixed, bd.movable, 0);
+let wallId = manager.getKind(bd.wall);
+let spaceId = manager.getKind(bd.space);
+let playerId = manager.getKind(bd.player);
+let enemyId = manager.getKind(bd.enemy);
+let boulderId = manager.getKind(bd.boulder);
+let diamondId = manager.getKind(bd.diamond);
 
 function fillAttr(f: number, n: number, i: number, g: number) {
     let res: AttrType[] = [];
@@ -168,12 +175,6 @@ function SpriteAt(id: number, col: number, row: number): WhenDo {
     return { col: col, row: row, attrs:attrs , witness: id, commands: [] }
 }
 
-let wallId = manager.getKind(bd.wall);
-let spaceId = manager.getKind(bd.space);
-let playerId = manager.getKind(bd.player);
-let enemyId = manager.getKind(bd.enemy);
-let boulderId = manager.getKind(bd.boulder);
-let diamondId = manager.getKind(bd.diamond);
 
 let tp = TileAt(spaceId, 2, 3)
 tp.attrs[playerId] = AttrType.OK;
@@ -249,7 +250,5 @@ let program: Program = {
 }
 
 tw.setProgram(program);
-//let ruleEditor = new tw.RuleEditor(manager, [0,1,2]);
-
-let mapEditor = new tw.MapEditor(manager, spaceId)
+let mapEditor = new tw.MapEditor(manager)
 
