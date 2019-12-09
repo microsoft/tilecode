@@ -19,7 +19,8 @@
         "tileworld.ts",
         "main.ts",
         "test.ts",
-        "spriteRules.ts"
+        "spriteRules.ts",
+        "utilities.ts"
     ],
     "testFiles": [],
     "public": false,

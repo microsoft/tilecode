@@ -5,12 +5,6 @@ namespace tileworld {
 
     const yoff = 6;
 
-    // TODO: Main Menu
-    // TODO: - map, pencil, play icons on the left
-    // TODO: - previous rule, new rule, next rule on the right 
-    // TODO: consistency of A pressed for menus, etc.
-    // TODO: opportunities for some abstraction
-    //  - need to pull out code for displaying diamond.
     export class RuleEditor {
         private background: Image;
         private cursor: Sprite;
@@ -251,9 +245,10 @@ namespace tileworld {
             this.fillTile(1, 6, 11);
             this.drawImage(1, 6, pencil);
             this.drawImage(2, 6, play)
-            this.drawImage(9, 6, rightArrow);
+            let index = this.rules.indexOf(this.rule);
+            this.drawImage(9, 6, index < this.rules.length -1 ? rightArrow : greyImage(rightArrow));
             this.drawImage(8, 6, this.centerImage());
-            this.drawImage(7, 6, leftArrow);
+            this.drawImage(7, 6, index > 0 ? leftArrow : greyImage(leftArrow));
         }
 
         private showRuleMenu(x: number, y: number) {

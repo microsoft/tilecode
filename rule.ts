@@ -110,7 +110,7 @@ namespace tileworld {
     let whendo: number = -1;
     let command: number = -1;
 
-    // packed 16-bit representation managed here
+    // TODO: packed 16-bit representation managed here
     // (10 bits for rule, 4 for whendo, 2 for command)
 
     function getRule(rid: number) {
@@ -123,6 +123,15 @@ namespace tileworld {
     export function setProgram(p: Program) {
         prog = p;
         lastRule = null;
+    }
+
+    export function makeRule(kind: number): number {
+        // TODO
+        return 0;
+    }
+
+    export function removeRule(rid: number) {
+
     }
 
     export function getRuleIds(): number[] {
