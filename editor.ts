@@ -105,6 +105,12 @@ namespace tileworld {
                     let spriteEditor = new ImageEditor(this.manager, this.userSpriteIndex);
                 } else if (this.row() == 2) {
                     // rule editor
+                    // collect up all the rules for this.userSpriteIndex;
+                    let rules = getRulesForKind(this.userSpriteIndex);
+                    if (rules.length > 0) {
+                        game.pushScene();
+                        let ruleEditor = new RuleEditor(this.manager, rules);
+                    }
                 } else if (this.row() == 3) {
                     // run the game
                 }

@@ -26,10 +26,12 @@ namespace tileworld {
         private attrSelected: number;
         // for editing commands
         private commandLengths: number[];
+        private rule: number;             // the current rule
         private whenDo: number;           // which WhenDo is being edited
         private currentCommand: number;   // the current command (potentially null)
 
-        constructor(private manager: ImageManager, private rule: number) {
+        constructor(private manager: ImageManager, private rules: number[]) {
+            this.rule = rules[0];
             this.ruleTypeMap = image.create(10,7);
             this.dirMap = image.create(10,7);
             
@@ -235,6 +237,7 @@ namespace tileworld {
         }
 
         private showMainMenu() {
+            this.background.fillRect(0, yoff + (6 << 4), 160, 19, 0);
             this.drawImage(0, 6, map);
             this.fillTile(1, 6, 11);
             this.drawImage(1, 6, pencil);

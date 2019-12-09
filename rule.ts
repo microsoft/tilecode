@@ -129,6 +129,10 @@ namespace tileworld {
         return prog.rules.map(r => r.id);
     }
 
+    export function getRulesForKind(kind: number): number[] {
+        return prog.rules.filter(r => r.rule.kind.indexOf(kind) != -1).map(r => r.id)
+    }
+
     export function getKinds(rid: number): number[] {
         return getRule(rid).kind;
     }

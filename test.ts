@@ -245,11 +245,11 @@ function makeIds(rules: Rule[]): IdRule[] {
 let program: Program = {
     fixed: 3,
     movable: 4,
-    rules: makeIds([boulderFallDown, boulderFallLeft])
+    rules: makeIds([boulderFallDown, boulderFallLeft, boulderFallingDown])
 }
 
 tw.setProgram(program);
-let ruleEditor = new tw.RuleEditor(manager, 0);
+//let ruleEditor = new tw.RuleEditor(manager, [0,1,2]);
 
-//let mapEditor = new tileWorldEditor.MapEditor(manager, spaceId)
+let mapEditor = new tw.MapEditor(manager, spaceId)
 
