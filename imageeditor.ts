@@ -110,10 +110,10 @@ namespace tileworld {
                 }
             });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.cursorType== CursorType.Color) 
-                    this.setCursor(CursorType.Paint);
-                else if (this.cursorType== CursorType.Paint)
-                    this.setCursor(CursorType.Color)
+                if (this.cursorType== CursorType.Paint) 
+                    this.setCursor(CursorType.Color);
+                else if (this.cursorType== CursorType.Color)
+                    game.popScene();
             });
             this.update()
         }

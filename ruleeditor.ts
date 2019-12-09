@@ -123,6 +123,14 @@ namespace tileworld {
                 }
                 this.update();
             })
+            controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
+                if (this.menu != RuleEditorMenus.MainMenu) {
+                    this.menu = RuleEditorMenus.MainMenu;
+                    this.update();
+                } else {
+                    game.popScene();
+                }
+            });
         }
 
         private col(curr: boolean = true) { 
