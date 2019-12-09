@@ -182,7 +182,7 @@ namespace tileworld {
 
         private noMenu() {
             this.whenDo = -1;
-            this.currentCommand = null;
+            this.currentCommand = -1;
             this.attrSelected = -1;
             this.menu = RuleEditorMenus.None;
             this.tileSaved.setFlag(SpriteFlag.Invisible, true);
@@ -210,7 +210,7 @@ namespace tileworld {
                 this.attrMenu()
             } else if (this.menu == RuleEditorMenus.CommandMenu) {
                 this.modifyCommandMenu();
-                this.commandUpdate();
+                //this.commandUpdate();
             }
             this.showRuleType(getType(this.rule), getDir(this.rule), 2, 2, false);
 
@@ -332,15 +332,16 @@ namespace tileworld {
             }
             // show the existing commands
             let col = 6;
-            this.tokens = this.getTokens(whendo);
+            let tokens = this.getTokens(whendo);
+            if (!draw) { this.tokens = tokens; }
             let cid = 0
             for(; cid < 4; cid++, col++) {
                 let inst = getInst(this.rule, whendo, cid);
                 if (inst != -1) {
-                    this.showCommand(col, row, whendo, cid, this.tokens, draw);
+                    this.showCommand(col, row, whendo, cid, tokens, draw);
                 } else {
-                    if (this.tokens.length > 0) {
-                        this.showCommand(col, row, whendo, cid, this.tokens, draw);
+                    if (tokens.length > 0) {
+                        this.showCommand(col, row, whendo, cid, tokens, draw);
                         return -(cid+1);
                     }
                     break;
@@ -390,7 +391,7 @@ namespace tileworld {
             this.whenDo = this.getWhenDo(r.col, r.row);
             this.setTileSaved();
             this.currentCommand = col - 1;
-            if (this.commandLengths[row] < 0) {
+            if (getInst(this.rule, this.whenDo, col -1) == -1) {
                 this.showCommandsAt(row, this.whenDo, false)
                 this.makeCommandMenu();
             } else {
@@ -411,13 +412,12 @@ namespace tileworld {
                 col++;
             };
             // show the commands
-            let brush = false;
             this.tokens.forEach(ct => {
                 if (ct == CommandTokens.MoveArrow && getWitness(this.rule,this.whenDo) != -1) {
                     arrowValues.forEach(v => {
                         worker(arrowImages[arrowValues.indexOf(v)], ct, v);
                     })
-                } else if (!brush && ct == CommandTokens.PaintTile) {
+                } else if (ct == CommandTokens.PaintTile) {
                     col = 5; row = 6;
                     this.manager.fixed().forEach((image, i) => {
                         worker(image, CommandTokens.PaintTile, i);
@@ -453,8 +453,8 @@ namespace tileworld {
         private commandUpdate(exit: boolean = false) {
             if (this.menu != RuleEditorMenus.CommandMenu)
                 return;
-            let tok = this.ruleTypeMap(this.col(), this.row());
-            let arg = this.dirMap(this.col(), this.row());
+            let tok = this.ruleTypeMap.getPixel(this.col(), this.row());
+            let arg = this.dirMap.getPixel(this.col(), this.row());
             // find coordinate and look up.
             if (tok == CommandTokens.MoveArrow) {
                 this.setCommand(CommandType.Move, arrowValues.indexOf(arg));
