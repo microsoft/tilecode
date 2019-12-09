@@ -114,9 +114,18 @@ namespace tileworld {
                     // look for deletion
                     this.exitCommandMenu();
                 } else if (this.menu == RuleEditorMenus.MainMenu) {
-                    if (this.col() == 0 && this.row() == 6) {
-                        game.popScene();
-                    }
+                    if (this.row() == 6) {
+                        if (this.col() == 0) game.popScene();
+                        else if (this.col() == 7 || this.col() == 9) {
+                            // move backward/forward in rule space
+                            let index = this.rules.indexOf(this.rule);
+                            if (this.col() == 7 && index > 0) {
+                                this.rule = this.rules[index-1];
+                            } else if (this.col() == 9 && index < this.rules.length-1) {
+                                this.rule = this.rules[index+1];
+                            }
+                        }
+                    } 
                 }
                 this.update();
             })

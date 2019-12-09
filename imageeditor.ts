@@ -126,7 +126,7 @@ namespace tileworld {
         }
 
         private update() {
-            this.screen.fill(12);
+            this.screen.fill(0);
             this.screen.fillRect(colorsX, yoff+16, 16, 16, 11);
             this.screen.drawTransparentImage(map, colorsX, yoff);
             this.screen.drawTransparentImage(paint, colorsX, yoff+16)

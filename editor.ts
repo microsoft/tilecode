@@ -135,7 +135,7 @@ namespace tileworld {
         }
 
         private update() {
-            this.screen.fill(12);
+            this.screen.fill(0);
             this.screen.fillRect(0, yoff, 16, 16, 11);
             this.manager.all().forEach((img, row) => {
                 this.drawImage(img, 1, row);
