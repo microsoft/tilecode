@@ -76,6 +76,7 @@ namespace tileworld {
             this.applyRules(Phase.Resting);
             // now, look for collisions
             this.collisionDetection();
+            this.updateWorld();
         }
 
         private matchingRules(phase: Phase, ts: TileSprite) {
@@ -114,6 +115,10 @@ namespace tileworld {
             // - look for colliding sprite os != ts, as defined
             //   (a) os in square T, resting or moving towards ts, or
             //   (b) os moving into T
+        }
+
+        private updateWorld() {
+
         }
 
         // store the sprite witnesses identified by guards
@@ -206,5 +211,14 @@ namespace tileworld {
                 }
             }
         }
-    }    
+    }
+
+    // interfacing the VM with the game engine
+    // - setting sprite direction and velocity
+    // - have all sprites move by one tile
+    // - get control back
+    // - debugging API
+    //    - which rules are ready to run? showing match in world?
+    //    - which ones get to run?
+
 }
