@@ -267,12 +267,12 @@ namespace tileworld {
             this.showRuleType(RuleType.Resting, 0, x, y-1);
             this.showRuleType(RuleType.Moving, MoveDirection.Left, x, y);
             this.showRuleType(RuleType.Moving, MoveDirection.Right, x + 1, y);
-            this.showRuleType(RuleType.Moving, MoveDirection.Up, x, y + 1);
-            this.showRuleType(RuleType.Moving, MoveDirection.Down, x + 1, y + 1);
-            this.showRuleType(RuleType.Pushing, MoveDirection.Right, x + 3, y);
-            this.showRuleType(RuleType.Pushing, MoveDirection.Left, x + 2, y+1);
-            this.showRuleType(RuleType.Pushing, MoveDirection.Down, x + 4, y+1);
-            this.showRuleType(RuleType.Pushing, MoveDirection.Up, x + 5, y);
+            this.showRuleType(RuleType.Moving, MoveDirection.Up, x + 2, y );
+            this.showRuleType(RuleType.Moving, MoveDirection.Down, x + 3, y);
+            this.showRuleType(RuleType.Pushing, MoveDirection.Right, x + 3, y + 1);
+            this.showRuleType(RuleType.Pushing, MoveDirection.Left, x, y + 1);
+            this.showRuleType(RuleType.Pushing, MoveDirection.Down, x + 5, y+1);
+            this.showRuleType(RuleType.Pushing, MoveDirection.Up, x + 4, y);
             this.showRuleType(RuleType.Colliding, MoveDirection.Right, x + 6, y);
             this.showRuleType(RuleType.Colliding, MoveDirection.Left, x + 7, y + 1);
             this.showRuleType(RuleType.Colliding, MoveDirection.Down, x + 9, y);
@@ -283,7 +283,7 @@ namespace tileworld {
                 showSelected: boolean = true) {
             let selected = showSelected && rt == getType(this.rule) && 
                     (rt == RuleType.Resting || rd == getDir(this.rule));
-            let selCol = 13
+            let selCol = 11;
             if (selected) {
                 this.background.fillRect(x << 4, (y << 4) + yoff, 16, 16, selCol)
             }

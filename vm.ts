@@ -99,6 +99,7 @@ namespace tileworld {
                 return true;
             let oneOf: boolean = false;
             let oneOfPassed: boolean = false;
+            // TODO: separate fixed from movable
             for(let kind=0; kind<this.manager.all().length; kind++) {
                 let attr = getAttr(rid, whendo, kind);
                 let witness = this.getWitness(kind, col, row);
