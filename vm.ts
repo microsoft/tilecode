@@ -179,7 +179,6 @@ namespace tileworld {
             }
             return ret;
         }
-
     
         private evaluateAllCommands(ts: TileSprite, rid: number) {
             this.evaluateWhenDoCommands(ts, rid, 2, 2); 
@@ -194,7 +193,17 @@ namespace tileworld {
             for (let cid = 0; cid < 4; cid++) {
                 let inst = getInst(rid, wid, cid);
                 if (inst == -1) break;
-                // evaluate commands against history
+                if (inst == CommandType.Paint) {
+                    if (this.nextWorld.getPixel(col,row) == 0xf) {
+                        this.nextWorld.setPixel(col,row,getArg(rid, wid, cid));
+                    }
+                } else if (inst == CommandType.Move) {
+                    let witness = ts ? ts : this.witnesses.find(ts => ts.col() == col && ts.row() == row);
+                    if (witness && witness.inst == -1) {
+                        witness.inst = inst;
+                        witness.arg = getArg(rid, wid, cid);
+                    }
+                }
             }
         }
     }    
