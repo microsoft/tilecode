@@ -4,6 +4,10 @@
 
 namespace tileworld {
 
+    // TODO: dpad
+    // TODO: game mechanics
+    // TODO: generalization
+
     export interface GameEngine<T> {
         createSprite: (col: number, row: number, kind: number, dir: TileDir) => T;
         moveSprite: (sprite: T, dir:TileDir) => void;
@@ -19,31 +23,34 @@ namespace tileworld {
     }
 
     class TileSprite extends Sprite implements Tile {
-        dir: MoveDirection;
+        public dir: MoveDirection;
+        public command: number;
+        public arg: number;
         constructor(img: Image, kind: number) {
             super(img);
             this.setKind(kind);
-            this.dir = MoveDirection.None;      
+            this.dir = MoveDirection.None
+            this.command = -1; 
         }
         public col() { return this.x >> 4; }
         public row() { return this.y >> 4; }
         // TODO: movement, animation, etc.
     }
-    
-    // controller interface
 
-    // debugger interface
+    enum Phase { Moving, Resting, Colliding};
 
     export class TileWorldVM {
         private world: Image;
+        private nextWorld: Image;
         private sprites: TileSprite[][];
         
-        constructor(private manager: ImageManager, private rules: number[] ) {
+        constructor(private manager: ImageManager, private rules: number[]) {
         }
 
         public setWorld(w: Image) {
             this.sprites = [];
             this.world = w.clone();
+            this.nextWorld = w.clone();
             scene.setTileMap(this.world);
             // set art for fixed sprites
             for(let code=0; code < this.manager.fixed().length; code++) {
@@ -64,20 +71,37 @@ namespace tileworld {
             }
         }
         
-        // TODO: generalization
+        private round() {
+            this.applyRules(Phase.Moving);
+            this.applyRules(Phase.Resting);
+            this.applyRules(Phase.Colliding);
+        }
+
+        // TODO: take phase into account
         private matchingRules(ts: TileSprite) {
-            return this.rules.filter(rid => getKinds(rid).indexOf(ts.kind()) != -1 && getDir(rid) == ts.dir);
+            return this.rules.filter(rid => {
+                return getKinds(rid).indexOf(ts.kind()) != -1 && getDir(rid) == ts.dir
+            });
         }
 
-        private applyRules(ts: TileSprite) {
-            let rules = this.matchingRules(ts);
-            
+        private allSprites(handler: (ts:TileSprite) => void) {
+            this.sprites.forEach(ls => ls.forEach(ts => handler(ts)));
         }
 
-        // TODO: phases
-        // phase 1: moving sprites -> moving + resting  (pushing, moving rules)
-        // phase 2: resting -> moving  (pushing, resting rules)
-        // phase 3: collisions
+        private applyRules(phase: Phase) {
+            // clear the state
+            if (phase == Phase.Moving) {
+                this.nextWorld.fill(0xf);
+                this.allSprites(ts => {  ts.command = -1; });
+            }
+            // apply rules
+            this.allSprites(ts => { 
+                if (phase == Phase.Moving && ts.dir != MoveDirection.None) {
+                    let rules = this.matchingRules(ts);
+                    rules.forEach(rid => { this.evaluateRule(ts, rid); });
+                }
+            });
+        }
 
         // store the sprite witnesses identified by guards
         private witnesses: TileSprite[];
@@ -143,18 +167,15 @@ namespace tileworld {
             return ret;
         }
 
-        // history: is there a more efficient way to do this?
-        private commands: CommandType[];
-        private args: number[];
-        private objects: TileSprite[];
+    
         private evaluateAllCommands(ts: TileSprite, rid: number) {
-            this.evaluateWhenDoCommands(rid, 2, 2); 
+            this.evaluateWhenDoCommands(ts, rid, 2, 2); 
             this.cols.forEach((col,i) => {
-                this.evaluateWhenDoCommands(rid, col, this.rows[i]);
+                this.evaluateWhenDoCommands(null, rid, col, this.rows[i]);
             });
         }
 
-        private evaluateWhenDoCommands(rid: number, col: number, row: number) {
+        private evaluateWhenDoCommands(ts: TileSprite, rid: number, col: number, row: number) {
             let wid = getWhenDo(rid, col, row);
             if (wid == -1) return;
             for (let cid = 0; cid < 4; cid++) {
