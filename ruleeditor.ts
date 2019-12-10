@@ -219,13 +219,17 @@ namespace tileworld {
             } else if (this.menu == RuleEditorMenus.RuleTypeMenu) {
                 this.ruleTypeMap.fill(0xf);
                 this.dirMap.fill(0xf);
+                this.background.fillRect(0, yoff+64, 16, 16, 0);
+                this.background.fillRect(0, yoff+80, 160, 36, 0);
                 this.showRuleMenu(0, 5);
             } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                 this.dirMap.fill(0xf);
+                this.background.fillRect(0, yoff + 80, 160, 36, 0);
                 this.attrMenu()
             } else if (this.menu == RuleEditorMenus.CommandMenu) {
+                this.background.fillRect(0, yoff + 80, 160, 36, 0);
                 this.modifyCommandMenu();
-                //this.commandUpdate();
+                this.commandUpdate();
             }
             this.showRuleType(getType(this.rule), getDir(this.rule), 2, 2, false);
 
@@ -315,10 +319,10 @@ namespace tileworld {
         }
 
         private showCollisionSprite(col:number, row:number, dir: MoveDirection) {
-            let x = col << 4;
-            let y = yoff + (row << 4);
-            x += (dir == MoveDirection.Left) ? 4 : (dir == MoveDirection.Right) ? -4 : 0;
-            y += (dir == MoveDirection.Up) ? 4 : (dir == MoveDirection.Down) ? -4 : 0;
+            let x = (col << 4) + 5;
+            let y = yoff + (row << 4) + 5;
+            x += (dir == MoveDirection.Left) ? 6 : (dir == MoveDirection.Right) ? -6 : 0;
+            y += (dir == MoveDirection.Up) ? 6 : (dir == MoveDirection.Down) ? -6 : 0;
             this.background.drawTransparentImage(smallSprite, x, y);
         }
 

@@ -51,14 +51,14 @@ namespace tileworld {
                 scene.setTile(code, art);
             }
             // initialize movable sprites
-            for(let code=this.manager.fixed().length; code < this.manager.all().length; code++) {
-                let tiles = scene.getTilesByType(code);
-                let art = this.manager.getImage(code);
-                scene.setTile(code, this.manager.getImage(this.manager.defaultTile));
-                this.sprites[code] = [];
+            for(let kind=this.manager.fixed().length; kind < this.manager.all().length; kind++) {
+                let tiles = scene.getTilesByType(kind);
+                let art = this.manager.getImage(kind);
+                scene.setTile(kind, this.manager.getImage(this.manager.defaultTile));
+                this.sprites[kind] = [];
                 for (let value of tiles) {
-                    let tileSprite = new TileSprite(art,code);
-                    this.sprites[code].push(tileSprite);
+                    let tileSprite = new TileSprite(art,kind);
+                    this.sprites[kind].push(tileSprite);
                     value.place(tileSprite);
                 }
             }
@@ -70,6 +70,10 @@ namespace tileworld {
         }
 
 
+        // TODO: phases
+        // phase 1: moving sprites -> moving + resting  (pushing, moving rules)
+        // phase 2: resting -> moving  (pushing, resting rules)
+        // phase 3: collisions
         private evaluateRule(ts: TileSprite, rid: number) {
             for(let col =0; col<5; col++) {
                 for (let row = 0; row < 5; row++) {
@@ -85,16 +89,44 @@ namespace tileworld {
             this.evaluateCommands(ts, rid);
         }
 
+        private getWitness(kind: number, col: number, row: number) {
+            return this.sprites[kind].find(ts => ts.col() == col && ts.row() == row);
+        }
+
         private evaluateWhenDo(ts: TileSprite, rid: number, col: number, row: number) {
-            // TODO: where to accumulate witnesses?
             let whendo = getWhenDo(rid, col, row);
             if (whendo == -1)
                 return true;
-            
-            return true;
+            let oneOf: boolean = false;
+            let oneOfPassed: boolean = false;
+            for(let kind=0; kind<this.manager.all().length; kind++) {
+                let attr = getAttr(rid, whendo, kind);
+                let witness = this.getWitness(kind, col, row);
+                switch(attr) {
+                    case AttrType.Exclude: {
+                        if (witness) return false;
+                        break;
+                    }
+                    case AttrType.Include: {
+                        if (!witness) return false;
+                        break; 
+                    }
+                    case AttrType.OneOf: {
+                        oneOf = true;
+                        if (witness) oneOfPassed = true;
+                        break;
+                    }
+                }
+            }
+            let ret = !oneOf || oneOfPassed
+            if (ret && Math.abs(2 - col) + Math.abs(2 - row) <= 1) {
+                // TODO: store witness
+            }
+            return ret;
         }
 
         private evaluateCommands(ts: TileSprite, rid: number) {
+            // create history
 
         }
     }    
