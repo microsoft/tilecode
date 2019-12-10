@@ -24,13 +24,13 @@ namespace tileworld {
 
     class TileSprite extends Sprite implements Tile {
         public dir: MoveDirection;
-        public command: number;
+        public inst: number;
         public arg: number;
         constructor(img: Image, kind: number) {
             super(img);
             this.setKind(kind);
             this.dir = MoveDirection.None
-            this.command = -1; 
+            this.inst = -1; 
         }
         public col() { return this.x >> 4; }
         public row() { return this.y >> 4; }
@@ -74,15 +74,17 @@ namespace tileworld {
         private round() {
             this.applyRules(Phase.Moving);
             this.applyRules(Phase.Resting);
+            // now, look for collisions
+            this.collisionDetection();
         }
 
         private matchingRules(phase: Phase, ts: TileSprite) {
             return this.rules.filter(rid => {
                 return getKinds(rid).indexOf(ts.kind()) != -1 && 
-                    ( (phase == Phase.Moving && 
-                        (getType(rid) == RuleType.Moving || getType(rid) == RuleType.Pushing) && 
-                            getDir(rid) == ts.dir)
-                    || (phase == Phase.Resting && getType(rid) == RuleType.Resting ) );
+                    (  (phase == Phase.Moving && getDir(rid) == ts.dir &&
+                        (getType(rid) == RuleType.Moving || getType(rid) == RuleType.Pushing) )
+                    || (phase == Phase.Resting && getType(rid) == RuleType.Resting) 
+                    );
             });
         }
 
@@ -94,17 +96,24 @@ namespace tileworld {
             // clear the state
             if (phase == Phase.Moving) {
                 this.nextWorld.fill(0xf);
-                this.allSprites(ts => {  ts.command = -1; });
+                this.allSprites(ts => {  ts.inst = -1; });
             }
             // apply rules
             this.allSprites(ts => { 
-                if (phase == Phase.Moving && ts.dir == MoveDirection.None ||
-                    phase == Phase.Resting && ts.dir != MoveDirection.None &&
-                         ts.command == CommandType.Move)
-                    return;
-                let rules = this.matchingRules(phase, ts);
-                rules.forEach(rid => { this.evaluateRule(ts, rid); });
+                if (phase == Phase.Moving && ts.dir != MoveDirection.None ||
+                    (phase == Phase.Resting && (ts.dir == MoveDirection.None ||
+                         ts.inst != CommandType.Move))) {
+                    let rules = this.matchingRules(phase, ts);
+                    rules.forEach(rid => { this.evaluateRule(ts, rid); });
+                }
             });
+        }
+
+        private collisionDetection() {
+            // for each sprite ts that is NOW moving (into T):
+            // - look for colliding sprite os != ts, as defined
+            //   (a) os in square T, resting or moving towards ts, or
+            //   (b) os moving into T
         }
 
         // store the sprite witnesses identified by guards
