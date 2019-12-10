@@ -8,21 +8,14 @@ namespace tileworld {
     // TODO: game mechanics
     // TODO: generalization
 
-    export interface GameEngine<T> {
-        createSprite: (col: number, row: number, kind: number, dir: TileDir) => T;
-        moveSprite: (sprite: T, dir:TileDir) => void;
-        reverseSprite: (sprite: T, dir: TileDir) => void;
-        stopSprite: (sprite: T) => void;
-        destroySprite: (sprite: T) => void;
-        update(): () => void;
-    }
-
-    interface Tile {
-        col(): number;
-        row(): number;
-    }
-
-    class TileSprite extends Sprite implements Tile {
+    //    createSprite: (col: number, row: number, kind: number, dir: TileDir) => T;
+    //    moveSprite: (sprite: T, dir:TileDir) => void;
+    //    reverseSprite: (sprite: T, dir: TileDir) => void;
+    //    stopSprite: (sprite: T) => void;
+    //    destroySprite: (sprite: T) => void;
+    //    update(): () => void;
+    
+    class TileSprite extends Sprite {
         public dir: MoveDirection;
         public inst: number;
         public arg: number;
@@ -34,7 +27,11 @@ namespace tileworld {
         }
         public col() { return this.x >> 4; }
         public row() { return this.y >> 4; }
-        // TODO: movement, animation, etc.
+        public update() {
+            this.dir = this.inst == CommandType.Move ? this.arg : MoveDirection.None;
+            this.vx = this.dir == MoveDirection.Left ? -100 : this.dir == MoveDirection.Right ? 100 : 0;
+            this.vy = this.dir == MoveDirection.Up ? -100 : this.dir == MoveDirection.Down ? 100 : 0;
+        }
     }
 
     enum Phase { Moving, Resting, Colliding};
@@ -45,6 +42,7 @@ namespace tileworld {
         private sprites: TileSprite[][];
         
         constructor(private manager: ImageManager, private rules: number[]) {
+            // not running yet
         }
 
         public setWorld(w: Image) {
@@ -59,19 +57,20 @@ namespace tileworld {
             }
             // initialize movable sprites
             for(let kind=this.manager.fixed().length; kind < this.manager.all().length; kind++) {
+                this.sprites[kind] = [];
                 let tiles = scene.getTilesByType(kind);
                 let art = this.manager.getImage(kind);
+                // now, put a space where every movable sprite was
                 scene.setTile(kind, this.manager.getImage(this.manager.defaultTile));
-                this.sprites[kind] = [];
                 for (let value of tiles) {
-                    let tileSprite = new TileSprite(art,kind);
+                    let tileSprite = new TileSprite(art, kind);
                     this.sprites[kind].push(tileSprite);
                     value.place(tileSprite);
                 }
             }
         }
         
-        private round() {
+        public round() {
             this.applyRules(Phase.Moving);
             this.applyRules(Phase.Resting);
             // now, look for collisions
@@ -118,7 +117,8 @@ namespace tileworld {
         }
 
         private updateWorld() {
-
+            // apply the move command
+            this.allSprites(ts => ts.update() );
         }
 
         // store the sprite witnesses identified by guards
@@ -130,7 +130,7 @@ namespace tileworld {
             this.witnesses = [];
             this.cols = [];
             this.rows = [];
-            for(let col =0; col<5; col++) {
+            for(let col = 0; col < 5; col++) {
                 for (let row = 0; row < 5; row++) {
                     if (Math.abs(2-col) + Math.abs(2-row) > 2 ||
                         col == 2 && row == 2)
@@ -142,7 +142,7 @@ namespace tileworld {
                         this.cols.push(col);
                         this.rows.push(row);
                     }
-                }    
+                }
             }
             this.evaluateAllCommands(ts, rid);
         }
@@ -177,7 +177,7 @@ namespace tileworld {
                         captureWitness = witness;
                 }
             }
-            let ret = !oneOf || oneOfPassed
+            let ret = !oneOf || oneOfPassed;
             if (ret && Math.abs(2 - col) + Math.abs(2 - row) <= 1) {
                 if (captureWitness)
                     this.witnesses.push(captureWitness);
@@ -214,11 +214,19 @@ namespace tileworld {
     }
 
     // interfacing the VM with the game engine
-    // - setting sprite direction and velocity
     // - have all sprites move by one tile
     // - get control back
     // - debugging API
     //    - which rules are ready to run? showing match in world?
     //    - which ones get to run?
 
+    // use an invisible "signal" sprite for moving one tile
+    let signal = new TileSprite(play,0);
+    signal.setFlag(SpriteFlag.Invisible, true);
+    signal.x = signal.y = 8;
+    signal.dir = MoveDirection.Right;
+
+    game.onUpdate(() => {
+
+    });
 }
