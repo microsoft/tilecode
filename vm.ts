@@ -221,6 +221,7 @@ namespace tileworld {
     //    - which ones get to run?
 
     // use an invisible "signal" sprite for moving one tile
+    /*
     let signal = new TileSprite(play,0);
     signal.setFlag(SpriteFlag.Invisible, true);
     signal.x = signal.y = 8;
@@ -229,4 +230,5 @@ namespace tileworld {
     game.onUpdate(() => {
 
     });
+    */
 }
