@@ -19,7 +19,7 @@ namespace tileworld {
     }
 
     class TileSprite extends Sprite implements Tile {
-        dir: MoveDirection; 
+        dir: MoveDirection;
         constructor(img: Image, kind: number) {
             super(img);
             this.setKind(kind);
@@ -69,27 +69,40 @@ namespace tileworld {
             return this.rules.filter(rid => getKinds(rid).indexOf(ts.kind()) != -1 && getDir(rid) == ts.dir);
         }
 
+        private applyRules(ts: TileSprite) {
+            let rules = this.matchingRules(ts);
+            
+        }
 
         // TODO: phases
         // phase 1: moving sprites -> moving + resting  (pushing, moving rules)
         // phase 2: resting -> moving  (pushing, resting rules)
         // phase 3: collisions
 
+        // store the sprite witnesses identified by guards
         private witnesses: TileSprite[];
+        // track the (col,row) where there are instructions to execute 
+        private cols: number[];
+        private rows: number[];
         private evaluateRule(ts: TileSprite, rid: number) {
             this.witnesses = [];
+            this.cols = [];
+            this.rows = [];
             for(let col =0; col<5; col++) {
                 for (let row = 0; row < 5; row++) {
-                    if (Math.abs(2-col) + Math.abs(2-row) <= 2) {
-                        if (col != 2 || row != 2) {
-                            if (!this.evaluateWhenDo(ts, rid, col, row)) {
-                                return;
-                            }
-                        }
+                    if (Math.abs(2-col) + Math.abs(2-row) > 2 ||
+                        col == 2 && row == 2)
+                        continue;
+                    if (!this.evaluateWhenDo(rid, col, row))
+                        return;
+                    let wid = getWhenDo(rid, col, row)
+                    if (wid != -1 && getInst(rid, wid, 0) != -1) {
+                        this.cols.push(col);
+                        this.rows.push(row);
                     }
                 }    
             }
-            this.evaluateCommands(ts, rid);
+            this.evaluateAllCommands(ts, rid);
         }
 
         private getWitness(kind: number, col: number, row: number) {
@@ -99,7 +112,7 @@ namespace tileworld {
                 return this.sprites[kind].find(ts => ts.col() == col && ts.row() == row);
         }
 
-        private evaluateWhenDo(ts: TileSprite, rid: number, col: number, row: number) {
+        private evaluateWhenDo(rid: number, col: number, row: number) {
             let whendo = getWhenDo(rid, col, row);
             if (whendo == -1)
                 return true;
@@ -110,7 +123,7 @@ namespace tileworld {
                 let attr = getAttr(rid, whendo, kind);
                 let witness = this.getWitness(kind, col, row);
                 if (attr == AttrType.Exclude && witness) {
-                    return false
+                    return false;
                 } else if (attr == AttrType.Include) {
                     if (!witness) return false;
                     if (!captureWitness && witness instanceof TileSprite)
@@ -130,9 +143,25 @@ namespace tileworld {
             return ret;
         }
 
-        private evaluateCommands(ts: TileSprite, rid: number) {
-            // create history
+        // history: is there a more efficient way to do this?
+        private commands: CommandType[];
+        private args: number[];
+        private objects: TileSprite[];
+        private evaluateAllCommands(ts: TileSprite, rid: number) {
+            this.evaluateWhenDoCommands(rid, 2, 2); 
+            this.cols.forEach((col,i) => {
+                this.evaluateWhenDoCommands(rid, col, this.rows[i]);
+            });
+        }
 
+        private evaluateWhenDoCommands(rid: number, col: number, row: number) {
+            let wid = getWhenDo(rid, col, row);
+            if (wid == -1) return;
+            for (let cid = 0; cid < 4; cid++) {
+                let inst = getInst(rid, wid, cid);
+                if (inst == -1) break;
+                // evaluate commands against history
+            }
         }
     }    
 }
