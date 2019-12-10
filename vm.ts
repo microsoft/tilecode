@@ -74,7 +74,10 @@ namespace tileworld {
         // phase 1: moving sprites -> moving + resting  (pushing, moving rules)
         // phase 2: resting -> moving  (pushing, resting rules)
         // phase 3: collisions
+
+        private witnesses: TileSprite[];
         private evaluateRule(ts: TileSprite, rid: number) {
+            this.witnesses = [];
             for(let col =0; col<5; col++) {
                 for (let row = 0; row < 5; row++) {
                     if (Math.abs(2-col) + Math.abs(2-row) <= 2) {
@@ -90,7 +93,10 @@ namespace tileworld {
         }
 
         private getWitness(kind: number, col: number, row: number) {
-            return this.sprites[kind].find(ts => ts.col() == col && ts.row() == row);
+            if (kind < this.manager.fixed().length) {
+                return this.world.getPixel(col, row) == kind;
+            } else 
+                return this.sprites[kind].find(ts => ts.col() == col && ts.row() == row);
         }
 
         private evaluateWhenDo(ts: TileSprite, rid: number, col: number, row: number) {
@@ -99,29 +105,27 @@ namespace tileworld {
                 return true;
             let oneOf: boolean = false;
             let oneOfPassed: boolean = false;
-            // TODO: separate fixed from movable
+            let captureWitness = null;
             for(let kind=0; kind<this.manager.all().length; kind++) {
                 let attr = getAttr(rid, whendo, kind);
                 let witness = this.getWitness(kind, col, row);
-                switch(attr) {
-                    case AttrType.Exclude: {
-                        if (witness) return false;
-                        break;
-                    }
-                    case AttrType.Include: {
-                        if (!witness) return false;
-                        break; 
-                    }
-                    case AttrType.OneOf: {
-                        oneOf = true;
-                        if (witness) oneOfPassed = true;
-                        break;
-                    }
+                if (attr == AttrType.Exclude && witness) {
+                    return false
+                } else if (attr == AttrType.Include) {
+                    if (!witness) return false;
+                    if (!captureWitness && witness instanceof TileSprite)
+                        captureWitness = witness;
+                } else if (attr == AttrType.OneOf) {
+                    oneOf = true;
+                    if (witness) oneOfPassed = true;
+                    if (!captureWitness && witness instanceof TileSprite)
+                        captureWitness = witness;
                 }
             }
             let ret = !oneOf || oneOfPassed
             if (ret && Math.abs(2 - col) + Math.abs(2 - row) <= 1) {
-                // TODO: store witness
+                if (captureWitness)
+                    this.witnesses.push(captureWitness);
             }
             return ret;
         }
