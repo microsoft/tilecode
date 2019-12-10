@@ -74,13 +74,15 @@ namespace tileworld {
         private round() {
             this.applyRules(Phase.Moving);
             this.applyRules(Phase.Resting);
-            this.applyRules(Phase.Colliding);
         }
 
-        // TODO: take phase into account
-        private matchingRules(ts: TileSprite) {
+        private matchingRules(phase: Phase, ts: TileSprite) {
             return this.rules.filter(rid => {
-                return getKinds(rid).indexOf(ts.kind()) != -1 && getDir(rid) == ts.dir
+                return getKinds(rid).indexOf(ts.kind()) != -1 && 
+                    ( (phase == Phase.Moving && 
+                        (getType(rid) == RuleType.Moving || getType(rid) == RuleType.Pushing) && 
+                            getDir(rid) == ts.dir)
+                    || (phase == Phase.Resting && getType(rid) == RuleType.Resting ) );
             });
         }
 
@@ -96,10 +98,12 @@ namespace tileworld {
             }
             // apply rules
             this.allSprites(ts => { 
-                if (phase == Phase.Moving && ts.dir != MoveDirection.None) {
-                    let rules = this.matchingRules(ts);
-                    rules.forEach(rid => { this.evaluateRule(ts, rid); });
-                }
+                if (phase == Phase.Moving && ts.dir == MoveDirection.None ||
+                    phase == Phase.Resting && ts.dir != MoveDirection.None &&
+                         ts.command == CommandType.Move)
+                    return;
+                let rules = this.matchingRules(phase, ts);
+                rules.forEach(rid => { this.evaluateRule(ts, rid); });
             });
         }
 
