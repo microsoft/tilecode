@@ -159,18 +159,9 @@ namespace tileworld {
         }
 
         private otherCursorMove() {
-            let col = this.col();
-            let row = this.row();
-            if (this.manhattanDistance2() <= 1) {
-                this.otherCursor.setFlag(SpriteFlag.Invisible, false);
-                // compute mapping from left to right hand side
-                this.otherCursor.x = 88;
-                if (col == 1) this.otherCursor.y = yoff+24;
-                else if (col == 3) this.otherCursor.y = yoff+56;
-                else if (row == 1) this.otherCursor.y = yoff+8;
-                else if (row == 3) this.otherCursor.y = yoff+72;
-                else this.otherCursor.y = yoff+40;
-            } else if (this.cursor.x >= 80 && (this.cursor.y - yoff) < 80) {
+            if (this.cursor.x >= 80 && (this.cursor.y - yoff) < 80) {
+                let col = this.col();
+                let row = this.row();
                 this.otherCursor.setFlag(SpriteFlag.Invisible, false);
                 // compute mapping from right to left hand side
                 if (row == 0 || row == 2 || row == 4)
