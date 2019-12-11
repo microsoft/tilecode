@@ -162,6 +162,8 @@ namespace tileworld {
             // compute the "pre-effect" of the rules
             this.ruleClosures = [];
             this.applyRules(Phase.Moving);
+            this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
+            this.ruleClosures = [];
             this.applyRules(Phase.Resting);
             this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
             // now, look for collisions
@@ -180,11 +182,8 @@ namespace tileworld {
         }
 
         private allSprites(handler: (ts:TileSprite) => void) {
-            this.sprites.forEach(ls => {
-                if (ls) ls.forEach(ts => handler(ts));
-            });
+            this.sprites.forEach(ls => { if (ls) ls.forEach(ts => handler(ts)); });
         }
-
 
         private applyRules(phase: Phase) {
             // clear the state
@@ -309,7 +308,7 @@ namespace tileworld {
                 let inst = getInst(rc.rid, wid, cid);
                 if (inst == -1) break;
                 if (inst == CommandType.Paint) {
-                    if (this.nextWorld.getPixel(wcol,wrow) == 0xf) {
+                    if (this.nextWorld.getPixel(wcol, wrow) == 0xf) {
                         this.nextWorld.setPixel(wcol, wrow, getArg(rc.rid, wid, cid));
                     }
                 } else if (inst == CommandType.Move) {
