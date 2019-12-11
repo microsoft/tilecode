@@ -247,7 +247,8 @@ namespace tileworld {
             this.drawImage(0, 6, map);
             this.fillTile(1, 6, 11);
             this.drawImage(1, 6, pencil);
-            this.drawImage(2, 6, play)
+            this.drawImage(2, 6,flipHoriz)
+            this.drawImage(3, 6, play)
             let index = this.rules.indexOf(this.rule);
             this.drawImage(9, 6, index < this.rules.length -1 ? rightArrow : greyImage(rightArrow));
             this.drawImage(8, 6, this.centerImage());

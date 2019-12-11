@@ -67,13 +67,13 @@ type Program = {
     rules: IdRule[];    // the rules
 }
 
-function makeRestingRule(m: tileworld.ImageManager, kind: number): Rule {
+function makeNewRule(kind: number[], rt: RuleType, dir: MoveDirection): Rule {
     return {
-        kind: [kind],
-        rt: RuleType.Resting,
-        dir: MoveDirection.Left,
+        kind: kind,
+        rt: rt,
+        dir: dir,
         generalize: [],
-        whenDo: [{ col: 2, row: 2, attrs: [], witness: kind, commands: [] }]
+        whenDo: [{ col: 2, row: 2, attrs: [], witness: kind[0], commands: [] }]
     }
 }
 
@@ -128,6 +128,36 @@ namespace tileworld {
     export function makeRule(kind: number): number {
         // TODO
         return 0;
+    }
+
+    function flipHorizDir(d: MoveDirection) {
+        return d == MoveDirection.Left ? MoveDirection.Right : d == MoveDirection.Right ? MoveDirection.Left : d;
+    }
+
+    function flipHorizCommands(commands: Command[]) {
+        return commands.map(c => { return { inst: c.inst, arg: c.inst == CommandType.Move ? flipHorizDir(c.arg) : c.arg } })
+    }
+
+    export function flipRuleHoriz(rid: number) {
+        let srcRule = getRule(rid);
+        let tgtRule = makeNewRule(srcRule.kind, srcRule.rt, flipHorizDir(srcRule.dir));
+        for (let row = 0; row < 5; row++) {
+            for (let col = 0; col < 5; col++) {
+                if (col != 2 && Math.abs(2-col) + Math.abs(2-row) > 2)
+                    continue;
+                // check for src
+                let whendo = srcRule.whenDo.find(w => w.col == col && w.row == row);
+                if (whendo) {
+                    let tgtWhenDo: WhenDo = { col: 4 - col, row: row, attrs: whendo.attrs, witness: whendo.witness, commands: flipHorizCommands(whendo.commands) };
+                }
+            }
+            let whendo = srcRule.whenDo.find(w => w.col == 2 && w.row == 2);
+            if (whendo) {
+                let tgtWhenDo: WhenDo = { col: 2, row: 2, attrs: whendo.attrs, witness: whendo.witness, commands: flipHorizCommands(whendo.commands) };
+            }
+        }
+        let newRule: IdRule = { id: prog.rules.length, rule: tgtRule};
+        prog.rules.push(newRule);
     }
 
     export function removeRule(rid: number) {

@@ -404,6 +404,25 @@ export const leftArrow = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
 `;
+export const flipHoriz = img`
+    . . . . . . . . . . . . . . . .
+    . . . . . b b . 9 9 . . . . . .
+    . . . . . b b . 9 9 . . . . . .
+    . . . . b b b . 9 9 9 . . . . .
+    . . . . b b b . 9 9 9 . . . . .
+    . . . . b b b . 9 9 9 . . . . .
+    . . . b b b b . 9 9 9 9 . . . .
+    . . . b b b b . 9 9 9 9 . . . .
+    . . . b b b b . 9 9 9 9 . . . .
+    . . b b b b b . 9 8 9 9 9 . . .
+    . . b b b b b . 9 8 8 9 9 . . .
+    . . b b 8 8 8 8 8 8 8 8 9 . . .
+    . b b b b b b . 9 8 8 9 9 9 . .
+    . b b b b b b . 9 8 9 9 9 9 . .
+    . b b b b b b . 9 9 9 9 9 9 . .
+    . . . . . . . . . . . . . . . .
+`;
+
 
 export const arrowImages = [leftArrow, rightArrow, upArrow, downArrow];
 export const arrowValues = [MoveDirection.Left, MoveDirection.Right, MoveDirection.Up, MoveDirection.Down];
