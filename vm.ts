@@ -2,6 +2,10 @@
 // this VM is independent of the underlying game engine, which
 // is abstracted by an interface. 
 
+// - debugging API
+//    - which rules are ready to run? showing match in world?
+//    - which ones get to run?
+
 namespace tileworld {
 
     // TODO: dpad
@@ -16,7 +20,10 @@ namespace tileworld {
     //    update(): () => void;
     
     class TileSprite extends Sprite {
+        // the direction the sprite is currently moving
         public dir: MoveDirection;
+        // the one instruction history to apply to the sprite to 
+        // create the next sprite state
         public inst: number;
         public arg: number;
         constructor(img: Image, kind: number) {
@@ -40,23 +47,26 @@ namespace tileworld {
         private world: Image;
         private nextWorld: Image;
         private sprites: TileSprite[][];
+        private signal: TileSprite;
         
         constructor(private manager: ImageManager, private rules: number[]) {
             // not running yet
         }
 
         public setWorld(w: Image) {
+            this.signal = null;
             this.sprites = [];
             this.world = w.clone();
             this.nextWorld = w.clone();
             scene.setTileMap(this.world);
             // set art for fixed sprites
-            for(let code=0; code < this.manager.fixed().length; code++) {
+            for(let code = 0; code < this.manager.fixed().length; code++) {
                 let art = this.manager.getImage(code);
                 scene.setTile(code, art);
             }
             // initialize movable sprites
-            for(let kind=this.manager.fixed().length; kind < this.manager.all().length; kind++) {
+            for(let kind = this.manager.fixed().length; 
+                    kind < this.manager.all().length; kind++) {
                 this.sprites[kind] = [];
                 let tiles = scene.getTilesByType(kind);
                 let art = this.manager.getImage(kind);
@@ -69,12 +79,34 @@ namespace tileworld {
                 }
             }
         }
-        
+
+        public start() {
+            let signal = new TileSprite(img`.`, 0);
+            signal.setFlag(SpriteFlag.Invisible, true);
+            signal.x = signal.y = 8;
+            signal.dir = MoveDirection.Right;
+            signal.inst = -1
+            this.signal = signal;
+
+            this.updateWorld();
+            this.signal.update();
+            game.onUpdate(() => {
+                // has signal sprite moved to new tile
+                // then do a worldUpdate and reset the signal sprite
+                if (this.signal.x >= 24) {
+                    this.signal.x = 8;
+                    this.updateWorld();
+                }
+            });
+        } 
+
         public round() {
+            // compute the "pre-effect" of the rules
             this.applyRules(Phase.Moving);
             this.applyRules(Phase.Resting);
             // now, look for collisions
             this.collisionDetection();
+            // finally, update the rules
             this.updateWorld();
         }
 
@@ -100,11 +132,11 @@ namespace tileworld {
             }
             // apply rules
             this.allSprites(ts => { 
-                if (phase == Phase.Moving && ts.dir != MoveDirection.None ||
-                    (phase == Phase.Resting && (ts.dir == MoveDirection.None ||
-                         ts.inst != CommandType.Move))) {
+                if ( (phase == Phase.Moving && ts.dir != MoveDirection.None) ||
+                     (phase == Phase.Resting && (ts.dir == MoveDirection.None ||
+                         ts.inst != CommandType.Move)) ) {
                     let rules = this.matchingRules(phase, ts);
-                    rules.forEach(rid => { this.evaluateRule(ts, rid); });
+                    rules.forEach(rid => this.evaluateRule(ts, rid) );
                 }
             });
         }
@@ -117,7 +149,6 @@ namespace tileworld {
         }
 
         private updateWorld() {
-            // apply the move command
             this.allSprites(ts => ts.update() );
         }
 
@@ -212,23 +243,4 @@ namespace tileworld {
             }
         }
     }
-
-    // interfacing the VM with the game engine
-    // - have all sprites move by one tile
-    // - get control back
-    // - debugging API
-    //    - which rules are ready to run? showing match in world?
-    //    - which ones get to run?
-
-    // use an invisible "signal" sprite for moving one tile
-    /*
-    let signal = new TileSprite(play,0);
-    signal.setFlag(SpriteFlag.Invisible, true);
-    signal.x = signal.y = 8;
-    signal.dir = MoveDirection.Right;
-
-    game.onUpdate(() => {
-
-    });
-    */
 }
