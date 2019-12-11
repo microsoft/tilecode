@@ -170,6 +170,12 @@ namespace tileworld {
         return newRule.id;
     }
 
+    export enum RotateDirection { Left, Right };
+
+    export function rotateRule(rid: number, rd: RotateDirection) {
+        // TODO
+    }
+
     export function removeRule(rid: number) {
 
     }
