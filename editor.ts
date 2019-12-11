@@ -111,7 +111,13 @@ namespace tileworld {
                         let ruleEditor = new RuleEditor(this.manager, rules);
                     }
                 } else if (this.row() == 3) {
-                    // run the game
+                    let rules = getRulesForKind(this.userSpriteIndex);
+                    if (rules.length > 0) {
+                        game.pushScene();
+                        let vm = new TileWorldVM(this.manager, rules);
+                        vm.setWorld(this.world);
+                        vm.start();
+                    }         
                 }
             } else {
                 if (this.userSpriteIndex >= 0) {
