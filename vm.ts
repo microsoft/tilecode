@@ -191,37 +191,27 @@ namespace tileworld {
         }
 
         // store the sprite witnesses identified by guards
-        private witnesses: TileSprite[];
-        // track the (col,row) where there are instructions to execute 
-        private cols: number[];
-        private rows: number[];
         private evaluateRule(ts: TileSprite, rid: number) {
-            this.witnesses = [];
-            this.cols = [];
-            this.rows = [];
+            let witnesses: TileSprite[] = [];
             for(let col = 0; col < 5; col++) {
                 for (let row = 0; row < 5; row++) {
                     if (Math.abs(2-col) + Math.abs(2-row) > 2 ||
                         col == 2 && row == 2)
                         continue;
-                    if (!this.evaluateWhenDo(ts, rid, col, row))
+                    if (!this.evaluateWhenDo(ts, rid, col, row, witnesses))
                         return;
-                    let wid = getWhenDo(rid, col, row)
-                    if (wid != -1 && getInst(rid, wid, 0) != -1) {
-                        this.cols.push(col);
-                        this.rows.push(row);
-                    }
                 }
             }
             //console.logValue("executing=", rid)
-            this.evaluateAllCommands(ts, rid);
+            this.evaluateAllCommands(ts, rid, witnesses);
         }
 
         private getWitness(kind: number, col: number, row: number) {
             return this.sprites[kind] && this.sprites[kind].find(ts => ts.col() == col && ts.row() == row);
         }
 
-        private evaluateWhenDo(ts: TileSprite, rid: number, col: number, row: number) {
+        private evaluateWhenDo(ts: TileSprite, rid: number, 
+                col: number, row: number, witnesses: TileSprite[]) {
             let whendo = getWhenDo(rid, col, row);
             if (whendo == -1)
                 return true;
@@ -261,23 +251,28 @@ namespace tileworld {
             let ret = !oneOf || oneOfPassed;
             if (ret && Math.abs(2 - col) + Math.abs(2 - row) <= 1) {
                 if (captureWitness)
-                    this.witnesses.push(captureWitness);
+                    witnesses.push(captureWitness);
             }
             return ret;
         }
     
-        private evaluateAllCommands(ts: TileSprite, rid: number) {
-            this.evaluateWhenDoCommands(ts, rid, 2, 2); 
-            this.cols.forEach((col,i) => {
-                this.evaluateWhenDoCommands(null, rid, col, this.rows[i]);
-            });
+        private evaluateAllCommands(ts: TileSprite, rid: number, witnesses: TileSprite[]) {
+            for (let col = 0; col < 5; col++) {
+                for (let row = 0; row < 5; row++) {
+                    if (Math.abs(2 - col) + Math.abs(2 - row) > 2)
+                        continue;
+                    this.evaluateWhenDoCommands(ts, rid, col, row, witnesses);
+                }
+            }
         }
 
-        private evaluateWhenDoCommands(ts: TileSprite, rid: number, col: number, row: number) {
+        private evaluateWhenDoCommands(ts: TileSprite, rid: number, 
+                col: number, row: number, witnesses: TileSprite[]) {
             let wid = getWhenDo(rid, col, row);
             if (wid == -1) return;
             let wcol = ts.col() + (2 - col);
             let wrow = ts.row() + (2 - row);
+            let self = col == 2 && row == 2;
             for (let cid = 0; cid < 4; cid++) {
                 let inst = getInst(rid, wid, cid);
                 if (inst == -1) break;
@@ -286,7 +281,7 @@ namespace tileworld {
                         this.nextWorld.setPixel(wcol, wrow, getArg(rid, wid, cid));
                     }
                 } else if (inst == CommandType.Move) {
-                    let witness = ts ? ts : this.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
+                    let witness = self ? ts : witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
                     if (witness && witness.inst == -1) {
                         witness.inst = inst;
                         witness.arg = getArg(rid, wid, cid);
