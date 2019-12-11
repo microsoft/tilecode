@@ -238,7 +238,7 @@ namespace tileworld {
             let wrow = ts.row() + (row - 2);
             let oneOf: boolean = false;
             let oneOfPassed: boolean = false;
-            let captureWitness = null;
+            let captureWitness: TileSprite = null;
             let kind = 0
             for(;kind<this.manager.fixed().length;kind++) {
                 let hasKind = this.world.getPixel(wcol, wrow) == kind;
@@ -258,12 +258,12 @@ namespace tileworld {
                     return false;
                 } else if (attr == AttrType.Include) {
                     if (!witness) return false;
-                    if (!captureWitness && witness instanceof TileSprite)
+                    if (!captureWitness)
                         captureWitness = witness;
                 } else if (attr == AttrType.OneOf) {
                     oneOf = true;
                     if (witness) oneOfPassed = true;
-                    if (!captureWitness && witness instanceof TileSprite)
+                    if (!captureWitness)
                         captureWitness = witness;
                 }
             }
