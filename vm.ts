@@ -12,9 +12,9 @@ namespace tileworld {
     // TODO: game mechanics
     // TODO: generalization
 
-    //    createSprite: (col: number, row: number, kind: number, dir: TileDir) => T;
-    //    moveSprite: (sprite: T, dir:TileDir) => void;
-    //    reverseSprite: (sprite: T, dir: TileDir) => void;
+    //    createSprite: (col: number, row: number, kind: number, dir) => T;
+    //    moveSprite: (sprite: T, dir) => void;
+    //    reverseSprite: (sprite: T, dir) => void;
     //    stopSprite: (sprite: T) => void;
     //    destroySprite: (sprite: T) => void;
     //    update(): () => void;
@@ -65,6 +65,7 @@ namespace tileworld {
 
         public setWorld(w: Image) {
             game.consoleOverlay.setVisible(true);
+            this.currentDirection = MoveDirection.None;
             this.signal = null;
             this.sprites = [];
             this.world = w.clone();
@@ -111,17 +112,47 @@ namespace tileworld {
                 }
             });
 
+            //scene.cameraFollowSprite(s)
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
-            });
+                this.requestMove(MoveDirection.Left)
+            })
+            controller.left.onEvent(ControllerButtonEvent.Released, () => {
+                this.requestStop(MoveDirection.Left)
+            })
             controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
-            });
+                this.requestMove(MoveDirection.Right)
+            })
+            controller.right.onEvent(ControllerButtonEvent.Released, () => {
+                this.requestStop(MoveDirection.Right)
+            })
             controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
-            });
+                this.requestMove(MoveDirection.Up)
+            })
+            controller.up.onEvent(ControllerButtonEvent.Released, () => {
+                this.requestStop(MoveDirection.Up)
+            })
             controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
-            });
+                this.requestMove(MoveDirection.Down)
+            })
+            controller.down.onEvent(ControllerButtonEvent.Released, () => {
+                this.requestStop(MoveDirection.Down)
+            })
 
             signal.vx = 100;
         } 
+
+        private currentDirection: MoveDirection;
+        private keyDowns: boolean[] = [false, false, false, false, false];
+        private requestMove(dir: MoveDirection) {
+            this.keyDowns[dir] = true;
+            this.currentDirection = dir;
+        }
+
+        private requestStop(dir: MoveDirection)  {
+            this.keyDowns[dir] = false;
+            let index = this.keyDowns.indexOf(true);
+            this.currentDirection = index == -1 ? MoveDirection.None : index;
+        }
 
         private ruleClosures: RuleClosure[];
         private round() {
@@ -145,7 +176,7 @@ namespace tileworld {
             return this.rules.filter(rid => {
                 return getKinds(rid).indexOf(ts.kind()) != -1 && 
                     (  (phase == Phase.Moving && getDir(rid) == ts.dir &&
-                        (getType(rid) == RuleType.Moving || getType(rid) == RuleType.Pushing) )
+                        (getType(rid) == RuleType.Moving || (getType(rid) == RuleType.Pushing && ts.dir == this.currentDirection)) )
                     || (phase == Phase.Resting && getType(rid) == RuleType.Resting) 
                     );
             });
