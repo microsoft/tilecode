@@ -130,24 +130,62 @@ namespace tileworld {
         return 0;
     }
 
-    export enum FlipDirection { Horizontal, Vertical };
+    export enum FlipRotate { Horizontal, Vertical, Left, Right };
 
-    function flipDir(d: MoveDirection, fd: FlipDirection) {
-        if (fd == FlipDirection.Horizontal) {
+    function flipRotateDir(d: MoveDirection, fr: FlipRotate) {
+        if (fr == FlipRotate.Horizontal) {
             return d == MoveDirection.Left ? MoveDirection.Right : d == MoveDirection.Right ? MoveDirection.Left : d;
-        } else {
+        } else if (fr == FlipRotate.Vertical) {
             return d == MoveDirection.Up ? MoveDirection.Down : d == MoveDirection.Down ? MoveDirection.Up : d;
+        } else if (fr == FlipRotate.Left) { 
+            switch (d) { // counter clockwise
+                case MoveDirection.Left: return MoveDirection.Down;
+                case MoveDirection.Down: return MoveDirection.Right;
+                case MoveDirection.Right: return MoveDirection.Up;
+                case MoveDirection.Up: return MoveDirection.Left;
+                case MoveDirection.None: return MoveDirection.None;
+            }
+        } else {
+            switch (d) {  // clockwise
+                case MoveDirection.Left: return MoveDirection.Up;
+                case MoveDirection.Up: return MoveDirection.Right;
+                case MoveDirection.Right: return MoveDirection.Down;
+                case MoveDirection.Down: return MoveDirection.Left;
+                case MoveDirection.None: return MoveDirection.None;
+            }
+        }
+        return d;
+    }
+
+    function flipCommands(commands: Command[], fr: FlipRotate) {
+        return commands.map(c => { return { inst: c.inst, arg: c.inst == CommandType.Move ? flipRotateDir(c.arg, fr) : c.arg } })
+    }
+
+    function transformCol(col: number, row: number, fr: FlipRotate) {
+        if (fr == FlipRotate.Horizontal || fr == FlipRotate.Vertical)
+            return fr == FlipRotate.Horizontal ? 4 - col : col;
+        else {
+            // make (0,0) center for rotation
+            row = 2 - row;
+            return fr == FlipRotate.Left ? (-row) + 2 : row + 2; 
         }
     }
 
-    function flipCommands(commands: Command[], fd: FlipDirection) {
-        return commands.map(c => { return { inst: c.inst, arg: c.inst == CommandType.Move ? flipDir(c.arg, fd) : c.arg } })
+    function transformRow(row: number, col: number, fr: FlipRotate) {
+        if (fr == FlipRotate.Horizontal || fr == FlipRotate.Vertical)
+            return fr == FlipRotate.Horizontal ? row : 4 - row;
+        else {
+            col = col - 2;
+            return fr == FlipRotate.Left ? (-col) + 2 : col + 2;
+        }
     }
 
-    export function flipRule(rid: number, fd: FlipDirection) {
+
+    // TODO: make this an online transformation over a rule to save space
+    export function flipRule(rid: number, fr: FlipRotate) {
         // TODO: convert this to using C-level API
         let srcRule = getRule(rid);
-        let tgtRule = makeNewRule(srcRule.kind, srcRule.rt, flipDir(srcRule.dir, fd));
+        let tgtRule = makeNewRule(srcRule.kind, srcRule.rt, flipRotateDir(srcRule.dir, fr));
         for (let row = 0; row < 5; row++) {
             for (let col = 0; col < 5; col++) {
                 if (Math.abs(2 - col) + Math.abs(2 - row) > 2)
@@ -156,11 +194,11 @@ namespace tileworld {
                 if (!whendo)
                     continue;
                 let tgtWhenDo: WhenDo = { 
-                    col: fd == FlipDirection.Horizontal ? 4 - col : col, 
-                    row: fd == FlipDirection.Vertical ? 4 - row : row, 
+                    col: transformCol(col, row, fr), 
+                    row: transformRow(row, col, fr),
                     attrs: whendo.attrs, 
                     witness: whendo.witness, 
-                    commands: flipCommands(whendo.commands, fd) 
+                    commands: flipCommands(whendo.commands, fr) 
                 };
                 tgtRule.whenDo.push(tgtWhenDo);
             }
@@ -168,12 +206,6 @@ namespace tileworld {
         let newRule: IdRule = { id: prog.rules.length, rule: tgtRule};
         prog.rules.push(newRule);
         return newRule.id;
-    }
-
-    export enum RotateDirection { Left, Right };
-
-    export function rotateRule(rid: number, rd: RotateDirection) {
-        // TODO
     }
 
     export function removeRule(rid: number) {

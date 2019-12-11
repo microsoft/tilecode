@@ -111,7 +111,7 @@ namespace tileworld {
                     if (this.row() == 6) {
                         if (this.col() == 0) game.popScene();
                         else if (this.col() == 2) {
-                            let flip = flipRule(this.rule, FlipDirection.Horizontal);
+                            let flip = flipRule(this.rule, FlipRotate.Left);
                             game.pushScene();
                             let flipRuleEditor = new RuleEditor(this.manager, [flip]);
                         } else if (this.col() == 7 || this.col() == 9) {
