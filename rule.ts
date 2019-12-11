@@ -73,7 +73,7 @@ function makeNewRule(kind: number[], rt: RuleType, dir: MoveDirection): Rule {
         rt: rt,
         dir: dir,
         generalize: [],
-        whenDo: [{ col: 2, row: 2, attrs: [], witness: kind[0], commands: [] }]
+        whenDo: []
     }
 }
 
@@ -149,15 +149,18 @@ namespace tileworld {
                 let whendo = srcRule.whenDo.find(w => w.col == col && w.row == row);
                 if (whendo) {
                     let tgtWhenDo: WhenDo = { col: 4 - col, row: row, attrs: whendo.attrs, witness: whendo.witness, commands: flipHorizCommands(whendo.commands) };
+                    tgtRule.whenDo.push(tgtWhenDo);
                 }
             }
             let whendo = srcRule.whenDo.find(w => w.col == 2 && w.row == 2);
             if (whendo) {
                 let tgtWhenDo: WhenDo = { col: 2, row: 2, attrs: whendo.attrs, witness: whendo.witness, commands: flipHorizCommands(whendo.commands) };
+                tgtRule.whenDo.push(tgtWhenDo);
             }
         }
         let newRule: IdRule = { id: prog.rules.length, rule: tgtRule};
         prog.rules.push(newRule);
+        return newRule.id;
     }
 
     export function removeRule(rid: number) {
