@@ -77,7 +77,7 @@ namespace tileworld {
         private nextWorld: Image;
         private sprites: TileSprite[][];
         private signal: TileSprite;
-        
+
         constructor(private manager: ImageManager, private rules: number[]) {
             // not running yet
         }
@@ -124,7 +124,7 @@ namespace tileworld {
                 // has signal sprite moved to new tile
                 // then do a worldUpdate and reset the signal sprite
                 // console.logValue("x", this.signal.x)
-                if (this.signal.x >= 24) {
+                if (this.signal.x >= 23) {
                     this.signal.x = 8;
                     this.round();
                 }
@@ -142,16 +142,21 @@ namespace tileworld {
             signal.vx = 100;
         } 
 
+        private ruleClosures: RuleClosure[];
         private round() {
+            // make sure everyone is centered
+            this.allSprites(ts => {
+                ts.x = ((ts.x >> 4) << 4) + 8;
+                ts.y = ((ts.y >> 4) << 4) + 8;
+            })
             // compute the "pre-effect" of the rules
+            this.ruleClosures = [];
             this.applyRules(Phase.Moving);
             this.applyRules(Phase.Resting);
             this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
             // now, look for collisions
             this.collisionDetection();
             // finally, update the rules
-            //console.log("--");
-            //basic.pause(1000);
             this.updateWorld();
         }
 
@@ -171,9 +176,8 @@ namespace tileworld {
             });
         }
 
-        private ruleClosures: RuleClosure[];
+
         private applyRules(phase: Phase) {
-            this.ruleClosures = [];
             // clear the state
             if (phase == Phase.Moving) {
                 this.nextWorld.fill(0xf);
