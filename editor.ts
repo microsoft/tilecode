@@ -10,6 +10,7 @@ namespace tileworld {
     // TODO: names of things as overlay
     // TODO: coordinates?
     // TODO: separate commands 2x3 from user-defined sprites 2x4
+    // TODO: home screen: new/load/save (2 slots)
 
     const yoff = 4;
 
