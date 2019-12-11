@@ -8,10 +8,6 @@
 
 namespace tileworld {
 
-    // TODO: dpad
-    // TODO: game mechanics
-    // TODO: generalization
-
     //    createSprite: (col: number, row: number, kind: number, dir) => T;
     //    moveSprite: (sprite: T, dir) => void;
     //    reverseSprite: (sprite: T, dir) => void;
@@ -65,7 +61,6 @@ namespace tileworld {
 
         public setWorld(w: Image) {
             game.consoleOverlay.setVisible(true);
-            this.currentDirection = MoveDirection.None;
             this.signal = null;
             this.sprites = [];
             this.world = w.clone();
@@ -100,6 +95,7 @@ namespace tileworld {
             signal.inst = -1
             this.signal = signal;
 
+            // get the game started
             this.round();
             
             game.onUpdate(() => {
@@ -112,7 +108,12 @@ namespace tileworld {
                 }
             });
 
-            //scene.cameraFollowSprite(s)
+            this.registerController();
+            this.currentDirection = MoveDirection.None;
+            signal.vx = 100;
+        } 
+
+        private registerController() {
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
                 this.requestMove(MoveDirection.Left)
             })
@@ -137,10 +138,7 @@ namespace tileworld {
             controller.down.onEvent(ControllerButtonEvent.Released, () => {
                 this.requestStop(MoveDirection.Down)
             })
-
-            signal.vx = 100;
-        } 
-
+        }
         private currentDirection: MoveDirection;
         private keyDowns: boolean[] = [false, false, false, false, false];
         private requestMove(dir: MoveDirection) {
@@ -175,10 +173,9 @@ namespace tileworld {
         private matchingRules(phase: Phase, ts: TileSprite) {
             return this.rules.filter(rid => {
                 return getKinds(rid).indexOf(ts.kind()) != -1 && 
-                    (  (phase == Phase.Moving && getDir(rid) == ts.dir &&
-                        (getType(rid) == RuleType.Moving || (getType(rid) == RuleType.Pushing && ts.dir == this.currentDirection)) )
-                    || (phase == Phase.Resting && getType(rid) == RuleType.Resting) 
-                    );
+                    ( phase == Phase.Moving && getDir(rid) == ts.dir && getType(rid) == RuleType.Moving
+                    || phase == Phase.Resting && getType(rid) == RuleType.Resting
+                    || getType(rid) == RuleType.Pushing && getDir(rid) == this.currentDirection);
             });
         }
 

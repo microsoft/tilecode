@@ -149,7 +149,7 @@ namespace bd {
 
 import tw = tileworld;
 
-let manager = new tw.ImageManager(bd.fixed, bd.movable, 0);
+let manager = new tw.ImageManager(bd.fixed, bd.movable, 2);
 let wallId = manager.getKind(bd.wall);
 let spaceId = manager.getKind(bd.space);
 let playerId = manager.getKind(bd.player);
@@ -246,7 +246,7 @@ function makeIds(rules: Rule[]): IdRule[] {
 let program: Program = {
     fixed: 3,
     movable: 4,
-    rules: makeIds([boulderFallDown, boulderFallLeft, boulderFallingDown])
+    rules: makeIds([boulderFallDown, boulderFallLeft, boulderFallingDown, playerPaint, playerMoveRight, playerMoveBoulder])
 }
 
 tw.setProgram(program);
