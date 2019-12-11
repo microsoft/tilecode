@@ -150,12 +150,15 @@ namespace bd {
 import tw = tileworld;
 
 let manager = new tw.ImageManager(bd.fixed, bd.movable, 2);
+
 let wallId = manager.getKind(bd.wall);
 let spaceId = manager.getKind(bd.space);
 let playerId = manager.getKind(bd.player);
 let enemyId = manager.getKind(bd.enemy);
 let boulderId = manager.getKind(bd.boulder);
 let diamondId = manager.getKind(bd.diamond);
+
+manager.setPlayer(playerId);
 
 function fillAttr(f: number, n: number, i: number, g: number) {
     let res: AttrType[] = [];
@@ -183,8 +186,13 @@ let playerMove = fillAttr(AttrType.OK, 7, boulderId, AttrType.Exclude);
 playerMove[wallId] = AttrType.Exclude;
 
 let moveRight = [{ inst: CommandType.Move, arg: MoveDirection.Right }]
+let moveLeft = [{ inst: CommandType.Move, arg: MoveDirection.Left }]
+
 let boulderRight = SpriteAt(boulderId, 3, 2)
 boulderRight.commands = [{ inst: CommandType.Move, arg: MoveDirection.Right }]
+
+let boulderLeft = SpriteAt(boulderId, 1, 2)
+boulderLeft.commands = [{ inst: CommandType.Move, arg: MoveDirection.Left }]
 
 let playerPaint: Rule = {
     kind: [playerId],
@@ -197,16 +205,48 @@ let playerMoveRight: Rule ={
     kind: [playerId],
     rt: RuleType.Pushing,
     dir: MoveDirection.Right,
-    whenDo: [{ col: 2, row: 2, attrs: [], witness: playerId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Right }] },
-                { col: 3, row: 2, attrs: playerMove, witness: -1, commands: [] } ]
+    whenDo: [{ col: 2, row: 2, attrs: [], witness: playerId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Right }, { inst: CommandType.Paint, arg: spaceId }] },
+        { col: 3, row: 2, attrs: playerMove, witness: -1, commands: [] } ]
 }
 
-let playerMoveBoulder: Rule = {
+let playerMoveLeft: Rule = {
+    kind: [playerId],
+    rt: RuleType.Pushing,
+    dir: MoveDirection.Left,
+    whenDo: [{ col: 2, row: 2, attrs: [], witness: playerId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Left }, { inst: CommandType.Paint, arg: spaceId }] },
+        { col: 1, row: 2, attrs: playerMove, witness: -1, commands: [] }]
+}
+
+let playerMoveUp: Rule = {
+    kind: [playerId],
+    rt: RuleType.Pushing,
+    dir: MoveDirection.Up,
+    whenDo: [{ col: 2, row: 2, attrs: [], witness: playerId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Up }, { inst: CommandType.Paint, arg: spaceId }] },
+    { col: 2, row: 1, attrs: playerMove, witness: -1, commands: [] }]
+}
+
+let playerMoveDown: Rule = {
+    kind: [playerId],
+    rt: RuleType.Pushing,
+    dir: MoveDirection.Down,
+    whenDo: [{ col: 2, row: 2, attrs: [], witness: playerId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Down }, { inst: CommandType.Paint, arg: spaceId }] },
+    { col: 2, row: 3, attrs: playerMove, witness: -1, commands: [] }]
+}
+
+let playerMoveBoulderRight: Rule = {
     kind: [playerId],
     rt: RuleType.Pushing,
     dir: MoveDirection.Right,
     whenDo: [{ col: 2, row: 2, attrs: [], witness: playerId, commands: moveRight },
         boulderRight, TileAt(spaceId, 4, 2)]
+}
+
+let playerMoveBoulderLeft: Rule = {
+    kind: [playerId],
+    rt: RuleType.Pushing,
+    dir: MoveDirection.Left,
+    whenDo: [{ col: 2, row: 2, attrs: [], witness: playerId, commands: moveLeft },
+        boulderLeft, TileAt(spaceId, 1, 2)]
 }
 
 let boulderFallDown: Rule = {
@@ -240,7 +280,8 @@ function makeIds(rules: Rule[]): IdRule[] {
 let program: Program = {
     fixed: 3,
     movable: 4,
-    rules: makeIds([boulderFallDown, boulderFallLeft, boulderFallingDown, playerPaint, playerMoveRight, playerMoveBoulder])
+    rules: makeIds([boulderFallDown, boulderFallLeft, boulderFallingDown, 
+        playerPaint, playerMoveRight, playerMoveLeft, playerMoveUp, playerMoveDown, playerMoveBoulderRight, playerMoveBoulderLeft])
 }
 
 tw.setProgram(program);

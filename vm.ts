@@ -97,7 +97,11 @@ namespace tileworld {
 
             // get the game started
             this.round();
-            
+            let playerId = this.manager.getPlayer();
+            if (playerId != -1 && this.sprites[playerId]) {
+                scene.cameraFollowSprite(this.sprites[playerId][0]);
+            }
+
             game.onUpdate(() => {
                 // has signal sprite moved to new tile
                 // then do a worldUpdate and reset the signal sprite
@@ -147,6 +151,7 @@ namespace tileworld {
         }
 
         private requestStop(dir: MoveDirection)  {
+            // TODO: don't lose fast key press 
             this.keyDowns[dir] = false;
             let index = this.keyDowns.indexOf(true);
             this.currentDirection = index == -1 ? MoveDirection.None : index;
@@ -172,12 +177,14 @@ namespace tileworld {
             this.updateWorld();
         }
 
-        private matchingRules(phase: Phase, ts: TileSprite) {
-            return this.rules.filter(rid => {
-                return getKinds(rid).indexOf(ts.kind()) != -1 && 
+        private matchingRules(phase: Phase, ts: TileSprite, handler: (ts: TileSprite, rid:number) => void) {
+            this.rules.forEach(rid => {
+                if (getKinds(rid).indexOf(ts.kind()) != -1 && 
                     ( phase == Phase.Moving && getDir(rid) == ts.dir && getType(rid) == RuleType.Moving
                     || phase == Phase.Resting && getType(rid) == RuleType.Resting
-                    || getType(rid) == RuleType.Pushing && getDir(rid) == this.currentDirection);
+                    || getType(rid) == RuleType.Pushing && getDir(rid) == this.currentDirection)) {
+                        handler(ts,rid);
+                    }
             });
         }
 
@@ -196,8 +203,7 @@ namespace tileworld {
                 if ( (phase == Phase.Moving && ts.dir != MoveDirection.None) ||
                      (phase == Phase.Resting && (ts.dir == MoveDirection.None ||
                          ts.inst != CommandType.Move)) ) {
-                    let rules = this.matchingRules(phase, ts);
-                    rules.forEach(rid => this.evaluateRule(ts, rid) );
+                    this.matchingRules(phase, ts, (ts,rid) => this.evaluateRule(ts, rid));
                 }
             });
         }
