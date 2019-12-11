@@ -136,6 +136,7 @@ namespace tileworld {
         private col(current: boolean = true) {
             return this.cursor.x >> 4;
         }
+        
         private row(current: boolean = true) {
             return (this.cursor.y - yoff) >> 4;
         }

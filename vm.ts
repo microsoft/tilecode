@@ -5,6 +5,7 @@
 // - debugging API
 //    - which rules are ready to run? showing match in world?
 //    - which ones get to run?
+
 const signalImage = img`
     . . . . . . . . . . . . . . . .
     . . 1 1 1 1 1 1 1 1 1 1 1 1 . .
@@ -121,6 +122,15 @@ namespace tileworld {
                 }
             });
 
+            controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
+            });
+            controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
+            });
+            controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
+            });
+            controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
+            });
+
             signal.vx = 100;
         } 
 
@@ -215,12 +225,14 @@ namespace tileworld {
             let whendo = getWhenDo(rid, col, row);
             if (whendo == -1)
                 return true;
+            let wcol = ts.col() + (col - 2);
+            let wrow = ts.row() + (row - 2);
             let oneOf: boolean = false;
             let oneOfPassed: boolean = false;
             let captureWitness = null;
             let kind = 0
             for(;kind<this.manager.fixed().length;kind++) {
-                let hasKind = this.world.getPixel(ts.col()+(col-2), ts.row()+(row-2)) == kind;
+                let hasKind = this.world.getPixel(wcol, wrow) == kind;
                 let attr = getAttr(rid, whendo, kind);
                 if (attr == AttrType.Exclude && hasKind ||
                     attr == AttrType.Include && !hasKind) {
@@ -232,7 +244,7 @@ namespace tileworld {
             }
             for(;kind<this.manager.all().length; kind++) {
                 let attr = getAttr(rid, whendo, kind);
-                let witness = this.getWitness(kind, ts.col()+(col-2), ts.row()+(row-2));
+                let witness = this.getWitness(kind, wcol, wrow);
                 if (attr == AttrType.Exclude && witness) {
                     return false;
                 } else if (attr == AttrType.Include) {
@@ -264,15 +276,17 @@ namespace tileworld {
         private evaluateWhenDoCommands(ts: TileSprite, rid: number, col: number, row: number) {
             let wid = getWhenDo(rid, col, row);
             if (wid == -1) return;
+            let wcol = ts.col() + (2 - col);
+            let wrow = ts.row() + (2 - row);
             for (let cid = 0; cid < 4; cid++) {
                 let inst = getInst(rid, wid, cid);
                 if (inst == -1) break;
                 if (inst == CommandType.Paint) {
-                    if (this.nextWorld.getPixel(col,row) == 0xf) {
-                        this.nextWorld.setPixel(col,row,getArg(rid, wid, cid));
+                    if (this.nextWorld.getPixel(wcol,wrow) == 0xf) {
+                        this.nextWorld.setPixel(wcol, wrow, getArg(rid, wid, cid));
                     }
                 } else if (inst == CommandType.Move) {
-                    let witness = ts ? ts : this.witnesses.find(ts => ts.col() == col && ts.row() == row);
+                    let witness = ts ? ts : this.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
                     if (witness && witness.inst == -1) {
                         witness.inst = inst;
                         witness.arg = getArg(rid, wid, cid);
