@@ -101,15 +101,15 @@ namespace tileworld {
             game.onUpdate(() => {
                 // has signal sprite moved to new tile
                 // then do a worldUpdate and reset the signal sprite
-                // console.logValue("x", this.signal.x)
                 if (this.signal.x >= 23) {
                     this.signal.x = 8;
                     this.round();
                 }
             });
 
-            this.registerController();
             this.currentDirection = MoveDirection.None;
+            this.keyDowns = [false, false, false, false, false];
+            this.registerController();
             signal.vx = 100;
         } 
 
@@ -140,7 +140,7 @@ namespace tileworld {
             })
         }
         private currentDirection: MoveDirection;
-        private keyDowns: boolean[] = [false, false, false, false, false];
+        private keyDowns: boolean[];
         private requestMove(dir: MoveDirection) {
             this.keyDowns[dir] = true;
             this.currentDirection = dir;
@@ -301,8 +301,8 @@ namespace tileworld {
             let wid = getWhenDo(rc.rid, col, row);
             if (wid == -1 || getInst(rc.rid, wid, 0) == -1)
                 return;
-            let wcol = rc.self.col() + (2 - col);
-            let wrow = rc.self.row() + (2 - row);
+            let wcol = rc.self.col() + (col - 2);
+            let wrow = rc.self.row() + (row - 2);
             let self = col == 2 && row == 2;
             for (let cid = 0; cid < 4; cid++) {
                 let inst = getInst(rc.rid, wid, cid);

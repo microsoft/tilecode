@@ -51,7 +51,6 @@ type Rule = {
     kind: number[];                 // the indices of movable sprite kinds this rule is defined over
     rt: RuleType;
     dir: MoveDirection;             // the direction associated with rule type (Moving, Colliding, Pushing)
-    generalize: MoveDirection[];    // the other directions to generalize this rule to 
     whenDo: WhenDo[];               // guarded commands
 }
 
@@ -72,7 +71,6 @@ function makeNewRule(kind: number[], rt: RuleType, dir: MoveDirection): Rule {
         kind: kind,
         rt: rt,
         dir: dir,
-        generalize: [],
         whenDo: []
     }
 }
@@ -244,13 +242,14 @@ namespace tileworld {
         getRule(rid).dir = dir;
     }
 
+    /*
     export function getGeneral(rid: number, gid: number): MoveDirection {
         return getRule(rid).generalize[gid];
     }
     
     export function setGeneral(rid: number, gid: number, general: MoveDirection) {
         getRule(rid).generalize[gid] = general;
-    }
+    } */
 
     export function getWhenDo(rid: number, col: number, row: number) {
         let whendo = getRule(rid).whenDo.find(wd => wd.col == col && wd.row == row);

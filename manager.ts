@@ -4,11 +4,19 @@ namespace tileworld {
     export class ImageManager {
         private allImages: Image[];
         private emptyImage: Image;
+        private player: number;
         constructor(private fixedImages: Image[], private movableImages: Image[], public defaultTile: number) {
             this.allImages = [];
-            this.fixedImages.forEach(s => { this.allImages.push(s) })
-            this.movableImages.forEach(s => { this.allImages.push(s) })
+            this.player = -1;
+            this.fixedImages.forEach(s => { this.allImages.push(s) });
+            this.movableImages.forEach(s => { this.allImages.push(s) });
         }
+
+        setPlayer(kind: number) {
+            this.player = kind;
+        }
+
+        getPlayer() { return this.player }
 
         getImage(kind: number) {
             return 0<=kind && kind < this.allImages.length ? this.allImages[kind] : null;

@@ -190,7 +190,6 @@ let playerPaint: Rule = {
     kind: [playerId],
     rt: RuleType.Resting,
     dir: MoveDirection.None,
-    generalize: [],
     whenDo: [{ col: 2, row: 2, attrs: [], witness: playerId, commands: [{ inst: CommandType.Paint, arg: spaceId }] }]
 }
 
@@ -198,7 +197,6 @@ let playerMoveRight: Rule ={
     kind: [playerId],
     rt: RuleType.Pushing,
     dir: MoveDirection.Right,
-    generalize: [],
     whenDo: [{ col: 2, row: 2, attrs: [], witness: playerId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Right }] },
                 { col: 3, row: 2, attrs: playerMove, witness: -1, commands: [] } ]
 }
@@ -207,7 +205,6 @@ let playerMoveBoulder: Rule = {
     kind: [playerId],
     rt: RuleType.Pushing,
     dir: MoveDirection.Right,
-    generalize: [],
     whenDo: [{ col: 2, row: 2, attrs: [], witness: playerId, commands: moveRight },
         boulderRight, TileAt(spaceId, 4, 2)]
 }
@@ -216,7 +213,6 @@ let boulderFallDown: Rule = {
     kind: [boulderId, diamondId],
     rt: RuleType.Resting,
     dir: MoveDirection.None,
-    generalize: [],
     whenDo: [{ col: 2, row: 2, attrs: [], witness: boulderId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Down }] },
              TileAt(spaceId, 2, 3)]
 }
@@ -225,7 +221,6 @@ let boulderFallingDown: Rule = {
     kind: [boulderId, diamondId],
     rt: RuleType.Moving,
     dir: MoveDirection.Down,
-    generalize: [],
     whenDo: [{ col: 2, row: 2, attrs: [], witness: boulderId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Down }] },
              tp]
 }
@@ -234,7 +229,6 @@ let boulderFallLeft: Rule = {
     kind: [boulderId, diamondId],
     rt: RuleType.Resting,
     dir: MoveDirection.None,
-    generalize: [MoveDirection.Right],
     whenDo: [{ col: 2, row: 2, attrs: [], witness: boulderId, commands: [{ inst: CommandType.Move, arg: MoveDirection.Left }] },
              SpriteAt(boulderId, 2, 3), TileAt(spaceId, 1, 2), TileAt(spaceId,1,3)]
 }
