@@ -8,19 +8,18 @@
     },
     "files": [
         "README.md",
+        "utilities.ts",
         "rule.ts",
-        "vm.ts",
         "sprites.ts",
         "manager.ts",
-        "toolbox.ts",
+        "vm.ts",
         "imageeditor.ts",
         "ruleeditor.ts",
+         "spriteRules.ts",
         "editor.ts",
         "tileworld.ts",
         "main.ts",
-        "test.ts",
-        "spriteRules.ts",
-        "utilities.ts"
+        "test.ts"
     ],
     "testFiles": [],
     "public": false,
