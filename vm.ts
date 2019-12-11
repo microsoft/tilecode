@@ -62,6 +62,14 @@ namespace tileworld {
         }
     }
 
+    class RuleClosure {
+        constructor(
+            public rid: number,
+            public self: TileSprite,
+            public witnesses: TileSprite[]) {
+        }
+    }
+
     enum Phase { Moving, Resting, Colliding};
 
     export class TileWorldVM {
@@ -138,6 +146,7 @@ namespace tileworld {
             // compute the "pre-effect" of the rules
             this.applyRules(Phase.Moving);
             this.applyRules(Phase.Resting);
+            this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
             // now, look for collisions
             this.collisionDetection();
             // finally, update the rules
@@ -162,7 +171,9 @@ namespace tileworld {
             });
         }
 
+        private ruleClosures: RuleClosure[];
         private applyRules(phase: Phase) {
+            this.ruleClosures = [];
             // clear the state
             if (phase == Phase.Moving) {
                 this.nextWorld.fill(0xf);
@@ -188,6 +199,14 @@ namespace tileworld {
 
         private updateWorld() {
             this.allSprites(ts => ts.update() );
+            // change tiles (can be done with less memory and time assuming few
+            // tiles are changed).
+            for(let x=0;x<this.nextWorld.width();x++) {
+                for (let y = 0; y < this.nextWorld.height(); y++) {
+                    if (this.nextWorld.getPixel(x,y) != 0xf)
+                        this.world.setPixel(x,y,this.nextWorld.getPixel(x,y));
+                }                
+            }
         }
 
         // store the sprite witnesses identified by guards
@@ -202,8 +221,8 @@ namespace tileworld {
                         return;
                 }
             }
-            //console.logValue("executing=", rid)
-            this.evaluateAllCommands(ts, rid, witnesses);
+            // this is all that is needed for closure
+            this.ruleClosures.push(new RuleClosure(rid, ts, witnesses));
         }
 
         private getWitness(kind: number, col: number, row: number) {
@@ -256,35 +275,35 @@ namespace tileworld {
             return ret;
         }
     
-        private evaluateAllCommands(ts: TileSprite, rid: number, witnesses: TileSprite[]) {
+        private evaluateRuleClosure(rc: RuleClosure) {
             for (let col = 0; col < 5; col++) {
                 for (let row = 0; row < 5; row++) {
                     if (Math.abs(2 - col) + Math.abs(2 - row) > 2)
                         continue;
-                    this.evaluateWhenDoCommands(ts, rid, col, row, witnesses);
+                    this.evaluateWhenDoCommands(rc, col, row);
                 }
             }
         }
 
-        private evaluateWhenDoCommands(ts: TileSprite, rid: number, 
-                col: number, row: number, witnesses: TileSprite[]) {
-            let wid = getWhenDo(rid, col, row);
-            if (wid == -1) return;
-            let wcol = ts.col() + (2 - col);
-            let wrow = ts.row() + (2 - row);
+        private evaluateWhenDoCommands(rc: RuleClosure, col: number, row: number) {
+            let wid = getWhenDo(rc.rid, col, row);
+            if (wid == -1 || getInst(rc.rid, wid, 0) == -1)
+                return;
+            let wcol = rc.self.col() + (2 - col);
+            let wrow = rc.self.row() + (2 - row);
             let self = col == 2 && row == 2;
             for (let cid = 0; cid < 4; cid++) {
-                let inst = getInst(rid, wid, cid);
+                let inst = getInst(rc.rid, wid, cid);
                 if (inst == -1) break;
                 if (inst == CommandType.Paint) {
                     if (this.nextWorld.getPixel(wcol,wrow) == 0xf) {
-                        this.nextWorld.setPixel(wcol, wrow, getArg(rid, wid, cid));
+                        this.nextWorld.setPixel(wcol, wrow, getArg(rc.rid, wid, cid));
                     }
                 } else if (inst == CommandType.Move) {
-                    let witness = self ? ts : witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
+                    let witness = self ? rc.self : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
                     if (witness && witness.inst == -1) {
                         witness.inst = inst;
-                        witness.arg = getArg(rid, wid, cid);
+                        witness.arg = getArg(rc.rid, wid, cid);
                     }
                 }
             }
