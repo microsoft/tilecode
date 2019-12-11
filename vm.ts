@@ -105,7 +105,6 @@ namespace tileworld {
             let signal = new TileSprite(signalImage, 0);
             signal.setFlag(SpriteFlag.Invisible, true);
             signal.x = signal.y = 8;
-            signal.vx = 100;
             signal.dir = MoveDirection.Right;
             signal.inst = -1
             this.signal = signal;
@@ -121,17 +120,20 @@ namespace tileworld {
                     this.round();
                 }
             });
+
+            signal.vx = 100;
         } 
 
-        public round() {
+        private round() {
             // compute the "pre-effect" of the rules
             this.applyRules(Phase.Moving);
             this.applyRules(Phase.Resting);
             // now, look for collisions
             this.collisionDetection();
             // finally, update the rules
+            //console.log("--");
+            //basic.pause(1000);
             this.updateWorld();
-            console.log("--")
         }
 
         private matchingRules(phase: Phase, ts: TileSprite) {
@@ -192,7 +194,7 @@ namespace tileworld {
                     if (Math.abs(2-col) + Math.abs(2-row) > 2 ||
                         col == 2 && row == 2)
                         continue;
-                    if (!this.evaluateWhenDo(rid, col, row))
+                    if (!this.evaluateWhenDo(ts, rid, col, row))
                         return;
                     let wid = getWhenDo(rid, col, row)
                     if (wid != -1 && getInst(rid, wid, 0) != -1) {
@@ -201,28 +203,36 @@ namespace tileworld {
                     }
                 }
             }
-            console.logValue("executing=", rid)
+            //console.logValue("executing=", rid)
             this.evaluateAllCommands(ts, rid);
         }
 
         private getWitness(kind: number, col: number, row: number) {
-            if (kind < this.manager.fixed().length) {
-                return this.world.getPixel(col, row) == kind;
-            } else {
-                return this.sprites[kind] && this.sprites[kind].find(ts => ts.col() == col && ts.row() == row);
-            }
+            return this.sprites[kind] && this.sprites[kind].find(ts => ts.col() == col && ts.row() == row);
         }
 
-        private evaluateWhenDo(rid: number, col: number, row: number) {
+        private evaluateWhenDo(ts: TileSprite, rid: number, col: number, row: number) {
             let whendo = getWhenDo(rid, col, row);
             if (whendo == -1)
                 return true;
             let oneOf: boolean = false;
             let oneOfPassed: boolean = false;
             let captureWitness = null;
-            for(let kind=0; kind<this.manager.all().length; kind++) {
+            let kind = 0
+            for(;kind<this.manager.fixed().length;kind++) {
+                let hasKind = this.world.getPixel(ts.col()+(col-2), ts.row()+(row-2)) == kind;
                 let attr = getAttr(rid, whendo, kind);
-                let witness = this.getWitness(kind, col, row);
+                if (attr == AttrType.Exclude && hasKind ||
+                    attr == AttrType.Include && !hasKind) {
+                    return false;
+                } else if (attr == AttrType.OneOf) {
+                    oneOf = true;
+                    if (hasKind) oneOfPassed = true;
+                }
+            }
+            for(;kind<this.manager.all().length; kind++) {
+                let attr = getAttr(rid, whendo, kind);
+                let witness = this.getWitness(kind, ts.col()+(col-2), ts.row()+(row-2));
                 if (attr == AttrType.Exclude && witness) {
                     return false;
                 } else if (attr == AttrType.Include) {
