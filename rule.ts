@@ -181,7 +181,7 @@ namespace tileworld {
     }
 
 
-    // TODO: make this an online transformation over a rule to save space
+    // TODO: make this an online transformation (view of) over a rule to save space
     export function flipRule(rid: number, fr: FlipRotate) {
         // TODO: convert this to using C-level API
         let srcRule = getRule(rid);
