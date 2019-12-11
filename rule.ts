@@ -130,31 +130,38 @@ namespace tileworld {
         return 0;
     }
 
-    function flipHorizDir(d: MoveDirection) {
-        return d == MoveDirection.Left ? MoveDirection.Right : d == MoveDirection.Right ? MoveDirection.Left : d;
+    export enum FlipDirection { Horizontal, Vertical };
+
+    function flipDir(d: MoveDirection, fd: FlipDirection) {
+        if (fd == FlipDirection.Horizontal) {
+            return d == MoveDirection.Left ? MoveDirection.Right : d == MoveDirection.Right ? MoveDirection.Left : d;
+        } else {
+            return d == MoveDirection.Up ? MoveDirection.Down : d == MoveDirection.Down ? MoveDirection.Up : d;
+        }
     }
 
-    function flipHorizCommands(commands: Command[]) {
-        return commands.map(c => { return { inst: c.inst, arg: c.inst == CommandType.Move ? flipHorizDir(c.arg) : c.arg } })
+    function flipCommands(commands: Command[], fd: FlipDirection) {
+        return commands.map(c => { return { inst: c.inst, arg: c.inst == CommandType.Move ? flipDir(c.arg, fd) : c.arg } })
     }
 
-    export function flipRuleHoriz(rid: number) {
+    export function flipRule(rid: number, fd: FlipDirection) {
+        // TODO: convert this to using C-level API
         let srcRule = getRule(rid);
-        let tgtRule = makeNewRule(srcRule.kind, srcRule.rt, flipHorizDir(srcRule.dir));
+        let tgtRule = makeNewRule(srcRule.kind, srcRule.rt, flipDir(srcRule.dir, fd));
         for (let row = 0; row < 5; row++) {
             for (let col = 0; col < 5; col++) {
-                if (col != 2 && Math.abs(2-col) + Math.abs(2-row) > 2)
+                if (Math.abs(2 - col) + Math.abs(2 - row) > 2)
                     continue;
-                // check for src
                 let whendo = srcRule.whenDo.find(w => w.col == col && w.row == row);
-                if (whendo) {
-                    let tgtWhenDo: WhenDo = { col: 4 - col, row: row, attrs: whendo.attrs, witness: whendo.witness, commands: flipHorizCommands(whendo.commands) };
-                    tgtRule.whenDo.push(tgtWhenDo);
-                }
-            }
-            let whendo = srcRule.whenDo.find(w => w.col == 2 && w.row == 2);
-            if (whendo) {
-                let tgtWhenDo: WhenDo = { col: 2, row: 2, attrs: whendo.attrs, witness: whendo.witness, commands: flipHorizCommands(whendo.commands) };
+                if (!whendo)
+                    continue;
+                let tgtWhenDo: WhenDo = { 
+                    col: fd == FlipDirection.Horizontal ? 4 - col : col, 
+                    row: fd == FlipDirection.Vertical ? 4 - row : row, 
+                    attrs: whendo.attrs, 
+                    witness: whendo.witness, 
+                    commands: flipCommands(whendo.commands, fd) 
+                };
                 tgtRule.whenDo.push(tgtWhenDo);
             }
         }
