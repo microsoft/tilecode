@@ -5,6 +5,24 @@
 // - debugging API
 //    - which rules are ready to run? showing match in world?
 //    - which ones get to run?
+const signalImage = img`
+    . . . . . . . . . . . . . . . .
+    . . 1 1 1 1 1 1 1 1 1 1 1 1 . .
+    . 1 1 . . . . . . . . . . 1 1 .
+    . 1 . . . . . . . . . . . . 1 .
+    . 1 . . . . . . . . . . . . 1 .
+    . 1 . . . . . . . . . . . . 1 .
+    . 1 . . . . . . . . . . . . 1 .
+    . 1 . . . . . 1 1 . . . . . 1 .
+    . 1 . . . . . 1 1 . . . . . 1 .
+    . 1 . . . . . . . . . . . . 1 .
+    . 1 . . . . . . . . . . . . 1 .
+    . 1 . . . . . . . . . . . . 1 .
+    . 1 . . . . . . . . . . . . 1 .
+    . 1 1 . . . . . . . . . . 1 1 .
+    . . 1 1 1 1 1 1 1 1 1 1 1 1 . .
+    . . . . . . . . . . . . . . . .
+`;
 
 namespace tileworld {
 
@@ -28,6 +46,8 @@ namespace tileworld {
         public arg: number;
         constructor(img: Image, kind: number) {
             super(img);
+            const scene = game.currentScene();
+            scene.physicsEngine.addSprite(this);
             this.setKind(kind);
             this.dir = MoveDirection.None
             this.inst = -1; 
@@ -54,6 +74,7 @@ namespace tileworld {
         }
 
         public setWorld(w: Image) {
+            game.consoleOverlay.setVisible(true);
             this.signal = null;
             this.sprites = [];
             this.world = w.clone();
@@ -81,21 +102,23 @@ namespace tileworld {
         }
 
         public start() {
-            let signal = new TileSprite(img`.`, 0);
+            let signal = new TileSprite(signalImage, 0);
             signal.setFlag(SpriteFlag.Invisible, true);
             signal.x = signal.y = 8;
+            signal.vx = 100;
             signal.dir = MoveDirection.Right;
             signal.inst = -1
             this.signal = signal;
 
-            this.updateWorld();
-            this.signal.update();
+            this.round();
+            
             game.onUpdate(() => {
                 // has signal sprite moved to new tile
                 // then do a worldUpdate and reset the signal sprite
+                // console.logValue("x", this.signal.x)
                 if (this.signal.x >= 24) {
                     this.signal.x = 8;
-                    this.updateWorld();
+                    this.round();
                 }
             });
         } 
@@ -112,6 +135,7 @@ namespace tileworld {
 
         private matchingRules(phase: Phase, ts: TileSprite) {
             return this.rules.filter(rid => {
+                // console.logValue("match=", rid)
                 return getKinds(rid).indexOf(ts.kind()) != -1 && 
                     (  (phase == Phase.Moving && getDir(rid) == ts.dir &&
                         (getType(rid) == RuleType.Moving || getType(rid) == RuleType.Pushing) )
@@ -121,7 +145,9 @@ namespace tileworld {
         }
 
         private allSprites(handler: (ts:TileSprite) => void) {
-            this.sprites.forEach(ls => ls.forEach(ts => handler(ts)));
+            this.sprites.forEach(ls => {
+                if (ls) ls.forEach(ts => handler(ts));
+            });
         }
 
         private applyRules(phase: Phase) {
@@ -158,6 +184,7 @@ namespace tileworld {
         private cols: number[];
         private rows: number[];
         private evaluateRule(ts: TileSprite, rid: number) {
+            //console.logValue("rid", rid)
             this.witnesses = [];
             this.cols = [];
             this.rows = [];
