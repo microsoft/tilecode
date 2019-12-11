@@ -6,25 +6,6 @@
 //    - which rules are ready to run? showing match in world?
 //    - which ones get to run?
 
-const signalImage = img`
-    . . . . . . . . . . . . . . . .
-    . . 1 1 1 1 1 1 1 1 1 1 1 1 . .
-    . 1 1 . . . . . . . . . . 1 1 .
-    . 1 . . . . . . . . . . . . 1 .
-    . 1 . . . . . . . . . . . . 1 .
-    . 1 . . . . . . . . . . . . 1 .
-    . 1 . . . . . . . . . . . . 1 .
-    . 1 . . . . . 1 1 . . . . . 1 .
-    . 1 . . . . . 1 1 . . . . . 1 .
-    . 1 . . . . . . . . . . . . 1 .
-    . 1 . . . . . . . . . . . . 1 .
-    . 1 . . . . . . . . . . . . 1 .
-    . 1 . . . . . . . . . . . . 1 .
-    . 1 1 . . . . . . . . . . 1 1 .
-    . . 1 1 1 1 1 1 1 1 1 1 1 1 . .
-    . . . . . . . . . . . . . . . .
-`;
-
 namespace tileworld {
 
     // TODO: dpad
@@ -111,7 +92,7 @@ namespace tileworld {
         }
 
         public start() {
-            let signal = new TileSprite(signalImage, 0);
+            let signal = new TileSprite(cursorIn, 0);
             signal.setFlag(SpriteFlag.Invisible, true);
             signal.x = signal.y = 8;
             signal.dir = MoveDirection.Right;

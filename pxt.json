@@ -15,7 +15,7 @@
         "vm.ts",
         "imageeditor.ts",
         "ruleeditor.ts",
-         "spriteRules.ts",
+        "spriteRules.ts",
         "editor.ts",
         "tileworld.ts",
         "main.ts",
