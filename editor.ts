@@ -6,6 +6,11 @@ namespace tileworld {
     // - wiring from view back to controller
     // - modes: painting, menus
 
+    // TODO: animate transitions between screens
+    // TODO: names of things as overlay
+    // TODO: coordinates?
+    // TODO: separate commands 2x3 from user-defined sprites 2x4
+
     const yoff = 4;
 
     // TODO: grey out edit option for fixed tiles

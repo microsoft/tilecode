@@ -143,7 +143,7 @@ namespace bd {
         f f f f c c c f f f c c c c f f
         f f f f f f f f f c c c c c c f
     `
-    export const movable = [player, boulder, diamond, enemy]
+    export const movable = [boulder, player, diamond, enemy]
     export const fixed = [space, wall, dirt]
 }
 

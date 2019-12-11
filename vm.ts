@@ -131,11 +131,11 @@ namespace tileworld {
             this.collisionDetection();
             // finally, update the rules
             this.updateWorld();
+            console.log("--")
         }
 
         private matchingRules(phase: Phase, ts: TileSprite) {
             return this.rules.filter(rid => {
-                // console.logValue("match=", rid)
                 return getKinds(rid).indexOf(ts.kind()) != -1 && 
                     (  (phase == Phase.Moving && getDir(rid) == ts.dir &&
                         (getType(rid) == RuleType.Moving || getType(rid) == RuleType.Pushing) )
@@ -184,7 +184,6 @@ namespace tileworld {
         private cols: number[];
         private rows: number[];
         private evaluateRule(ts: TileSprite, rid: number) {
-            //console.logValue("rid", rid)
             this.witnesses = [];
             this.cols = [];
             this.rows = [];
@@ -202,14 +201,16 @@ namespace tileworld {
                     }
                 }
             }
+            console.logValue("executing=", rid)
             this.evaluateAllCommands(ts, rid);
         }
 
         private getWitness(kind: number, col: number, row: number) {
             if (kind < this.manager.fixed().length) {
                 return this.world.getPixel(col, row) == kind;
-            } else 
-                return this.sprites[kind].find(ts => ts.col() == col && ts.row() == row);
+            } else {
+                return this.sprites[kind] && this.sprites[kind].find(ts => ts.col() == col && ts.row() == row);
+            }
         }
 
         private evaluateWhenDo(rid: number, col: number, row: number) {
