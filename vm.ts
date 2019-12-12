@@ -37,6 +37,14 @@ namespace tileworld {
         }
     }
 
+    class VMState {
+        public fixed: number;
+        public movable: number;
+        public world: Image;
+        public nextWorld: Image;
+        public sprites: TileSprite[][];
+    }
+
     class RuleClosure {
         constructor(
             public rid: number,
@@ -48,43 +56,21 @@ namespace tileworld {
     enum Phase { Moving, Resting, Colliding};
 
     class TileWorldVM {
-        private world: Image;
-        private nextWorld: Image;
-        public sprites: TileSprite[][];
         private ruleClosures: RuleClosure[];
-
-        constructor(private manager: ImageManager, private rules: number[]) {
-            // not running yet
-        }
-
-        public setWorld(w: Image) {
-            this.sprites = [];
-            this.world = w.clone();
-            this.nextWorld = w.clone();
-            scene.setTileMap(this.world);
-            // set art for fixed sprites
-            for(let code = 0; code < this.manager.fixed().length; code++) {
-                let art = this.manager.getImage(code);
-                scene.setTile(code, art);
-            }
-            // initialize movable sprites
-            for(let kind = this.manager.fixed().length; 
-                    kind < this.manager.all().length; kind++) {
-                this.sprites[kind] = [];
-                let tiles = scene.getTilesByType(kind);
-                let art = this.manager.getImage(kind);
-                // now, put a space where every movable sprite was
-                scene.setTile(kind, this.manager.getImage(this.manager.defaultTile));
-                for (let value of tiles) {
-                    let tileSprite = new TileSprite(art, kind);
-                    this.sprites[kind].push(tileSprite);
-                    value.place(tileSprite);
-                }
-            }
-        }
-
+        private gs: VMState;
         private dpad: MoveDirection
+
+        constructor(private rules: number[]) {
+            this.gs = null;
+        }
+
+        public setState(gs: VMState) {
+            this.gs = gs;
+        }
+
         public round(currDir: MoveDirection) {
+            if (!this.gs)
+                return;
             this.dpad = currDir;
             // make sure everyone is centered
             this.allSprites(ts => {
@@ -116,13 +102,13 @@ namespace tileworld {
         }
 
         private allSprites(handler: (ts:TileSprite) => void) {
-            this.sprites.forEach(ls => { if (ls) ls.forEach(ts => handler(ts)); });
+            this.gs.sprites.forEach(ls => { if (ls) ls.forEach(ts => handler(ts)); });
         }
 
         private applyRules(phase: Phase) {
             // clear the state
             if (phase == Phase.Moving) {
-                this.nextWorld.fill(0xf);
+                this.gs.nextWorld.fill(0xf);
                 this.allSprites(ts => {  ts.inst = -1; });
             }
             // apply rules
@@ -136,6 +122,9 @@ namespace tileworld {
         }
 
         private collisionDetection() {
+            this.allSprites(ts => {
+                
+            })
             // for each sprite ts that is NOW moving (into T):
             // - look for colliding sprite os != ts, as defined
             //   (a) os in square T, resting or moving towards ts, or
@@ -146,10 +135,10 @@ namespace tileworld {
             this.allSprites(ts => ts.update() );
             // change tiles (can be done with less memory and time assuming few
             // tiles are changed).
-            for(let x=0;x<this.nextWorld.width();x++) {
-                for (let y = 0; y < this.nextWorld.height(); y++) {
-                    if (this.nextWorld.getPixel(x,y) != 0xf)
-                        this.world.setPixel(x,y,this.nextWorld.getPixel(x,y));
+            for(let x=0;x<this.gs.nextWorld.width();x++) {
+                for (let y = 0; y < this.gs.nextWorld.height(); y++) {
+                    if (this.gs.nextWorld.getPixel(x,y) != 0xf)
+                        this.gs.world.setPixel(x,y,this.gs.nextWorld.getPixel(x,y));
                 }                
             }
         }
@@ -171,12 +160,12 @@ namespace tileworld {
         }
 
         private getWitness(kind: number, col: number, row: number) {
-            return this.sprites[kind] && this.sprites[kind].find(ts => ts.col() == col && ts.row() == row);
+            return this.gs.sprites[kind] && this.gs.sprites[kind].find(ts => ts.col() == col && ts.row() == row);
         }
 
         private inBounds(col: number, row: number) {
-            return 0 <= col && col < this.world.width() &&
-                   0 <= row && row < this.world.height();
+            return 0 <= col && col < this.gs.world.width() &&
+                   0 <= row && row < this.gs.world.height();
         }
 
         private evaluateWhenDo(ts: TileSprite, rid: number, 
@@ -192,8 +181,8 @@ namespace tileworld {
             let oneOfPassed: boolean = false;
             let captureWitness: TileSprite = null;
             let kind = 0
-            for(;kind<this.manager.fixed().length;kind++) {
-                let hasKind = this.world.getPixel(wcol, wrow) == kind;
+            for(;kind<this.gs.fixed;kind++) {
+                let hasKind = this.gs.world.getPixel(wcol, wrow) == kind;
                 let attr = getAttr(rid, whendo, kind);
                 if (attr == AttrType.Exclude && hasKind ||
                     attr == AttrType.Include && !hasKind) {
@@ -203,7 +192,7 @@ namespace tileworld {
                     if (hasKind) oneOfPassed = true;
                 }
             }
-            for(;kind<this.manager.all().length; kind++) {
+            for(;kind<this.gs.movable; kind++) {
                 let attr = getAttr(rid, whendo, kind);
                 let witness = this.getWitness(kind, wcol, wrow);
                 if (attr == AttrType.Exclude && witness) {
@@ -248,8 +237,8 @@ namespace tileworld {
                 let inst = getInst(rc.rid, wid, cid);
                 if (inst == -1) break;
                 if (inst == CommandType.Paint) {
-                    if (this.nextWorld.getPixel(wcol, wrow) == 0xf) {
-                        this.nextWorld.setPixel(wcol, wrow, getArg(rc.rid, wid, cid));
+                    if (this.gs.nextWorld.getPixel(wcol, wrow) == 0xf) {
+                        this.gs.nextWorld.setPixel(wcol, wrow, getArg(rc.rid, wid, cid));
                     }
                 } else if (inst == CommandType.Move) {
                     let witness = self ? rc.self : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
@@ -265,15 +254,41 @@ namespace tileworld {
     export class RunGame {
         private vm: TileWorldVM;
         private signal: TileSprite;
+        private state: VMState;
         constructor(private manager: ImageManager, rules: number[]) {
-            this.vm = new TileWorldVM(manager, rules)
-            this.dirQueue = [];
-            game.consoleOverlay.setVisible(true);
-            this.signal = null;
+            this.vm = new TileWorldVM(rules)
+            //game.consoleOverlay.setVisible(true);
         }
         
         public setWorld(w: Image) {
-            this.vm.setWorld(w);
+            this.dirQueue = [];
+            this.signal = null;
+            this.state = new VMState;
+            this.state.fixed = this.manager.fixed().length;
+            this.state.movable = this.manager.movable().length;
+            this.state.sprites = [];
+            this.state.world = w.clone();
+            this.state.nextWorld = w.clone();
+            scene.setTileMap(this.state.world);
+            // set art for fixed sprites
+            for (let code = 0; code < this.manager.fixed().length; code++) {
+                let art = this.manager.getImage(code);
+                scene.setTile(code, art);
+            }
+            // initialize movable sprites
+            for (let kind = this.manager.fixed().length;
+                kind < this.manager.all().length; kind++) {
+                this.state.sprites[kind] = [];
+                let tiles = scene.getTilesByType(kind);
+                let art = this.manager.getImage(kind);
+                // now, put a space where every movable sprite was
+                scene.setTile(kind, this.manager.getImage(this.manager.defaultTile));
+                for (let value of tiles) {
+                    let tileSprite = new TileSprite(art, kind);
+                    this.state.sprites[kind].push(tileSprite);
+                    value.place(tileSprite);
+                }
+            }
         }
 
         public start() {
@@ -287,10 +302,11 @@ namespace tileworld {
             // get the game started
  
             let playerId = this.manager.getPlayer();
-            if (playerId != -1 && this.vm.sprites[playerId]) {
-                scene.cameraFollowSprite(this.vm.sprites[playerId][0]);
+            if (playerId != -1 && this.state.sprites[playerId]) {
+                scene.cameraFollowSprite(this.state.sprites[playerId][0]);
             }
 
+            this.vm.setState(this.state);
             this.vm.round(MoveDirection.None);
             game.onUpdate(() => {
                 // has signal sprite moved to new tile
@@ -299,9 +315,9 @@ namespace tileworld {
                     this.signal.x = 8;
                     let currentDirection = this.dirQueue.length > 0 ? this.dirQueue[0] : MoveDirection.None;
                     this.vm.round(currentDirection);
-                    if (this.dirQueue.length > 0) {
-                        if (!this.keyDowns[this.dirQueue[0]])
-                            this.dirQueue.removeAt(0);
+                    if (currentDirection != MoveDirection.None) {
+                        if (!this.keyDowns[currentDirection])
+                            this.dirQueue.removeElement(currentDirection);
                     }
                 }
             });
@@ -346,8 +362,6 @@ namespace tileworld {
             this.keyDowns[dir] = true;
             if (this.dirQueue.length == 0)
                 this.dirQueue.push(dir);
-            else if (this.dirQueue.length == 1)
-                this.dirQueue.insertAt(0, dir);
         }
 
         private requestStop(dir: MoveDirection) {
