@@ -120,9 +120,9 @@ namespace tileworld {
                     let rules = getRuleIds();
                     if (rules.length > 0) {
                         game.pushScene();
-                        let vm = new TileWorldVM(this.manager, rules);
-                        vm.setWorld(this.world);
-                        vm.start();
+                        let g = new RunGame(this.manager, rules);
+                        g.setWorld(this.world);
+                        g.start();
                     }         
                 }
             } else {

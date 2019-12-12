@@ -47,20 +47,17 @@ namespace tileworld {
 
     enum Phase { Moving, Resting, Colliding};
 
-    export class TileWorldVM {
+    class TileWorldVM {
         private world: Image;
         private nextWorld: Image;
-        private sprites: TileSprite[][];
-        private signal: TileSprite;
+        public sprites: TileSprite[][];
+        private ruleClosures: RuleClosure[];
 
         constructor(private manager: ImageManager, private rules: number[]) {
             // not running yet
         }
 
         public setWorld(w: Image) {
-            game.consoleOverlay.setVisible(true);
-            this.dirQueue = [];
-            this.signal = null;
             this.sprites = [];
             this.world = w.clone();
             this.nextWorld = w.clone();
@@ -86,89 +83,9 @@ namespace tileworld {
             }
         }
 
-        public start() {
-            let signal = new TileSprite(cursorIn, 0);
-            signal.setFlag(SpriteFlag.Invisible, true);
-            signal.x = signal.y = 8;
-            signal.dir = MoveDirection.Right;
-            signal.inst = -1
-            this.signal = signal;
-
-            // get the game started
-            this.round();
-            let playerId = this.manager.getPlayer();
-            if (playerId != -1 && this.sprites[playerId]) {
-                scene.cameraFollowSprite(this.sprites[playerId][0]);
-            }
-
-            game.onUpdate(() => {
-                // has signal sprite moved to new tile
-                // then do a worldUpdate and reset the signal sprite
-                if (this.signal.x >= 23) {
-                    this.signal.x = 8;
-                    this.round();
-                    if (this.dirQueue.length > 0) {
-                        if (!this.keyDowns[this.dirQueue[0]])
-                            this.dirQueue.removeAt(0);
-                    }
-                }
-            });
-
-            this.keyDowns = [false, false, false, false, false];
-            this.registerController();
-            signal.vx = 100;
-        } 
-
-        private registerController() {
-            controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
-                this.requestMove(MoveDirection.Left)
-            })
-            controller.left.onEvent(ControllerButtonEvent.Released, () => {
-                this.requestStop(MoveDirection.Left)
-            })
-            controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
-                this.requestMove(MoveDirection.Right)
-            })
-            controller.right.onEvent(ControllerButtonEvent.Released, () => {
-                this.requestStop(MoveDirection.Right)
-            })
-            controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
-                this.requestMove(MoveDirection.Up)
-            })
-            controller.up.onEvent(ControllerButtonEvent.Released, () => {
-                this.requestStop(MoveDirection.Up)
-            })
-            controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
-                this.requestMove(MoveDirection.Down)
-            })
-            controller.down.onEvent(ControllerButtonEvent.Released, () => {
-                this.requestStop(MoveDirection.Down)
-            })
-            controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
-                game.popScene();
-            })
-        }
-        private dirQueue: MoveDirection[];
-        private keyDowns: boolean[];
-        private requestMove(dir: MoveDirection) {
-            this.keyDowns[dir] = true;
-            if (this.dirQueue.length == 0)
-                this.dirQueue.push(dir);
-            else if (this.dirQueue.length == 1)
-                this.dirQueue.insertAt(0,dir);
-        }
-
-        private requestStop(dir: MoveDirection)  { 
-            this.keyDowns[dir] = false;
-            let ind2 = this.dirQueue.indexOf(dir)
-            if (ind2 > 0) this.dirQueue.removeAt(ind2);
-            let index = this.keyDowns.indexOf(true);
-            if (index != -1 && this.dirQueue.length == 0) 
-                this.dirQueue.push(index);
-        }
-
-        private ruleClosures: RuleClosure[];
-        private round() {
+        private dpad: MoveDirection
+        public round(currDir: MoveDirection) {
+            this.dpad = currDir;
             // make sure everyone is centered
             this.allSprites(ts => {
                 ts.x = ((ts.x >> 4) << 4) + 8;
@@ -188,12 +105,11 @@ namespace tileworld {
         }
 
         private matchingRules(phase: Phase, ts: TileSprite, handler: (ts: TileSprite, rid:number) => void) {
-            let currentDirection = this.dirQueue.length > 0 ? this.dirQueue[0] : MoveDirection.None;
             this.rules.forEach(rid => {
                 if (getKinds(rid).indexOf(ts.kind()) != -1 && 
                     ( phase == Phase.Moving && getDir(rid) == ts.dir && getType(rid) == RuleType.Moving
                     || phase == Phase.Resting && getType(rid) == RuleType.Resting
-                    || getType(rid) == RuleType.Pushing && getDir(rid) == currentDirection)) {
+                    || getType(rid) == RuleType.Pushing && getDir(rid) == this.dpad)) {
                         handler(ts,rid);
                     }
             });
@@ -343,6 +259,104 @@ namespace tileworld {
                     }
                 }
             }
+        }
+    }
+
+    export class RunGame {
+        private vm: TileWorldVM;
+        private signal: TileSprite;
+        constructor(private manager: ImageManager, rules: number[]) {
+            this.vm = new TileWorldVM(manager, rules)
+            this.dirQueue = [];
+            game.consoleOverlay.setVisible(true);
+            this.signal = null;
+        }
+        
+        public setWorld(w: Image) {
+            this.vm.setWorld(w);
+        }
+
+        public start() {
+            let signal = new TileSprite(cursorIn, 0);
+            signal.setFlag(SpriteFlag.Invisible, true);
+            signal.x = signal.y = 8;
+            signal.dir = MoveDirection.Right;
+            signal.inst = -1
+            this.signal = signal;
+
+            // get the game started
+ 
+            let playerId = this.manager.getPlayer();
+            if (playerId != -1 && this.vm.sprites[playerId]) {
+                scene.cameraFollowSprite(this.vm.sprites[playerId][0]);
+            }
+
+            this.vm.round(MoveDirection.None);
+            game.onUpdate(() => {
+                // has signal sprite moved to new tile
+                // then do a worldUpdate and reset the signal sprite
+                if (this.signal.x >= 23) {
+                    this.signal.x = 8;
+                    let currentDirection = this.dirQueue.length > 0 ? this.dirQueue[0] : MoveDirection.None;
+                    this.vm.round(currentDirection);
+                    if (this.dirQueue.length > 0) {
+                        if (!this.keyDowns[this.dirQueue[0]])
+                            this.dirQueue.removeAt(0);
+                    }
+                }
+            });
+
+            this.keyDowns = [false, false, false, false, false];
+            this.registerController();
+            signal.vx = 100;
+        }
+
+        private registerController() {
+            controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
+                this.requestMove(MoveDirection.Left)
+            })
+            controller.left.onEvent(ControllerButtonEvent.Released, () => {
+                this.requestStop(MoveDirection.Left)
+            })
+            controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
+                this.requestMove(MoveDirection.Right)
+            })
+            controller.right.onEvent(ControllerButtonEvent.Released, () => {
+                this.requestStop(MoveDirection.Right)
+            })
+            controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
+                this.requestMove(MoveDirection.Up)
+            })
+            controller.up.onEvent(ControllerButtonEvent.Released, () => {
+                this.requestStop(MoveDirection.Up)
+            })
+            controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
+                this.requestMove(MoveDirection.Down)
+            })
+            controller.down.onEvent(ControllerButtonEvent.Released, () => {
+                this.requestStop(MoveDirection.Down)
+            })
+            controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
+                game.popScene();
+            })
+        }
+        private dirQueue: MoveDirection[];
+        private keyDowns: boolean[];
+        private requestMove(dir: MoveDirection) {
+            this.keyDowns[dir] = true;
+            if (this.dirQueue.length == 0)
+                this.dirQueue.push(dir);
+            else if (this.dirQueue.length == 1)
+                this.dirQueue.insertAt(0, dir);
+        }
+
+        private requestStop(dir: MoveDirection) {
+            this.keyDowns[dir] = false;
+            let ind2 = this.dirQueue.indexOf(dir)
+            if (ind2 > 0) this.dirQueue.removeAt(ind2);
+            let index = this.keyDowns.indexOf(true);
+            if (index != -1 && this.dirQueue.length == 0)
+                this.dirQueue.push(index);
         }
     }
 }
