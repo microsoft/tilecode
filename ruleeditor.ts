@@ -351,17 +351,18 @@ namespace tileworld {
         private showCommands() {
             this.commandLengths = [];
             this.rowToCoord.forEach(r => {
-                let len = this.showCommandsAt(r.lr, this.getWhenDo(r.col, r.row));
+                let len = this.showCommandsAt(r.lr, r.col, r.row); 
                 this.commandLengths.push(len);
             })
         }
 
         private tokens: CommandTokens[];
-        private showCommandsAt(row: number, whendo: number, draw: boolean = true) {
+        private showCommandsAt(crow: number, wcol: number, wrow: number, draw: boolean = true) {
+            let whendo = this.getWhenDo(wcol, wrow);
             if (draw) {
-                let img2 = getWitness(this.rule, whendo) == -1 ? genericSprite :    
-                    this.manager.getImage(getWitness(this.rule, whendo));
-                this.drawImage(5, row, img2);
+                let index = this.findWitness(wcol, wrow);
+                let img2 = index == -1 ? genericSprite : this.manager.getImage(index);
+                this.drawImage(5, crow, img2);
             }
             // show the existing commands
             let col = 6;
@@ -371,10 +372,10 @@ namespace tileworld {
             for(; cid < 4; cid++, col++) {
                 let inst = getInst(this.rule, whendo, cid);
                 if (inst != -1) {
-                    this.showCommand(col, row, whendo, cid, tokens, draw);
+                    this.showCommand(col, crow, whendo, cid, tokens, draw);
                 } else {
                     if (tokens.length > 0) {
-                        this.showCommand(col, row, whendo, cid, tokens, draw);
+                        this.showCommand(col, crow, whendo, cid, tokens, draw);
                         return -(cid+1);
                     }
                     break;
@@ -405,7 +406,7 @@ namespace tileworld {
 
         private getTokens(whendo: number) {
             let tokens = [CommandTokens.PaintTile];
-            if (getWitness(this.rule, whendo) != -1)
+            if (this.findWitness(this.rule, whendo) != -1)
                 tokens.insertAt(0, CommandTokens.MoveArrow);
             return tokens;
         }
@@ -424,7 +425,7 @@ namespace tileworld {
             this.setTileSaved();
             this.currentCommand = col - 1;
             if (getInst(this.rule, this.whenDo, col -1) == -1) {
-                this.showCommandsAt(row, this.whenDo, false)
+                this.showCommandsAt(row, r.col, r.row, false)
                 this.makeCommandMenu();
             } else {
                 this.tokens = [];
@@ -445,7 +446,7 @@ namespace tileworld {
             };
             // show the commands
             this.tokens.forEach(ct => {
-                if (ct == CommandTokens.MoveArrow && getWitness(this.rule,this.whenDo) != -1) {
+                if (ct == CommandTokens.MoveArrow && this.findWitnessWhenDo(this.whenDo) != -1) {
                     arrowValues.forEach(v => {
                         worker(arrowImages[arrowValues.indexOf(v)], ct, v);
                     })
@@ -507,14 +508,17 @@ namespace tileworld {
             return (index == -1) ? this.attrIndex(whendo, AttrType.OneOf,begin) : index;
         }
 
+        private findWitnessWhenDo(whendo: number) {
+            if (whendo == -1)
+                return -1;
+            return this.posSpritePosition(whendo, this.manager.fixed().length);
+        }
+
         // what is ordering of sprites?
         // (0,0) always first
         private findWitness(col: number, row: number) {
-            let whendo = this.getWhenDo(col, row)
-            if (col != 2 || row != 2) {
-                let witness = this.posSpritePosition(whendo, this.manager.fixed().length);
-                setWitness(this.rule, whendo, witness);
-            }
+            let whendo = this.getWhenDo(col, row);
+            return (col != 2 || row != 2) ? this.findWitnessWhenDo(whendo) : getKinds(this.rule)[0];
         }
 
         private attrIndex(whendo: number, a: AttrType, begin: number = 0) {

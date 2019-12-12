@@ -59,7 +59,9 @@ namespace tileworld {
         private ruleClosures: RuleClosure[];
         private gs: VMState;
         private dpad: MoveDirection
+        // special (temporary) state for collision detection
         private moving: TileSprite[];
+        private other: TileSprite;
 
         constructor(private rules: number[]) {
             this.gs = null;
@@ -79,6 +81,7 @@ namespace tileworld {
                 ts.x = ((ts.x >> 4) << 4) + 8;
                 ts.y = ((ts.y >> 4) << 4) + 8;
             })
+            this.other = null;
             // compute the "pre-effect" of the rules
             this.ruleClosures = [];
             this.applyRules(Phase.Moving);
@@ -87,7 +90,9 @@ namespace tileworld {
             this.applyRules(Phase.Resting);
             this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
             // now, look for collisions
+            this.ruleClosures = [];
             this.collisionDetection();
+            this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
             // finally, update the rules
             this.updateWorld();
         }
@@ -119,7 +124,11 @@ namespace tileworld {
                      (phase == Phase.Resting && (ts.dir == MoveDirection.None ||
                          ts.inst != CommandType.Move)) ) {
                     let witnesses: TileSprite[] = [];
-                    this.matchingRules(phase, ts, (ts,rid) => this.evaluateRule(ts, rid));
+                    this.matchingRules(phase, ts, (ts,rid) => {
+                        let closure = this.evaluateRule(ts, rid);
+                        if (closure)
+                            this.ruleClosures.push(closure);
+                    });
                 }
             });
         }
@@ -134,7 +143,6 @@ namespace tileworld {
             });
         }
 
-
         // for each sprite ts that is NOW moving (into T):
         // - look for colliding sprite os != ts, as defined
         //   (a) os in square T, resting or moving towards ts, or
@@ -147,27 +155,28 @@ namespace tileworld {
                 this.collidingRules(ts, (ts,rid) => {
                     let wcol = ts.col() + moveXdelta(ts.arg);
                     let wrow = ts.row() + moveYdelta(ts.arg);
+                    this.other = null;
                     // T = (wcol, wrow)
                     this.allSprites(os => {
                         if (os == ts) return;
                         // (a) os in square T, resting or moving towards ts, or
                         if (os.col() == wcol && os.row() == wrow) {
                             if (os.inst != CommandType.Move || oppDir(ts.arg,os.arg))
-                                this.collide(rid, ts, os);
+                                this.collide(rid, ts, os, wcol, wrow);
                         } else {
                             let leftRotate = flipRotateDir(ts.arg, FlipRotate.Left);
                             let osCol = wcol + moveXdelta(leftRotate);
                             let osRow = wrow + moveYdelta(leftRotate);
                             if (os.col() == osCol && os.row() == osRow && 
                                 os.inst == CommandType.Move && oppDir(leftRotate,os.arg)) {
-                                this.collide(rid, ts, os);
+                                this.collide(rid, ts, os, wcol, wrow);
                             }
                             let rightRotate = flipRotateDir(ts.arg, FlipRotate.Right);
                             osCol = wcol + moveXdelta(rightRotate);
                             osRow = wrow + moveYdelta(rightRotate);
                             if (os.col() == osCol && os.row() == osRow &&
                                 os.inst == CommandType.Move && oppDir(rightRotate, os.arg)) {
-                                this.collide(rid, ts, os);
+                                this.collide(rid, ts, os, wcol, wrow);
                             }
                         }
                     });
@@ -175,10 +184,12 @@ namespace tileworld {
             });
         }
 
-        private collide(rid: number, ts: TileSprite, os: TileSprite) {
-            // issue here is addressing of os (it is going to move into tile T, but not)
-            // necessarily present there yet
-            this.ruleClosures.push(new RuleClosure(rid, ts, [os]));
+        private collide(rid: number, ts: TileSprite, os: TileSprite, ocol: number, orow: number) {
+            let witnesses: TileSprite[] = [];
+            let ret = this.evaluateWhenDo(ts, rid, ocol, orow, witnesses);
+            if (ret) {
+                this.ruleClosures.push(new RuleClosure(rid, ts, witnesses));
+            }
         }
 
         private updateWorld() {
@@ -202,11 +213,10 @@ namespace tileworld {
                         col == 2 && row == 2)
                         continue;
                     if (!this.evaluateWhenDo(ts, rid, col, row, witnesses))
-                        return;
+                        return null;
                 }
             }
-            // this is all that is needed for closure
-            this.ruleClosures.push(new RuleClosure(rid, ts, witnesses));
+            return new RuleClosure(rid, ts, witnesses);
         }
 
         private getWitness(kind: number, col: number, row: number) {
@@ -245,6 +255,8 @@ namespace tileworld {
             for(;kind<this.gs.movable; kind++) {
                 let attr = getAttr(rid, whendo, kind);
                 let witness = this.getWitness(kind, wcol, wrow);
+                if (this.other && this.other.kind() == kind)
+                    witness = this.other;
                 if (attr == AttrType.Exclude && witness) {
                     return false;
                 } else if (attr == AttrType.Include) {

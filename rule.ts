@@ -26,14 +26,14 @@ function oppDir(dir: MoveDirection, dir2: MoveDirection) {
             (dir == MoveDirection.Down && dir2 == MoveDirection.Up);
 }
 
-enum CommandType { // [8]
-    Move,     // arg (MoveDirection)
-    Paint,    // arg (index of fixed sprite)
+enum CommandType {  // [8]
+    Move,           // arg (MoveDirection)
+    Paint,          // arg (index of fixed sprite)
     Reverse,
     Stop,
-    // Score+1
-    // Destroy
-    // Life-1
+    Destroy,
+    ScorePlusOne,
+    LifeMinusOne
 }
 
 enum AttrType {  // [2]
@@ -52,7 +52,6 @@ type WhenDo = {
     col: number;            // [4] the guards and commands associated with a tile in the neighborhood
     row: number;            // [4] (2,2) is the center of neighborhood, graphics coordinate system.
     attrs: AttrType[];      // [2]*N the guard, one attribute per fixed/movable sprite
-    witness: number;       // does the guard identify a witness (index of movable sprite)
     commands: Command[];   // the commands
 }
 
@@ -106,8 +105,6 @@ interface ProgramInterface {
     makeWhenDo(rid: number, col: number, row: number): number; // new wdid or existing
     getAttrs(rid: number, wdid: number): AttrType[]; // exactly fixed + movable
     setAttrs(rid: number, wdid: number, attrs: AttrType[]): void;
-    getWitness(rid: number, wdid: number): number;
-    setWitness(rid: number, wdid: number, wit: number): void;
     getInst(rid: number, wdid: number, cid: number): number;
     setInst(rid: number, wdid: number, cid: number, inst: number): void;
     getArg(rid: number, wdid: number, cid: number): number;
@@ -210,7 +207,6 @@ namespace tileworld {
                     col: transformCol(col, row, fr), 
                     row: transformRow(row, col, fr),
                     attrs: whendo.attrs, 
-                    witness: whendo.witness, 
                     commands: flipCommands(whendo.commands, fr) 
                 };
                 tgtRule.whenDo.push(tgtWhenDo);
@@ -275,7 +271,7 @@ namespace tileworld {
     }
 
     export function makeWhenDo(rid: number, col: number, row: number) {
-        let whenDo: WhenDo = { col: col, row: row, witness:-1, attrs:[], commands:[]}
+        let whenDo: WhenDo = { col: col, row: row, attrs:[], commands:[]}
         getRule(rid).whenDo.push(whenDo);
         return getRule(rid).whenDo.length-1;
     }
@@ -286,14 +282,6 @@ namespace tileworld {
 
     export function setAttr(rid: number, wdid: number, aid: number, attr: AttrType) {
         getRule(rid).whenDo[wdid].attrs[aid] = attr;
-    }
-
-    export function getWitness(rid: number, wdid: number) {
-        return getRule(rid).whenDo[wdid].witness;
-    }
-
-    export function setWitness(rid: number, wdid: number, wit: number) {
-        getRule(rid).whenDo[wdid].witness = wit;
     }
 
     export function getInst(rid: number, wdid: number, cid: number) {
