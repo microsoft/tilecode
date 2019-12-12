@@ -59,6 +59,7 @@ namespace tileworld {
 
         public setWorld(w: Image) {
             game.consoleOverlay.setVisible(true);
+            this.dirQueue = [];
             this.signal = null;
             this.sprites = [];
             this.world = w.clone();
@@ -106,10 +107,13 @@ namespace tileworld {
                 if (this.signal.x >= 23) {
                     this.signal.x = 8;
                     this.round();
+                    if (this.dirQueue.length > 0) {
+                        if (!this.keyDowns[this.dirQueue[0]])
+                            this.dirQueue.removeAt(0);
+                    }
                 }
             });
 
-            this.currentDirection = MoveDirection.None;
             this.keyDowns = [false, false, false, false, false];
             this.registerController();
             signal.vx = 100;
@@ -141,18 +145,23 @@ namespace tileworld {
                 this.requestStop(MoveDirection.Down)
             })
         }
-        private currentDirection: MoveDirection;
+        private dirQueue: MoveDirection[];
         private keyDowns: boolean[];
         private requestMove(dir: MoveDirection) {
             this.keyDowns[dir] = true;
-            this.currentDirection = dir;
+            if (this.dirQueue.length == 0)
+                this.dirQueue.push(dir);
+            else if (this.dirQueue.length == 1)
+                this.dirQueue.insertAt(0,dir);
         }
 
-        private requestStop(dir: MoveDirection)  {
-            // TODO: don't lose fast key press 
+        private requestStop(dir: MoveDirection)  { 
             this.keyDowns[dir] = false;
+            let ind2 = this.dirQueue.indexOf(dir)
+            if (ind2 > 0) this.dirQueue.removeAt(ind2);
             let index = this.keyDowns.indexOf(true);
-            this.currentDirection = index == -1 ? MoveDirection.None : index;
+            if (index != -1 && this.dirQueue.length == 0) 
+                this.dirQueue.push(index);
         }
 
         private ruleClosures: RuleClosure[];
@@ -176,11 +185,12 @@ namespace tileworld {
         }
 
         private matchingRules(phase: Phase, ts: TileSprite, handler: (ts: TileSprite, rid:number) => void) {
+            let currentDirection = this.dirQueue.length > 0 ? this.dirQueue[0] : MoveDirection.None;
             this.rules.forEach(rid => {
                 if (getKinds(rid).indexOf(ts.kind()) != -1 && 
                     ( phase == Phase.Moving && getDir(rid) == ts.dir && getType(rid) == RuleType.Moving
                     || phase == Phase.Resting && getType(rid) == RuleType.Resting
-                    || getType(rid) == RuleType.Pushing && getDir(rid) == this.currentDirection)) {
+                    || getType(rid) == RuleType.Pushing && getDir(rid) == currentDirection)) {
                         handler(ts,rid);
                     }
             });
