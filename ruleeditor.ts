@@ -287,11 +287,10 @@ namespace tileworld {
             this.drawImage(x, y, this.centerImage());
             this.ruleTypeMap.setPixel(x, y, rt);
             this.dirMap.setPixel(x, y, rd);
-            if (rt == RuleType.Moving || rt == RuleType.Colliding) {
+            if (rt == RuleType.Moving) {
                 let indexOf = arrowValues.indexOf(rd);
                 this.drawImage(x, y, arrowImages[indexOf])
-            }
-            if (rt == RuleType.Pushing || rt == RuleType.Colliding) {
+            } else if (rt == RuleType.Pushing || rt == RuleType.Colliding) {
                 let indexOf = arrowValues.indexOf(rd);
                 let ax = rd == MoveDirection.Left ? 1 : (rd == MoveDirection.Right ? -1 : 0)
                 let ay = rd == MoveDirection.Down ? -1 : (rd == MoveDirection.Up ? 1 : 0)
@@ -304,23 +303,25 @@ namespace tileworld {
                     this.ruleTypeMap.setPixel(x+ax, y+ay, rt);
                     this.dirMap.setPixel(x+ax, y+ay, rd);
                 } else {
+                   
                     if (selected) {
                         this.background.fillRect((x - ax) << 4, ((y - ay) << 4) + yoff,
                             16, 16, selCol)
                     }
-                    this.showCollisionSprite(x - ax, y - ay, rd);
+                    this.showCollision(x - ax, y - ay, rd, arrowImages[indexOf]);
                     this.ruleTypeMap.setPixel(x - ax, y - ay , rt);
                     this.dirMap.setPixel(x - ax, y - ay, rd);
                 }
             }
         }
 
-        private showCollisionSprite(col:number, row:number, dir: MoveDirection) {
-            let x = (col << 4) + 5;
-            let y = yoff + (row << 4) + 5;
-            x += (dir == MoveDirection.Left) ? 6 : (dir == MoveDirection.Right) ? -6 : 0;
-            y += (dir == MoveDirection.Up) ? 6 : (dir == MoveDirection.Down) ? -6 : 0;
+        private showCollision(col:number, row:number, dir: MoveDirection, arrowImg: Image) {
+            let x = (col << 4) + 6;
+            let y = yoff + (row << 4) + 6;
             this.background.drawTransparentImage(smallSprite, x, y);
+            x = (dir == MoveDirection.Left) ? 8 : (dir == MoveDirection.Right) ? -8 : 0;
+            y = (dir == MoveDirection.Up) ? 8 : (dir == MoveDirection.Down) ? -8 : 0;
+            this.background.drawTransparentImage(arrowImg, (col <<4) + x, (row <<4) + yoff + y);
         }
 
         private makeContext() {
