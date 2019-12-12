@@ -5,6 +5,7 @@ namespace tileworld {
 
     const yoff = 6;
 
+    // TODO: grey out tiles base on rule type
     export class RuleEditor {
         private background: Image;
         private cursor: Sprite;
@@ -316,8 +317,8 @@ namespace tileworld {
         }
 
         private showCollision(col:number, row:number, dir: MoveDirection, arrowImg: Image) {
-            let x = (col << 4) + 6;
-            let y = yoff + (row << 4) + 6;
+            let x = (col << 4);
+            let y = yoff + (row << 4) ;
             this.background.drawTransparentImage(smallSprite, x, y);
             x = (dir == MoveDirection.Left) ? 8 : (dir == MoveDirection.Right) ? -8 : 0;
             y = (dir == MoveDirection.Up) ? 8 : (dir == MoveDirection.Down) ? -8 : 0;

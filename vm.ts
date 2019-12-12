@@ -20,6 +20,8 @@ namespace tileworld {
         // create the next sprite state
         public inst: number;
         public arg: number;
+        // collision instruction
+        public collide: number;
         constructor(img: Image, kind: number) {
             super(img);
             const scene = game.currentScene();
