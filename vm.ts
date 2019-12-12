@@ -1,20 +1,18 @@
-// the VM takes a program and a map and executes the program
-// this VM is independent of the underlying game engine, which
-// is abstracted by an interface. 
-
 // - debugging API
 //    - which rules are ready to run? showing match in world?
 //    - which ones get to run?
 
+//    createSprite: (col: number, row: number, kind: number, dir) => T;
+//    moveSprite: (sprite: T, dir) => void;
+//    reverseSprite: (sprite: T, dir) => void;
+//    stopSprite: (sprite: T) => void;
+//    destroySprite: (sprite: T) => void;
+//    update(): () => void;
+
+// TODO: - sprites at world edge, need to handle out-of-bounds 
+
 namespace tileworld {
 
-    //    createSprite: (col: number, row: number, kind: number, dir) => T;
-    //    moveSprite: (sprite: T, dir) => void;
-    //    reverseSprite: (sprite: T, dir) => void;
-    //    stopSprite: (sprite: T) => void;
-    //    destroySprite: (sprite: T) => void;
-    //    update(): () => void;
-    
     class TileSprite extends Sprite {
         // the direction the sprite is currently moving
         public dir: MoveDirection;

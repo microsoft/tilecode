@@ -246,7 +246,7 @@ let playerMoveBoulderLeft: Rule = {
     rt: RuleType.Pushing,
     dir: MoveDirection.Left,
     whenDo: [{ col: 2, row: 2, attrs: [], witness: playerId, commands: moveLeft },
-        boulderLeft, TileAt(spaceId, 1, 2)]
+        boulderLeft, TileAt(spaceId, 0, 2)]
 }
 
 let boulderFallDown: Rule = {
