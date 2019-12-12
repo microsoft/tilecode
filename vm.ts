@@ -144,6 +144,9 @@ namespace tileworld {
             controller.down.onEvent(ControllerButtonEvent.Released, () => {
                 this.requestStop(MoveDirection.Down)
             })
+            controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
+                game.popScene();
+            })
         }
         private dirQueue: MoveDirection[];
         private keyDowns: boolean[];
@@ -255,6 +258,11 @@ namespace tileworld {
             return this.sprites[kind] && this.sprites[kind].find(ts => ts.col() == col && ts.row() == row);
         }
 
+        private inBounds(col: number, row: number) {
+            return 0 <= col && col < this.world.width() &&
+                   0 <= row && row < this.world.height();
+        }
+
         private evaluateWhenDo(ts: TileSprite, rid: number, 
                 col: number, row: number, witnesses: TileSprite[]) {
             let whendo = getWhenDo(rid, col, row);
@@ -262,6 +270,8 @@ namespace tileworld {
                 return true;
             let wcol = ts.col() + (col - 2);
             let wrow = ts.row() + (row - 2);
+            if (!this.inBounds(wcol, wrow))
+                return false;
             let oneOf: boolean = false;
             let oneOfPassed: boolean = false;
             let captureWitness: TileSprite = null;
