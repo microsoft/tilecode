@@ -11,6 +11,21 @@ enum MoveDirection { // [4], could be[2]
     None, Left, Right, Up, Down
 }
 
+function moveXdelta(dir: MoveDirection) {
+    return dir == MoveDirection.Left ? -1 : (dir == MoveDirection.Right ? 1 : 0);
+}
+
+function moveYdelta(dir: MoveDirection) {
+    return dir == MoveDirection.Up ? -1 : (dir == MoveDirection.Down ? 1 : 0);
+}
+
+function oppDir(dir: MoveDirection, dir2: MoveDirection) {
+    return  (dir == MoveDirection.Left && dir2 == MoveDirection.Right) ||
+            (dir == MoveDirection.Right && dir2 == MoveDirection.Left) ||
+            (dir == MoveDirection.Up && dir2 == MoveDirection.Down) ||
+            (dir == MoveDirection.Down && dir2 == MoveDirection.Up);
+}
+
 enum CommandType { // [8]
     Move,     // arg (MoveDirection)
     Paint,    // arg (index of fixed sprite)
@@ -130,7 +145,7 @@ namespace tileworld {
 
     export enum FlipRotate { Horizontal, Vertical, Left, Right };
 
-    function flipRotateDir(d: MoveDirection, fr: FlipRotate) {
+    export function flipRotateDir(d: MoveDirection, fr: FlipRotate) {
         if (fr == FlipRotate.Horizontal) {
             return d == MoveDirection.Left ? MoveDirection.Right : d == MoveDirection.Right ? MoveDirection.Left : d;
         } else if (fr == FlipRotate.Vertical) {

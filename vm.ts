@@ -121,14 +121,58 @@ namespace tileworld {
             });
         }
 
+        private collidingRules(ts: TileSprite, handler: (ts: TileSprite, rid: number) => void) {
+            this.rules.forEach(rid => {
+                if (getKinds(rid).indexOf(ts.kind()) != -1 && 
+                    getType(rid) == RuleType.Colliding &&
+                    getDir(rid) == ts.dir) {
+                        handler(ts, rid);
+                }
+            });
+        }
+
+
+        // for each sprite ts that is NOW moving (into T):
+        // - look for colliding sprite os != ts, as defined
+        //   (a) os in square T, resting or moving towards ts, or
+        //   (b) os moving into T
+        // TODO: this can be optimized, a lot
         private collisionDetection() {
             this.allSprites(ts => {
-                
-            })
-            // for each sprite ts that is NOW moving (into T):
-            // - look for colliding sprite os != ts, as defined
-            //   (a) os in square T, resting or moving towards ts, or
-            //   (b) os moving into T
+                if (ts.inst != CommandType.Move) return;
+                this.collidingRules(ts, (ts,rid) => {
+                    let wcol = ts.col() + moveXdelta(ts.arg);
+                    let wrow = ts.row() + moveYdelta(ts.arg);
+                    // T = (wcol, wrow)
+                    this.allSprites(os => {
+                        if (os == ts) return;
+                        // (a) os in square T, resting or moving towards ts, or
+                        if (os.col() == wcol && os.row() == wrow) {
+                            if (os.inst != CommandType.Move || oppDir(ts.arg,os.arg))
+                                this.collide(rid, ts, os);
+                        } else {
+                            let leftRotate = flipRotateDir(ts.arg, FlipRotate.Left);
+                            let osCol = wcol + moveXdelta(leftRotate);
+                            let osRow = wrow + moveYdelta(leftRotate);
+                            if (os.col() == osCol && os.row() == osRow && 
+                                os.inst == CommandType.Move && oppDir(leftRotate,os.arg)) {
+                                this.collide(rid, ts, os);
+                            }
+                            let rightRotate = flipRotateDir(ts.arg, FlipRotate.Right);
+                            osCol = wcol + moveXdelta(rightRotate);
+                            osRow = wrow + moveYdelta(rightRotate);
+                            if (os.col() == osCol && os.row() == osRow &&
+                                os.inst == CommandType.Move && oppDir(rightRotate, os.arg)) {
+                                this.collide(rid, ts, os);
+                            }
+                        }
+                    });
+                });
+            });
+        }
+
+        private collide(rid: number, ts: TileSprite, os: TileSprite) {
+            
         }
 
         private updateWorld() {
