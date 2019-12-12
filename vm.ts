@@ -59,6 +59,7 @@ namespace tileworld {
         private ruleClosures: RuleClosure[];
         private gs: VMState;
         private dpad: MoveDirection
+        private moving: TileSprite[];
 
         constructor(private rules: number[]) {
             this.gs = null;
@@ -72,6 +73,7 @@ namespace tileworld {
             if (!this.gs)
                 return;
             this.dpad = currDir;
+            this.moving = [];
             // make sure everyone is centered
             this.allSprites(ts => {
                 ts.x = ((ts.x >> 4) << 4) + 8;
@@ -116,6 +118,7 @@ namespace tileworld {
                 if ( (phase == Phase.Moving && ts.dir != MoveDirection.None) ||
                      (phase == Phase.Resting && (ts.dir == MoveDirection.None ||
                          ts.inst != CommandType.Move)) ) {
+                    let witnesses: TileSprite[] = [];
                     this.matchingRules(phase, ts, (ts,rid) => this.evaluateRule(ts, rid));
                 }
             });
@@ -138,7 +141,8 @@ namespace tileworld {
         //   (b) os moving into T
         // TODO: this can be optimized, a lot
         private collisionDetection() {
-            this.allSprites(ts => {
+            this.allSprites(ts => { if (ts.inst == CommandType.Move) this.moving.push(ts) }); 
+            this.moving.forEach(ts => {
                 if (ts.inst != CommandType.Move) return;
                 this.collidingRules(ts, (ts,rid) => {
                     let wcol = ts.col() + moveXdelta(ts.arg);
@@ -172,7 +176,9 @@ namespace tileworld {
         }
 
         private collide(rid: number, ts: TileSprite, os: TileSprite) {
-            
+            // issue here is addressing of os (it is going to move into tile T, but not)
+            // necessarily present there yet
+            this.ruleClosures.push(new RuleClosure(rid, ts, [os]));
         }
 
         private updateWorld() {
