@@ -22,11 +22,7 @@ namespace tileworld {
                     private kind: number, private rt: RuleType, private dir: MoveDirection) {
             super(manager);
 
-            this.rules = [];
-            getRulesForKind(kind).forEach(rid => {
-                if (getType(rid) == rt && (rt == RuleType.Resting || getDir(rid) == dir))
-                    this.rules.push(rid);
-            });
+            this.rules = this.getRulesForTypeDir(getRulesForKind(kind), rt, dir);
             if (this.rules.length == 0) {
                 this.rules.push(makeRule(kind, rt, dir));
             }

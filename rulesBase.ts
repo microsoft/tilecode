@@ -50,6 +50,10 @@ namespace tileworld {
             })
         }
 
+        protected getRulesForTypeDir(rules: number[], rt: RuleType, dir: MoveDirection) {
+            return rules.filter(rid => getType(rid) == rt && (rt == RuleType.Resting || getDir(rid) == dir));
+        }
+        
         protected col(curr: boolean = true) {
             return curr ? this.cursor.x >> 4 : this.tileSaved.x >> 4;
         }

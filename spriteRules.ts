@@ -7,7 +7,7 @@ namespace tileworld {
     export class RuleRoom extends RuleVisualsBase {
         constructor(m: ImageManager, private kind: number) {
             super(m);
-            this.showRuleMenu(1, 0);
+            this.update();
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 let rt = this.ruleTypeMap.getPixel(this.col(), this.row());
                 let dir = this.dirMap.getPixel(this.col(), this.row());
@@ -19,9 +19,16 @@ namespace tileworld {
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 game.popScene();
             });
+            game.addScenePopHandler(() => {
+                this.update();
+            })
         }
 
-        centerImage() {
+        private update() {
+            this.showRuleMenu(1, 0);
+        }
+
+        protected centerImage() {
             return this.manager.getImage(this.kind);
         }
 
@@ -39,18 +46,29 @@ namespace tileworld {
             this.dirMap.setPixel(col, row, rd);
         }
 
+        private rules: number[];
         private doBoth(rt: RuleType, rd: MoveDirection, col: number, row: number, center: boolean = true) {
+            let scol = 13;
+            let rules = this.getRulesForTypeDir(this.rules, rt, rd);
             if (rt == RuleType.Colliding) {
-                this.setRuleType(rt, rd, col + moveXdelta(rd), row + moveYdelta(rd));
+                let tcol = col + moveXdelta(rd);
+                let trow = row + moveYdelta(rd);
+                this.setRuleType(rt, rd, tcol, trow);
+                if (rules.length > 0) { this.fillTile(tcol, trow, scol); }
             } else if (rt == RuleType.Pushing) {
-                this.setRuleType(rt, rd, col - moveXdelta(rd), row - moveYdelta(rd));
+                let tcol = col - moveXdelta(rd);
+                let trow = row - moveYdelta(rd);
+                this.setRuleType(rt, rd, tcol, trow);
+                if (rules.length > 0) { this.fillTile(tcol, trow, scol); }
             } else {
                 this.setRuleType(rt, rd, col, row);
+                if (rules.length > 0) { this.fillTile(col, row, scol); }
             }
             this.showRuleType(rt, rd, col, row, center);
         }
 
         private showRuleMenu(x: number, y: number) {
+            this.rules = getRulesForKind(this.kind);
             this.makeContext(x + 2, y + 1)
             this.doBoth(RuleType.Resting, 0, x + 2, y + 1);
 
