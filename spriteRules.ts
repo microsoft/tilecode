@@ -1,12 +1,20 @@
-// TODO: need a room to show the rules associated with a sprite
-// Issues:
-// - how to distinguish rules from one another???
-// - ruletype + direction, + witness command
-// - also 
-
 namespace tileworld {
 
     const yoff = 6;
+
+/* 
+
+                if (this.menu == RuleEditorMenus.RuleTypeMenu) {
+                    let rt = this.ruleTypeMap.getPixel(this.col(), this.row());
+                    if (rt != 0xf) {
+                        setType(this.rule,rt);
+                        setDir(this.rule,this.dirMap.getPixel(this.col(), this.row()));
+                        this.update();
+                    }
+                } else
+
+                */
+
 
     export class RuleRoom extends RuleVisualsBase {
         constructor(m: ImageManager) {

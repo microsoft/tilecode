@@ -2,19 +2,6 @@ namespace tileworld {
 
     const yoff = 6;
 
-/* 
-
-                if (this.menu == RuleEditorMenus.RuleTypeMenu) {
-                    let rt = this.ruleTypeMap.getPixel(this.col(), this.row());
-                    if (rt != 0xf) {
-                        setType(this.rule,rt);
-                        setDir(this.rule,this.dirMap.getPixel(this.col(), this.row()));
-                        this.update();
-                    }
-                } else
-
-                */
-
     export class RuleVisualsBase {
         protected background: Image;
         protected cursor: Sprite;
@@ -72,12 +59,20 @@ namespace tileworld {
             return curr ? (this.cursor.y - yoff) >> 4 : (this.tileSaved.y - yoff) >> 4;
         }
 
-        drawImage(c: number, r: number, img: Image) {
+        protected drawImage(c: number, r: number, img: Image) {
             this.background.drawTransparentImage(img, c << 4, yoff + (r << 4));
         }
 
-        drawImageAbs(x: number, y: number, img: Image) {
+        protected drawImageAbs(x: number, y: number, img: Image) {
             this.background.drawTransparentImage(img, x, y);
+        }
+
+        protected drawOutline(c: number, r: number) {
+            this.background.drawRect(c << 4, yoff + (r << 4), 17, 17, 12)
+        }
+
+        protected fillTile(c: number, r: number, col: color) {
+            this.background.fillRect(c << 4, yoff + (r << 4), 16, 16, col);
         }
 
         protected cursorMove() { }
@@ -179,7 +174,6 @@ namespace tileworld {
     enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu };
     enum CommandTokens { MoveArrow, PaintTile, SpaceTile, Delete };
 
-
     // TODO: grey out tiles base on rule type
     export class RuleEditor extends RuleVisualsBase {
         private otherCursor: Sprite;      // show correspondence between left and right
@@ -257,6 +251,7 @@ namespace tileworld {
                 }
                 this.update();
             })
+
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.menu != RuleEditorMenus.MainMenu) {
                     this.menu = RuleEditorMenus.MainMenu;
@@ -343,14 +338,6 @@ namespace tileworld {
             return this.manager.getImage(getKinds(this.rule)[0]);
         }
 
-        private drawOutline(c: number, r: number) {
-            this.background.drawRect(c << 4, yoff + (r << 4), 17, 17, 12)
-        }
-
-        private fillTile(c: number, r:number, col: color) {
-            this.background.fillRect(c << 4, yoff + (r << 4), 16, 16, col);
-        }
-
         private showMainMenu() {
             this.background.fillRect(0, yoff + (6 << 4), 160, 19, 0);
             this.drawImage(0, 6, map);
@@ -362,22 +349,6 @@ namespace tileworld {
             this.drawImage(9, 6, index < this.rules.length -1 ? rightArrow : greyImage(rightArrow));
             this.drawImage(8, 6, this.centerImage());
             this.drawImage(7, 6, index > 0 ? leftArrow : greyImage(leftArrow));
-        }
-
-        private showRuleMenu(x: number, y: number) {
-            this.showRuleType(RuleType.Resting, 0, x, y-1);
-            this.showRuleType(RuleType.Moving, MoveDirection.Left, x, y);
-            this.showRuleType(RuleType.Moving, MoveDirection.Right, x + 1, y);
-            this.showRuleType(RuleType.Moving, MoveDirection.Up, x + 2, y );
-            this.showRuleType(RuleType.Moving, MoveDirection.Down, x + 3, y);
-            this.showRuleType(RuleType.Pushing, MoveDirection.Right, x + 3, y + 1);
-            this.showRuleType(RuleType.Pushing, MoveDirection.Left, x, y + 1);
-            this.showRuleType(RuleType.Pushing, MoveDirection.Down, x + 5, y+1);
-            this.showRuleType(RuleType.Pushing, MoveDirection.Up, x + 4, y);
-            this.showRuleType(RuleType.Colliding, MoveDirection.Right, x + 6, y);
-            this.showRuleType(RuleType.Colliding, MoveDirection.Left, x + 7, y + 1);
-            this.showRuleType(RuleType.Colliding, MoveDirection.Down, x + 9, y);
-            this.showRuleType(RuleType.Colliding, MoveDirection.Up, x + 8, y+1);
         }
 
         private makeContext() {
@@ -636,6 +607,7 @@ namespace tileworld {
             return false;
         }
 
+        // TODO: move this out to rule.ts
         private getWhenDo(col: number, row: number) {
             let whendo = getWhenDo(this.rule, col, row);
             if (whendo == -1) {
