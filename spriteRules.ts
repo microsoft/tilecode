@@ -43,11 +43,11 @@ namespace tileworld {
             let spaceImg = this.manager.empty();
             for (let i = -1; i <= 1; i++) {
                 for (let j = -1; j <= 1; j++) {
-                    let dist = Math.abs(j) + Math.abs(i);
-                    if (dist <= 1) {
+                    //let dist = Math.abs(j) + Math.abs(i);
+                    //if (dist <= 1) {
                         // TODO: limit the context base on the rule type
                         this.drawImage(col+i, row+j, spaceImg);
-                    }
+                    //}
                 }
             }
         }
