@@ -14,15 +14,14 @@
         "manager.ts",
         "vm.ts",
         "imageeditor.ts",
-        "ruleeditor.ts",
+        "rulesBase.ts",
         "spriteRules.ts",
+        "ruleeditor.ts",
         "editor.ts",
         "tileworld.ts",
-        "main.ts",
-        "test.ts",
-        "rulesBase.ts"
+        "main.ts"
     ],
-    "testFiles": [],
+    "testFiles": [ "test.ts" ],
     "public": false,
     "preferredEditor": "tsprj"
 }
