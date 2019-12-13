@@ -10,6 +10,7 @@ namespace tileworld {
                 let rt = this.ruleTypeMap.getPixel(this.col(), this.row());
                 let dir = this.dirMap.getPixel(this.col(), this.row());
                 if (rt != 0xf) {
+                    game.pushScene();
                     let ruleEditor = new RuleEditor(this.manager, kind, rt, dir);
                 }
             });

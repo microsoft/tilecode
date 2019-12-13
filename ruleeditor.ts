@@ -30,6 +30,7 @@ namespace tileworld {
             if (this.rules.length == 0) {
                 this.rules.push(makeRule(kind, rt, dir));
             }
+            this.rule = this.rules[0];
 
             // attribute menu view
             this.attrSelected = -1;
