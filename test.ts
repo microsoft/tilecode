@@ -273,14 +273,10 @@ let boulderFallLeft: Rule = {
              SpriteAt(boulderId, 2, 3), TileAt(spaceId, 1, 2), TileAt(spaceId,1,3)]
 }
 
-function makeIds(rules: Rule[]): IdRule[] {
-    return rules.map((r,i) => { return { id:i, rule: r} })
-}
-
 let program: Program = {
     fixed: 3,
     movable: 4,
-    rules: makeIds([boulderFallDown, boulderFallLeft, boulderFallingDown, 
+    rules: tw.makeIds([boulderFallDown, boulderFallLeft, boulderFallingDown, 
         playerPaint, playerMoveRight, playerMoveLeft, playerMoveUp, playerMoveDown, playerMoveBoulderRight, playerMoveBoulderLeft])
 }
 

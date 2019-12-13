@@ -11,21 +11,6 @@ enum MoveDirection { // [4], could be[2]
     None, Left, Right, Up, Down
 }
 
-function moveXdelta(dir: MoveDirection) {
-    return dir == MoveDirection.Left ? -1 : (dir == MoveDirection.Right ? 1 : 0);
-}
-
-function moveYdelta(dir: MoveDirection) {
-    return dir == MoveDirection.Up ? -1 : (dir == MoveDirection.Down ? 1 : 0);
-}
-
-function oppDir(dir: MoveDirection, dir2: MoveDirection) {
-    return  (dir == MoveDirection.Left && dir2 == MoveDirection.Right) ||
-            (dir == MoveDirection.Right && dir2 == MoveDirection.Left) ||
-            (dir == MoveDirection.Up && dir2 == MoveDirection.Down) ||
-            (dir == MoveDirection.Down && dir2 == MoveDirection.Up);
-}
-
 enum CommandType {  // [8]
     Move,           // arg (MoveDirection)
     Paint,          // arg (index of fixed sprite)
@@ -68,9 +53,12 @@ type Rule = {
     whenDo: WhenDo[];               // guarded commands
 }
 
+enum FlipRotate { Horizontal, Vertical, Left, Right };
+
 type IdRule = {
     id: number;
     rule: Rule;
+    // transform: FlipRotate of rule with different id
 }
 
 // fixed sprites are ordered before movable sprites (0-based)
@@ -109,6 +97,12 @@ namespace tileworld {
         return lastRule.rule;
     }
 
+    function wrapRule(r: Rule) {
+        let newRule: IdRule = { id: prog.rules.length, rule: r };
+        prog.rules.push(newRule);
+        return newRule.id;
+    }
+
     export function setProgram(p: Program) {
         prog = p;
         lastRule = null;
@@ -118,88 +112,8 @@ namespace tileworld {
         return wrapRule(makeNewRule([kind], rt, dir));
     }
 
-    export enum FlipRotate { Horizontal, Vertical, Left, Right };
-
-    export function flipRotateDir(d: MoveDirection, fr: FlipRotate) {
-        if (fr == FlipRotate.Horizontal) {
-            return d == MoveDirection.Left ? MoveDirection.Right : d == MoveDirection.Right ? MoveDirection.Left : d;
-        } else if (fr == FlipRotate.Vertical) {
-            return d == MoveDirection.Up ? MoveDirection.Down : d == MoveDirection.Down ? MoveDirection.Up : d;
-        } else if (fr == FlipRotate.Left) { 
-            switch (d) { // counter clockwise
-                case MoveDirection.Left: return MoveDirection.Down;
-                case MoveDirection.Down: return MoveDirection.Right;
-                case MoveDirection.Right: return MoveDirection.Up;
-                case MoveDirection.Up: return MoveDirection.Left;
-                case MoveDirection.None: return MoveDirection.None;
-            }
-        } else {
-            switch (d) {  // clockwise
-                case MoveDirection.Left: return MoveDirection.Up;
-                case MoveDirection.Up: return MoveDirection.Right;
-                case MoveDirection.Right: return MoveDirection.Down;
-                case MoveDirection.Down: return MoveDirection.Left;
-                case MoveDirection.None: return MoveDirection.None;
-            }
-        }
-        return d;
-    }
-
-    function flipCommands(commands: Command[], fr: FlipRotate) {
-        return commands.map(c => { return { inst: c.inst, arg: c.inst == CommandType.Move ? flipRotateDir(c.arg, fr) : c.arg } })
-    }
-
-    function transformCol(col: number, row: number, fr: FlipRotate) {
-        if (fr == FlipRotate.Horizontal || fr == FlipRotate.Vertical)
-            return fr == FlipRotate.Horizontal ? 4 - col : col;
-        else {
-            // make (0,0) center for rotation
-            row = 2 - row;
-            return fr == FlipRotate.Left ? (-row) + 2 : row + 2; 
-        }
-    }
-
-    function transformRow(row: number, col: number, fr: FlipRotate) {
-        if (fr == FlipRotate.Horizontal || fr == FlipRotate.Vertical)
-            return fr == FlipRotate.Horizontal ? row : 4 - row;
-        else {
-            col = col - 2;
-            return fr == FlipRotate.Left ? (-col) + 2 : col + 2;
-        }
-    }
-
-    function wrapRule(r: Rule) {
-        let newRule: IdRule = { id: prog.rules.length, rule: r };
-        prog.rules.push(newRule);
-        return newRule.id;
-    }
-
-    // TODO: make this an online transformation (view of) over a rule to save space
-    export function flipRule(rid: number, fr: FlipRotate) {
-        // TODO: convert this to using C-level API
-        let srcRule = getRule(rid);
-        let tgtRule = makeNewRule(srcRule.kind, srcRule.rt, flipRotateDir(srcRule.dir, fr));
-        for (let row = 0; row < 5; row++) {
-            for (let col = 0; col < 5; col++) {
-                if (Math.abs(2 - col) + Math.abs(2 - row) > 2)
-                    continue;
-                let whendo = srcRule.whenDo.find(w => w.col == col && w.row == row);
-                if (!whendo)
-                    continue;
-                let tgtWhenDo: WhenDo = { 
-                    col: transformCol(col, row, fr), 
-                    row: transformRow(row, col, fr),
-                    attrs: whendo.attrs, 
-                    commands: flipCommands(whendo.commands, fr) 
-                };
-                tgtRule.whenDo.push(tgtWhenDo);
-            }
-        }
-        return wrapRule(tgtRule);
-    }
-
     export function removeRule(rid: number) {
-
+        // TODO
     }
 
     export function getRuleIds(): number[] {
@@ -268,6 +182,7 @@ namespace tileworld {
 
     // 16 bits to specify command:
     // rid: [10], wdid: [4], cid:[2]
+
     export function setInst(rid: number, wdid: number, cid: number, n: number) {
         let commands = getRule(rid).whenDo[wdid].commands;
         while (cid >= commands.length && cid < 4) {
@@ -289,5 +204,99 @@ namespace tileworld {
         if (cid < commands.length) {
             commands.removeAt(cid);
         }
+    }
+
+    // useful utilities
+    export function makeIds(rules: Rule[]): IdRule[] {
+        return rules.map((r, i) => { return { id: i, rule: r } })
+    }
+
+    export function moveXdelta(dir: MoveDirection) {
+        return dir == MoveDirection.Left ? -1 : (dir == MoveDirection.Right ? 1 : 0);
+    }
+
+    export function moveYdelta(dir: MoveDirection) {
+        return dir == MoveDirection.Up ? -1 : (dir == MoveDirection.Down ? 1 : 0);
+    }
+
+    export function oppDir(dir: MoveDirection, dir2: MoveDirection) {
+        return (dir == MoveDirection.Left && dir2 == MoveDirection.Right) ||
+            (dir == MoveDirection.Right && dir2 == MoveDirection.Left) ||
+            (dir == MoveDirection.Up && dir2 == MoveDirection.Down) ||
+            (dir == MoveDirection.Down && dir2 == MoveDirection.Up);
+    }
+
+    export function flipRotateDir(d: MoveDirection, fr: FlipRotate) {
+        if (fr == FlipRotate.Horizontal) {
+            return d == MoveDirection.Left ? MoveDirection.Right : d == MoveDirection.Right ? MoveDirection.Left : d;
+        } else if (fr == FlipRotate.Vertical) {
+            return d == MoveDirection.Up ? MoveDirection.Down : d == MoveDirection.Down ? MoveDirection.Up : d;
+        } else if (fr == FlipRotate.Left) {
+            switch (d) { // counter clockwise
+                case MoveDirection.Left: return MoveDirection.Down;
+                case MoveDirection.Down: return MoveDirection.Right;
+                case MoveDirection.Right: return MoveDirection.Up;
+                case MoveDirection.Up: return MoveDirection.Left;
+                case MoveDirection.None: return MoveDirection.None;
+            }
+        } else {
+            switch (d) {  // clockwise
+                case MoveDirection.Left: return MoveDirection.Up;
+                case MoveDirection.Up: return MoveDirection.Right;
+                case MoveDirection.Right: return MoveDirection.Down;
+                case MoveDirection.Down: return MoveDirection.Left;
+                case MoveDirection.None: return MoveDirection.None;
+            }
+        }
+        return d;
+    }
+
+    // rule transformations: flip and rotate
+
+    function flipCommands(commands: Command[], fr: FlipRotate) {
+        return commands.map(c => { return { inst: c.inst, arg: c.inst == CommandType.Move ? flipRotateDir(c.arg, fr) : c.arg } })
+    }
+
+    function transformCol(col: number, row: number, fr: FlipRotate) {
+        if (fr == FlipRotate.Horizontal || fr == FlipRotate.Vertical)
+            return fr == FlipRotate.Horizontal ? 4 - col : col;
+        else {
+            // make (0,0) center for rotation
+            row = 2 - row;
+            return fr == FlipRotate.Left ? (-row) + 2 : row + 2;
+        }
+    }
+
+    function transformRow(row: number, col: number, fr: FlipRotate) {
+        if (fr == FlipRotate.Horizontal || fr == FlipRotate.Vertical)
+            return fr == FlipRotate.Horizontal ? row : 4 - row;
+        else {
+            col = col - 2;
+            return fr == FlipRotate.Left ? (-col) + 2 : col + 2;
+        }
+    }
+
+    // TODO: make this an online transformation (view of) over a rule to save space
+    export function flipRule(rid: number, fr: FlipRotate) {
+        // TODO: convert this to using C-level API
+        let srcRule = getRule(rid);
+        let tgtRule = makeNewRule(srcRule.kind, srcRule.rt, flipRotateDir(srcRule.dir, fr));
+        for (let row = 0; row < 5; row++) {
+            for (let col = 0; col < 5; col++) {
+                if (Math.abs(2 - col) + Math.abs(2 - row) > 2)
+                    continue;
+                let whendo = srcRule.whenDo.find(w => w.col == col && w.row == row);
+                if (!whendo)
+                    continue;
+                let tgtWhenDo: WhenDo = {
+                    col: transformCol(col, row, fr),
+                    row: transformRow(row, col, fr),
+                    attrs: whendo.attrs,
+                    commands: flipCommands(whendo.commands, fr)
+                };
+                tgtRule.whenDo.push(tgtWhenDo);
+            }
+        }
+        return wrapRule(tgtRule);
     }
 }

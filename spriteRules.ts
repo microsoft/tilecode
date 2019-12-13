@@ -2,6 +2,8 @@ namespace tileworld {
 
     const yoff = 6;
 
+    // TODO: menu
+    // TODO: highlight the squares with rules
     export class RuleRoom extends RuleVisualsBase {
         constructor(m: ImageManager, private kind: number) {
             super(m);
