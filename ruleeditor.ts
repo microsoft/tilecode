@@ -13,13 +13,23 @@ namespace tileworld {
         private attrSelected: number;
         // for editing commands
         private commandLengths: number[];
+        private rules: number[];
         private rule: number;             // the current rule
         private whenDo: number;           // which WhenDo is being edited
         private currentCommand: number;   // the current command (potentially null)
 
-        constructor(manager: ImageManager, private rules: number[]) {
+        constructor(manager: ImageManager, 
+                    private kind: number, private rt: RuleType, private dir: MoveDirection) {
             super(manager);
-            this.rule = rules[0];
+
+            this.rules = [];
+            getRulesForKind(kind).forEach(rid => {
+                if (getType(rid) == rt && (rt == RuleType.Resting || getDir(rid) == dir))
+                    this.rules.push(rid);
+            });
+            if (this.rules.length == 0) {
+                this.rules.push(makeRule(kind, rt, dir));
+            }
 
             // attribute menu view
             this.attrSelected = -1;
@@ -63,10 +73,10 @@ namespace tileworld {
                     if (this.row() == 6) {
                         if (this.col() == 0) game.popScene();
                         else if (this.col() == 2) {
-                            let flip = flipRule(this.rule, FlipRotate.Horizontal);
-                            game.pushScene();
+                            //let flip = flipRule(this.rule, FlipRotate.Horizontal);
+                            //game.pushScene();
                             // TODO: copy/paste??? rule inventory
-                            let flipRuleEditor = new RuleEditor(this.manager, [flip]);
+                            // let flipRuleEditor = new RuleEditor(this.manager, [flip]);
                         } else if (this.col() == 7 || this.col() == 9) {
                             // move backward/forward in rule space
                             let index = this.rules.indexOf(this.rule);

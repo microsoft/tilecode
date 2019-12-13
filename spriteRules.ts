@@ -10,14 +10,7 @@ namespace tileworld {
                 let rt = this.ruleTypeMap.getPixel(this.col(), this.row());
                 let dir = this.dirMap.getPixel(this.col(), this.row());
                 if (rt != 0xf) {
-                    // do a rule editor
-                    let rules = getRulesForKind(kind);
-                    let filteredRules: number[] = [];
-                    rules.forEach(rid => {
-                        if (getType(rid) == rt && (rt == RuleType.Resting || getDir(rid) == dir))
-                            rules.push(rid);
-                    });
-                    let ruleEditor = new RuleEditor(this.manager, filteredRules);
+                    let ruleEditor = new RuleEditor(this.manager, kind, rt, dir);
                 }
             });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {

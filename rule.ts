@@ -114,9 +114,8 @@ namespace tileworld {
         lastRule = null;
     }
 
-    export function makeRule(kind: number): number {
-        // TODO
-        return 0;
+    export function makeRule(kind: number, rt: RuleType, dir: MoveDirection): number {
+        return wrapRule(makeNewRule([kind], rt, dir));
     }
 
     export enum FlipRotate { Horizontal, Vertical, Left, Right };
@@ -169,6 +168,11 @@ namespace tileworld {
         }
     }
 
+    function wrapRule(r: Rule) {
+        let newRule: IdRule = { id: prog.rules.length, rule: r };
+        prog.rules.push(newRule);
+        return newRule.id;
+    }
 
     // TODO: make this an online transformation (view of) over a rule to save space
     export function flipRule(rid: number, fr: FlipRotate) {
@@ -191,9 +195,7 @@ namespace tileworld {
                 tgtRule.whenDo.push(tgtWhenDo);
             }
         }
-        let newRule: IdRule = { id: prog.rules.length, rule: tgtRule};
-        prog.rules.push(newRule);
-        return newRule.id;
+        return wrapRule(tgtRule);
     }
 
     export function removeRule(rid: number) {
@@ -231,15 +233,6 @@ namespace tileworld {
     export function setDir(rid: number, dir: MoveDirection) {
         getRule(rid).dir = dir;
     }
-
-    /*
-    export function getGeneral(rid: number, gid: number): MoveDirection {
-        return getRule(rid).generalize[gid];
-    }
-    
-    export function setGeneral(rid: number, gid: number, general: MoveDirection) {
-        getRule(rid).generalize[gid] = general;
-    } */
 
     export function getWhenDo(rid: number, col: number, row: number) {
         let whendo = getRule(rid).whenDo.find(wd => wd.col == col && wd.row == row);

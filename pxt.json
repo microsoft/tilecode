@@ -21,7 +21,9 @@
         "tileworld.ts",
         "main.ts"
     ],
-    "testFiles": [ "test.ts" ],
+    "testFiles": [
+        "test.ts"
+    ],
     "public": false,
     "preferredEditor": "tsprj"
 }
