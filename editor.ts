@@ -147,9 +147,8 @@ namespace tileworld {
             this.manager.all().forEach((img, row) => {
                 this.drawImage(img, 1, row);
             });
-            let rules = getRulesForKind(this.userSpriteIndex);
             commandImages.forEach((img, row) => {
-                this.drawImage(row == 2 ? (rules.length > 0 ? img : greyImage(img) ) : img, 0, row);
+                this.drawImage(row == 2 ? (this.userSpriteIndex >= this.manager.fixed().length ? img : greyImage(img) ) : img, 0, row);
             })
             for(let x = this.offsetX; x<this.offsetX+8; x++) {
                 for (let y = this.offsetY; y < this.offsetY + 7; y++) {
