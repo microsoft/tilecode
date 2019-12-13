@@ -285,8 +285,6 @@ let program: Program = {
 }
 
 tw.setProgram(program);
-let mapEditor = new tw.MapEditor(manager)
-
-// let ruleRoom = new tw.RuleRoom(manager);
+let mapEditor = new tw.MapEditor(manager);
 
 

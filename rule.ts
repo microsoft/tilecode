@@ -91,27 +91,6 @@ function makeNewRule(kind: number[], rt: RuleType, dir: MoveDirection): Rule {
 
 // new API for access to low-level representation
 
-interface ProgramInterface {
-    getRuleIds(): number[];
-    getKinds(rid: number): number[];  // at most 4
-    setKinds(rid: number, kinds: number[]): void;
-    getType(rid: number): RuleType;
-    setType(rid: number, rt: RuleType): void;
-    getDir(rid: number): MoveDirection;
-    setDir(rid: number, dir: MoveDirection): void;
-    getGeneral(rid: number): MoveDirection[]; 
-    setGeneral(rid: number, g: MoveDirection[]): void;
-    getWhenDo(rid: number, col: number, row: number): number; // wdid or -1
-    makeWhenDo(rid: number, col: number, row: number): number; // new wdid or existing
-    getAttrs(rid: number, wdid: number): AttrType[]; // exactly fixed + movable
-    setAttrs(rid: number, wdid: number, attrs: AttrType[]): void;
-    getInst(rid: number, wdid: number, cid: number): number;
-    setInst(rid: number, wdid: number, cid: number, inst: number): void;
-    getArg(rid: number, wdid: number, cid: number): number;
-    setArg(rid: number, wdid: number, cid:number, inst: number): void;
-    removeCommand(rid: number, wdid: number, cid: number): void;
-}
-
 namespace tileworld {
 
     let lastRule: IdRule = null;

@@ -3,26 +3,37 @@ namespace tileworld {
     const yoff = 6;
 
     export class RuleRoom extends RuleVisualsBase {
-        constructor(m: ImageManager) {
+        constructor(m: ImageManager, private kind: number) {
             super(m);
             this.showRuleMenu(1, 0);
+            controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
+                let rt = this.ruleTypeMap.getPixel(this.col(), this.row());
+                let dir = this.dirMap.getPixel(this.col(), this.row());
+                if (rt != 0xf) {
+                    // do a rule editor
+                    let rules = getRulesForKind(kind);
+                    let filteredRules: number[] = [];
+                    rules.forEach(rid => {
+                        if (getType(rid) == rt && (rt == RuleType.Resting || getDir(rid) == dir))
+                            rules.push(rid);
+                    });
+                    let ruleEditor = new RuleEditor(this.manager, filteredRules);
+                }
+            });
+            controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
+                game.popScene();
+            });
         }
 
         centerImage() {
-            return this.manager.getImage(3);
-
-            // return this.manager.getImage(getKinds(this.rule)[0]);
+            return this.manager.getImage(this.kind);
         }
 
         private makeContext(col: number, row: number) {
             let spaceImg = this.manager.empty();
             for (let i = -1; i <= 1; i++) {
                 for (let j = -1; j <= 1; j++) {
-                    //let dist = Math.abs(j) + Math.abs(i);
-                    //if (dist <= 1) {
-                        // TODO: limit the context base on the rule type
-                        this.drawImage(col+i, row+j, spaceImg);
-                    //}
+                    this.drawImage(col+i, row+j, spaceImg);
                 }
             }
         }

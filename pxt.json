@@ -19,7 +19,8 @@
         "editor.ts",
         "tileworld.ts",
         "main.ts",
-        "test.ts"
+        "test.ts",
+        "rulesBase.ts"
     ],
     "testFiles": [],
     "public": false,
