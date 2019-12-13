@@ -6,11 +6,13 @@ namespace tileworld {
     const yoff = 6;
 
     export class RuleVisualsBase {
-        constructor() {
-            
+        constructor(protected manager: ImageManager) {    
         }
+
         protected drawImage(c: number, r: number, img: Image): void { }
+        protected drawImageAbs(x: number, y: number, img: Image): void { }
         protected centerImage(): Image { return null; }
+        
         protected showRuleType(rt: RuleType, rd: MoveDirection, x: number, y: number) {
             let selCol = 11;
             this.drawImage(x, y, this.centerImage());
@@ -24,9 +26,83 @@ namespace tileworld {
                 if (rt == RuleType.Pushing) {
                     this.drawImage(x + ax, y + ay, handImages[indexOf])
                 } else {
-                    // this.showCollision(x - ax, y - ay, rd, arrowImages[indexOf]);
+                    this.showCollision(x - ax, y - ay, rd, arrowImages[indexOf]);
                 }
             }
+        }
+
+        private showCollision(col: number, row: number, dir: MoveDirection, arrowImg: Image) {
+            this.drawImage(col, row, smallSprite);
+            let x = (dir == MoveDirection.Left) ? 8 : (dir == MoveDirection.Right) ? -8 : 0;
+            let y = (dir == MoveDirection.Up) ? 8 : (dir == MoveDirection.Down) ? -8 : 0;
+            this.drawImageAbs((col << 4) + x, (row << 4) + yoff + y, arrowImg);        
+        }
+
+        protected attrIndex(rid: number, whendo: number, a: AttrType, begin: number = 0) {
+            for (let i = begin; i < this.manager.all().length; i++) {
+                if (getAttr(rid, whendo, i) == a)
+                    return i;
+            }
+            return -1;
+        }
+
+        protected showAttributes(rid: number, col: number, row: number) {
+            let whendo = getWhenDo(rid, col, row);
+            if (whendo >= 0) {
+                // if there is an include or single oneOf, show it.
+                let index = this.attrIndex(rid, whendo, AttrType.Include);
+                if (index == -1) {
+                    index = this.attrIndex(rid, whendo, AttrType.OneOf);
+                    if (index != -1) {
+                        let index2 = this.attrIndex(rid, whendo, AttrType.OneOf, index + 1);
+                        if (index2 != -1)
+                            index = -1;
+                    }
+                }
+                // and skip to the other (if it exists)
+                let begin = 0;
+                let end = this.manager.all().length - 1;
+                if (index != -1) {
+                    this.drawImage(col, row, this.manager.getImage(index));
+                    if (index < this.manager.fixed().length) {
+                        begin = this.manager.fixed().length;
+                    } else {
+                        end = this.manager.fixed().length - 1;
+                    }
+                }
+                let project = this.projectAttrs(rid, whendo, begin, end);
+                let done: AttrType[] = [];
+                project.forEach(index => {
+                    let val = getAttr(rid, whendo, index);
+                    // eliminate duplicates
+                    if (done.indexOf(val) == -1) {
+                        done.push(val);
+                        this.drawImage(col, row, attrImages[attrValues.indexOf(val)]);
+                    }
+                });
+            }
+        }
+
+        private projectAttrs(rid: number, whendo: number, begin: number, end: number): number[] {
+            let attrCnt = (a: AttrType) => {
+                let cnt = 0;
+                for (let i = begin; i <= end; i++) {
+                    if (getAttr(rid, whendo, i) == a) cnt++;
+                }
+                return cnt;
+            }
+            let res: number[] = [];
+            let excludeCnt = attrCnt(AttrType.Exclude);
+            let okCnt = attrCnt(AttrType.OK);
+            let cnt = end - begin + 1;
+            if (okCnt == this.manager.all().length || excludeCnt == cnt || (begin == 0 && okCnt == cnt))
+                return res;
+            let remove = (okCnt != 0 && excludeCnt != 0) ?
+                ((excludeCnt < okCnt) ? AttrType.OK : AttrType.Exclude) : -1;
+            for (let i = begin; i <= end; i++) {
+                if (getAttr(rid, whendo, i) != remove) res.push(i);
+            }
+            return res;
         }
     }
 
@@ -50,8 +126,8 @@ namespace tileworld {
         private whenDo: number;           // which WhenDo is being edited
         private currentCommand: number;   // the current command (potentially null)
 
-        constructor(private manager: ImageManager, private rules: number[]) {
-            super();
+        constructor(manager: ImageManager, private rules: number[]) {
+            super(manager);
             this.rule = rules[0];
             this.ruleTypeMap = image.create(10,7);
             this.dirMap = image.create(10,7);
@@ -265,6 +341,10 @@ namespace tileworld {
             this.background.drawTransparentImage(img, c << 4, yoff + (r << 4));
         }
 
+        drawImageAbs(x: number, y: number, img: Image) {
+            this.background.drawTransparentImage(img, x, y);
+        }
+
         private drawOutline(c: number, r: number) {
             this.background.drawRect(c << 4, yoff + (r << 4), 17, 17, 12)
         }
@@ -302,13 +382,6 @@ namespace tileworld {
             this.showRuleType(RuleType.Colliding, MoveDirection.Up, x + 8, y+1);
         }
 
-        private showCollision(col:number, row:number, dir: MoveDirection, arrowImg: Image) {
-            this.drawImage(col, row, smallSprite);
-            let x = (dir == MoveDirection.Left) ? 8 : (dir == MoveDirection.Right) ? -8 : 0;
-            let y = (dir == MoveDirection.Up) ? 8 : (dir == MoveDirection.Down) ? -8 : 0;
-            this.background.drawTransparentImage(arrowImg, (col <<4) + x, (row <<4) + yoff + y);
-        }
-
         private makeContext() {
             let spaceImg = this.manager.empty();
             for (let i = 0; i <= 4; i++) {
@@ -316,11 +389,9 @@ namespace tileworld {
                     let dist = Math.abs(2-j) + Math.abs(2-i);
                     if (dist <= 2) {
                         // TODO: limit the context base on the rule type
-                        this.drawImage(i,j, spaceImg);
+                        this.drawImage(i, j, spaceImg);
                         if (i != 2 || j != 2)
-                            this.showAttributes(i,j);
-                        if (dist <= 1)
-                            this.findWitness(i,j);
+                            this.showAttributes(this.rule, i, j);
                     }
                 }
             }
@@ -489,8 +560,8 @@ namespace tileworld {
         }
 
         private posSpritePosition(whendo: number, begin: number) {
-            let index = this.attrIndex(whendo, AttrType.Include, begin);
-            return (index == -1) ? this.attrIndex(whendo, AttrType.OneOf,begin) : index;
+            let index = this.attrIndex(this.rule, whendo, AttrType.Include, begin);
+            return (index == -1) ? this.attrIndex(this.rule, whendo, AttrType.OneOf, begin) : index;
         }
 
         private findWitnessWhenDo(whendo: number) {
@@ -504,73 +575,6 @@ namespace tileworld {
         private findWitness(col: number, row: number) {
             let whendo = this.getWhenDo(col, row);
             return (col != 2 || row != 2) ? this.findWitnessWhenDo(whendo) : getKinds(this.rule)[0];
-        }
-
-        private attrIndex(whendo: number, a: AttrType, begin: number = 0) {
-            for(let i = begin; i<this.manager.all().length; i++) {
-                if (getAttr(this.rule, whendo, i) == a) 
-                    return i;
-            }
-            return -1;
-        }
-
-        private showAttributes(col: number, row: number) {
-            let whendo = getWhenDo(this.rule, col, row);
-            if (whendo >= 0) {
-                // if there is an include or single oneOf, show it.
-                let index = this.attrIndex(whendo, AttrType.Include);
-                if (index == -1) {
-                    index = this.attrIndex(whendo, AttrType.OneOf);
-                    if (index != -1) {
-                        let index2 = this.attrIndex(whendo, AttrType.OneOf, index+1);
-                        if (index2 != -1)
-                            index = -1;
-                    }
-                }
-                // and skip to the other (if it exists)
-                let begin = 0;
-                let end = this.manager.all().length-1;
-                if (index != -1) {
-                    this.drawImage(col, row, this.manager.getImage(index));
-                    if (index < this.manager.fixed().length) {
-                        begin = this.manager.fixed().length;
-                    } else {
-                        end = this.manager.fixed().length-1;
-                    }
-                }
-                let project = this.projectAttrs(this.rule, whendo, begin, end);
-                let done: AttrType[] = [];
-                project.forEach(index => {
-                    let val = getAttr(this.rule, whendo, index);
-                    // eliminate duplicates
-                    if (done.indexOf(val) == -1) {
-                        done.push(val);
-                        this.drawImage(col, row, attrImages[attrValues.indexOf(val)]);
-                    }
-                });
-            }
-        }
-
-        private projectAttrs(rid: number, whendo: number, begin: number, end: number): number[] {
-            let attrCnt = (a: AttrType) => {
-                let cnt = 0;
-                for (let i = begin; i <= end; i++) {
-                    if (getAttr(rid, whendo, i) == a) cnt++;
-                }
-                return cnt;
-            }
-            let res: number[] = [];
-            let excludeCnt = attrCnt(AttrType.Exclude);
-            let okCnt = attrCnt(AttrType.OK);
-            let cnt = end - begin + 1;
-            if (okCnt == this.manager.all().length || excludeCnt == cnt || (begin == 0 && okCnt == cnt))
-                return res;
-            let remove = (okCnt != 0 && excludeCnt != 0) ?
-                    ((excludeCnt < okCnt) ? AttrType.OK : AttrType.Exclude) : -1;
-            for (let i = begin; i <= end; i++) {
-                if (getAttr(rid, whendo, i) != remove) res.push(i);
-            }
-            return res;
         }
 
         private attrMenu() {
