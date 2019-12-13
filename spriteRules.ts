@@ -11,8 +11,6 @@ namespace tileworld {
     export class RuleRoom extends RuleVisualsBase {
         constructor(m: ImageManager) {
             super(m);
-            this.background = image.create(160, 120)
-            scene.setBackgroundImage(this.background) 
             this.showRuleMenu(1, 0);
         }
 
@@ -28,14 +26,6 @@ namespace tileworld {
             return this.manager.getImage(3);
 
             // return this.manager.getImage(getKinds(this.rule)[0]);
-        }
-
-        drawImage(c: number, r: number, img: Image) {
-            this.background.drawTransparentImage(img, c << 4, (r << 4) + yoff);
-        }
-
-        drawImageAbs(x: number, y: number, img: Image) {
-            this.background.drawTransparentImage(img, x, y);
         }
 
         private makeContext(col: number, row: number) {

@@ -1,8 +1,5 @@
 namespace tileworld {
 
-    enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu };
-    enum CommandTokens { MoveArrow, PaintTile, SpaceTile, Delete };
-
     const yoff = 6;
 
 /* 
@@ -21,6 +18,8 @@ namespace tileworld {
     export class RuleVisualsBase {
         protected background: Image;
         protected cursor: Sprite;
+        protected tileSaved: Sprite;      // remember the tile that we are editing
+
         // rule type state
         protected ruleTypeMap: Image;      // mapping of tile to rule type
         protected dirMap: Image;          // mapping of tile to direction
@@ -28,6 +27,8 @@ namespace tileworld {
         constructor(protected manager: ImageManager) {    
             this.ruleTypeMap = image.create(10, 7);
             this.dirMap = image.create(10, 7);
+            this.ruleTypeMap.fill(0xf);
+            this.dirMap.fill(0xf);
             this.background = image.create(160, 120)
             scene.setBackgroundImage(this.background)
             this.cursor = sprites.create(cursorIn)
@@ -36,11 +37,50 @@ namespace tileworld {
             this.cursor.y = yoff + 40
             this.cursor.z = 50;
 
+            this.tileSaved = sprites.create(cursorOut)
+            this.tileSaved.setFlag(SpriteFlag.Invisible, true)
+            this.tileSaved.z = 10;
+
+
+            controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
+                if (this.col() > 0)
+                    this.cursor.x -= 16
+                this.cursorMove();
+            })
+            controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
+                if (this.col() < 9)
+                    this.cursor.x += 16
+                this.cursorMove();
+            })
+            controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
+                if (this.row() > 0)
+                    this.cursor.y -= 16;
+                this.cursorMove();
+            })
+            controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
+                if (this.row() < 6)
+                    this.cursor.y += 16;
+                this.cursorMove();
+            })
         }
 
+        protected col(curr: boolean = true) {
+            return curr ? this.cursor.x >> 4 : this.tileSaved.x >> 4;
+        }
 
-        protected drawImage(c: number, r: number, img: Image): void { }
-        protected drawImageAbs(x: number, y: number, img: Image): void { }
+        protected row(curr: boolean = true) {
+            return curr ? (this.cursor.y - yoff) >> 4 : (this.tileSaved.y - yoff) >> 4;
+        }
+
+        drawImage(c: number, r: number, img: Image) {
+            this.background.drawTransparentImage(img, c << 4, yoff + (r << 4));
+        }
+
+        drawImageAbs(x: number, y: number, img: Image) {
+            this.background.drawTransparentImage(img, x, y);
+        }
+
+        protected cursorMove() { }
         protected centerImage(): Image { return null; }
         
         protected showRuleType(rt: RuleType, rd: MoveDirection, x: number, y: number, center: boolean = true) {
@@ -136,9 +176,12 @@ namespace tileworld {
         }
     }
 
+    enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu };
+    enum CommandTokens { MoveArrow, PaintTile, SpaceTile, Delete };
+
+
     // TODO: grey out tiles base on rule type
     export class RuleEditor extends RuleVisualsBase {
-        private tileSaved: Sprite;      // remember the tile that we are editing
         private otherCursor: Sprite;      // show correspondence between left and right
 
         // in-world menus
@@ -155,13 +198,8 @@ namespace tileworld {
             super(manager);
             this.rule = rules[0];
 
-
             // attribute menu view
             this.attrSelected = -1;
-            this.tileSaved = sprites.create(cursorOut)
-            this.tileSaved.setFlag(SpriteFlag.Invisible, true)
-            this.tileSaved.z = 10;
-    
 
             // Control
             this.menu = RuleEditorMenus.MainMenu;
@@ -176,28 +214,8 @@ namespace tileworld {
             // refresh display
             this.update();
 
-            controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.col() > 0)
-                    this.cursor.x -= 16
-                this.cursorMove();
-            })
-            controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.col() < 9)
-                    this.cursor.x += 16
-                this.cursorMove();
-            })
-            controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.row() > 0)
-                    this.cursor.y -= 16;
-                this.cursorMove();
-            })
-            controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.row() < 6)
-                    this.cursor.y += 16;
-                this.cursorMove();
-            })
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.manhattanDistance2() <=2) {
+                if (this.manhattanDistance2() <=2 && (this.col() != 2 || this.row() != 2)) {
                      // otherwise if we are in the diamond, bring up attr menu
                     if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                         this.noMenu();
@@ -249,14 +267,7 @@ namespace tileworld {
             });
         }
 
-        private col(curr: boolean = true) { 
-            return curr ? this.cursor.x >> 4 : this.tileSaved.x >> 4; 
-        }
-        private row(curr: boolean = true) { 
-            return curr ? (this.cursor.y - yoff) >> 4: (this.tileSaved.y - yoff) >> 4; 
-        }
-
-        private cursorMove() {
+        protected cursorMove() {
             if (this.menu == RuleEditorMenus.MainMenu) {
                 this.otherCursorMove();
             } else {
@@ -330,14 +341,6 @@ namespace tileworld {
 
         centerImage() {
             return this.manager.getImage(getKinds(this.rule)[0]);
-        }
-
-        drawImage(c: number, r: number, img: Image) {
-            this.background.drawTransparentImage(img, c << 4, yoff + (r << 4));
-        }
-
-        drawImageAbs(x: number, y: number, img: Image) {
-            this.background.drawTransparentImage(img, x, y);
         }
 
         private drawOutline(c: number, r: number) {

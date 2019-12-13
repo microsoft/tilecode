@@ -284,9 +284,9 @@ let program: Program = {
         playerPaint, playerMoveRight, playerMoveLeft, playerMoveUp, playerMoveDown, playerMoveBoulderRight, playerMoveBoulderLeft])
 }
 
-//tw.setProgram(program);
-//let mapEditor = new tw.MapEditor(manager)
+tw.setProgram(program);
+let mapEditor = new tw.MapEditor(manager)
 
-let ruleRoom = new tw.RuleRoom(manager);
+//let ruleRoom = new tw.RuleRoom(manager);
 
 
