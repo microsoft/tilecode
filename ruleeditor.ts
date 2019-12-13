@@ -300,7 +300,7 @@ namespace tileworld {
                         this.background.fillRect((x + ax) << 4, ((y + ay) << 4) + yoff, 
                             16, 16, selCol)
                     }
-                    this.drawImage(x+ax, y+ay, arrowImages[indexOf])
+                    this.drawImage(x+ax, y+ay, handImages[indexOf])
                     this.ruleTypeMap.setPixel(x+ax, y+ay, rt);
                     this.dirMap.setPixel(x+ax, y+ay, rd);
                 } else {
