@@ -13,9 +13,9 @@ namespace tileworld {
         protected drawImageAbs(x: number, y: number, img: Image): void { }
         protected centerImage(): Image { return null; }
         
-        protected showRuleType(rt: RuleType, rd: MoveDirection, x: number, y: number) {
+        protected showRuleType(rt: RuleType, rd: MoveDirection, x: number, y: number, center: boolean = true) {
             let selCol = 11;
-            this.drawImage(x, y, this.centerImage());
+            if (center) this.drawImage(x, y, this.centerImage());
             if (rt == RuleType.Moving) {
                 let indexOf = arrowValues.indexOf(rd);
                 this.drawImage(x, y, arrowImages[indexOf])

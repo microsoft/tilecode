@@ -57,22 +57,23 @@ namespace tileworld {
             this.showRuleType(RuleType.Resting, 0, x + 2, y + 1);
 
             this.makeContext(x + 6, y + 1)
-            this.showRuleType(RuleType.Moving, MoveDirection.Right, x+6, y+1);
+            this.showRuleType(RuleType.Moving, MoveDirection.Right, x + 7, y + 1);
+            this.showRuleType(RuleType.Moving, MoveDirection.Left, x + 5, y + 1);
+            this.showRuleType(RuleType.Moving, MoveDirection.Up, x + 6, y);
+            this.showRuleType(RuleType.Moving, MoveDirection.Down, x+6, y+2);
+
             this.makeContext(x + 2, y + 5)
             this.showRuleType(RuleType.Colliding, MoveDirection.Right, x + 2, y+5);
+            this.showRuleType(RuleType.Colliding, MoveDirection.Left, x + 2, y + 5, false);
+            this.showRuleType(RuleType.Colliding, MoveDirection.Up, x + 2, y + 5, false);
+            this.showRuleType(RuleType.Colliding, MoveDirection.Down, x + 2, y + 5, false);
+            this.showRuleType(RuleType.Resting, 0, x + 2, y + 5);
+
             this.makeContext(x + 6, y + 5)
-            this.showRuleType(RuleType.Pushing, MoveDirection.Right, x + 6, y + 5);
-            //this.showRuleType(RuleType.Moving, MoveDirection.Down, x + 8, y);
-
-            //this.showRuleType(RuleType.Colliding, MoveDirection.Right, x, y + 3);
-            //this.showRuleType(RuleType.Colliding, MoveDirection.Left, x + 3, y + 2);
-            //this.showRuleType(RuleType.Colliding, MoveDirection.Down, x + 6, y + 2);
-            //this.showRuleType(RuleType.Colliding, MoveDirection.Up, x + 9, y + 3);
-
-            //this.showRuleType(RuleType.Pushing, MoveDirection.Right, x, y + 6);
-            //this.showRuleType(RuleType.Pushing, MoveDirection.Left, x + 3, y + 5);
-            //this.showRuleType(RuleType.Pushing, MoveDirection.Down, x + 6, y + 5);
-            //this.showRuleType(RuleType.Pushing, MoveDirection.Up, x + 9, y + 6);
+            this.showRuleType(RuleType.Pushing, MoveDirection.Right, x + 8, y + 5, false);
+            this.showRuleType(RuleType.Pushing, MoveDirection.Left, x + 4, y + 5, false);
+            this.showRuleType(RuleType.Pushing, MoveDirection.Down, x + 6, y + 7, false);
+            this.showRuleType(RuleType.Pushing, MoveDirection.Up, x + 6, y + 3, false);
         }
 
     }
