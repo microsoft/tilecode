@@ -5,8 +5,33 @@ namespace tileworld {
 
     const yoff = 6;
 
+    export class RuleVisualsBase {
+        constructor() {
+            
+        }
+        protected drawImage(c: number, r: number, img: Image): void { }
+        protected centerImage(): Image { return null; }
+        protected showRuleType(rt: RuleType, rd: MoveDirection, x: number, y: number) {
+            let selCol = 11;
+            this.drawImage(x, y, this.centerImage());
+            if (rt == RuleType.Moving) {
+                let indexOf = arrowValues.indexOf(rd);
+                this.drawImage(x, y, arrowImages[indexOf])
+            } else if (rt == RuleType.Pushing || rt == RuleType.Colliding) {
+                let indexOf = arrowValues.indexOf(rd);
+                let ax = rd == MoveDirection.Left ? 1 : (rd == MoveDirection.Right ? -1 : 0)
+                let ay = rd == MoveDirection.Down ? -1 : (rd == MoveDirection.Up ? 1 : 0)
+                if (rt == RuleType.Pushing) {
+                    this.drawImage(x + ax, y + ay, handImages[indexOf])
+                } else {
+                    // this.showCollision(x - ax, y - ay, rd, arrowImages[indexOf]);
+                }
+            }
+        }
+    }
+
     // TODO: grey out tiles base on rule type
-    export class RuleEditor {
+    export class RuleEditor extends RuleVisualsBase {
         private background: Image;
         private cursor: Sprite;
         private tileSaved: Sprite;      // remember the tile that we are editing
@@ -26,6 +51,7 @@ namespace tileworld {
         private currentCommand: number;   // the current command (potentially null)
 
         constructor(private manager: ImageManager, private rules: number[]) {
+            super();
             this.rule = rules[0];
             this.ruleTypeMap = image.create(10,7);
             this.dirMap = image.create(10,7);
@@ -228,15 +254,14 @@ namespace tileworld {
                 this.modifyCommandMenu();
                 this.commandUpdate();
             }
-            this.showRuleType(getType(this.rule), getDir(this.rule), 2, 2, false);
-
+            this.showRuleType(getType(this.rule), getDir(this.rule), 2, 2);
         }
 
-        private centerImage() {
+        centerImage() {
             return this.manager.getImage(getKinds(this.rule)[0]);
         }
 
-        private drawImage(c: number, r: number, img: Image, z: number = 0) {
+        drawImage(c: number, r: number, img: Image) {
             this.background.drawTransparentImage(img, c << 4, yoff + (r << 4));
         }
 
@@ -277,51 +302,10 @@ namespace tileworld {
             this.showRuleType(RuleType.Colliding, MoveDirection.Up, x + 8, y+1);
         }
 
-        private showRuleType(rt: RuleType, rd: MoveDirection, x: number, y: number, 
-                showSelected: boolean = true) {
-            let selected = showSelected && rt == getType(this.rule) && 
-                    (rt == RuleType.Resting || rd == getDir(this.rule));
-            let selCol = 11;
-            if (selected) {
-                this.background.fillRect(x << 4, (y << 4) + yoff, 16, 16, selCol)
-            }
-            this.drawImage(x, y, this.centerImage());
-            this.ruleTypeMap.setPixel(x, y, rt);
-            this.dirMap.setPixel(x, y, rd);
-            if (rt == RuleType.Moving) {
-                let indexOf = arrowValues.indexOf(rd);
-                this.drawImage(x, y, arrowImages[indexOf])
-            } else if (rt == RuleType.Pushing || rt == RuleType.Colliding) {
-                let indexOf = arrowValues.indexOf(rd);
-                let ax = rd == MoveDirection.Left ? 1 : (rd == MoveDirection.Right ? -1 : 0)
-                let ay = rd == MoveDirection.Down ? -1 : (rd == MoveDirection.Up ? 1 : 0)
-                if (rt == RuleType.Pushing) {
-                    if (selected) {
-                        this.background.fillRect((x + ax) << 4, ((y + ay) << 4) + yoff, 
-                            16, 16, selCol)
-                    }
-                    this.drawImage(x+ax, y+ay, handImages[indexOf])
-                    this.ruleTypeMap.setPixel(x+ax, y+ay, rt);
-                    this.dirMap.setPixel(x+ax, y+ay, rd);
-                } else {
-                   
-                    if (selected) {
-                        this.background.fillRect((x - ax) << 4, ((y - ay) << 4) + yoff,
-                            16, 16, selCol)
-                    }
-                    this.showCollision(x - ax, y - ay, rd, arrowImages[indexOf]);
-                    this.ruleTypeMap.setPixel(x - ax, y - ay , rt);
-                    this.dirMap.setPixel(x - ax, y - ay, rd);
-                }
-            }
-        }
-
         private showCollision(col:number, row:number, dir: MoveDirection, arrowImg: Image) {
-            let x = (col << 4);
-            let y = yoff + (row << 4) ;
-            this.background.drawTransparentImage(smallSprite, x, y);
-            x = (dir == MoveDirection.Left) ? 8 : (dir == MoveDirection.Right) ? -8 : 0;
-            y = (dir == MoveDirection.Up) ? 8 : (dir == MoveDirection.Down) ? -8 : 0;
+            this.drawImage(col, row, smallSprite);
+            let x = (dir == MoveDirection.Left) ? 8 : (dir == MoveDirection.Right) ? -8 : 0;
+            let y = (dir == MoveDirection.Up) ? 8 : (dir == MoveDirection.Down) ? -8 : 0;
             this.background.drawTransparentImage(arrowImg, (col <<4) + x, (row <<4) + yoff + y);
         }
 
