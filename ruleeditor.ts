@@ -1,13 +1,43 @@
 namespace tileworld {
 
-    enum RuleEditorMenus { MainMenu, RuleTypeMenu, AttrTypeMenu, CommandMenu };
+    enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu };
     enum CommandTokens { MoveArrow, PaintTile, SpaceTile, Delete };
 
     const yoff = 6;
 
+/* 
+
+                if (this.menu == RuleEditorMenus.RuleTypeMenu) {
+                    let rt = this.ruleTypeMap.getPixel(this.col(), this.row());
+                    if (rt != 0xf) {
+                        setType(this.rule,rt);
+                        setDir(this.rule,this.dirMap.getPixel(this.col(), this.row()));
+                        this.update();
+                    }
+                } else
+
+                */
+
     export class RuleVisualsBase {
+        protected background: Image;
+        protected cursor: Sprite;
+        // rule type state
+        protected ruleTypeMap: Image;      // mapping of tile to rule type
+        protected dirMap: Image;          // mapping of tile to direction
+
         constructor(protected manager: ImageManager) {    
+            this.ruleTypeMap = image.create(10, 7);
+            this.dirMap = image.create(10, 7);
+            this.background = image.create(160, 120)
+            scene.setBackgroundImage(this.background)
+            this.cursor = sprites.create(cursorIn)
+            this.cursor.setFlag(SpriteFlag.Invisible, false)
+            this.cursor.x = 40
+            this.cursor.y = yoff + 40
+            this.cursor.z = 50;
+
         }
+
 
         protected drawImage(c: number, r: number, img: Image): void { }
         protected drawImageAbs(x: number, y: number, img: Image): void { }
@@ -33,8 +63,8 @@ namespace tileworld {
 
         private showCollision(col: number, row: number, dir: MoveDirection, arrowImg: Image) {
             this.drawImage(col, row, smallSprite);
-            let x = (dir == MoveDirection.Left) ? 8 : (dir == MoveDirection.Right) ? -8 : 0;
-            let y = (dir == MoveDirection.Up) ? 8 : (dir == MoveDirection.Down) ? -8 : 0;
+            let x = (dir == MoveDirection.Left) ? 7 : (dir == MoveDirection.Right) ? -7 : 0;
+            let y = (dir == MoveDirection.Up) ? 7 : (dir == MoveDirection.Down) ? -7 : 0;
             this.drawImageAbs((col << 4) + x, (row << 4) + yoff + y, arrowImg);        
         }
 
@@ -108,16 +138,11 @@ namespace tileworld {
 
     // TODO: grey out tiles base on rule type
     export class RuleEditor extends RuleVisualsBase {
-        private background: Image;
-        private cursor: Sprite;
         private tileSaved: Sprite;      // remember the tile that we are editing
         private otherCursor: Sprite;      // show correspondence between left and right
 
         // in-world menus
         private menu: RuleEditorMenus;  // which menu is active?
-        // rule type state
-        private ruleTypeMap: Image;     // mapping of tile to rule type
-        private dirMap: Image;          // mapping of tile to direction
         // whendo state
         private attrSelected: number;
         // for editing commands
@@ -129,24 +154,18 @@ namespace tileworld {
         constructor(manager: ImageManager, private rules: number[]) {
             super(manager);
             this.rule = rules[0];
-            this.ruleTypeMap = image.create(10,7);
-            this.dirMap = image.create(10,7);
-            
+
+
             // attribute menu view
             this.attrSelected = -1;
             this.tileSaved = sprites.create(cursorOut)
             this.tileSaved.setFlag(SpriteFlag.Invisible, true)
             this.tileSaved.z = 10;
-            this.background = image.create(160, 120)
-            scene.setBackgroundImage(this.background)           
+    
 
             // Control
             this.menu = RuleEditorMenus.MainMenu;
-            this.cursor = sprites.create(cursorIn)
-            this.cursor.setFlag(SpriteFlag.Invisible, false)
-            this.cursor.x = 40
-            this.cursor.y = yoff+40
-            this.cursor.z = 50;
+
             // linked cursor
             this.otherCursor = sprites.create(cursorOut)
             this.otherCursor.setFlag(SpriteFlag.Invisible, true)
@@ -178,16 +197,7 @@ namespace tileworld {
                 this.cursorMove();
             })
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.manhattanDistance2() == 0) {
-                     // if we are on center sprite, bring up the ruletype menu
-                    if (this.menu == RuleEditorMenus.RuleTypeMenu) {
-                        this.noMenu();
-                    } else {
-                        this.noMenu();
-                        this.menu = RuleEditorMenus.RuleTypeMenu;
-                        this.setTileSaved();
-                    }
-                } else if (this.manhattanDistance2() <=2) {
+                if (this.manhattanDistance2() <=2) {
                      // otherwise if we are in the diamond, bring up attr menu
                     if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                         this.noMenu();
@@ -202,8 +212,6 @@ namespace tileworld {
                         let yes = this.tryEditCommand();
                         if (!yes) this.noMenu();
                     }
-                } else if (this.menu == RuleEditorMenus.RuleTypeMenu) {
-                    this.noMenu();
                 } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                     let yes = this.attrUpdate();
                     if (!yes) this.noMenu();
@@ -252,14 +260,7 @@ namespace tileworld {
             if (this.menu == RuleEditorMenus.MainMenu) {
                 this.otherCursorMove();
             } else {
-                if (this.menu == RuleEditorMenus.RuleTypeMenu) {
-                    let rt = this.ruleTypeMap.getPixel(this.col(), this.row());
-                    if (rt != 0xf) {
-                        setType(this.rule,rt);
-                        setDir(this.rule,this.dirMap.getPixel(this.col(), this.row()));
-                        this.update();
-                    }
-                } else if (this.menu == RuleEditorMenus.CommandMenu) {
+                if (this.menu == RuleEditorMenus.CommandMenu) {
                     this.commandUpdate();
                     this.update();
                 }
@@ -315,12 +316,6 @@ namespace tileworld {
 
             if (this.menu == RuleEditorMenus.MainMenu) {
                 this.showMainMenu();
-            } else if (this.menu == RuleEditorMenus.RuleTypeMenu) {
-                this.ruleTypeMap.fill(0xf);
-                this.dirMap.fill(0xf);
-                this.background.fillRect(0, yoff+64, 16, 16, 0);
-                this.background.fillRect(0, yoff+80, 160, 36, 0);
-                this.showRuleMenu(0, 5);
             } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                 this.dirMap.fill(0xf);
                 this.background.fillRect(0, yoff + 80, 160, 36, 0);

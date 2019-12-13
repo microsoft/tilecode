@@ -9,7 +9,6 @@ namespace tileworld {
     const yoff = 6;
 
     export class RuleRoom extends RuleVisualsBase {
-        private background: Image;
         constructor(m: ImageManager) {
             super(m);
             this.background = image.create(160, 120)
