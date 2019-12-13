@@ -331,6 +331,7 @@ namespace tileworld {
                 for (let j = 0; j <= 4; j++) {
                     let dist = Math.abs(2-j) + Math.abs(2-i);
                     if (dist <= 2) {
+                        // TODO: limit the context base on the rule type
                         this.drawImage(i,j, spaceImg);
                         if (i != 2 || j != 2)
                             this.showAttributes(i,j);
@@ -384,7 +385,6 @@ namespace tileworld {
             }
             return cid+1;
         }
-
 
         private showCommand(col: number, row: number, 
                             whendo: number, cid: number, tokens: CommandTokens[],

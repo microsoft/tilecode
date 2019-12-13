@@ -9,7 +9,8 @@
 //    destroySprite: (sprite: T) => void;
 //    update(): () => void;
 
-// TODO: - sprites at world edge, need to handle out-of-bounds 
+// bugs: 
+// - boulder at rest falls through player
 
 namespace tileworld {
 
@@ -424,14 +425,12 @@ namespace tileworld {
         private keyDowns: boolean[];
         private requestMove(dir: MoveDirection) {
             this.keyDowns[dir] = true;
-            if (this.dirQueue.length == 0)
-                this.dirQueue.push(dir);
+            if (this.dirQueue.length == 0 || this.dirQueue.length == 1 && dir != this.dirQueue[0])
+                this.dirQueue.insertAt(0,dir);
         }
 
         private requestStop(dir: MoveDirection) {
             this.keyDowns[dir] = false;
-            let ind2 = this.dirQueue.indexOf(dir)
-            if (ind2 > 0) this.dirQueue.removeAt(ind2);
             let index = this.keyDowns.indexOf(true);
             if (index != -1 && this.dirQueue.length == 0)
                 this.dirQueue.push(index);
