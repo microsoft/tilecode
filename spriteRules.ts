@@ -15,6 +15,8 @@ namespace tileworld {
                     game.pushScene();
                     let ruleEditor = new RuleEditor(this.manager, kind, rt, dir);
                 }
+                if (this.col() == 0 && this.row() == 0)
+                    game.popScene();
             });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 game.popScene();
@@ -25,6 +27,9 @@ namespace tileworld {
         }
 
         private update() {
+            this.background.fillRect(0, yoff + 16, 16, 16, 11);
+            this.background.drawTransparentImage(map, 0, yoff);
+            this.background.drawTransparentImage(pencil, 0, yoff + 16)
             this.showRuleMenu(1, 0);
         }
 
@@ -54,15 +59,15 @@ namespace tileworld {
                 let tcol = col + moveXdelta(rd);
                 let trow = row + moveYdelta(rd);
                 this.setRuleType(rt, rd, tcol, trow);
-                if (rules.length > 0) { this.fillTile(tcol, trow, scol); }
+                if (rules.length > 0) { this.fillTile(tcol, trow, scol); this.drawOutline(tcol,trow, 1); }
             } else if (rt == RuleType.Pushing) {
                 let tcol = col - moveXdelta(rd);
                 let trow = row - moveYdelta(rd);
                 this.setRuleType(rt, rd, tcol, trow);
-                if (rules.length > 0) { this.fillTile(tcol, trow, scol); }
+                if (rules.length > 0) { this.fillTile(tcol, trow, scol); this.drawOutline(tcol, trow, 1); }
             } else {
                 this.setRuleType(rt, rd, col, row);
-                if (rules.length > 0) { this.fillTile(col, row, scol); }
+                if (rules.length > 0) { this.fillTile(col, row, scol); this.drawOutline(col, row, 1); }
             }
             this.showRuleType(rt, rd, col, row, center);
         }

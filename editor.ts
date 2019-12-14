@@ -108,7 +108,7 @@ namespace tileworld {
                     // paint
                     game.pushScene();
                     let spriteEditor = new ImageEditor(this.manager, this.userSpriteIndex);
-                } else if (this.row() == 2) {
+                } else if (this.row() == 2 && this.userSpriteIndex >= this.manager.fixed().length) {
                     game.pushScene();
                     let ruleRoom = new RuleRoom(this.manager, this.userSpriteIndex);
                 } else if (this.row() == 3) {

@@ -9,6 +9,8 @@
 //    destroySprite: (sprite: T) => void;
 //    update(): () => void;
 
+// TODO: checking for no more diamonds? how to end game?
+
 // bugs: 
 // - boulder at rest falls through player
 
@@ -102,12 +104,13 @@ namespace tileworld {
 
         private matchingRules(phase: Phase, ts: TileSprite, handler: (ts: TileSprite, rid:number) => void) {
             this.rules.forEach(rid => {
-                if (getKinds(rid).indexOf(ts.kind()) != -1 && 
-                    ( phase == Phase.Moving && getDir(rid) == ts.dir && getType(rid) == RuleType.Moving
+                if (   getKinds(rid).indexOf(ts.kind()) != -1 && 
+                    (  phase == Phase.Moving && getDir(rid) == ts.dir && getType(rid) == RuleType.Moving
                     || phase == Phase.Resting && getType(rid) == RuleType.Resting
-                    || getType(rid) == RuleType.Pushing && getDir(rid) == this.dpad)) {
-                        handler(ts,rid);
-                    }
+                    || getDir(rid) == this.dpad && getType(rid) == RuleType.Pushing) ) 
+                {
+                    handler(ts,rid);
+                }
             });
         }
 

@@ -3,6 +3,7 @@ namespace tileworld {
     enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu };
     enum CommandTokens { MoveArrow, PaintTile, SpaceTile, Delete };
 
+    // TODO: + between arrows to create new rule
     // TODO: grey out tiles base on rule type
     export class RuleEditor extends RuleVisualsBase {
         private otherCursor: Sprite;      // show correspondence between left and right

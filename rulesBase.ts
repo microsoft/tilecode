@@ -70,8 +70,8 @@ namespace tileworld {
             this.background.drawTransparentImage(img, x, y);
         }
 
-        protected drawOutline(c: number, r: number) {
-            this.background.drawRect(c << 4, yoff + (r << 4), 17, 17, 12)
+        protected drawOutline(c: number, r: number, col: number = 12) {
+            this.background.drawRect(c << 4, yoff + (r << 4), 17, 17, col);
         }
 
         protected fillTile(c: number, r: number, col: color) {
