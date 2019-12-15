@@ -205,7 +205,9 @@ let playerMoveRight: Rule ={
     kind: [playerId],
     rt: RuleType.Pushing,
     dir: MoveDirection.Right,
-    whenDo: [{ col: 2, row: 2, attrs: [], commands: [{ inst: CommandType.Move, arg: MoveDirection.Right }, { inst: CommandType.Paint, arg: spaceId }] },
+    whenDo: [{ col: 2, row: 2, attrs: [], 
+               commands: [{ inst: CommandType.Move, arg: MoveDirection.Right }, 
+                          { inst: CommandType.Paint, arg: spaceId }] },
         { col: 3, row: 2, attrs: playerMove, commands: [] } ]
 }
 

@@ -44,10 +44,11 @@ namespace tileworld {
 
     class VMState {
         public fixed: number;
-        public movable: number;
+        public all: number;
         public world: Image;
         public nextWorld: Image;
         public sprites: TileSprite[][];
+        constructor() {}
     }
 
     class RuleClosure {
@@ -96,8 +97,8 @@ namespace tileworld {
             this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
             // now, look for collisions
             this.ruleClosures = [];
-            this.collisionDetection();
-            this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
+            //this.collisionDetection();
+            //this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
             // finally, update the rules
             this.updateWorld();
         }
@@ -202,10 +203,11 @@ namespace tileworld {
             this.allSprites(ts => ts.update() );
             // change tiles (can be done with less memory and time assuming few
             // tiles are changed).
-            for(let x=0;x<this.gs.nextWorld.width();x++) {
+            for(let x = 0; x < this.gs.nextWorld.width(); x++) {
                 for (let y = 0; y < this.gs.nextWorld.height(); y++) {
-                    if (this.gs.nextWorld.getPixel(x,y) != 0xf)
-                        this.gs.world.setPixel(x,y,this.gs.nextWorld.getPixel(x,y));
+                    let pixel = this.gs.nextWorld.getPixel(x, y);
+                    if (pixel != 0xf)
+                        this.gs.world.setPixel(x, y, pixel);
                 }                
             }
         }
@@ -246,8 +248,7 @@ namespace tileworld {
             let oneOf: boolean = false;
             let oneOfPassed: boolean = false;
             let captureWitness: TileSprite = null;
-            let kind = 0
-            for(;kind<this.gs.fixed;kind++) {
+            for(let kind = 0; kind < this.gs.fixed; kind++) {
                 let hasKind = this.gs.world.getPixel(wcol, wrow) == kind;
                 let attr = getAttr(rid, whendo, kind);
                 if (attr == AttrType.Exclude && hasKind ||
@@ -258,7 +259,7 @@ namespace tileworld {
                     if (hasKind) oneOfPassed = true;
                 }
             }
-            for(;kind<this.gs.movable; kind++) {
+            for(let kind = this.gs.fixed; kind<this.gs.all; kind++) {
                 let attr = getAttr(rid, whendo, kind);
                 let witness = this.getWitness(kind, wcol, wrow);
                 if (this.other && this.other.kind() == kind)
@@ -331,9 +332,9 @@ namespace tileworld {
         public setWorld(w: Image) {
             this.dirQueue = [];
             this.signal = null;
-            this.state = new VMState;
+            this.state = new VMState();
             this.state.fixed = this.manager.fixed().length;
-            this.state.movable = this.manager.movable().length;
+            this.state.all = this.manager.all().length;
             this.state.sprites = [];
             this.state.world = w.clone();
             this.state.nextWorld = w.clone();
