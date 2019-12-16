@@ -1,9 +1,10 @@
 namespace tileworld {
     
     enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu };
-    enum CommandTokens { MoveArrow, PaintTile, SpaceTile, Delete };
+    enum CommandTokens { MoveArrow, PaintTile, GameCommand, SpriteProperty, SpaceTile, Delete };
 
-    // TODO: + between arrows to create new rule
+    // TODO: rule addition/deletion
+    // TODO: two-level menu for command+arg
     // TODO: grey out tiles base on rule type
     export class RuleEditor extends RuleVisualsBase {
         private otherCursor: Sprite;      // show correspondence between left and right
@@ -14,7 +15,7 @@ namespace tileworld {
         private attrSelected: number;
         // for editing commands
         private commandLengths: number[];
-        private rules: number[];
+
         private rule: number;             // the current rule
         private whenDo: number;           // which WhenDo is being edited
         private currentCommand: number;   // the current command (potentially null)
@@ -23,11 +24,11 @@ namespace tileworld {
                     private kind: number, private rt: RuleType, private dir: MoveDirection) {
             super(manager);
 
-            this.rules = this.getRulesForTypeDir(getRulesForKind(kind), rt, dir);
-            if (this.rules.length == 0) {
-                this.rules.push(makeRule(kind, rt, dir));
+            let rules = this.currentRules();
+            if (rules.length == 0) {
+                rules.push(makeRule(kind, rt, dir));
             }
-            this.rule = this.rules[0];
+            this.rule = rules[0];
 
             // attribute menu view
             this.attrSelected = -1;
@@ -77,11 +78,12 @@ namespace tileworld {
                             // let flipRuleEditor = new RuleEditor(this.manager, [flip]);
                         } else if (this.col() == 7 || this.col() == 9) {
                             // move backward/forward in rule space
-                            let index = this.rules.indexOf(this.rule);
+                            let rules = this.currentRules();
+                            let index = rules.indexOf(this.rule);
                             if (this.col() == 7 && index > 0) {
-                                this.rule = this.rules[index-1];
-                            } else if (this.col() == 9 && index < this.rules.length-1) {
-                                this.rule = this.rules[index+1];
+                                this.rule = rules[index-1];
+                            } else if (this.col() == 9 && index < rules.length-1) {
+                                this.rule = rules[index+1];
                             }
                         }
                     } 
@@ -97,6 +99,10 @@ namespace tileworld {
                     game.popScene();
                 }
             });
+        }
+
+        protected currentRules() {
+            return this.getRulesForTypeDir(getRulesForKind(this.kind), this.rt, this.dir);
         }
 
         protected cursorMove() {
@@ -182,8 +188,9 @@ namespace tileworld {
             this.drawImage(1, 6, pencil);
             this.drawImage(2, 6,flipHoriz)
             this.drawImage(3, 6, play)
-            let index = this.rules.indexOf(this.rule);
-            this.drawImage(9, 6, index < this.rules.length -1 ? rightArrow : greyImage(rightArrow));
+            let rules = this.currentRules();
+            let index = rules.indexOf(this.rule);
+            this.drawImage(9, 6, index < rules.length -1 ? rightArrow : greyImage(rightArrow));
             this.drawImage(8, 6, this.centerImage());
             this.drawImage(7, 6, index > 0 ? leftArrow : greyImage(leftArrow));
         }
@@ -296,6 +303,7 @@ namespace tileworld {
             return true;
         }
 
+        // row will be commands, need tileCursor for this...
         private makeCommandMenu() {
             let col = 5;
             let row = 5;
@@ -321,6 +329,11 @@ namespace tileworld {
                     worker(deleteIcon, ct, 0);
                 }
             });
+        }
+
+        // row 6 will be args
+        private makeArgMenu() {
+
         }
 
         private modifyCommandMenu() {

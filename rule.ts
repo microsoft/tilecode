@@ -11,14 +11,30 @@ enum MoveDirection { // [4], could be[2]
     None, Left, Right, Up, Down
 }
 
+
+// move
+// - left, right, up, down, uturn, stop, ...
+
+// paint
+// - art 
+
+// sprite property
+// - zero-remaining
+// - one remaining
+// - health up
+// - health down
+
+// game reset
+// game win
+// game end
+// game next-level
+// game score+1, score-1
+// 
+
+
 enum CommandType {  // [8]
-    Move,           // arg (MoveDirection)
-    Paint,          // arg (index of fixed sprite)
-    Reverse,
-    Stop,
-    Destroy,
-    ScorePlusOne,
-    LifeMinusOne
+    Move,           // arg (MoveDirection) + Stop, UTurn, ...
+    Paint           // arg (index of fixed sprite)
 }
 
 enum AttrType {  // [2]
