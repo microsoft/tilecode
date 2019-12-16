@@ -3,7 +3,7 @@ namespace tileworld {
     const yoff = 6;
 
     // TODO: menu
-    // TODO: highlight the squares with rules
+    // sprite property sheet
     export class RuleRoom extends RuleVisualsBase {
         constructor(m: ImageManager, private kind: number) {
             super(m);

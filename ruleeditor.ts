@@ -172,7 +172,7 @@ namespace tileworld {
         }
 
         centerImage() {
-            return this.manager.getImage(getKinds(this.rule)[0]);
+            return this.manager.getImage(this.kind);
         }
 
         private showMainMenu() {
