@@ -206,8 +206,11 @@ namespace tileworld {
             for(let x = 0; x < this.gs.nextWorld.width(); x++) {
                 for (let y = 0; y < this.gs.nextWorld.height(); y++) {
                     let pixel = this.gs.nextWorld.getPixel(x, y);
-                    if (pixel != 0xf)
-                        this.gs.world.setPixel(x, y, pixel);
+                    if (pixel != 0xf) {
+                        //this.gs.world.setPixel(x, y, pixel);
+                        const tm = game.currentScene().tileMap;
+                        tm.setTileAt(x, y, pixel)
+                    }
                 }                
             }
         }
