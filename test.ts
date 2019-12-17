@@ -197,7 +197,7 @@ boulderLeft.commands = [{ inst: CommandType.Move, arg: MoveDirection.Left }]
 let playerPaint: Rule = {
     kind: [playerId],
     rt: RuleType.Resting,
-    dir: MoveDirection.None,
+    dir: MoveDirection.Left,
     whenDo: [{ col: 2, row: 2, attrs: [], commands: [{ inst: CommandType.Paint, arg: spaceId }] }]
 }
 
@@ -254,7 +254,7 @@ let playerMoveBoulderLeft: Rule = {
 let boulderFallDown: Rule = {
     kind: [boulderId, diamondId],
     rt: RuleType.Resting,
-    dir: MoveDirection.None,
+    dir: MoveDirection.Left,
     whenDo: [{ col: 2, row: 2, attrs: [], commands: [{ inst: CommandType.Move, arg: MoveDirection.Down }] },
              TileAt(spaceId, 2, 3)]
 }
@@ -270,7 +270,7 @@ let boulderFallingDown: Rule = {
 let boulderFallLeft: Rule = {
     kind: [boulderId, diamondId],
     rt: RuleType.Resting,
-    dir: MoveDirection.None,
+    dir: MoveDirection.Left,
     whenDo: [{ col: 2, row: 2, attrs: [], commands: [{ inst: CommandType.Move, arg: MoveDirection.Left }] },
              SpriteAt(boulderId, 2, 3), TileAt(spaceId, 1, 2), TileAt(spaceId,1,3)]
 }

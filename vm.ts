@@ -30,13 +30,13 @@ namespace tileworld {
             const scene = game.currentScene();
             scene.physicsEngine.addSprite(this);
             this.setKind(kind);
-            this.dir = MoveDirection.None
+            this.dir = -1;
             this.inst = -1; 
         }
         public col() { return this.x >> 4; }
         public row() { return this.y >> 4; }
         public update() {
-            this.dir = this.inst == CommandType.Move ? this.arg : MoveDirection.None;
+            this.dir = this.inst == CommandType.Move ? this.arg : -1;
             this.vx = this.dir == MoveDirection.Left ? -100 : this.dir == MoveDirection.Right ? 100 : 0;
             this.vy = this.dir == MoveDirection.Up ? -100 : this.dir == MoveDirection.Down ? 100 : 0;
         }
@@ -127,8 +127,8 @@ namespace tileworld {
             }
             // apply rules
             this.allSprites(ts => { 
-                if ( (phase == Phase.Moving && ts.dir != MoveDirection.None) ||
-                     (phase == Phase.Resting && (ts.dir == MoveDirection.None ||
+                if ( (phase == Phase.Moving && ts.dir != -1) ||
+                     (phase == Phase.Resting && (ts.dir == -1 ||
                          ts.inst != CommandType.Move)) ) {
                     let witnesses: TileSprite[] = [];
                     this.matchingRules(phase, ts, (ts,rid) => {
@@ -381,15 +381,15 @@ namespace tileworld {
             }
 
             this.vm.setState(this.state);
-            this.vm.round(MoveDirection.None);
+            this.vm.round(-1);
             game.onUpdate(() => {
                 // has signal sprite moved to new tile
                 // then do a worldUpdate and reset the signal sprite
                 if (this.signal.x >= 23) {
                     this.signal.x = 8;
-                    let currentDirection = this.dirQueue.length > 0 ? this.dirQueue[0] : MoveDirection.None;
+                    let currentDirection = this.dirQueue.length > 0 ? this.dirQueue[0] : -1;
                     this.vm.round(currentDirection);
-                    if (currentDirection != MoveDirection.None) {
+                    if (currentDirection != -1) {
                         if (!this.keyDowns[currentDirection])
                             this.dirQueue.removeElement(currentDirection);
                     }

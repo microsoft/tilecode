@@ -8,7 +8,7 @@ enum RuleType {  // [4], could be [2]
 }
 
 enum MoveDirection { // [4], could be[2]
-    None, Left, Right, Up, Down
+    Left, Right, Up, Down
 }
 
 // move
@@ -249,7 +249,6 @@ namespace tileworld {
                 case MoveDirection.Down: return MoveDirection.Right;
                 case MoveDirection.Right: return MoveDirection.Up;
                 case MoveDirection.Up: return MoveDirection.Left;
-                case MoveDirection.None: return MoveDirection.None;
             }
         } else {
             switch (d) {  // clockwise
@@ -257,7 +256,6 @@ namespace tileworld {
                 case MoveDirection.Up: return MoveDirection.Right;
                 case MoveDirection.Right: return MoveDirection.Down;
                 case MoveDirection.Down: return MoveDirection.Left;
-                case MoveDirection.None: return MoveDirection.None;
             }
         }
         return d;
@@ -312,48 +310,67 @@ namespace tileworld {
         return wrapRule(tgtRule);
     }
 
-    // TODO: write directly into buffer instead of doing string building
-    function colRowToLRUD(col: number, row: number) {
-        control.assert(Math.abs(2-col) + Math.abs(2-row) <= 2, 42);
-        let ret = "";
-        if (col == 2 && row == 2) return "LR";
-        while (col < 2) { ret += "L"; col++; }
-        while (col > 2) { ret += "R"; col--; }
-        while (row < 2) { ret += "U"; row++; }
-        while (row > 2) { ret += "D"; row--; }
-        return ret;
-    }
 
-
-    let b: Buffer = null
+    let buf: Buffer = null
     let bitIndex = 0;
+
     function writeBuf(v: number, bits: number) {
         let byteIndex = bitIndex >> 3;
-        if (byteIndex >= b.length) {
-            // doesn't fit in buffer - oops!
+        if (byteIndex >= buf.length) {
+            
         }
         let shift = bitIndex - (byteIndex << 3);
         if (shift + bits >= 8) {
             // packing error - can't have value that spans byte boundary
         }
-        let byte = b.getUint8(byteIndex);
-        // create mask of length |bits|
-        // merge values
-        b.setUint8(byte, byteIndex);
+        let byte = buf.getUint8(byteIndex);
+        let mask = 0x1;
+        for(let i=0; i<bits; i++) { mask = mask | (mask << 1); }
+        mask = mask << shift;
+        mask = mask ^ 0xffffffff;
+        buf.setUint8(byte , byteIndex);
         bitIndex += bits;
     }
 
+    function colRowToLRUD(col: number, row: number) {
+        control.assert(Math.abs(2 - col) + Math.abs(2 - row) <= 2, 42);
+        let ret = "";
+        if (col == 2 && row == 2) {
+            writeBuf(MoveDirection.Left, 2);
+            writeBuf(MoveDirection.Right, 2);
+            return;
+        }
+        while (col < 2) { writeBuf(MoveDirection.Left, 2); col++; }
+        while (col > 2) { writeBuf(MoveDirection.Right, 2); col--; }
+        while (row < 2) { writeBuf(MoveDirection.Up, 2); row++; }
+        while (row > 2) { writeBuf(MoveDirection.Down, 2); row--; }
+    }
+
     function packRule(r: Rule) {
+        buf = control.createBuffer(64);
+        // TODO: create enough space for a rule
+        // 3 + (13*3) + (5*4) = 3 + 39 + 20 = 62 bytes (round up to 64)
         r.kind.forEach(v => { writeBuf(v, 4); });  // 2 bytes
         writeBuf(r.rt, 2);
         writeBuf(r.dir, 2);  // 2.5 bytes
         // how many when dos do we have
         writeBuf(r.whenDo.length, 4); // 3 bytes
         r.whenDo.forEach(wd => { // + 3 bytes + 1 byte for each command
-            let moves = colRowToLRUD(wd.col, wd.row);
-            //wd.col, wd.row, encode as two moves L,R,D,U (2,2) origin // .5 byte
-            //attrs, at most 8 (for now), two bits each, // 2 byte
+            colRowToLRUD(wd.col, wd.row);  // + .5 byte
+            let cnt = 0;
+            wd.attrs.forEach(a => { writeBuf(a, 2); cnt++; }); // +2 bytes
+            for(;cnt<=8;cnt++) { writeBuf(0,2); }
+            writeBuf(wd.commands.length, 4);  // +.5 byte
             //commands: 4 bits for length,  1 byte for each command
+            for(let i = 0; i < wd.commands.length; i++) {
+                writeBuf(wd.commands[i].inst, 4);
+                writeBuf(wd.commands[i].arg, 4);
+            }
         })
+    }
+
+    function storeRule(r: IdRule) {
+        packRule(r.rule);
+        settings.writeBuffer(r.id.toString(), buf);
     }
 }
