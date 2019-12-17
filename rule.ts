@@ -310,18 +310,19 @@ namespace tileworld {
         return wrapRule(tgtRule);
     }
 
-
     let buf: Buffer = null
     let bitIndex = 0;
 
-    function readWriteBuf(v: number, bits: number, write: boolean = true) {
+    function readWriteBuf(v: number, bits: number, write: boolean) {
         let byteIndex = bitIndex >> 3;
         if (byteIndex >= buf.length) {
             // shouldn't get here
+            control.assert(false, 43);
         }
         let shift = bitIndex - (byteIndex << 3);
         if (shift + bits >= 8) {
             // packing error - can't have value that spans byte boundary
+            control.assert(false, 44);
         }
         let byte = buf.getUint8(byteIndex);
         let mask = 0x1;
@@ -338,17 +339,25 @@ namespace tileworld {
         return (byte & mask) >> shift;
     }
 
+    function writeBuf(v: number, bits: number) {
+        readWriteBuf(v, bits, true);
+    }
+
+    function readBuf(bits: number) {
+        return readWriteBuf(0, bits, false);
+    }
+
     function colRowToLRUD(col: number, row: number) {
         // control.assert(Math.abs(2 - col) + Math.abs(2 - row) <= 2, 42);
         if (col == 2 && row == 2) {
-            readWriteBuf(MoveDirection.Left, 2);
-            readWriteBuf(MoveDirection.Right, 2);
+            writeBuf(MoveDirection.Left, 2);
+            writeBuf(MoveDirection.Right, 2);
             return;
         }
-        while (col < 2) { readWriteBuf(MoveDirection.Left, 2); col++; }
-        while (col > 2) { readWriteBuf(MoveDirection.Right, 2); col--; }
-        while (row < 2) { readWriteBuf(MoveDirection.Up, 2); row++; }
-        while (row > 2) { readWriteBuf(MoveDirection.Down, 2); row--; }
+        while (col < 2) { writeBuf(MoveDirection.Left, 2); col++; }
+        while (col > 2) { writeBuf(MoveDirection.Right, 2); col--; }
+        while (row < 2) { writeBuf(MoveDirection.Up, 2); row++; }
+        while (row > 2) { writeBuf(MoveDirection.Down, 2); row--; }
     }
 
     // pack things so that they'll be easy to read off
@@ -359,34 +368,34 @@ namespace tileworld {
         r.whenDo.forEach(wd => { len += (wd.commands.length > 0 ? 4 : 0)});
         buf = control.createBuffer(len);
 
-        r.kind.forEach(v => { readWriteBuf(v, 4); });   // 2 bytes
+        r.kind.forEach(v => { writeBuf(v, 4); });   // 2 bytes
         // pad out the rest with 0xf
-        for(let i = r.kind.length; i < 4; i++) { readWriteBuf(0xf, 4); }
+        for(let i = r.kind.length; i < 4; i++) { writeBuf(0xf, 4); }
 
-        readWriteBuf(r.rt, 2);
-        readWriteBuf(r.dir, 2);                         // 2.5 bytes
+        writeBuf(r.rt, 2);
+        writeBuf(r.dir, 2);                         // 2.5 bytes
         // how many when dos do we have
-        readWriteBuf(r.whenDo.length, 4);               // 3 bytes
+        writeBuf(r.whenDo.length, 4);               // 3 bytes
         // should we establish an order??
         r.whenDo.forEach(wd => {
             colRowToLRUD(wd.col, wd.row);                       // + .5 byte
             let cnt = 0;
-            wd.attrs.forEach(a => { readWriteBuf(a, 2); cnt++; });  // +2 bytes
-            for(;cnt<=8;cnt++) { readWriteBuf(0,2); }
-            readWriteBuf(wd.commands.length, 4);                    // +.5 byte
+            wd.attrs.forEach(a => { writeBuf(a, 2); cnt++; });  // +2 bytes
+            for(;cnt<=8;cnt++) { writeBuf(0,2); }
+            writeBuf(wd.commands.length, 4);                    // +.5 byte
         });
         // now, write out the commands (at most 5 non-zero)
         r.whenDo.forEach(wd => {
             // 1 byte for each command
             let i = 0;
             for(; i < wd.commands.length; i++) {
-                readWriteBuf(wd.commands[i].inst, 4);
-                readWriteBuf(wd.commands[i].arg, 4);
+                writeBuf(wd.commands[i].inst, 4);
+                writeBuf(wd.commands[i].arg, 4);
             }
             if (i > 0) {
                 // padd the rest
                 for(let j = i; j < 4; j++) {
-                    readWriteBuf(0xff, 8);
+                    writeBuf(0xff, 8);
                 }
             }
         });
@@ -401,20 +410,42 @@ namespace tileworld {
     function unPackRule() {
         let kinds = [];
         for(let i = 0; i<4; i++) {
-          let kind = readWriteBuf(0, 4);
+          let kind = readBuf(4);
           if (kind != 0xf) kinds.push(kind);
         }
-        let rt = readWriteBuf(0, 2);
-        let dir = readWriteBuf(0, 2);
+        let rt = readBuf(2);
+        let dir = readBuf(2);
         let rule = new Rule(kinds, rt, dir, []);
-        let whenDoLen = readWriteBuf(0, 4);
+        let whenDoLen = readBuf(4);
+        let hasCommands: WhenDo[] = [];
         for(let i = 0; i<whenDoLen; i++) {
-            let firstMove = readWriteBuf(0, 2);
-            let secondMove = readWriteBuf(0, 2);
-            // compute the column and row. 
-            // get the attributes
-            // are there commands? 
+            let firstMove = readBuf(2);
+            let secondMove = readBuf(2);
+            let col = 2 + moveXdelta(firstMove) + moveXdelta(secondMove);
+            let row = 2 + moveYdelta(firstMove) + moveYdelta(secondMove);
+            let whenDo = new WhenDo(col, row, [], []);
+            for(let a = 0; a < 8; a++) {
+                let attr = readBuf(2);
+                whenDo.attrs.push(attr);
+            }
+            let cmdLen = readBuf(4);
+            if (cmdLen > 0) hasCommands.push(whenDo);
+            rule.whenDo.push(whenDo);
         }
+        hasCommands.forEach(wd => {
+            for(let i = 0; i < 4; i++) {
+                let inst = readBuf(4);
+                let arg = readBuf(4);
+                if (inst != 0xf) {
+                    wd.commands.push(new Command(inst, arg));
+                }
+            }
+        })
         return rule
+    }
+
+    function retrieveRule(rid: number) {
+        buf = settings.readBuffer(rid.toString());
+        return unPackRule();
     }
 }
