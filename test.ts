@@ -169,15 +169,14 @@ function fillAttr(f: number, n: number, i: number, g: number) {
 }
 
 function TileAt(id: number, col: number, row: number): WhenDo {
-    return { col: col, row: row, attrs: fillAttr(AttrType.Exclude, 7, id, AttrType.Include), commands: [] }
+    return new WhenDo(col, row, fillAttr(AttrType.Exclude, 7, id, AttrType.Include), []);
 }
 
 function SpriteAt(id: number, col: number, row: number): WhenDo {
     let attrs = fillAttr(AttrType.Exclude, 7, id, AttrType.Include);
     attrs[0] = attrs[1] = attrs[2] = AttrType.OK;
-    return { col: col, row: row, attrs:attrs, commands: [] }
+    return new WhenDo(col, row, attrs, []);
 }
-
 
 let tp = TileAt(spaceId, 2, 3)
 tp.attrs[playerId] = AttrType.OK;
@@ -194,86 +193,58 @@ boulderRight.commands = [{ inst: CommandType.Move, arg: MoveDirection.Right }]
 let boulderLeft = SpriteAt(boulderId, 1, 2)
 boulderLeft.commands = [{ inst: CommandType.Move, arg: MoveDirection.Left }]
 
-let playerPaint: Rule = {
-    kind: [playerId],
-    rt: RuleType.Resting,
-    dir: MoveDirection.Left,
-    whenDo: [{ col: 2, row: 2, attrs: [], commands: [{ inst: CommandType.Paint, arg: spaceId }] }]
-}
+let playerPaint = new Rule([playerId], RuleType.Resting, MoveDirection.Left,
+    [new WhenDo(2,2,[],[new Command(CommandType.Paint,spaceId)])]
+);
 
-let playerMoveRight: Rule ={
-    kind: [playerId],
-    rt: RuleType.Pushing,
-    dir: MoveDirection.Right,
-    whenDo: [{ col: 2, row: 2, attrs: [], 
-               commands: [{ inst: CommandType.Move, arg: MoveDirection.Right }, 
-                          { inst: CommandType.Paint, arg: spaceId }] },
-        { col: 3, row: 2, attrs: playerMove, commands: [] } ]
-}
+let playerMoveRight = new Rule([playerId], RuleType.Pushing, MoveDirection.Right,
+    [new WhenDo(2, 2, [], 
+        [new Command(CommandType.Move, MoveDirection.Right), 
+         new Command(CommandType.Paint, spaceId) ]),
+     new WhenDo(3, 2, playerMove, []) ]
+);
 
-let playerMoveLeft: Rule = {
-    kind: [playerId],
-    rt: RuleType.Pushing,
-    dir: MoveDirection.Left,
-    whenDo: [{ col: 2, row: 2, attrs: [], commands: [{ inst: CommandType.Move, arg: MoveDirection.Left }, { inst: CommandType.Paint, arg: spaceId }] },
-        { col: 1, row: 2, attrs: playerMove, commands: [] }]
-}
+let playerMoveLeft = new Rule([playerId], RuleType.Pushing, MoveDirection.Left,
+    [new WhenDo(2, 2, [], 
+        [new Command(CommandType.Move, MoveDirection.Left), 
+         new Command(CommandType.Paint, spaceId)]),
+     new WhenDo(1, 2, playerMove, [])]
+);
 
-let playerMoveUp: Rule = {
-    kind: [playerId],
-    rt: RuleType.Pushing,
-    dir: MoveDirection.Up,
-    whenDo: [{ col: 2, row: 2, attrs: [], commands: [{ inst: CommandType.Move, arg: MoveDirection.Up }, { inst: CommandType.Paint, arg: spaceId }] },
-    { col: 2, row: 1, attrs: playerMove, commands: [] }]
-}
+let playerMoveUp = new Rule([playerId], RuleType.Pushing, MoveDirection.Up,
+    [new WhenDo(2, 2, [],
+        [new Command(CommandType.Move, MoveDirection.Up), 
+         new Command(CommandType.Paint, spaceId)]),
+     new WhenDo(2, 1, playerMove, [])]
+);
 
-let playerMoveDown: Rule = {
-    kind: [playerId],
-    rt: RuleType.Pushing,
-    dir: MoveDirection.Down,
-    whenDo: [{ col: 2, row: 2, attrs: [], commands: [{ inst: CommandType.Move, arg: MoveDirection.Down }, { inst: CommandType.Paint, arg: spaceId }] },
-    { col: 2, row: 3, attrs: playerMove, commands: [] }]
-}
+let playerMoveDown = new Rule([playerId], RuleType.Pushing, MoveDirection.Down,
+    [new WhenDo(2, 2, [],
+        [new Command(CommandType.Move, MoveDirection.Down),
+        new Command(CommandType.Paint, spaceId)]),
+    new WhenDo(2, 3, playerMove, [])]
+);
 
-let playerMoveBoulderRight: Rule = {
-    kind: [playerId],
-    rt: RuleType.Pushing,
-    dir: MoveDirection.Right,
-    whenDo: [{ col: 2, row: 2, attrs: [], commands: moveRight },
-        boulderRight, TileAt(spaceId, 4, 2)]
-}
+let playerMoveBoulderRight = new Rule([playerId], RuleType.Pushing, MoveDirection.Right,
+    [new WhenDo(2, 2, [], moveRight), boulderRight, TileAt(spaceId, 4, 2)]
+);
 
-let playerMoveBoulderLeft: Rule = {
-    kind: [playerId],
-    rt: RuleType.Pushing,
-    dir: MoveDirection.Left,
-    whenDo: [{ col: 2, row: 2, attrs: [], commands: moveLeft },
-        boulderLeft, TileAt(spaceId, 0, 2)]
-}
+let playerMoveBoulderLeft = new Rule([playerId], RuleType.Pushing, MoveDirection.Left,
+    [new WhenDo(2, 2, [], moveLeft), boulderLeft, TileAt(spaceId, 0, 2)]
+);
 
-let boulderFallDown: Rule = {
-    kind: [boulderId, diamondId],
-    rt: RuleType.Resting,
-    dir: MoveDirection.Left,
-    whenDo: [{ col: 2, row: 2, attrs: [], commands: [{ inst: CommandType.Move, arg: MoveDirection.Down }] },
-             TileAt(spaceId, 2, 3)]
-}
+let boulderFallDown = new Rule([boulderId, diamondId], RuleType.Resting, MoveDirection.Left,
+    [new WhenDo(2, 2, [], [new Command(CommandType.Move, MoveDirection.Down)]), TileAt(spaceId, 2, 3)]
+);
 
-let boulderFallingDown: Rule = {
-    kind: [boulderId, diamondId],
-    rt: RuleType.Moving,
-    dir: MoveDirection.Down,
-    whenDo: [{ col: 2, row: 2, attrs: [], commands: [{ inst: CommandType.Move, arg: MoveDirection.Down }] },
-             tp]
-}
+let boulderFallingDown = new Rule([boulderId, diamondId], RuleType.Moving, MoveDirection.Down,
+    [new WhenDo(2, 2, [], [new Command(CommandType.Move, MoveDirection.Down)]), tp]
+);
 
-let boulderFallLeft: Rule = {
-    kind: [boulderId, diamondId],
-    rt: RuleType.Resting,
-    dir: MoveDirection.Left,
-    whenDo: [{ col: 2, row: 2, attrs: [], commands: [{ inst: CommandType.Move, arg: MoveDirection.Left }] },
-             SpriteAt(boulderId, 2, 3), TileAt(spaceId, 1, 2), TileAt(spaceId,1,3)]
-}
+let boulderFallLeft = new Rule([boulderId, diamondId], RuleType.Resting, MoveDirection.Left,
+    [new WhenDo(2, 2, [], [new Command(CommandType.Move, MoveDirection.Left)]),
+     SpriteAt(boulderId, 2, 3), TileAt(spaceId, 1, 2), TileAt(spaceId,1,3) ]
+);
 
 let program: Program = {
     fixed: 3,

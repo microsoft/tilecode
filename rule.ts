@@ -38,36 +38,44 @@ enum CommandType {
 }
 
 enum AttrType {
-    Exclude = 0,  // tile cannot contain this kind
-    Include,  // tile must contain this kind
-    OneOf,    // tile must contain at least one labelled thusly
-    OK        // tile may contain this kind
+    Exclude = 0,    // tile cannot contain this kind
+    Include,        // tile must contain this kind
+    OneOf,          // tile must contain at least one labelled thusly
+    OK              // tile may contain this kind
 }
 
-type Command = {
-    inst: CommandType;
-    arg: number;
+class Command {
+    constructor(
+        public inst: CommandType,
+        public arg: number
+    ) {}
 }
 
-type WhenDo = {
-    col: number;            // [4] the guards and commands associated with a tile in the neighborhood
-    row: number;            // [4] (2,2) is the center of neighborhood, graphics coordinate system.
-    attrs: AttrType[];      // [2]*N the guard, one attribute per fixed/movable sprite
-    commands: Command[];   // the commands
+class WhenDo {
+    constructor(
+        public col: number,            // the guards and commands associated with a tile in the neighborhood
+        public row: number,            // (2,2) is the center of neighborhood, graphics coordinate system.
+        public attrs: AttrType[],      // the guard, one attribute per fixed/movable sprite
+        public commands: Command[]     // the commands
+    ) {}
 }
 
-type Rule = {
-    kind: number[];                 // the indices of movable sprite kinds this rule is defined over
-    rt: RuleType;
-    dir: MoveDirection;             // the direction associated with rule type (Moving, Colliding, Pushing)
-    whenDo: WhenDo[];               // guarded commands (limit on number of these? 6 for now)
+class Rule {
+    constructor( 
+        public kind: number[],                 // the indices of movable sprite kinds this rule is defined over
+        public rt: RuleType,
+        public dir: MoveDirection,             // the direction associated with rule type (Moving, Colliding, Pushing)
+        public whenDo: WhenDo[]               // guarded commands (limit on number of these? 6 for now)
+    ) { }
 }
 
-type IdRule = {
-    id: number;
-    rule: Rule;
-    // transform: FlipRotate of rule with different id
+class IdRule {
+    constructor(
+        public id: number,
+        public rule: Rule
+    ) { }
 }
+// transform: FlipRotate of rule with different id
 
 enum FlipRotate { Horizontal, Vertical, Left, Right };
 
@@ -82,12 +90,7 @@ type Program = {
 // TODO: ordering of rules (pairs).
 
 function makeNewRule(kind: number[], rt: RuleType, dir: MoveDirection): Rule {
-    return {
-        kind: kind,
-        rt: rt,
-        dir: dir,
-        whenDo: []
-    }
+    return new Rule(kind, rt, dir, []);
 }
 
 // new API for access to low-level representation
@@ -110,7 +113,7 @@ namespace tileworld {
     }
 
     function wrapRule(r: Rule) {
-        let newRule: IdRule = { id: prog.rules.length, rule: r };
+        let newRule = new IdRule(prog.rules.length, r);
         prog.rules.push(newRule);
         return newRule.id;
     }
@@ -169,7 +172,7 @@ namespace tileworld {
     }
 
     export function makeWhenDo(rid: number, col: number, row: number) {
-        let whenDo: WhenDo = { col: col, row: row, attrs:[], commands:[]}
+        let whenDo = new WhenDo(col, row, [], []);
         getRule(rid).whenDo.push(whenDo);
         return getRule(rid).whenDo.length-1;
     }
@@ -195,7 +198,7 @@ namespace tileworld {
     export function setInst(rid: number, wdid: number, cid: number, n: number) {
         let commands = getRule(rid).whenDo[wdid].commands;
         while (cid >= commands.length && cid < 4) {
-            commands.push({inst: -1, arg: -1});
+            commands.push(new Command(-1, -1));
         }
         commands[cid].inst = n;
     }
@@ -203,7 +206,7 @@ namespace tileworld {
     export function setArg(rid: number, wdid: number, cid: number, n: number) {
         let commands = getRule(rid).whenDo[wdid].commands;
         while (cid >= commands.length && cid < 4) {
-            commands.push({ inst: -1, arg: -1 });
+            commands.push(new Command(-1, -1));
         }
         commands[cid].arg = n;
     }
@@ -217,7 +220,7 @@ namespace tileworld {
 
     // useful utilities
     export function makeIds(rules: Rule[]): IdRule[] {
-        return rules.map((r, i) => { return { id: i, rule: r } })
+        return rules.map((r, i) => { return new IdRule(i, r); });
     }
 
     export function moveXdelta(dir: MoveDirection) {
