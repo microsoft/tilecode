@@ -1,11 +1,5 @@
 namespace tileworld {
 
-    // TODO: base class for tile-based editors
-    // - drawing
-    // - cursor and selected items
-    // - wiring from view back to controller
-    // - modes: painting, menus
-
     // TODO: animate transitions between screens
     // TODO: names of things as overlay
     // TODO: coordinates?

@@ -11,12 +11,13 @@ enum MoveDirection { // [4], could be[2]
     None, Left, Right, Up, Down
 }
 
-
 // move
 // - left, right, up, down, uturn, stop, ...
 
-// paint
-// - art 
+// tile-based commands
+// - paint art (of tile)
+// - create sprite (at tile)
+// - 
 
 // sprite property
 // - zero-remaining
@@ -29,12 +30,10 @@ enum MoveDirection { // [4], could be[2]
 // game end
 // game next-level
 // game score+1, score-1
-// 
-
 
 enum CommandType {  // [8]
-    Move,           // arg (MoveDirection) + Stop, UTurn, ...
-    Paint           // arg (index of fixed sprite)
+    Move,           // arg (MoveDirection) + Stop, UTurn, ... tie to sprite
+    Paint           // arg (index of fixed sprite) - these commands are not tied to sprite
 }
 
 enum AttrType {  // [2]
@@ -99,12 +98,11 @@ namespace tileworld {
 
     let lastRule: IdRule = null;
     let prog: Program = null;
-    let rule: number = -1;
-    let whendo: number = -1;
-    let command: number = -1;
 
     // TODO: packed 16-bit representation managed here
     // (10 bits for rule, 4 for whendo, 2 for command)
+
+    // - move to a single number to represent rid+wid+cid
 
     function getRule(rid: number) {
         if (lastRule == null || lastRule.id != rid) {
