@@ -320,7 +320,7 @@ namespace tileworld {
             control.assert(false, 43);
         }
         let shift = bitIndex - (byteIndex << 3);
-        if (shift + bits >= 8) {
+        if (shift + bits > 8) {
             // packing error - can't have value that spans byte boundary
             control.assert(false, 44);
         }
@@ -348,20 +348,38 @@ namespace tileworld {
     }
 
     function colRowToLRUD(col: number, row: number) {
-        // control.assert(Math.abs(2 - col) + Math.abs(2 - row) <= 2, 42);
-        if (col == 2 && row == 2) {
+        let dist = Math.abs(2 - col) + Math.abs(2 - row);
+        if (dist == 0) {
             writeBuf(MoveDirection.Left, 2);
             writeBuf(MoveDirection.Right, 2);
             return;
+        } else if (dist == 1) {
+            // trick encoding here
+            if (col == 2 && row == 1) {
+                writeBuf(MoveDirection.Right, 2);
+                writeBuf(MoveDirection.Up, 2);
+            } else if (col == 2 && row == 3) {
+                writeBuf(MoveDirection.Left, 2);
+                writeBuf(MoveDirection.Down, 2);
+            } else if (col == 1 && row == 2) {
+                writeBuf(MoveDirection.Left, 2);
+                writeBuf(MoveDirection.Up, 2);
+            } else {
+                writeBuf(MoveDirection.Right, 2);
+                writeBuf(MoveDirection.Down, 2);   
+            }
+        } else {
+            // important for row to go first, see dist == 1
+            while (row < 2) { writeBuf(MoveDirection.Up, 2); row++; }
+            while (row > 2) { writeBuf(MoveDirection.Down, 2); row--; }
+            while (col < 2) { writeBuf(MoveDirection.Left, 2); col++; }
+            while (col > 2) { writeBuf(MoveDirection.Right, 2); col--; }
         }
-        while (col < 2) { writeBuf(MoveDirection.Left, 2); col++; }
-        while (col > 2) { writeBuf(MoveDirection.Right, 2); col--; }
-        while (row < 2) { writeBuf(MoveDirection.Up, 2); row++; }
-        while (row > 2) { writeBuf(MoveDirection.Down, 2); row--; }
     }
 
     // pack things so that they'll be easy to read off
     function packRule(r: Rule) {
+        bitIndex = 0;
         // compute length (at most 13 whenDo, at most 5 whenDo have commands)
         // so max = 3 + 39 + 20 = 62
         let len = 3 + r.whenDo.length * 3;
@@ -381,7 +399,7 @@ namespace tileworld {
             colRowToLRUD(wd.col, wd.row);                       // + .5 byte
             let cnt = 0;
             wd.attrs.forEach(a => { writeBuf(a, 2); cnt++; });  // +2 bytes
-            for(;cnt<=8;cnt++) { writeBuf(0,2); }
+            for(;cnt<8;cnt++) { writeBuf(0,2); }
             writeBuf(wd.commands.length, 4);                    // +.5 byte
         });
         // now, write out the commands (at most 5 non-zero)
@@ -401,13 +419,15 @@ namespace tileworld {
         });
     }
 
-    function storeRule(r: IdRule) {
+    export function storeRule(r: IdRule) {
         packRule(r.rule);
-        settings.writeBuffer(r.id.toString(), buf);
+        return buf;
+        // settings.writeBuffer(r.id.toString(), buf);
     }
 
     // first, let's fully unpack
     function unPackRule() {
+        bitIndex = 0;
         let kinds = [];
         for(let i = 0; i<4; i++) {
           let kind = readBuf(4);
@@ -421,8 +441,20 @@ namespace tileworld {
         for(let i = 0; i<whenDoLen; i++) {
             let firstMove = readBuf(2);
             let secondMove = readBuf(2);
-            let col = 2 + moveXdelta(firstMove) + moveXdelta(secondMove);
-            let row = 2 + moveYdelta(firstMove) + moveYdelta(secondMove);
+            let col = 2;
+            let row = 2;
+            if (firstMove == MoveDirection.Left && secondMove == MoveDirection.Up) {
+                col = 1;
+            } else if (firstMove == MoveDirection.Right && secondMove == MoveDirection.Up) {
+                row = 1;
+            } else if (firstMove == MoveDirection.Left && secondMove == MoveDirection.Down) {
+                row = 3;
+            } else if (firstMove == MoveDirection.Right && secondMove == MoveDirection.Down) {
+                col = 3;;
+            } else {
+                col += moveXdelta(firstMove) + moveXdelta(secondMove);
+                row += moveYdelta(firstMove) + moveYdelta(secondMove);
+            }
             let whenDo = new WhenDo(col, row, [], []);
             for(let a = 0; a < 8; a++) {
                 let attr = readBuf(2);
@@ -444,8 +476,8 @@ namespace tileworld {
         return rule
     }
 
-    function retrieveRule(rid: number) {
-        buf = settings.readBuffer(rid.toString());
+    export function retrieveRule(b: Buffer) {
+        buf = b;
         return unPackRule();
     }
 }

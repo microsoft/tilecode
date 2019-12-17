@@ -241,7 +241,7 @@ let boulderFallingDown = new Rule([boulderId, diamondId], RuleType.Moving, MoveD
     [new WhenDo(2, 2, [], [new Command(CommandType.Move, MoveDirection.Down)]), tp]
 );
 
-let boulderFallLeft = new Rule([boulderId, diamondId], RuleType.Resting, MoveDirection.Left,
+let boulderFallLeft: Rule = new Rule([boulderId, diamondId], RuleType.Resting, MoveDirection.Left,
     [new WhenDo(2, 2, [], [new Command(CommandType.Move, MoveDirection.Left)]),
      SpriteAt(boulderId, 2, 3), TileAt(spaceId, 1, 2), TileAt(spaceId,1,3) ]
 );
@@ -253,6 +253,8 @@ let program: Program = {
         playerPaint, playerMoveRight, playerMoveLeft, playerMoveUp, playerMoveDown, playerMoveBoulderRight, playerMoveBoulderLeft])
 }
 
+let roundTripRules = program.rules.map(r => { let b = tw.storeRule(r); return tw.retrieveRule(b); })
+program.rules = tw.makeIds(roundTripRules);
 tw.setProgram(program);
 let mapEditor = new tw.MapEditor(manager);
 
