@@ -249,8 +249,8 @@ let boulderFallLeft: Rule = new Rule([boulderId, diamondId], RuleType.Resting, M
 let program: Program = {
     fixed: 3,
     movable: 4,
-    rules: tw.makeIds([boulderFallDown, boulderFallLeft, boulderFallingDown, 
-        playerPaint, playerMoveRight, playerMoveLeft, playerMoveUp, playerMoveDown, playerMoveBoulderRight, playerMoveBoulderLeft])
+    rules: tw.makeIds([boulderFallDown]) //, boulderFallLeft, boulderFallingDown, 
+      //  playerPaint, playerMoveRight, playerMoveLeft, playerMoveUp, playerMoveDown, playerMoveBoulderRight, playerMoveBoulderLeft])
 }
 
 let roundTripRules = program.rules.map(r => { 

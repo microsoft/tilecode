@@ -331,12 +331,18 @@ namespace tileworld {
         let writeMask = mask ^ 0xffffffff;
 
         if (write) {
-            buf.setUint8((byte & writeMask) | (v << shift), byteIndex);
+            let newVal = (byte & writeMask) | (v << shift);
+            buf.setUint8(byteIndex, newVal);
         }
         
         bitIndex += bits;
 
-        return (byte & mask) >> shift;
+        byte = buf.getUint8(byteIndex);
+        let ret = (byte & mask) >> shift
+        if (write) {
+            control.assert(ret == v, 42);
+        }
+        return ret;
     }
 
     function writeBuf(v: number, bits: number) {
@@ -383,7 +389,9 @@ namespace tileworld {
         // compute length (at most 13 whenDo, at most 5 whenDo have commands)
         // so max = 3 + 39 + 20 = 62
         let len = 3 + r.whenDo.length * 3;
-        r.whenDo.forEach(wd => { len += (wd.commands.length > 0 ? 4 : 0)});
+        for (let i = 0; i<r.whenDo.length; i++) {
+            len += (r.whenDo[i].commands.length > 0 ? 4 : 0);
+        }
         buf = control.createBuffer(len);
 
         r.kind.forEach(v => { writeBuf(v, 4); });   // 2 bytes
@@ -397,20 +405,20 @@ namespace tileworld {
         // should we establish an order??
         r.whenDo.forEach(wd => {
             colRowToLRUD(wd.col, wd.row);                       // + .5 byte
-            let cnt = 0;
-            wd.attrs.forEach(a => { writeBuf(a, 2); cnt++; });  // +2 bytes
-            for(;cnt<8;cnt++) { writeBuf(0,2); }
+            wd.attrs.forEach(a => { writeBuf(a, 2);  });        // +2 bytes
+            for(let cnt = wd.attrs.length; cnt < 8; cnt++) { writeBuf(0, 2); }
             writeBuf(wd.commands.length, 4);                    // +.5 byte
         });
         // now, write out the commands (at most 5 non-zero)
         r.whenDo.forEach(wd => {
-            // 1 byte for each command
-            for(let i = 0; i < wd.commands.length; i++) {
-                writeBuf(wd.commands[i].inst, 4);
-                writeBuf(wd.commands[i].arg, 4);
-            }
-            for(let j = wd.commands.length; j < 4; j++) {
-                writeBuf(0xff, 8);
+            if (wd.commands.length > 0) {
+                for(let i = 0; i < wd.commands.length; i++) {
+                    writeBuf(wd.commands[i].inst, 4);
+                    writeBuf(wd.commands[i].arg, 4);
+                }
+                for(let j = wd.commands.length; j < 4; j++) {
+                    writeBuf(0xff, 8);
+                }
             }
         });
     }
