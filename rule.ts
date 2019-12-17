@@ -31,6 +31,10 @@ enum MoveDirection { // [4], could be[2]
 // game next-level
 // game score+1, score-1
 
+
+enum CommandType {
+    Move,           // arg (MoveDirection) + Stop, UTurn, ...
+    Paint           // arg (index of fixed sprite)
 enum CommandType {  // [8]
     Move,           // arg (MoveDirection) + Stop, UTurn, ... tie to sprite
     Paint           // arg (index of fixed sprite) - these commands are not tied to sprite
@@ -55,17 +59,11 @@ type WhenDo = {
     commands: Command[];   // the commands
 }
 
-// kinds: 4*[4]  16
-// rt:    [2]    18
-// dir:   [2]    20
-// gen:   4*[2]  28
-// whendo: [1-12]*[2+2+N*2+4+4*8]  = [1-12]*[40+N*2]= [1-12]*[40+16]
-
 type Rule = {
     kind: number[];                 // the indices of movable sprite kinds this rule is defined over
     rt: RuleType;
     dir: MoveDirection;             // the direction associated with rule type (Moving, Colliding, Pushing)
-    whenDo: WhenDo[];               // guarded commands
+    whenDo: WhenDo[];               // guarded commands (limit on number of these? 6 for now)
 }
 
 enum FlipRotate { Horizontal, Vertical, Left, Right };
@@ -82,6 +80,9 @@ type Program = {
     movable: number;    // the number of movable sprites
     rules: IdRule[];    // the rules
 }
+
+// TODO: make things more compact through application of transformations
+// TODO: ordering of rules (pairs).
 
 function makeNewRule(kind: number[], rt: RuleType, dir: MoveDirection): Rule {
     return {
@@ -312,5 +313,50 @@ namespace tileworld {
             }
         }
         return wrapRule(tgtRule);
+    }
+
+    // TODO: write directly into buffer instead of doing string building
+    function colRowToLRUD(col: number, row: number) {
+        control.assert(Math.abs(2-col) + Math.abs(2-row) <= 2, 42);
+        let ret = "";
+        if (col == 2 && row == 2) return "LR";
+        while (col < 2) { ret += "L"; col++; }
+        while (col > 2) { ret += "R"; col--; }
+        while (row < 2) { ret += "U"; row++; }
+        while (row > 2) { ret += "D"; row--; }
+        return ret;
+    }
+
+
+    let b: Buffer = null
+    let bitIndex = 0;
+    function writeBuf(v: number, bits: number) {
+        let byteIndex = bitIndex >> 3;
+        if (byteIndex >= b.length) {
+            // doesn't fit in buffer - oops!
+        }
+        let shift = bitIndex - (byteIndex << 3);
+        if (shift + bits >= 8) {
+            // packing error - can't have value that spans byte boundary
+        }
+        let byte = b.getUint8(byteIndex);
+        // create mask of length |bits|
+        // merge values
+        b.setUint8(byte, byteIndex);
+        bitIndex += bits;
+    }
+
+    function packRule(r: Rule) {
+        r.kind.forEach(v => { writeBuf(v, 4); });  // 2 bytes
+        writeBuf(r.rt, 2);
+        writeBuf(r.dir, 2);  // 2.5 bytes
+        // how many when dos do we have
+        writeBuf(r.whenDo.length, 4); // 3 bytes
+        r.whenDo.forEach(wd => { // + 3 bytes + 1 byte for each command
+            let moves = colRowToLRUD(wd.col, wd.row);
+            //wd.col, wd.row, encode as two moves L,R,D,U (2,2) origin // .5 byte
+            //attrs, at most 8 (for now), two bits each, // 2 byte
+            //commands: 4 bits for length,  1 byte for each command
+        })
     }
 }
