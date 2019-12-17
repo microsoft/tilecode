@@ -33,9 +33,6 @@ enum MoveDirection { // [4], could be[2]
 
 
 enum CommandType {
-    Move,           // arg (MoveDirection) + Stop, UTurn, ...
-    Paint           // arg (index of fixed sprite)
-enum CommandType {  // [8]
     Move,           // arg (MoveDirection) + Stop, UTurn, ... tie to sprite
     Paint           // arg (index of fixed sprite) - these commands are not tied to sprite
 }
