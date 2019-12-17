@@ -184,14 +184,14 @@ tp.attrs[enemyId] = AttrType.OK;
 let playerMove = fillAttr(AttrType.OK, 7, boulderId, AttrType.Exclude);
 playerMove[wallId] = AttrType.Exclude;
 
-let moveRight = [{ inst: CommandType.Move, arg: MoveDirection.Right }]
-let moveLeft = [{ inst: CommandType.Move, arg: MoveDirection.Left }]
+let moveRight = [new Command(CommandType.Move, MoveDirection.Right)]
+let moveLeft = [new Command(CommandType.Move, MoveDirection.Left)]
 
 let boulderRight = SpriteAt(boulderId, 3, 2)
-boulderRight.commands = [{ inst: CommandType.Move, arg: MoveDirection.Right }]
+boulderRight.commands = moveRight;
 
 let boulderLeft = SpriteAt(boulderId, 1, 2)
-boulderLeft.commands = [{ inst: CommandType.Move, arg: MoveDirection.Left }]
+boulderLeft.commands = moveLeft;
 
 let playerPaint = new Rule([playerId], RuleType.Resting, MoveDirection.Left,
     [new WhenDo(2,2,[],[new Command(CommandType.Paint,spaceId)])]

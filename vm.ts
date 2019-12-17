@@ -252,9 +252,9 @@ namespace tileworld {
             let oneOfPassed: boolean = false;
             let captureWitness: TileSprite = null;
             for(let kind = 0; kind < this.gs.fixed; kind++) {
-                //let hasKind = this.gs.world.getPixel(wcol, wrow) == kind;
-                const tm = game.currentScene().tileMap;
-                let hasKind = tm.getTile(wcol, wrow)
+                let hasKind = this.gs.world.getPixel(wcol, wrow) == kind;
+                // const tm = game.currentScene().tileMap;
+                //let hasKind = tm.getTile(wcol, wrow)
                 let attr = getAttr(rid, whendo, kind);
                 if (attr == AttrType.Exclude && hasKind ||
                     attr == AttrType.Include && !hasKind) {

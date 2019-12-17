@@ -4,7 +4,8 @@
     "description": "",
     "dependencies": {
         "device": "*",
-        "animation": "*"
+        "animation": "*",
+        "color-coded-tilemap": "*"
     },
     "files": [
         "README.md",

@@ -38,17 +38,17 @@ enum CommandType {
 }
 
 enum AttrType {
-    Exclude = 0,    // tile cannot contain this kind
-    Include,        // tile must contain this kind
-    OneOf,          // tile must contain at least one labelled thusly
-    OK              // tile may contain this kind
+    OK = 0,    // tile cannot contain this kind
+    Include,   // tile must contain this kind
+    OneOf,     // tile must contain at least one labelled thusly
+    Exclude    // tile may contain this kind
 }
 
 class Command {
     constructor(
         public inst: CommandType,
         public arg: number
-    ) {}
+    ) { }
 }
 
 class WhenDo {
@@ -57,7 +57,7 @@ class WhenDo {
         public row: number,            // (2,2) is the center of neighborhood, graphics coordinate system.
         public attrs: AttrType[],      // the guard, one attribute per fixed/movable sprite
         public commands: Command[]     // the commands
-    ) {}
+    ) { }
 }
 
 class Rule {
@@ -264,7 +264,7 @@ namespace tileworld {
     // rule transformations: flip and rotate
 
     function flipCommands(commands: Command[], fr: FlipRotate) {
-        return commands.map(c => { return { inst: c.inst, arg: c.inst == CommandType.Move ? flipRotateDir(c.arg, fr) : c.arg } })
+        return commands.map(c => { return new Command(c.inst, c.inst == CommandType.Move ? flipRotateDir(c.arg, fr) : c.arg); })
     }
 
     function transformCol(col: number, row: number, fr: FlipRotate) {
@@ -332,6 +332,19 @@ namespace tileworld {
         bitIndex += bits;
     }
 
+    function readBuf(bits: number) {
+        let byteIndex = bitIndex >> 3;
+        if (byteIndex >= buf.length) {
+            // shouldn't get here
+        }
+        let shift = bitIndex - (byteIndex << 3);
+        if (shift + bits >= 8) {
+            // packing error - can't have value that spans byte boundary
+        }
+        let byte = buf.getUint8(byteIndex);
+        
+    }
+
     function colRowToLRUD(col: number, row: number) {
         // control.assert(Math.abs(2 - col) + Math.abs(2 - row) <= 2, 42);
         if (col == 2 && row == 2) {
@@ -347,24 +360,31 @@ namespace tileworld {
 
     // pack things so that they'll be easy to read off
     function packRule(r: Rule) {
-        buf = control.createBuffer(64);
-        // 3 + (13*3) + (5*4) = 3 + 39 + 20 = 62 bytes (round up to 64)
-        r.kind.forEach(v => { writeBuf(v, 4); });  // 2 bytes
+        // compute length (at most 13 whenDo, at most 5 whenDo have commands)
+        // so max = 3 + 39 + 20 = 62
+        let len = 3 + r.whenDo.length * 3;
+        r.whenDo.forEach(wd => { len += (wd.commands.length > 0 ? 4 : 0)});
+        buf = control.createBuffer(len);
+
+        r.kind.forEach(v => { writeBuf(v, 4); });   // 2 bytes
+        // pad out the rest with 0xf
+        for(let i = r.kind.length; i < 4; i++) { writeBuf(0xf, 4); }
+
         writeBuf(r.rt, 2);
-        writeBuf(r.dir, 2);  // 2.5 bytes
+        writeBuf(r.dir, 2);                         // 2.5 bytes
         // how many when dos do we have
-        writeBuf(r.whenDo.length, 4); // 3 bytes
+        writeBuf(r.whenDo.length, 4);               // 3 bytes
         // should we establish an order??
-        r.whenDo.forEach(wd => { // + 3 bytes for each when do (1 at least, 13 at most)
-            colRowToLRUD(wd.col, wd.row);  // + .5 byte
+        r.whenDo.forEach(wd => {
+            colRowToLRUD(wd.col, wd.row);                       // + .5 byte
             let cnt = 0;
-            wd.attrs.forEach(a => { writeBuf(a, 2); cnt++; }); // +2 bytes
+            wd.attrs.forEach(a => { writeBuf(a, 2); cnt++; });  // +2 bytes
             for(;cnt<=8;cnt++) { writeBuf(0,2); }
-            writeBuf(wd.commands.length, 4);  // +.5 byte
+            writeBuf(wd.commands.length, 4);                    // +.5 byte
         });
         // now, write out the commands (at most 5 non-zero)
         r.whenDo.forEach(wd => {
-            //commands: 4 bits for length,  1 byte for each command
+            // 1 byte for each command
             let i = 0;
             for(; i < wd.commands.length; i++) {
                 writeBuf(wd.commands[i].inst, 4);
@@ -382,5 +402,10 @@ namespace tileworld {
     function storeRule(r: IdRule) {
         packRule(r.rule);
         settings.writeBuffer(r.id.toString(), buf);
+    }
+
+    // first, let's fully unpack
+    function unPackRule() {
+        
     }
 }
