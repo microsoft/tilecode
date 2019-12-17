@@ -423,10 +423,9 @@ namespace tileworld {
         });
     }
 
-    export function storeRule(r: IdRule) {
+    export function storeRule(prefix: string, r: IdRule) {
         packRule(r.rule);
-        return buf;
-        // settings.writeBuffer(r.id.toString(), buf);
+        settings.writeBuffer(prefix + r.id.toString(), buf);
     }
 
     // first, let's fully unpack
@@ -480,8 +479,8 @@ namespace tileworld {
         return rule
     }
 
-    export function retrieveRule(b: Buffer) {
-        buf = b;
+    export function retrieveRule(prefix: string, rid: number) {
+        buf = settings.readBuffer(prefix + rid.toString());
         return unPackRule();
     }
 }

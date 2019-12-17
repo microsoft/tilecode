@@ -20,7 +20,8 @@
         "ruleeditor.ts",
         "editor.ts",
         "tileworld.ts",
-        "main.ts"
+        "main.ts",
+        "loadScreen.ts"
     ],
     "testFiles": [
         "test.ts"

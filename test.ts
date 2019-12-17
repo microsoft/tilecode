@@ -254,12 +254,15 @@ let program: Program = {
       playerMoveBoulderRight, playerMoveBoulderLeft])
 }
 
+/*
 let roundTripRules = program.rules.map(r => { 
     let b: Buffer = tw.storeRule(r); 
     let newb = b.slice(0,b.length);
     return tw.retrieveRule(newb); 
 })
-program.rules = tw.makeIds(roundTripRules);
+*/
+
+
 tw.setProgram(program);
 let mapEditor = new tw.MapEditor(manager);
 
