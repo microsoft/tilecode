@@ -325,13 +325,13 @@ namespace tileworld {
             control.assert(false, 44);
         }
         let byte = buf.getUint8(byteIndex);
-        let mask = 0x1;
-        for(let i=0; i<bits; i++) { mask = mask | (mask << 1); }
+        let mask = 0;
+        for(let i=0; i<bits; i++) { mask = 0x1 | (mask << 1); }
         mask = mask << shift;
-        mask = mask ^ 0xffffffff;
+        let writeMask = mask ^ 0xffffffff;
 
         if (write) {
-            buf.setUint8((byte & mask) | (v << shift), byteIndex);
+            buf.setUint8((byte & writeMask) | (v << shift), byteIndex);
         }
         
         bitIndex += bits;
@@ -405,16 +405,12 @@ namespace tileworld {
         // now, write out the commands (at most 5 non-zero)
         r.whenDo.forEach(wd => {
             // 1 byte for each command
-            let i = 0;
-            for(; i < wd.commands.length; i++) {
+            for(let i = 0; i < wd.commands.length; i++) {
                 writeBuf(wd.commands[i].inst, 4);
                 writeBuf(wd.commands[i].arg, 4);
             }
-            if (i > 0) {
-                // padd the rest
-                for(let j = i; j < 4; j++) {
-                    writeBuf(0xff, 8);
-                }
+            for(let j = wd.commands.length; j < 4; j++) {
+                writeBuf(0xff, 8);
             }
         });
     }
