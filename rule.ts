@@ -1,14 +1,14 @@
 // bytecode representation
 
-enum RuleType {  // [4], could be [2]
-    Resting,     // a sprite at rest 
+enum RuleType {
+    Resting = 0,     // a sprite at rest 
     Moving,      // a sprite moving in a given direction
     Pushing,     // a sprite being pushed in a given direction
     Colliding    // a moving sprite about to collide with another sprite
 }
 
-enum MoveDirection { // [4], could be[2]
-    Left, Right, Up, Down
+enum MoveDirection {
+    Left = 0, Right, Up, Down
 }
 
 // move
@@ -37,14 +37,14 @@ enum CommandType {
     Paint           // arg (index of fixed sprite) - these commands are not tied to sprite
 }
 
-enum AttrType {  // [2]
-    Exclude,  // tile cannot contain this kind
+enum AttrType {
+    Exclude = 0,  // tile cannot contain this kind
     Include,  // tile must contain this kind
     OneOf,    // tile must contain at least one labelled thusly
     OK        // tile may contain this kind
 }
 
-type Command = { // [4] + [4]
+type Command = {
     inst: CommandType;
     arg: number;
 }
@@ -63,13 +63,13 @@ type Rule = {
     whenDo: WhenDo[];               // guarded commands (limit on number of these? 6 for now)
 }
 
-enum FlipRotate { Horizontal, Vertical, Left, Right };
-
 type IdRule = {
     id: number;
     rule: Rule;
     // transform: FlipRotate of rule with different id
 }
+
+enum FlipRotate { Horizontal, Vertical, Left, Right };
 
 // fixed sprites are ordered before movable sprites (0-based)
 type Program = {
@@ -191,9 +191,6 @@ namespace tileworld {
         let c = getRule(rid).whenDo[wdid].commands[cid];
         return (c == null) ? -1 : c.arg;
     }
-
-    // 16 bits to specify command:
-    // rid: [10], wdid: [4], cid:[2]
 
     export function setInst(rid: number, wdid: number, cid: number, n: number) {
         let commands = getRule(rid).whenDo[wdid].commands;
@@ -317,7 +314,7 @@ namespace tileworld {
     function writeBuf(v: number, bits: number) {
         let byteIndex = bitIndex >> 3;
         if (byteIndex >= buf.length) {
-            
+            // shouldn't get here
         }
         let shift = bitIndex - (byteIndex << 3);
         if (shift + bits >= 8) {
@@ -328,13 +325,12 @@ namespace tileworld {
         for(let i=0; i<bits; i++) { mask = mask | (mask << 1); }
         mask = mask << shift;
         mask = mask ^ 0xffffffff;
-        buf.setUint8(byte , byteIndex);
+        buf.setUint8((byte & mask) | (v << shift), byteIndex);
         bitIndex += bits;
     }
 
     function colRowToLRUD(col: number, row: number) {
-        control.assert(Math.abs(2 - col) + Math.abs(2 - row) <= 2, 42);
-        let ret = "";
+        // control.assert(Math.abs(2 - col) + Math.abs(2 - row) <= 2, 42);
         if (col == 2 && row == 2) {
             writeBuf(MoveDirection.Left, 2);
             writeBuf(MoveDirection.Right, 2);
@@ -346,27 +342,38 @@ namespace tileworld {
         while (row > 2) { writeBuf(MoveDirection.Down, 2); row--; }
     }
 
+    // pack things so that they'll be easy to read off
     function packRule(r: Rule) {
         buf = control.createBuffer(64);
-        // TODO: create enough space for a rule
         // 3 + (13*3) + (5*4) = 3 + 39 + 20 = 62 bytes (round up to 64)
         r.kind.forEach(v => { writeBuf(v, 4); });  // 2 bytes
         writeBuf(r.rt, 2);
         writeBuf(r.dir, 2);  // 2.5 bytes
         // how many when dos do we have
         writeBuf(r.whenDo.length, 4); // 3 bytes
-        r.whenDo.forEach(wd => { // + 3 bytes + 1 byte for each command
+        // should we establish an order??
+        r.whenDo.forEach(wd => { // + 3 bytes for each when do (1 at least, 13 at most)
             colRowToLRUD(wd.col, wd.row);  // + .5 byte
             let cnt = 0;
             wd.attrs.forEach(a => { writeBuf(a, 2); cnt++; }); // +2 bytes
             for(;cnt<=8;cnt++) { writeBuf(0,2); }
             writeBuf(wd.commands.length, 4);  // +.5 byte
+        });
+        // now, write out the commands (at most 5 non-zero)
+        r.whenDo.forEach(wd => {
             //commands: 4 bits for length,  1 byte for each command
-            for(let i = 0; i < wd.commands.length; i++) {
+            let i = 0;
+            for(; i < wd.commands.length; i++) {
                 writeBuf(wd.commands[i].inst, 4);
                 writeBuf(wd.commands[i].arg, 4);
             }
-        })
+            if (i > 0) {
+                // padd the rest
+                for(let j = i; j < 4; j++) {
+                    writeBuf(0xff, 8);
+                }
+            }
+        });
     }
 
     function storeRule(r: IdRule) {
