@@ -8,13 +8,9 @@ namespace tileworld {
             this.program = null;
             this.fromSlot = -1;
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                if ( (this.col() == 4 || this.col() == 6) && 
-                     (this.row() == 2 || this.row() == 4)) {
+                if ( (this.col() == 4 || this.col() == 6) && this.row() == 2) {
                     let prefix = this.col() == 4 ? "TW1-" : "TW2-";
-                    if (this.row() == 2)
-                        this.loadProgram(prefix);
-                    else 
-                        this.saveProgram(prefix);
+                    this.loadProgram(prefix);
                 }
             });
             this.update();
@@ -26,7 +22,7 @@ namespace tileworld {
             let names = settings.list(prefix);
             if (names.length == 0)
                 return;
-            
+        
             // things to load
             // - the meta data (fixed, movable)
             // - the sprites
@@ -36,21 +32,21 @@ namespace tileworld {
             this.update();
         }
 
-        private saveProgram(prefix: string) {
-            if (this.program == null)
+        private saveBootstrap(prefix: string){
+            if (this.bootstrap == null)
                 return;
             // TODO: sprites
             settings.writeNumber(prefix + "FL", this.program.fixed.length);
             settings.writeNumber(prefix + "ML", this.program.movable.length);
             this.program.fixed.forEach((img,i) => {
-                settings.writeBuffer(prefix+"FS", null);
+                settings.writeBuffer(prefix + "FS" + i.toString(), imageToBuffer(img));
             });
             this.program.movable.forEach((img, i) => {
-
+                settings.writeBuffer(prefix + "MS" + i.toString() , imageToBuffer(img));
             });
             this.program.rules.forEach(r => {storeRule(prefix, r) });
         }
-
+        
         private update() {
             this.background.fill(15);
             this.drawImage(9, 6, this.program ? map : greyImage(map));
@@ -61,11 +57,6 @@ namespace tileworld {
             this.fillTile(6, 2, 11);
             this.background.print("2", (6 << 4) + 6, (2 << 4) + 4 + yoff);
             if (this.program) {
-                this.background.print("Save", 2 << 4, (4 << 4) + 4 + yoff);
-                this.fillTile(4, 4, 12);
-                this.background.print("1", (4 << 4) + 6, (4 << 4) + 4 + yoff);
-                this.fillTile(6, 4, 12);
-                this.background.print("2", (6 << 4) + 6, (4 << 4) + 4 + yoff);
                 for(let x=0; x<9; x++) {
                     this.drawImage(x,6,rightHand);
                 }
