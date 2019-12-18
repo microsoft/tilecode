@@ -11,6 +11,7 @@
         "README.md",
         "utilities.ts",
         "rule.ts",
+        "project.ts",
         "sprites.ts",
         "vm.ts",
         "imageeditor.ts",
@@ -18,9 +19,9 @@
         "spriteRules.ts",
         "ruleeditor.ts",
         "editor.ts",
+        "loadScreen.ts",
         "tileworld.ts",
-        "main.ts",
-        "loadScreen.ts"
+        "main.ts"
     ],
     "testFiles": [
         "test.ts"
