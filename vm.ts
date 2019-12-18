@@ -69,7 +69,7 @@ namespace tileworld {
         private moving: TileSprite[];
         private other: TileSprite;
 
-        constructor(private rules: number[]) {
+        constructor(private p: Project, private rules: number[]) {
             this.gs = null;
         }
 
@@ -105,10 +105,10 @@ namespace tileworld {
 
         private matchingRules(phase: Phase, ts: TileSprite, handler: (ts: TileSprite, rid:number) => void) {
             this.rules.forEach(rid => {
-                if (   getKinds(rid).indexOf(ts.kind()) != -1 && 
-                    (  phase == Phase.Moving && getDir(rid) == ts.dir && getType(rid) == RuleType.Moving
-                    || phase == Phase.Resting && getType(rid) == RuleType.Resting
-                    || getDir(rid) == this.dpad && getType(rid) == RuleType.Pushing) ) 
+                if (   this.p.getKinds(rid).indexOf(ts.kind()) != -1 && 
+                    (  phase == Phase.Moving && this.p.getDir(rid) == ts.dir && this.p.getType(rid) == RuleType.Moving
+                    || phase == Phase.Resting && this.p.getType(rid) == RuleType.Resting
+                    || this.p.getDir(rid) == this.dpad && this.p.getType(rid) == RuleType.Pushing) ) 
                 {
                     handler(ts,rid);
                 }
@@ -142,9 +142,9 @@ namespace tileworld {
 
         private collidingRules(ts: TileSprite, handler: (ts: TileSprite, rid: number) => void) {
             this.rules.forEach(rid => {
-                if (getKinds(rid).indexOf(ts.kind()) != -1 && 
-                    getType(rid) == RuleType.Colliding &&
-                    getDir(rid) == ts.dir) {
+                if (this.p.getKinds(rid).indexOf(ts.kind()) != -1 && 
+                    this.p.getType(rid) == RuleType.Colliding &&
+                    this.p.getDir(rid) == ts.dir) {
                         handler(ts, rid);
                 }
             });
@@ -241,7 +241,7 @@ namespace tileworld {
 
         private evaluateWhenDo(ts: TileSprite, rid: number, 
                 col: number, row: number, witnesses: TileSprite[]) {
-            let whendo = getWhenDo(rid, col, row);
+            let whendo = this.p.getWhenDo(rid, col, row);
             if (whendo == -1)
                 return true;
             let wcol = ts.col() + (col - 2);
@@ -255,7 +255,7 @@ namespace tileworld {
                 // let hasKind = this.gs.world.getPixel(wcol, wrow) == kind;
                 const tm = game.currentScene().tileMap;
                 let hasKind = tm.getTile(wcol, wrow).tileSet == kind;
-                let attr = getAttr(rid, whendo, kind);
+                let attr = this.p.getAttr(rid, whendo, kind);
                 if (attr == AttrType.Exclude && hasKind ||
                     attr == AttrType.Include && !hasKind) {
                     return false;
@@ -265,7 +265,7 @@ namespace tileworld {
                 }
             }
             for(let kind = this.gs.fixed; kind<this.gs.all; kind++) {
-                let attr = getAttr(rid, whendo, kind);
+                let attr = this.p.getAttr(rid, whendo, kind);
                 let witness = this.getWitness(kind, wcol, wrow);
                 if (this.other && this.other.kind() == kind)
                     witness = this.other;
@@ -301,24 +301,24 @@ namespace tileworld {
         }
 
         private evaluateWhenDoCommands(rc: RuleClosure, col: number, row: number) {
-            let wid = getWhenDo(rc.rid, col, row);
-            if (wid == -1 || getInst(rc.rid, wid, 0) == -1)
+            let wid = this.p.getWhenDo(rc.rid, col, row);
+            if (wid == -1 || this.p.getInst(rc.rid, wid, 0) == -1)
                 return;
             let wcol = rc.self.col() + (col - 2);
             let wrow = rc.self.row() + (row - 2);
             let self = col == 2 && row == 2;
             for (let cid = 0; cid < 4; cid++) {
-                let inst = getInst(rc.rid, wid, cid);
+                let inst = this.p.getInst(rc.rid, wid, cid);
                 if (inst == -1) break;
                 if (inst == CommandType.Paint) {
                     if (this.gs.nextWorld.getPixel(wcol, wrow) == 0xf) {
-                        this.gs.nextWorld.setPixel(wcol, wrow, getArg(rc.rid, wid, cid));
+                        this.gs.nextWorld.setPixel(wcol, wrow, this.p.getArg(rc.rid, wid, cid));
                     }
                 } else if (inst == CommandType.Move) {
                     let witness = self ? rc.self : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
                     if (witness && witness.inst == -1) {
                         witness.inst = inst;
-                        witness.arg = getArg(rc.rid, wid, cid);
+                        witness.arg = this.p.getArg(rc.rid, wid, cid);
                     }
                 }
             }
@@ -329,8 +329,8 @@ namespace tileworld {
         private vm: TileWorldVM;
         private signal: TileSprite;
         private state: VMState;
-        constructor(private manager: ImageManager, rules: number[]) {
-            this.vm = new TileWorldVM(rules)
+        constructor(private p: Project, rules: number[]) {
+            this.vm = new TileWorldVM(p, rules)
             //game.consoleOverlay.setVisible(true);
         }
         
@@ -338,25 +338,25 @@ namespace tileworld {
             this.dirQueue = [];
             this.signal = null;
             this.state = new VMState();
-            this.state.fixed = this.manager.fixed().length;
-            this.state.all = this.manager.all().length;
+            this.state.fixed = this.p.fixed().length;
+            this.state.all = this.p.all().length;
             this.state.sprites = [];
             this.state.world = w.clone();
             this.state.nextWorld = w.clone();
             scene.setTileMap(this.state.world);
             // set art for fixed sprites
-            for (let code = 0; code < this.manager.fixed().length; code++) {
-                let art = this.manager.getImage(code);
+            for (let code = 0; code < this.p.fixed().length; code++) {
+                let art = this.p.getImage(code);
                 scene.setTile(code, art);
             }
             // initialize movable sprites
-            for (let kind = this.manager.fixed().length;
-                kind < this.manager.all().length; kind++) {
+            for (let kind = this.p.fixed().length;
+                kind < this.p.all().length; kind++) {
                 this.state.sprites[kind] = [];
                 let tiles = scene.getTilesByType(kind);
-                let art = this.manager.getImage(kind);
+                let art = this.p.getImage(kind);
                 // now, put a space where every movable sprite was
-                scene.setTile(kind, this.manager.getImage(this.manager.defaultTile));
+                scene.setTile(kind, this.p.getImage(this.p.defaultTile));
                 for (let value of tiles) {
                     let tileSprite = new TileSprite(art, kind);
                     this.state.sprites[kind].push(tileSprite);
@@ -375,7 +375,7 @@ namespace tileworld {
 
             // get the game started
  
-            let playerId = this.manager.getPlayer();
+            let playerId = this.p.getPlayer();
             if (playerId != -1 && this.state.sprites[playerId]) {
                 scene.cameraFollowSprite(this.state.sprites[playerId][0]);
             }

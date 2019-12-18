@@ -23,7 +23,7 @@ namespace tileworld {
         private userSpriteIndex: number;
         constructor(private p: Project) {
             // this is the world
-            this.world = p.world.clone();
+            this.world = p.getWorld().clone();
             // this is the screen (under our control)
             this.screen = image.create(160, 120);
             let empty = emptyTile;

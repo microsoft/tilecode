@@ -235,9 +235,8 @@ let project = new tw.Project(
 );
 let world = image.create(30, 30);
 world.fill(2);
-project.world = world;
-project.player = playerId;
+project.setWorld(world);
+project.setPlayer(playerId);
 
-//tw.setProgram(program);
 //let mapEditor = new tw.MapEditor(manager);
 let loadSave = new tw.LoadScreen(project);   

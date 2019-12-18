@@ -12,7 +12,6 @@
         "utilities.ts",
         "rule.ts",
         "sprites.ts",
-        "manager.ts",
         "vm.ts",
         "imageeditor.ts",
         "rulesBase.ts",

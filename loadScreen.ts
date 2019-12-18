@@ -5,6 +5,8 @@ namespace tileworld {
         private lastRule: IdRule;
         public defaultTile: number;
         private allImages: Image[];
+        private _player: number;
+        private _world: Image;
 
         constructor(
             private fixedImages: Image[],      // the number of fixed sprites
@@ -14,28 +16,27 @@ namespace tileworld {
             this.defaultTile = 0;
             this.lastRule = null;
             this.allImages = [];
-            this.player = -1;
+            this._player = -1;
+            this._world = null;
             this.fixedImages.forEach(s => { this.allImages.push(s) });
             this.movableImages.forEach(s => { this.allImages.push(s) });
         }
 
-        set player(kind: number) {
-            this.player = kind;
+        public setPlayer(kind: number) {
+            this._player = kind;
         }
         
-        get player() {
-            return this.player;
+        public getPlayer() {
+            return this._player;
         }
 
-        set world(img: Image) {
-            this.world = img;
+        public setWorld(img: Image) {
+            this._world = img;
         }
 
-        get world() {
-            return this.world;
+        public getWorld() {
+            return this._world;
         }
-
-        getPlayer() { return this.player }
         
         // images
 
@@ -166,10 +167,8 @@ namespace tileworld {
 
     export class LoadScreen extends RuleVisualsBase {
         private fromSlot: string;
-        private program: Project;
         constructor(private bootstrap: Project) {
             super(null);
-            this.program = null;
             this.fromSlot = null;
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 if ( (this.col() == 4 || this.col() == 6) && this.row() == 2) {
@@ -189,7 +188,7 @@ namespace tileworld {
             // get the tile map, handling errors
             let buf = settings.readBuffer(prefix + "TM");
             let world = buf && buf.length > 0 ? bufferToImage(buf) : null;
-            this.program.world = world ? world : image.create(30, 30);
+            world = world ? world : image.create(30, 30);
             // get sprites
             let fixedList: Image[] = [];
             if (names.indexOf(prefix+"FL") != -1) {
@@ -211,6 +210,8 @@ namespace tileworld {
                     movableList.push(img);
                 }
             }
+            this.p = new Project(fixedList, movableList, []);
+            this.p.setWorld(world);
             // rules as needed?
             this.setTileSaved();
             // push scene and load editor
@@ -228,13 +229,13 @@ namespace tileworld {
             this.bootstrap.movable().forEach((img, i) => {
                 settings.writeBuffer(prefix + "MS" + i.toString() , imageToBuffer(img));
             });
-            settings.writeBuffer(prefix + "TM", imageToBuffer(this.bootstrap.world));
-            this.program.getRules().forEach(r => { storeRule(prefix, r); });
+            settings.writeBuffer(prefix + "TM", imageToBuffer(this.bootstrap.getWorld()));
+            this.p.getRules().forEach(r => { storeRule(prefix, r); });
         }
         
         private update() {
             this.background.fill(15);
-            this.drawImage(9, 6, this.program ? map : greyImage(map));
+            this.drawImage(9, 6, this.p ? map : greyImage(map));
             this.background.print("TileWorld", 0, yoff);
             this.background.print("Load", 2 << 4, (2 << 4) + 4 + yoff);
             this.fillTile(4, 2, 11);
@@ -244,7 +245,7 @@ namespace tileworld {
             if (this.bootstrap) {
                 
             }
-            if (this.program) {
+            if (this.p) {
                 for(let x=0; x<9; x++) {
                     this.drawImage(x,6,rightHand);
                 }
