@@ -79,6 +79,7 @@ class IdRule {
 
 enum FlipRotate { Horizontal, Vertical, Left, Right };
 
+// add world and sprites for complete description
 class Program {
     fixed: number;      // the number of fixed sprites
     movable: number;    // the number of movable sprites

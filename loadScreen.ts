@@ -3,13 +3,14 @@ namespace tileworld {
     export class LoadScreen extends RuleVisualsBase {
         private program: Program;
         private fromSlot: number;
-        constructor() {
-            super(null);
+        constructor(manager: ImageManager) {
+            super(manager);
             this.update();
             this.program = null;
             this.fromSlot = -1;
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                if ((this.col() == 4 || this.col() == 6) && (this.row() == 2 || this.row() == 4)) {
+                if ( (this.col() == 4 || this.col() == 6) && 
+                     (this.row() == 2 || this.row() == 4)) {
                     let prefix = this.col() == 4 ? "TW1-" : "TW2-";
                     if (this.row() == 2)
                         this.loadProgram(prefix);
@@ -18,10 +19,14 @@ namespace tileworld {
                 }
             });
         }
-        
+
         private loadProgram(prefix: string)  {
             // check for overwrite of current (modified) program
             this.program = new Program();
+            let names = settings.list(prefix);
+            if (names.length == 0)
+                return;
+            
             // things to load
             // - the meta data (fixed, movable)
             // - the sprites
@@ -34,6 +39,7 @@ namespace tileworld {
         private saveProgram(prefix: string) {
             if (this.program == null)
                 return;
+            // TODO: sprites
             settings.writeNumber(prefix + "fixed", this.program.fixed);
             settings.writeNumber(prefix + "movable", this.program.movable);
             this.program.rules.forEach(r => {storeRule(prefix, r) });

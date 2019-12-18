@@ -53,24 +53,6 @@ namespace bd {
         . . . . . . c c b b b b c c . .
         . . . . . . . . c c c c . . . .
     `;
-    export const rock = img`
-        . . . . . . . . . . . . . . . .
-        . . . . 8 8 8 8 d d b . . . . .
-        . . . 8 8 8 8 9 d d d b b . . .
-        . . 8 8 8 8 9 9 d d d d d b . .
-        . 8 8 8 8 8 8 9 d d d d d b . .
-        8 8 8 8 8 8 8 8 d d d d d b . .
-        9 9 9 9 9 9 9 9 b d d d b b b .
-        9 9 9 9 9 9 9 9 b b b b b b d .
-        . 9 9 9 9 9 9 9 b b b d d b d .
-        . . 9 9 9 9 9 9 d d d b b b d .
-        . . . 9 9 9 9 9 b b b b d d c .
-        . . . . 9 9 9 9 b d d d b c c .
-        . . . . . 9 9 9 c c c c b b b .
-        . . . . . . 9 9 b b b b b . . .
-        . . . . . . . 9 b b b b . . . .
-        . . . . . . . . . . . . . . . .
-    `;
     export const enemy = img`
         . . . . . . . f f f f . . . . .
         . . . . . f f 1 1 1 1 f f . . .
@@ -264,4 +246,4 @@ let roundTripRules = program.rules.map(r => {
 
 //tw.setProgram(program);
 //let mapEditor = new tw.MapEditor(manager);
-let loadSave = new tw.LoadScreen();   
+let loadSave = new tw.LoadScreen(manager);   
