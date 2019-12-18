@@ -16,38 +16,36 @@ namespace tileworld {
             this.dirMap = image.create(10, 7);
             this.ruleTypeMap.fill(0xf);
             this.dirMap.fill(0xf);
-            this.background = image.create(160, 120)
-            scene.setBackgroundImage(this.background)
-            this.cursor = sprites.create(cursorIn)
-            this.cursor.setFlag(SpriteFlag.Invisible, false)
-            this.cursor.x = 40
-            this.cursor.y = yoff + 40
-            this.cursor.z = 50;
+            this.background = image.create(160, 120);
+            scene.setBackgroundImage(this.background);
+            this.cursor = sprites.create(cursorIn);
+            this.cursor.setFlag(SpriteFlag.Invisible, false);
+            this.cursor.x = 40;
+            this.cursor.y = yoff + 40;
 
-            this.tileSaved = sprites.create(cursorOut)
-            this.tileSaved.setFlag(SpriteFlag.Invisible, true)
-            this.tileSaved.z = 10;
+            this.tileSaved = sprites.create(cursorOut);
+            this.tileSaved.setFlag(SpriteFlag.Invisible, true);
 
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.col() > 0)
-                    this.cursor.x -= 16
+                    this.cursor.x -= 16;
                 this.cursorMove();
-            })
+            });
             controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.col() < 9)
-                    this.cursor.x += 16
+                    this.cursor.x += 16;
                 this.cursorMove();
-            })
+            });
             controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.row() > 0)
                     this.cursor.y -= 16;
                 this.cursorMove();
-            })
+            });
             controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.row() < 6)
                     this.cursor.y += 16;
                 this.cursorMove();
-            })
+            });
         }
 
         protected getRulesForTypeDir(rules: number[], rt: RuleType, dir: MoveDirection) {

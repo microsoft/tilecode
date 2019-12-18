@@ -262,8 +262,8 @@ let roundTripRules = program.rules.map(r => {
 })
 */
 
-
-tw.setProgram(program);
-let mapEditor = new tw.MapEditor(manager);
+//tw.setProgram(program);
+//let mapEditor = new tw.MapEditor(manager);
+let loadSave = new tw.LoadScreen();   
 
 
