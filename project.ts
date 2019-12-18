@@ -8,17 +8,21 @@ namespace tileworld {
         private _world: Image;
 
         constructor(
+            public prefix: string,
             private fixedImages: Image[],      // the number of fixed sprites
             private movableImages: Image[],    // the number of movable sprites
             private rules: IdRule[]     // the rules
         ) {
+            this.reset();
+        }
+
+        private reset() {
+            this.prefix = null;
             this.defaultTile = 0;
             this.lastRule = null;
-            this.allImages = [];
+            this.allImages = null;
             this._player = -1;
             this._world = null;
-            this.fixedImages.forEach(s => { this.allImages.push(s) });
-            this.movableImages.forEach(s => { this.allImages.push(s) });
         }
 
         public setPlayer(kind: number) {
@@ -41,7 +45,14 @@ namespace tileworld {
 
         public fixed() { return this.fixedImages; }
         public movable() { return this.movableImages; }
-        public all() { return this.allImages; }
+        public all() { 
+            if (!this.allImages) {
+                this.allImages = [];
+                this.fixedImages.forEach(s => { this.allImages.push(s) });
+                this.movableImages.forEach(s => { this.allImages.push(s) });
+            }
+            return this.allImages; 
+        }
 
         getImage(kind: number) {
             return 0 <= kind && kind < this.allImages.length ? this.allImages[kind] : null;
@@ -162,5 +173,61 @@ namespace tileworld {
                 commands.removeAt(cid);
             }
         }
+    }
+
+    export function loadProject(prefix: string) {
+        let names = settings.list(prefix);
+        if (names.length == 0)
+            return null;
+        // get the tile map, handling errors
+        let buf = settings.readBuffer(prefix + "TM");
+        let world = buf && buf.length > 0 ? bufferToImage(buf) : null;
+        world = world ? world : image.create(30, 30);
+        // get sprites
+        let fixedImages: Image[] = [];
+        if (names.indexOf(prefix + "FL") != -1) {
+            let fixed = settings.readNumber(prefix + "FL");
+            for (let i = 0; i < fixed; i++) {
+                let buf = settings.readBuffer(prefix + "FS" + i.toString());
+                let img = buf && buf.length > 0 ? bufferToImage(buf) : null;
+                if (!img) { img = image.create(16, 16); img.fill(1 + i); }
+                fixedImages.push(img);
+            }
+        }
+        let movableImages: Image[] = [];
+        if (names.indexOf(prefix + "ML") != -1) {
+            let movable = settings.readNumber(prefix + "ML");
+            for (let i = 0; i < movable; i++) {
+                let buf = settings.readBuffer(prefix + "MS" + i.toString());
+                let img = buf && buf.length > 0 ? bufferToImage(buf) : null;
+                if (!img) { img = image.create(16, 16); img.fill(1 + i); }
+                movableImages.push(img);
+            }
+        }
+        // get the rules, at least
+        let ruleName = prefix + "RL";
+        let ruleids = names.filter(s => s.indexOf(ruleName) == 0).map(s => parseInt(s.substr(ruleName.length())));
+        let rules: IdRule[] = [];
+        ruleids.forEach(rid => {
+            let rule = retrieveRule(ruleName, rid);
+            rules.push(new IdRule(rid, rule));
+        });
+        return new Project(prefix, fixedImages, movableImages, rules);
+    }
+
+    export function saveEntireProject(p: Project){
+        if (p == null)
+            return;
+        let prefix = p.prefix;
+        settings.writeNumber(prefix + "FL", p.fixed().length);
+        settings.writeNumber(prefix + "ML", p.movable().length);
+        p.fixed().forEach((img, i) => {
+            settings.writeBuffer(prefix + "FS" + i.toString(), imageToBuffer(img));
+        });
+        p.movable().forEach((img, i) => {
+            settings.writeBuffer(prefix + "MS" + i.toString(), imageToBuffer(img));
+        });
+        settings.writeBuffer(prefix + "TM", imageToBuffer(p.getWorld()));
+        p.getRules().forEach(r => { storeRule(prefix+"RL", r); });
     }
 } 

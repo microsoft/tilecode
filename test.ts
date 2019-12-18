@@ -129,9 +129,6 @@ namespace bd {
     export const fixed = [space, wall, dirt];
     export const all = [].concat(fixed).concat(movable);
 }
-
-import tw = tileworld;
-
 let wallId = bd.all.indexOf(bd.wall);
 let spaceId = bd.all.indexOf(bd.space);
 let playerId = bd.all.indexOf(bd.player);
@@ -225,11 +222,11 @@ let boulderFallLeft: Rule = new Rule([boulderId, diamondId], RuleType.Resting, M
      SpriteAt(boulderId, 2, 3), TileAt(spaceId, 1, 2), TileAt(spaceId,1,3) ]
 );
 
-
-let project = new tw.Project(
+let project = new tileworld.Project(
+    "TW1-",
     bd.fixed,
     bd.movable,
-    tw.makeIds([boulderFallDown, boulderFallLeft, boulderFallingDown, 
+    tileworld.makeIds([boulderFallDown, boulderFallLeft, boulderFallingDown, 
       playerPaint, playerMoveRight, playerMoveLeft, playerMoveUp, playerMoveDown, 
       playerMoveBoulderRight, playerMoveBoulderLeft])
 );
@@ -238,5 +235,5 @@ world.fill(2);
 project.setWorld(world);
 project.setPlayer(playerId);
 
-//let mapEditor = new tw.MapEditor(manager);
-let loadSave = new tw.LoadScreen(project);   
+let mapEditor = new tileworld.MapEditor(project);
+// let loadSave = new tileworld.LoadScreen(project);
