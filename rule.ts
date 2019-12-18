@@ -79,18 +79,12 @@ class IdRule {
 
 enum FlipRotate { Horizontal, Vertical, Left, Right };
 
-// TODO: make things more compact through application of transformations
-// TODO: ordering of rules (pairs).
-
-function makeNewRule(kind: number[], rt: RuleType, dir: MoveDirection): Rule {
-    return new Rule(kind, rt, dir, []);
-}
-
-// new API for access to low-level representation
-
 namespace tileworld {
 
-    
+    export function makeNewRule(kind: number[], rt: RuleType, dir: MoveDirection): Rule {
+        return new Rule(kind, rt, dir, []);
+    }
+
     // useful utilities
     export function makeIds(rules: Rule[]): IdRule[] {
         return rules.map((r, i) => { return new IdRule(i, r); });
