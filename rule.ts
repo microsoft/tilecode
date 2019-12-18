@@ -79,8 +79,7 @@ class IdRule {
 
 enum FlipRotate { Horizontal, Vertical, Left, Right };
 
-// fixed sprites are ordered before movable sprites (0-based)
-type Program = {
+class Program {
     fixed: number;      // the number of fixed sprites
     movable: number;    // the number of movable sprites
     rules: IdRule[];    // the rules
