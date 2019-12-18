@@ -14,7 +14,7 @@ namespace tileworld {
         private original: Image; // 16x16
         private image: Image;    // 16x16
         private screen: Image;  // whole screen
-        constructor(private manager: ImageManager, private kind: number) {
+        constructor(private p: Project, private kind: number) {
             this.cursorType= CursorType.Color;
             this.cursor = sprites.create(cursorIn);
             this.cursor.x = colorsX + 8;
@@ -29,7 +29,7 @@ namespace tileworld {
             this.paintCursor.x = paintSize * 5 + 2 
             this.paintCursor.y = paintSize * 2 + 2
             this.paintCursor.setFlag(SpriteFlag.Invisible, true)
-            this.original = manager.getImage(kind);
+            this.original = p.getImage(kind);
             this.image = this.original // i.clone();
             this.screen = image.create(160, 120)
             scene.setBackgroundImage(this.screen)

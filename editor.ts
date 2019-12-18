@@ -21,13 +21,12 @@ namespace tileworld {
         private cursor: Sprite;
         private selected: Sprite;
         private userSpriteIndex: number;
-        constructor(private manager: ImageManager) {
+        constructor(private p: Project) {
             // this is the world
-            this.world = image.create(30, 30);
-            this.world.fill(manager.defaultTile);
+            this.world = p.world.clone();
             // this is the screen (under our control)
             this.screen = image.create(160, 120);
-            let empty = this.manager.empty()
+            let empty = emptyTile;
             scene.setBackgroundImage(this.screen)
             // cursors
             this.selected = sprites.create(cursorOut);
@@ -101,15 +100,15 @@ namespace tileworld {
                 } else if (this.row() == 1) {
                     // paint
                     game.pushScene();
-                    let spriteEditor = new ImageEditor(this.manager, this.userSpriteIndex);
-                } else if (this.row() == 2 && this.userSpriteIndex >= this.manager.fixed().length) {
+                    let spriteEditor = new ImageEditor(this.p, this.userSpriteIndex);
+                } else if (this.row() == 2 && this.userSpriteIndex >= this.p.fixed().length) {
                     game.pushScene();
-                    let ruleRoom = new RuleRoom(this.manager, this.userSpriteIndex);
+                    let ruleRoom = new RuleRoom(this.p, this.userSpriteIndex);
                 } else if (this.row() == 3) {
-                    let rules = getRuleIds();
+                    let rules = this.p.getRuleIds();
                     if (rules.length > 0) {
                         game.pushScene();
-                        let g = new RunGame(this.manager, rules);
+                        let g = new RunGame(this.p, rules);
                         g.setWorld(this.world);
                         g.start();
                     }         
@@ -138,11 +137,11 @@ namespace tileworld {
         private update() {
             this.screen.fill(0);
             this.screen.fillRect(0, yoff, 16, 16, 11);
-            this.manager.all().forEach((img, row) => {
+            this.p.all().forEach((img, row) => {
                 this.drawImage(img, 1, row);
             });
             commandImages.forEach((img, row) => {
-                this.drawImage(row == 2 ? (this.userSpriteIndex >= this.manager.fixed().length ? img : greyImage(img) ) : img, 0, row);
+                this.drawImage(row == 2 ? (this.userSpriteIndex >= this.p.fixed().length ? img : greyImage(img) ) : img, 0, row);
             })
             for(let x = this.offsetX; x<this.offsetX+8; x++) {
                 for (let y = this.offsetY; y < this.offsetY + 7; y++) {
@@ -150,8 +149,8 @@ namespace tileworld {
                     let col = 2 + (x - this.offsetX);
                     let row = (y - this.offsetY);
                     if (index >= 0)
-                        this.drawImage(this.manager.getImage(this.manager.defaultTile), col, row)
-                    this.drawImage(index >= 0 ? this.manager.getImage(index) : emptyTile, 
+                        this.drawImage(this.p.getImage(this.p.defaultTile), col, row)
+                    this.drawImage(index >= 0 ? this.p.getImage(index) : emptyTile, 
                         col, row);
                 }    
             }

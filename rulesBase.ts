@@ -11,7 +11,7 @@ namespace tileworld {
         protected ruleTypeMap: Image;      // mapping of tile to rule type
         protected dirMap: Image;          // mapping of tile to direction
 
-        constructor(protected manager: ImageManager) {
+        constructor(protected p: Project) {
             this.ruleTypeMap = image.create(10, 7);
             this.dirMap = image.create(10, 7);
             this.ruleTypeMap.fill(0xf);
@@ -49,7 +49,7 @@ namespace tileworld {
         }
 
         protected getRulesForTypeDir(rules: number[], rt: RuleType, dir: MoveDirection) {
-            return rules.filter(rid => getType(rid) == rt && (rt == RuleType.Resting || getDir(rid) == dir));
+            return rules.filter(rid => this.p.getType(rid) == rt && (rt == RuleType.Resting || this.p.getDir(rid) == dir));
         }
         
         protected col(curr: boolean = true) {
@@ -112,15 +112,15 @@ namespace tileworld {
         }
 
         protected attrIndex(rid: number, whendo: number, a: AttrType, begin: number = 0) {
-            for (let i = begin; i < this.manager.all().length; i++) {
-                if (getAttr(rid, whendo, i) == a)
+            for (let i = begin; i < this.p.all().length; i++) {
+                if (this.p.getAttr(rid, whendo, i) == a)
                     return i;
             }
             return -1;
         }
 
         protected showAttributes(rid: number, col: number, row: number) {
-            let whendo = getWhenDo(rid, col, row);
+            let whendo = this.p.getWhenDo(rid, col, row);
             if (whendo >= 0) {
                 // if there is an include or single oneOf, show it.
                 let index = this.attrIndex(rid, whendo, AttrType.Include);
@@ -134,19 +134,19 @@ namespace tileworld {
                 }
                 // and skip to the other (if it exists)
                 let begin = 0;
-                let end = this.manager.all().length - 1;
+                let end = this.p.all().length - 1;
                 if (index != -1) {
-                    this.drawImage(col, row, this.manager.getImage(index));
-                    if (index < this.manager.fixed().length) {
-                        begin = this.manager.fixed().length;
+                    this.drawImage(col, row, this.p.getImage(index));
+                    if (index < this.p.fixed().length) {
+                        begin = this.p.fixed().length;
                     } else {
-                        end = this.manager.fixed().length - 1;
+                        end = this.p.fixed().length - 1;
                     }
                 }
                 let project = this.projectAttrs(rid, whendo, begin, end);
                 let done: AttrType[] = [];
                 project.forEach(index => {
-                    let val = getAttr(rid, whendo, index);
+                    let val = this.p.getAttr(rid, whendo, index);
                     // eliminate duplicates
                     if (done.indexOf(val) == -1) {
                         done.push(val);
@@ -160,7 +160,7 @@ namespace tileworld {
             let attrCnt = (a: AttrType) => {
                 let cnt = 0;
                 for (let i = begin; i <= end; i++) {
-                    if (getAttr(rid, whendo, i) == a) cnt++;
+                    if (this.p.getAttr(rid, whendo, i) == a) cnt++;
                 }
                 return cnt;
             }
@@ -168,12 +168,12 @@ namespace tileworld {
             let excludeCnt = attrCnt(AttrType.Exclude);
             let okCnt = attrCnt(AttrType.OK);
             let cnt = end - begin + 1;
-            if (okCnt == this.manager.all().length || excludeCnt == cnt || (begin == 0 && okCnt == cnt))
+            if (okCnt == this.p.all().length || excludeCnt == cnt || (begin == 0 && okCnt == cnt))
                 return res;
             let remove = (okCnt != 0 && excludeCnt != 0) ?
                 ((excludeCnt < okCnt) ? AttrType.OK : AttrType.Exclude) : -1;
             for (let i = begin; i <= end; i++) {
-                if (getAttr(rid, whendo, i) != remove) res.push(i);
+                if (this.p.getAttr(rid, whendo, i) != remove) res.push(i);
             }
             return res;
         }

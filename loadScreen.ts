@@ -1,9 +1,173 @@
 namespace tileworld {
 
+    // add world and sprites for complete description
+    export class Project {
+        private lastRule: IdRule;
+        public defaultTile: number;
+        private allImages: Image[];
+
+        constructor(
+            private fixedImages: Image[],      // the number of fixed sprites
+            private movableImages: Image[],    // the number of movable sprites
+            private rules: IdRule[]     // the rules
+        ) { 
+            this.defaultTile = 0;
+            this.lastRule = null;
+            this.allImages = [];
+            this.player = -1;
+            this.fixedImages.forEach(s => { this.allImages.push(s) });
+            this.movableImages.forEach(s => { this.allImages.push(s) });
+        }
+
+        set player(kind: number) {
+            this.player = kind;
+        }
+        
+        get player() {
+            return this.player;
+        }
+
+        set world(img: Image) {
+            this.world = img;
+        }
+
+        get world() {
+            return this.world;
+        }
+
+        getPlayer() { return this.player }
+        
+        // images
+
+        public fixed() { return this.fixedImages; }
+        public movable() { return this.movableImages; }
+        public all() { return this.allImages; }
+
+        getImage(kind: number) {
+            return 0 <= kind && kind < this.allImages.length ? this.allImages[kind] : null;
+        }
+
+        getKind(img: Image) {
+            return this.allImages.indexOf(img);
+        }
+
+        // rules 
+
+        public getRules() { return this.rules; }
+
+        public getRule(rid: number) {
+            if (this.lastRule == null || this.lastRule.id != rid) {
+                this.lastRule = this.rules.find(r => r.id == rid);
+            }
+            return this.lastRule.rule;
+        }
+
+        private wrapRule(r: Rule) {
+            let newRule = new IdRule(this.rules.length, r);
+            this.rules.push(newRule);
+            return newRule.id;
+        }
+
+        public makeRule(kind: number, rt: RuleType, dir: MoveDirection): number {
+            return this.wrapRule(makeNewRule([kind], rt, dir));
+        }
+
+        public removeRule(rid: number) {
+            // TODO
+        }
+
+        public getRuleIds(): number[] {
+            return this.rules.map(r => r.id);
+        }
+
+        public getRulesForKind(kind: number): number[] {
+            return this.rules.filter(r => r.rule.kind.indexOf(kind) != -1).map(r => r.id)
+        }
+
+        public getKinds(rid: number): number[] {
+            return this.getRule(rid).kind;
+        }
+
+        public setKinds(rid: number, kind: number[]) {
+            this.getRule(rid).kind = kind;
+        }
+
+        public getType(rid: number) {
+            return this.getRule(rid).rt;
+        }
+
+        public setType(rid: number, rt: RuleType) {
+            this.getRule(rid).rt = rt;
+        }
+
+        public getDir(rid: number): MoveDirection {
+            return this.getRule(rid).dir;
+        }
+
+        public setDir(rid: number, dir: MoveDirection) {
+            this.getRule(rid).dir = dir;
+        }
+
+        public getWhenDo(rid: number, col: number, row: number) {
+            let whendo = this.getRule(rid).whenDo.find(wd => wd.col == col && wd.row == row);
+            if (whendo == null)
+                return -1;
+            else
+                return this.getRule(rid).whenDo.indexOf(whendo);
+        }
+
+        public makeWhenDo(rid: number, col: number, row: number) {
+            let whenDo = new WhenDo(col, row, [], []);
+            this.getRule(rid).whenDo.push(whenDo);
+            return this.getRule(rid).whenDo.length - 1;
+        }
+
+        public getAttr(rid: number, wdid: number, aid: number): AttrType {
+            return this.getRule(rid).whenDo[wdid].attrs[aid];
+        }
+
+        public setAttr(rid: number, wdid: number, aid: number, attr: AttrType) {
+            this.getRule(rid).whenDo[wdid].attrs[aid] = attr;
+        }
+
+        public getInst(rid: number, wdid: number, cid: number) {
+            let c = this.getRule(rid).whenDo[wdid].commands[cid];
+            return (c == null) ? -1 : c.inst;
+        }
+
+        public getArg(rid: number, wdid: number, cid: number) {
+            let c = this.getRule(rid).whenDo[wdid].commands[cid];
+            return (c == null) ? -1 : c.arg;
+        }
+
+        public setInst(rid: number, wdid: number, cid: number, n: number) {
+            let commands = this.getRule(rid).whenDo[wdid].commands;
+            while (cid >= commands.length && cid < 4) {
+                commands.push(new Command(-1, -1));
+            }
+            commands[cid].inst = n;
+        }
+
+        public setArg(rid: number, wdid: number, cid: number, n: number) {
+            let commands = this.getRule(rid).whenDo[wdid].commands;
+            while (cid >= commands.length && cid < 4) {
+                commands.push(new Command(-1, -1));
+            }
+            commands[cid].arg = n;
+        }
+
+        public removeCommand(rid: number, wdid: number, cid: number) {
+            let commands = this.getRule(rid).whenDo[wdid].commands;
+            if (cid < commands.length) {
+                commands.removeAt(cid);
+            }
+        }
+    }
+
     export class LoadScreen extends RuleVisualsBase {
         private fromSlot: string;
-        private program: Program;
-        constructor(private bootstrap: Program) {
+        private program: Project;
+        constructor(private bootstrap: Project) {
             super(null);
             this.program = null;
             this.fromSlot = null;
@@ -19,7 +183,6 @@ namespace tileworld {
         private loadProgram(prefix: string)  {
             this.fromSlot = prefix;
             // check for overwrite of current (modified) program
-            this.program = new Program([],[],null,[]);
             let names = settings.list(prefix);
             if (names.length == 0)
                 return;
@@ -28,22 +191,24 @@ namespace tileworld {
             let world = buf && buf.length > 0 ? bufferToImage(buf) : null;
             this.program.world = world ? world : image.create(30, 30);
             // get sprites
+            let fixedList: Image[] = [];
             if (names.indexOf(prefix+"FL") != -1) {
                 let fixed = settings.readNumber(prefix + "FL");
                 for(let i=0; i<fixed;i++) { 
                     let buf = settings.readBuffer(prefix+"FS"+i.toString());
                     let img = buf && buf.length > 0 ? bufferToImage(buf): null;
                     if (!img) { img = image.create(16, 16); img.fill(1+i); }
-                    this.program.fixed.push(img);
+                    fixedList.push(img);
                 }
             }
+            let movableList: Image[] = [];
             if (names.indexOf(prefix + "ML") != -1) {
                 let movable = settings.readNumber(prefix + "ML");
                 for (let i = 0; i < movable; i++) {
                     let buf = settings.readBuffer(prefix + "MS" + i.toString());
                     let img = buf && buf.length > 0 ? bufferToImage(buf) : null;
                     if (!img) { img = image.create(16, 16); img.fill(1 + i); }
-                    this.program.movable.push(img);
+                    movableList.push(img);
                 }
             }
             // rules as needed?
@@ -55,16 +220,16 @@ namespace tileworld {
         private saveBootstrap(prefix: string){
             if (this.bootstrap == null)
                 return;
-            settings.writeNumber(prefix + "FL", this.bootstrap.fixed.length);
-            settings.writeNumber(prefix + "ML", this.bootstrap.movable.length);
-            this.bootstrap.fixed.forEach((img,i) => {
+            settings.writeNumber(prefix + "FL", this.bootstrap.fixed().length);
+            settings.writeNumber(prefix + "ML", this.bootstrap.movable().length);
+            this.bootstrap.fixed().forEach((img,i) => {
                 settings.writeBuffer(prefix + "FS" + i.toString(), imageToBuffer(img));
             });
-            this.bootstrap.movable.forEach((img, i) => {
+            this.bootstrap.movable().forEach((img, i) => {
                 settings.writeBuffer(prefix + "MS" + i.toString() , imageToBuffer(img));
             });
             settings.writeBuffer(prefix + "TM", imageToBuffer(this.bootstrap.world));
-            this.program.rules.forEach(r => { storeRule(prefix, r); });
+            this.program.getRules().forEach(r => { storeRule(prefix, r); });
         }
         
         private update() {

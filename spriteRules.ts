@@ -5,15 +5,15 @@ namespace tileworld {
     // TODO: menu
     // sprite property sheet
     export class RuleRoom extends RuleVisualsBase {
-        constructor(m: ImageManager, private kind: number) {
-            super(m);
+        constructor(p: Project, private kind: number) {
+            super(p);
             this.update();
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 let rt = this.ruleTypeMap.getPixel(this.col(), this.row());
                 let dir = this.dirMap.getPixel(this.col(), this.row());
                 if (rt != 0xf) {
                     game.pushScene();
-                    let ruleEditor = new RuleEditor(this.manager, kind, rt, dir);
+                    let ruleEditor = new RuleEditor(this.p, kind, rt, dir);
                 }
                 if (this.col() == 0 && this.row() == 0)
                     game.popScene();
@@ -34,14 +34,13 @@ namespace tileworld {
         }
 
         protected centerImage() {
-            return this.manager.getImage(this.kind);
+            return this.p.getImage(this.kind);
         }
 
         private makeContext(col: number, row: number) {
-            let spaceImg = this.manager.empty();
             for (let i = -1; i <= 1; i++) {
                 for (let j = -1; j <= 1; j++) {
-                    this.drawImage(col+i, row+j, spaceImg);
+                    this.drawImage(col+i, row+j, emptyTile);
                 }
             }
         }
@@ -73,7 +72,7 @@ namespace tileworld {
         }
 
         private showRuleMenu(x: number, y: number) {
-            this.rules = getRulesForKind(this.kind);
+            this.rules = this.p.getRulesForKind(this.kind);
             this.makeContext(x + 2, y + 1)
             this.doBoth(RuleType.Resting, 0, x + 2, y + 1);
 

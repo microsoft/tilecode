@@ -79,16 +79,6 @@ class IdRule {
 
 enum FlipRotate { Horizontal, Vertical, Left, Right };
 
-// add world and sprites for complete description
-class Program {
-    constructor(
-        public fixed: Image[],      // the number of fixed sprites
-        public movable: Image[],    // the number of movable sprites
-        public world: Image,        // the world
-        public rules: IdRule[]     // the rules
-    ) {}
-}
-
 // TODO: make things more compact through application of transformations
 // TODO: ordering of rules (pairs).
 
@@ -100,127 +90,7 @@ function makeNewRule(kind: number[], rt: RuleType, dir: MoveDirection): Rule {
 
 namespace tileworld {
 
-    let lastRule: IdRule = null;
-    let prog: Program = null;
-
-    // TODO: packed 16-bit representation managed here
-    // (10 bits for rule, 4 for whendo, 2 for command)
-
-    // - move to a single number to represent rid+wid+cid
-
-    function getRule(rid: number) {
-        if (lastRule == null || lastRule.id != rid) {
-            lastRule = prog.rules.find(r => r.id == rid);
-        }
-        return lastRule.rule;
-    }
-
-    function wrapRule(r: Rule) {
-        let newRule = new IdRule(prog.rules.length, r);
-        prog.rules.push(newRule);
-        return newRule.id;
-    }
-
-    export function setProgram(p: Program) {
-        prog = p;
-        lastRule = null;
-    }
-
-    export function makeRule(kind: number, rt: RuleType, dir: MoveDirection): number {
-        return wrapRule(makeNewRule([kind], rt, dir));
-    }
-
-    export function removeRule(rid: number) {
-        // TODO
-    }
-
-    export function getRuleIds(): number[] {
-        return prog.rules.map(r => r.id);
-    }
-
-    export function getRulesForKind(kind: number): number[] {
-        return prog.rules.filter(r => r.rule.kind.indexOf(kind) != -1).map(r => r.id)
-    }
-
-    export function getKinds(rid: number): number[] {
-        return getRule(rid).kind;
-    }
-
-    export function setKinds(rid: number, kind: number[]) {
-        getRule(rid).kind = kind;
-    }
-
-    export function getType(rid: number) {
-        return getRule(rid).rt;
-    }
-
-    export function setType(rid: number, rt: RuleType) {
-        getRule(rid).rt = rt;
-    }
-
-    export function getDir(rid: number): MoveDirection {
-        return getRule(rid).dir;
-    }
-
-    export function setDir(rid: number, dir: MoveDirection) {
-        getRule(rid).dir = dir;
-    }
-
-    export function getWhenDo(rid: number, col: number, row: number) {
-        let whendo = getRule(rid).whenDo.find(wd => wd.col == col && wd.row == row);
-        if (whendo == null)
-            return -1;
-        else
-            return getRule(rid).whenDo.indexOf(whendo);
-    }
-
-    export function makeWhenDo(rid: number, col: number, row: number) {
-        let whenDo = new WhenDo(col, row, [], []);
-        getRule(rid).whenDo.push(whenDo);
-        return getRule(rid).whenDo.length-1;
-    }
-
-    export function getAttr(rid: number, wdid: number, aid: number): AttrType {
-        return getRule(rid).whenDo[wdid].attrs[aid];
-    }
-
-    export function setAttr(rid: number, wdid: number, aid: number, attr: AttrType) {
-        getRule(rid).whenDo[wdid].attrs[aid] = attr;
-    }
-
-    export function getInst(rid: number, wdid: number, cid: number) {
-        let c = getRule(rid).whenDo[wdid].commands[cid];
-        return (c == null) ? -1: c.inst;
-    }
-
-    export function getArg(rid: number, wdid: number, cid: number) {
-        let c = getRule(rid).whenDo[wdid].commands[cid];
-        return (c == null) ? -1 : c.arg;
-    }
-
-    export function setInst(rid: number, wdid: number, cid: number, n: number) {
-        let commands = getRule(rid).whenDo[wdid].commands;
-        while (cid >= commands.length && cid < 4) {
-            commands.push(new Command(-1, -1));
-        }
-        commands[cid].inst = n;
-    }
     
-    export function setArg(rid: number, wdid: number, cid: number, n: number) {
-        let commands = getRule(rid).whenDo[wdid].commands;
-        while (cid >= commands.length && cid < 4) {
-            commands.push(new Command(-1, -1));
-        }
-        commands[cid].arg = n;
-    }
-
-    export function removeCommand(rid: number, wdid: number, cid: number) {
-        let commands = getRule(rid).whenDo[wdid].commands;
-        if (cid < commands.length) {
-            commands.removeAt(cid);
-        }
-    }
-
     // useful utilities
     export function makeIds(rules: Rule[]): IdRule[] {
         return rules.map((r, i) => { return new IdRule(i, r); });
@@ -290,9 +160,8 @@ namespace tileworld {
     }
 
     // TODO: make this an online transformation (view of) over a rule to save space
-    export function flipRule(rid: number, fr: FlipRotate) {
+    export function flipRule(srcRule: Rule, fr: FlipRotate) {
         // TODO: convert this to using C-level API
-        let srcRule = getRule(rid);
         let tgtRule = makeNewRule(srcRule.kind, srcRule.rt, flipRotateDir(srcRule.dir, fr));
         for (let row = 0; row < 5; row++) {
             for (let col = 0; col < 5; col++) {
@@ -310,7 +179,7 @@ namespace tileworld {
                 tgtRule.whenDo.push(tgtWhenDo);
             }
         }
-        return wrapRule(tgtRule);
+        return tgtRule;
     }
 
     let buf: Buffer = null

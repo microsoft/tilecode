@@ -127,20 +127,17 @@ namespace bd {
     `;
     export const movable = [boulder, player, diamond, enemy];
     export const fixed = [space, wall, dirt];
+    export const all = [].concat(fixed).concat(movable);
 }
 
 import tw = tileworld;
 
-let manager = new tw.ImageManager(bd.fixed, bd.movable, 2);
-
-let wallId = manager.getKind(bd.wall);
-let spaceId = manager.getKind(bd.space);
-let playerId = manager.getKind(bd.player);
-let enemyId = manager.getKind(bd.enemy);
-let boulderId = manager.getKind(bd.boulder);
-let diamondId = manager.getKind(bd.diamond);
-
-manager.setPlayer(playerId);
+let wallId = bd.all.indexOf(bd.wall);
+let spaceId = bd.all.indexOf(bd.space);
+let playerId = bd.all.indexOf(bd.player);
+let enemyId = bd.all.indexOf(bd.enemy);
+let boulderId = bd.all.indexOf(bd.boulder);
+let diamondId = bd.all.indexOf(bd.diamond);
 
 function fillAttr(f: number, n: number, i: number, g: number) {
     let res: AttrType[] = [];
@@ -228,17 +225,19 @@ let boulderFallLeft: Rule = new Rule([boulderId, diamondId], RuleType.Resting, M
      SpriteAt(boulderId, 2, 3), TileAt(spaceId, 1, 2), TileAt(spaceId,1,3) ]
 );
 
-let world = image.create(30, 30);
-world.fill(2);
-let program = new Program(
+
+let project = new tw.Project(
     bd.fixed,
     bd.movable,
-    world,
     tw.makeIds([boulderFallDown, boulderFallLeft, boulderFallingDown, 
       playerPaint, playerMoveRight, playerMoveLeft, playerMoveUp, playerMoveDown, 
       playerMoveBoulderRight, playerMoveBoulderLeft])
 );
+let world = image.create(30, 30);
+world.fill(2);
+project.world = world;
+project.player = playerId;
 
 //tw.setProgram(program);
 //let mapEditor = new tw.MapEditor(manager);
-let loadSave = new tw.LoadScreen(program);   
+let loadSave = new tw.LoadScreen(project);   
