@@ -81,9 +81,12 @@ enum FlipRotate { Horizontal, Vertical, Left, Right };
 
 // add world and sprites for complete description
 class Program {
-    fixed: number;      // the number of fixed sprites
-    movable: number;    // the number of movable sprites
-    rules: IdRule[];    // the rules
+    constructor(
+        public fixed: Image[],      // the number of fixed sprites
+        public movable: Image[],    // the number of movable sprites
+        public world: Image,        // the world
+        public rules: IdRule[]      // the rules
+    ) {}
 }
 
 // TODO: make things more compact through application of transformations

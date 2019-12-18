@@ -228,13 +228,14 @@ let boulderFallLeft: Rule = new Rule([boulderId, diamondId], RuleType.Resting, M
      SpriteAt(boulderId, 2, 3), TileAt(spaceId, 1, 2), TileAt(spaceId,1,3) ]
 );
 
-let program: Program = {
-    fixed: 3,
-    movable: 4,
-    rules: tw.makeIds([boulderFallDown, boulderFallLeft, boulderFallingDown, 
+let program = new Program(
+    bd.fixed,
+    bd.movable,
+    image.create(30, 30),
+    tw.makeIds([boulderFallDown, boulderFallLeft, boulderFallingDown, 
       playerPaint, playerMoveRight, playerMoveLeft, playerMoveUp, playerMoveDown, 
       playerMoveBoulderRight, playerMoveBoulderLeft])
-}
+);
 
 /*
 let roundTripRules = program.rules.map(r => { 
@@ -244,6 +245,6 @@ let roundTripRules = program.rules.map(r => {
 })
 */
 
-//tw.setProgram(program);
-//let mapEditor = new tw.MapEditor(manager);
-let loadSave = new tw.LoadScreen(manager);   
+tw.setProgram(program);
+let mapEditor = new tw.MapEditor(manager);
+//let loadSave = new tw.LoadScreen(program);   

@@ -1,11 +1,10 @@
 namespace tileworld {
 
     export class LoadScreen extends RuleVisualsBase {
-        private program: Program;
         private fromSlot: number;
-        constructor(manager: ImageManager) {
-            super(manager);
-            this.update();
+        private program: Program;
+        constructor(private bootstrap: Program) {
+            super(null);
             this.program = null;
             this.fromSlot = -1;
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
@@ -18,11 +17,12 @@ namespace tileworld {
                         this.saveProgram(prefix);
                 }
             });
+            this.update();
         }
 
         private loadProgram(prefix: string)  {
             // check for overwrite of current (modified) program
-            this.program = new Program();
+            this.program = new Program([],[],null,[]);
             let names = settings.list(prefix);
             if (names.length == 0)
                 return;
@@ -40,8 +40,8 @@ namespace tileworld {
             if (this.program == null)
                 return;
             // TODO: sprites
-            settings.writeNumber(prefix + "fixed", this.program.fixed);
-            settings.writeNumber(prefix + "movable", this.program.movable);
+            settings.writeNumber(prefix + "fixed", this.program.fixed.length);
+            settings.writeNumber(prefix + "movable", this.program.movable.length);
             this.program.rules.forEach(r => {storeRule(prefix, r) });
         }
 
