@@ -85,7 +85,7 @@ class Program {
         public fixed: Image[],      // the number of fixed sprites
         public movable: Image[],    // the number of movable sprites
         public world: Image,        // the world
-        public rules: IdRule[]      // the rules
+        public rules: IdRule[]     // the rules
     ) {}
 }
 

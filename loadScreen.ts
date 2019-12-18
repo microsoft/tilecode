@@ -40,8 +40,14 @@ namespace tileworld {
             if (this.program == null)
                 return;
             // TODO: sprites
-            settings.writeNumber(prefix + "fixed", this.program.fixed.length);
-            settings.writeNumber(prefix + "movable", this.program.movable.length);
+            settings.writeNumber(prefix + "FL", this.program.fixed.length);
+            settings.writeNumber(prefix + "ML", this.program.movable.length);
+            this.program.fixed.forEach((img,i) => {
+                settings.writeBuffer(prefix+"FS", null);
+            });
+            this.program.movable.forEach((img, i) => {
+
+            });
             this.program.rules.forEach(r => {storeRule(prefix, r) });
         }
 
