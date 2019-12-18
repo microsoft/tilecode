@@ -19,13 +19,13 @@ namespace tileworld {
         let index = 0;
         buf.setNumber(NumberFormat.Int8LE, index++, img.width());
         buf.setNumber(NumberFormat.Int8LE, index++, img.height());
-        let pixel = -1;
+        let pixel = 17;
         let length = 0;
-        for(let x = 0; x<img.width(); x++) {
+        for(let x = 0; x < img.width(); x++) {
             for (let y = 0; y < img.height(); y++) {
                 let newPixel = img.getPixel(x, y);
                 if (newPixel != pixel) {
-                    if (pixel != -1) {
+                    if (length > 0) {
                         // output run
                         buf.setUint8(index++, ((length & 0xf) << 4) | (pixel & 0xf));
                     }
@@ -35,9 +35,9 @@ namespace tileworld {
                 } else {
                     if (length == 14) {
                         // output run
-                        buf.setUint8(index++, (0xf << 4) | (pixel & 0xf));
+                        buf.setUint8(index++, 0xf0 | (pixel & 0xf));
                         // reset
-                        pixel = -1;
+                        pixel = 17;
                         length = 0;
                     } else {
                         length++;
@@ -63,9 +63,14 @@ namespace tileworld {
         while (index < buf.length) {
             let pair = buf.getUint8(index++);
             let pixel = pair & 0xf;
-            let len = (pair & 0x0f) >> 4;
-            // paint the pixels and wrap as needed
+            let len = (pair & 0xf0) >> 4;
+            while (len > 0) {
+                img.setPixel(x, y, pixel);
+                if (y == height -1 ) { x++; y = 0; } else { y++; }
+                len--;
+            }
         }
-        // assert we have complete paint!
+        control.assert(index == buf.length, 54);
+        return img;
     }
 }
