@@ -135,13 +135,6 @@ namespace tileworld {
             }
         }
 
-        private setTileSaved() {
-            this.tileSaved.x = this.cursor.x;
-            this.tileSaved.y = this.cursor.y;
-            this.tileSaved.z = 100;
-            this.tileSaved.setFlag(SpriteFlag.Invisible, false);
-        }
-
         private noMenu() {
             this.whenDo = -1;
             this.currentCommand = -1;

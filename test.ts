@@ -16,7 +16,7 @@ namespace bd {
         . . 4 4 f 4 4 5 5 4 4 f 4 4 . .
         . . . . . f f f f f f . . . . .
         . . . . . f f . . f f . . . . .
-    `
+    `;
     export const diamond = img`
         . . . . . . . . . . . . . . . .
         . . . . 8 8 8 8 8 8 8 8 . . . .
@@ -34,7 +34,7 @@ namespace bd {
         . . . . . . 9 9 1 1 . . . . . .
         . . . . . . . 9 1 . . . . . . .
         . . . . . . . . . . . . . . . .
-    `
+    `;
     export const boulder = img`
         . . . . . c c b b b . . . . . .
         . . . . c b d d d d b . . . . .
@@ -52,7 +52,7 @@ namespace bd {
         . . c c c c c b b b b b b b c .
         . . . . . . c c b b b b c c . .
         . . . . . . . . c c c c . . . .
-    `
+    `;
     export const rock = img`
         . . . . . . . . . . . . . . . .
         . . . . 8 8 8 8 d d b . . . . .
@@ -70,7 +70,7 @@ namespace bd {
         . . . . . . 9 9 b b b b b . . .
         . . . . . . . 9 b b b b . . . .
         . . . . . . . . . . . . . . . .
-    `
+    `;
     export const enemy = img`
         . . . . . . . f f f f . . . . .
         . . . . . f f 1 1 1 1 f f . . .
@@ -88,7 +88,7 @@ namespace bd {
         . f 1 c 1 c 1 f f f f f f . . .
         . f d f d f d f f f f f . . . .
         . . f . f . f . . . . . . . . .
-    `
+    `;
     export const wall = img`
         d d d d d d d d d d d d d d d 8
         d 6 6 6 8 8 8 6 6 6 6 6 6 6 8 8
@@ -106,7 +106,7 @@ namespace bd {
         d 8 8 8 8 6 6 6 6 8 8 8 8 8 6 8
         d 6 6 6 6 6 6 6 8 8 6 6 6 8 6 8
         8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
-    `
+    `;
     export const dirt = img`
         f e e e e e f e e e e 4 4 4 4 e
         e e 4 4 e e e f f f e e e e e e
@@ -124,7 +124,7 @@ namespace bd {
         e f e 4 4 4 4 4 e f e 4 4 e e e
         e e f e 4 4 4 e f e 4 4 4 4 e e
         f e e f e e e f e 4 4 4 4 4 4 e
-    `
+    `;
     export const space = img`
         f f f f f f f f f f f c c c c f
         f f c c f f f f f f f f f f f f
@@ -142,9 +142,9 @@ namespace bd {
         f f f c c c c c f f f c c f f f
         f f f f c c c f f f c c c c f f
         f f f f f f f f f c c c c c c f
-    `
-    export const movable = [boulder, player, diamond, enemy]
-    export const fixed = [space, wall, dirt]
+    `;
+    export const movable = [boulder, player, diamond, enemy];
+    export const fixed = [space, wall, dirt];
 }
 
 import tw = tileworld;
@@ -265,5 +265,3 @@ let roundTripRules = program.rules.map(r => {
 //tw.setProgram(program);
 //let mapEditor = new tw.MapEditor(manager);
 let loadSave = new tw.LoadScreen();   
-
-

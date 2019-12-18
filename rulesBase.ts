@@ -20,7 +20,7 @@ namespace tileworld {
             scene.setBackgroundImage(this.background);
             this.cursor = sprites.create(cursorIn);
             this.cursor.setFlag(SpriteFlag.Invisible, false);
-            this.cursor.x = 40;
+            this.cursor.x = 24;
             this.cursor.y = yoff + 40;
 
             this.tileSaved = sprites.create(cursorOut);
@@ -74,6 +74,13 @@ namespace tileworld {
 
         protected fillTile(c: number, r: number, col: color) {
             this.background.fillRect(c << 4, yoff + (r << 4), 16, 16, col);
+        }
+
+        protected setTileSaved() {
+            this.tileSaved.x = this.cursor.x;
+            this.tileSaved.y = this.cursor.y;
+            this.tileSaved.z = 100;
+            this.tileSaved.setFlag(SpriteFlag.Invisible, false);
         }
 
         protected cursorMove() { }

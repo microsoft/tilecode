@@ -25,6 +25,11 @@ namespace tileworld {
         getKind(img: Image) {
             return this.allImages.indexOf(img);
         }
+        saveImages(prefix: string) {
+            this.allImages.forEach(img => {
+            
+            });
+        }
 
         fixed() { return this.fixedImages; }
         movable() { return this.movableImages; }
