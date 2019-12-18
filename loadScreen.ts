@@ -1,12 +1,12 @@
 namespace tileworld {
 
     export class LoadScreen extends RuleVisualsBase {
-        private fromSlot: number;
+        private fromSlot: string;
         private program: Program;
         constructor(private bootstrap: Program) {
             super(null);
             this.program = null;
-            this.fromSlot = -1;
+            this.fromSlot = null;
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 if ( (this.col() == 4 || this.col() == 6) && this.row() == 2) {
                     let prefix = this.col() == 4 ? "TW1-" : "TW2-";
@@ -17,16 +17,36 @@ namespace tileworld {
         }
 
         private loadProgram(prefix: string)  {
+            this.fromSlot = prefix;
             // check for overwrite of current (modified) program
             this.program = new Program([],[],null,[]);
             let names = settings.list(prefix);
             if (names.length == 0)
                 return;
-        
-            // things to load
-            // - the meta data (fixed, movable)
-            // - the sprites
-            // - all the rules
+            // get the tile map, handling errors
+            let buf = settings.readBuffer(prefix + "TM");
+            let world = buf && buf.length > 0 ? bufferToImage(buf) : null;
+            this.program.world = world ? world : image.create(30, 30);
+            // get sprites
+            if (names.indexOf(prefix+"FL") != -1) {
+                let fixed = settings.readNumber(prefix + "FL");
+                for(let i=0; i<fixed;i++) { 
+                    let buf = settings.readBuffer(prefix+"FS"+i.toString());
+                    let img = buf && buf.length > 0 ? bufferToImage(buf): null;
+                    if (!img) { img = image.create(16, 16); img.fill(1+i); }
+                    this.program.fixed.push(img);
+                }
+            }
+            if (names.indexOf(prefix + "ML") != -1) {
+                let movable = settings.readNumber(prefix + "ML");
+                for (let i = 0; i < movable; i++) {
+                    let buf = settings.readBuffer(prefix + "MS" + i.toString());
+                    let img = buf && buf.length > 0 ? bufferToImage(buf) : null;
+                    if (!img) { img = image.create(16, 16); img.fill(1 + i); }
+                    this.program.movable.push(img);
+                }
+            }
+            // rules as needed?
             this.setTileSaved();
             // push scene and load editor
             this.update();
@@ -35,16 +55,16 @@ namespace tileworld {
         private saveBootstrap(prefix: string){
             if (this.bootstrap == null)
                 return;
-            // TODO: sprites
-            settings.writeNumber(prefix + "FL", this.program.fixed.length);
-            settings.writeNumber(prefix + "ML", this.program.movable.length);
-            this.program.fixed.forEach((img,i) => {
+            settings.writeNumber(prefix + "FL", this.bootstrap.fixed.length);
+            settings.writeNumber(prefix + "ML", this.bootstrap.movable.length);
+            this.bootstrap.fixed.forEach((img,i) => {
                 settings.writeBuffer(prefix + "FS" + i.toString(), imageToBuffer(img));
             });
-            this.program.movable.forEach((img, i) => {
+            this.bootstrap.movable.forEach((img, i) => {
                 settings.writeBuffer(prefix + "MS" + i.toString() , imageToBuffer(img));
             });
-            this.program.rules.forEach(r => {storeRule(prefix, r) });
+            settings.writeBuffer(prefix + "TM", imageToBuffer(this.bootstrap.world));
+            this.program.rules.forEach(r => { storeRule(prefix, r); });
         }
         
         private update() {
@@ -56,6 +76,9 @@ namespace tileworld {
             this.background.print("1", (4 << 4) + 6, (2 << 4) + 4 + yoff);
             this.fillTile(6, 2, 11);
             this.background.print("2", (6 << 4) + 6, (2 << 4) + 4 + yoff);
+            if (this.bootstrap) {
+                
+            }
             if (this.program) {
                 for(let x=0; x<9; x++) {
                     this.drawImage(x,6,rightHand);

@@ -228,23 +228,17 @@ let boulderFallLeft: Rule = new Rule([boulderId, diamondId], RuleType.Resting, M
      SpriteAt(boulderId, 2, 3), TileAt(spaceId, 1, 2), TileAt(spaceId,1,3) ]
 );
 
+let world = image.create(30, 30);
+world.fill(2);
 let program = new Program(
     bd.fixed,
     bd.movable,
-    image.create(30, 30),
+    world,
     tw.makeIds([boulderFallDown, boulderFallLeft, boulderFallingDown, 
       playerPaint, playerMoveRight, playerMoveLeft, playerMoveUp, playerMoveDown, 
       playerMoveBoulderRight, playerMoveBoulderLeft])
 );
 
-/*
-let roundTripRules = program.rules.map(r => { 
-    let b: Buffer = tw.storeRule(r); 
-    let newb = b.slice(0,b.length);
-    return tw.retrieveRule(newb); 
-})
-*/
-
-tw.setProgram(program);
-let mapEditor = new tw.MapEditor(manager);
-//let loadSave = new tw.LoadScreen(program);   
+//tw.setProgram(program);
+//let mapEditor = new tw.MapEditor(manager);
+let loadSave = new tw.LoadScreen(program);   
