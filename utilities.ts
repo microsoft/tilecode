@@ -32,15 +32,21 @@ namespace tileworld {
                     pixel = newPixel;
                     length = 1;
                 } else {
-                    length++;
-                    if (length == 16) {
+                    if (length == 14) {
                         // output run
-                        buf.setUint8(((length & 0xf) << 4) | (pixel & 0xf), bufIndex);
+                        buf.setUint8((0xf << 4) | (pixel & 0xf), bufIndex);
                         bufIndex++;
-                        length = 1;
+                        length = 0;
+                    } else {
+                        length++;
                     }
                 }
             }
+        }
+        // last bit (if needed)
+        if (length > 0) {
+            buf.setUint8(((length & 0xf) << 4) | (pixel & 0xf), bufIndex);
+            bufIndex++;
         }
         // return exactly the amount used. 
         return buf.slice(0, bufIndex);
