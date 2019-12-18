@@ -10,6 +10,9 @@ namespace tileworld {
                     let prefix = this.col() == 4 ? "TW1-" : "TW2-";
                     this.p = loadProject(prefix);
                     this.update();
+                } else if (this.p && this.col() == 9 && this.row() ==6) {
+                    game.pushScene();
+                    let mapEditor = new MapEditor(this.p);
                 }
             });
             this.update();

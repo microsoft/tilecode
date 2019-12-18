@@ -1,11 +1,11 @@
 namespace tileworld {
 
     export class Project {
-        private lastRule: IdRule;
-        public defaultTile: number;
-        private allImages: Image[];
-        private _player: number;
-        private _world: Image;
+        private lastRule: IdRule = null;
+        public defaultTile: number = 0;
+        private allImages: Image[] = null;
+        private _player: number = -1;
+        private _world: Image = null;
 
         constructor(
             public prefix: string,
@@ -13,16 +13,7 @@ namespace tileworld {
             private movableImages: Image[],    // the number of movable sprites
             private rules: IdRule[]     // the rules
         ) {
-            this.reset();
-        }
 
-        private reset() {
-            this.prefix = null;
-            this.defaultTile = 0;
-            this.lastRule = null;
-            this.allImages = null;
-            this._player = -1;
-            this._world = null;
         }
 
         public setPlayer(kind: number) {

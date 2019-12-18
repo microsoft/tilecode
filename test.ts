@@ -235,5 +235,5 @@ world.fill(2);
 project.setWorld(world);
 project.setPlayer(playerId);
 
-let mapEditor = new tileworld.MapEditor(project);
-// let loadSave = new tileworld.LoadScreen(project);
+//let mapEditor = new tileworld.MapEditor(project);
+let loadSave = new tileworld.LoadScreen(project);
