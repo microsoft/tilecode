@@ -26,7 +26,7 @@ namespace tileworld {
             this.offsetX = this.offsetY = 0;
             this.update();
 
-            controller.left.onEvent(ControllerButtonEvent.Repeated, () => {
+            controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.col() > 0)
                     this.cursor.x -= 16
                 else {
@@ -34,7 +34,7 @@ namespace tileworld {
                     this.update();
                 }
             });
-            controller.right.onEvent(ControllerButtonEvent.Repeated, () => {
+            controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.col() < 9)
                     this.cursor.x += 16
                 else {
@@ -42,7 +42,7 @@ namespace tileworld {
                     this.update();
                 }
             });
-            controller.up.onEvent(ControllerButtonEvent.Repeated, () => {
+            controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.row() > 0)
                     this.cursor.y -= 16
                 else {
@@ -50,7 +50,7 @@ namespace tileworld {
                     this.update();
                 }
             });
-            controller.down.onEvent(ControllerButtonEvent.Repeated, () => {
+            controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.row() < 6)
                     this.cursor.y += 16
                 else {
