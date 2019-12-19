@@ -156,10 +156,10 @@ namespace tileworld {
         }
 
         public update() {
-            background.fill(11);
-            background.fillRect(0, 0, 80, 120, 12);
-            background.print("When", 0, 0);
-            background.print("Do", 80, 0);
+            screen.fill(11);
+            screen.fillRect(0, 0, 80, 120, 12);
+            screen.print("When", 0, 0);
+            screen.print("Do", 80, 0);
 
             this.makeContext();
             this.showCommands(); 
@@ -168,10 +168,10 @@ namespace tileworld {
                 this.showMainMenu();
             } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                 this.dirMap.fill(0xf);
-                background.fillRect(0, yoff + 80, 160, 36, 0);
+                screen.fillRect(0, yoff + 80, 160, 36, 0);
                 this.attrMenu()
             } else if (this.menu == RuleEditorMenus.CommandMenu) {
-                background.fillRect(0, yoff + 80, 160, 36, 0);
+                screen.fillRect(0, yoff + 80, 160, 36, 0);
                 this.modifyCommandMenu();
                 this.commandUpdate();
             }
@@ -183,7 +183,7 @@ namespace tileworld {
         }
 
         private showMainMenu() {
-            background.fillRect(0, yoff + (6 << 4), 160, 19, 0);
+            screen.fillRect(0, yoff + (6 << 4), 160, 19, 0);
             this.drawImage(0, 6, map);
             this.fillTile(1, 6, 11);
             this.drawImage(1, 6, pencil);

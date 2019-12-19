@@ -259,6 +259,5 @@ namespace tileworld {
             let buf = storeRule(prefix, r.id, r.rule); 
             length += buf.length;
         });
-        // console.logValue("world Size", length);
     }
 } 

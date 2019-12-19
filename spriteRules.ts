@@ -23,10 +23,10 @@ namespace tileworld {
         }
 
         public update() {
-            background.fill(15);
-            background.fillRect(0, yoff + 16, 16, 16, 11);
-            background.drawTransparentImage(map, 0, yoff);
-            background.drawTransparentImage(pencil, 0, yoff + 16)
+            screen.fill(15);
+            screen.fillRect(0, yoff + 16, 16, 16, 11);
+            screen.drawTransparentImage(map, 0, yoff);
+            screen.drawTransparentImage(pencil, 0, yoff + 16)
             this.showRuleMenu(1, 0);
         }
 

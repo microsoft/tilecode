@@ -4,13 +4,8 @@ namespace tileworld {
 
     export class BackgroundBase {
         constructor() {
-            backStack.push(this);
-            scene.setBackgroundImage(background);
-            game.addScenePopHandler(() => {
-                backStack.pop();
-                if (backStack.length > 0) {
-                    backStack[backStack.length-1].update();
-                }
+            game.onPaint(function () {
+                this.update();
             })
         }
         public update() {
@@ -75,19 +70,19 @@ namespace tileworld {
         }
 
         protected drawImage(c: number, r: number, img: Image) {
-            background.drawTransparentImage(img, c << 4, yoff + (r << 4));
+            screen.drawTransparentImage(img, c << 4, yoff + (r << 4));
         }
 
         protected drawImageAbs(x: number, y: number, img: Image) {
-            background.drawTransparentImage(img, x, y);
+            screen.drawTransparentImage(img, x, y);
         }
 
         protected drawOutline(c: number, r: number, col: number = 12) {
-            background.drawRect(c << 4, yoff + (r << 4), 17, 17, col);
+            screen.drawRect(c << 4, yoff + (r << 4), 17, 17, col);
         }
 
         protected fillTile(c: number, r: number, col: color) {
-            background.fillRect(c << 4, yoff + (r << 4), 16, 16, col);
+            screen.fillRect(c << 4, yoff + (r << 4), 16, 16, col);
         }
 
         protected setTileSaved() {

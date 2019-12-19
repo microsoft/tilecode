@@ -26,7 +26,7 @@ namespace tileworld {
             this.offsetX = this.offsetY = 0;
             this.update();
 
-            controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
+            controller.left.onEvent(ControllerButtonEvent.Repeated, () => {
                 if (this.col() > 0)
                     this.cursor.x -= 16
                 else {
@@ -34,7 +34,7 @@ namespace tileworld {
                     this.update();
                 }
             });
-            controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
+            controller.right.onEvent(ControllerButtonEvent.Repeated, () => {
                 if (this.col() < 9)
                     this.cursor.x += 16
                 else {
@@ -42,7 +42,7 @@ namespace tileworld {
                     this.update();
                 }
             });
-            controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
+            controller.up.onEvent(ControllerButtonEvent.Repeated, () => {
                 if (this.row() > 0)
                     this.cursor.y -= 16
                 else {
@@ -50,7 +50,7 @@ namespace tileworld {
                     this.update();
                 }
             });
-            controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
+            controller.down.onEvent(ControllerButtonEvent.Repeated, () => {
                 if (this.row() < 6)
                     this.cursor.y += 16
                 else {
@@ -123,12 +123,12 @@ namespace tileworld {
         }
 
         private drawImage(img: Image, col: number, row: number) {
-            background.drawTransparentImage(img, col << 4, (row << 4)+yoff);
+            screen.drawTransparentImage(img, col << 4, (row << 4)+yoff);
         }
 
         public update() {
-            background.fill(0);
-            background.fillRect(0, yoff, 16, 16, 11);
+            screen.fill(0);
+            screen.fillRect(0, yoff, 16, 16, 11);
             this.p.all().forEach((img, row) => {
                 this.drawImage(img, 1, row);
             });
@@ -143,7 +143,7 @@ namespace tileworld {
                     this.drawImage(index >= 0 ? this.p.getImage(index) : emptyTile, col, row);
                 }    
             }
-            background.drawLine(32, yoff, 32, 119, 11)
+            screen.drawLine(32, yoff, 32, 119, 11)
         }
     } 
  }
