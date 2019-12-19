@@ -203,7 +203,9 @@ namespace tileworld {
             let rule = retrieveRule(ruleName, rid);
             rules.push(new IdRule(rid, rule));
         });
-        return new Project(prefix, fixedImages, movableImages, rules);
+        let p = new Project(prefix, fixedImages, movableImages, rules);
+        p.setWorld(world);
+        return p;
     }
 
     export function saveEntireProject(p: Project){
