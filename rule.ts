@@ -292,6 +292,7 @@ namespace tileworld {
     export function storeRule(prefix: string, r: IdRule) {
         packRule(r.rule);
         settings.writeBuffer(prefix + r.id.toString(), buf);
+        return buf;
     }
 
     // first, let's fully unpack

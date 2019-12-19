@@ -210,15 +210,26 @@ namespace tileworld {
         if (p == null)
             return;
         let prefix = p.prefix;
+        let length = 8;
         settings.writeNumber(prefix + "FL", p.fixed().length);
         settings.writeNumber(prefix + "ML", p.movable().length);
         p.fixed().forEach((img, i) => {
-            settings.writeBuffer(prefix + "FS" + i.toString(), imageToBuffer(img));
+            let buf = imageToBuffer(img);
+            length += buf.length;
+            settings.writeBuffer(prefix + "FS" + i.toString(), buf);
         });
         p.movable().forEach((img, i) => {
-            settings.writeBuffer(prefix + "MS" + i.toString(), imageToBuffer(img));
+            let buf = imageToBuffer(img);
+            length += buf.length;
+            settings.writeBuffer(prefix + "MS" + i.toString(), buf);
         });
-        settings.writeBuffer(prefix + "TM", imageToBuffer(p.getWorld()));
-        p.getRules().forEach(r => { storeRule(prefix+"RL", r); });
+        let worldBuf = imageToBuffer(p.getWorld());
+        length += worldBuf.length;
+        settings.writeBuffer(prefix + "TM", worldBuf);
+        p.getRules().forEach(r => { 
+            let buf = storeRule(prefix+"RL", r); 
+            length += buf.length;
+        });
+        // console.logValue("world Size", length);
     }
 } 
