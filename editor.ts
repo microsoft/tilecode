@@ -1,17 +1,7 @@
 namespace tileworld {
 
-    // TODO: animate transitions between screens
-    // TODO: names of things as overlay
-    // TODO: coordinates?
-    // TODO: separate commands 2x3 from user-defined sprites 2x4
-    // TODO: home screen: new/load/save (2 slots)
-
     const yoff = 4;
 
-    // TODO: grey out edit option for fixed tiles
-    // TODO: some indication of motion of the world when scrolling
-    // TODO: painting of tiles and sprites separately
-    // TODO: zoom-out (to 8x8 tiles rather than 16x16) and zoom-in
     // the root of the editing experience is creating a (shared) tile map
     export class MapEditor extends BackgroundBase {
         private world: Image;
@@ -24,8 +14,6 @@ namespace tileworld {
             super();
             // this is the world
             this.world = p.getWorld();
-            // this is the screen (under our control)
-            let empty = emptyTile;
             // cursors
             this.selected = sprites.create(cursorOut);
             this.selected.x = 24;

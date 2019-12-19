@@ -4,14 +4,13 @@ namespace tileworld {
     const paintSize = 6;
     const colorsY = 30;
     const colorsX = 5;
-    enum CursorType {Regular, Color, Paint};
+    enum CursorType { Regular, Color, Paint};
     export class ImageEditor extends BackgroundBase {
         private cursorType: CursorType;         // are we selecting a color or painting?
         private cursor: Sprite;
         private colorCursor: Sprite;
         private paintCursor: Sprite;
         private selectedColor: number;
-        private original: Image; // 16x16
         private image: Image;    // 16x16
         constructor(private p: Project, private kind: number) {
             super();
@@ -29,8 +28,7 @@ namespace tileworld {
             this.paintCursor.x = paintSize * 5 + 2 
             this.paintCursor.y = paintSize * 2 + 2
             this.paintCursor.setFlag(SpriteFlag.Invisible, true)
-            this.original = p.getImage(kind);
-            this.image = this.original // i.clone();
+            this.image = p.getImage(kind);
             this.update();
 
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {

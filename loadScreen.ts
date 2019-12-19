@@ -1,10 +1,8 @@
 namespace tileworld {
 
     export class LoadScreen extends RuleVisualsBase {
-        private fromSlot: string;
         constructor(private bootstrap: Project) {
             super(null);
-            this.fromSlot = null;
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 if ( (this.col() == 4 || this.col() == 6) && this.row() == 2) {
                     let prefix = this.col() == 4 ? "TW1-" : "TW2-";
