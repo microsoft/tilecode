@@ -45,12 +45,31 @@ namespace tileworld {
             return this.allImages; 
         }
 
-        getImage(kind: number) {
+        public getImage(kind: number) {
             return 0 <= kind && kind < this.allImages.length ? this.allImages[kind] : null;
         }
 
-        getKind(img: Image) {
+        public getKind(img: Image) {
             return this.allImages.indexOf(img);
+        }
+
+        public saveImage(kind: number) {
+            let fixed = true;
+            let index = kind;
+            if (kind >= this.fixedImages.length()) { 
+                fixed = false; 
+                index -= this.fixedImages.length(); 
+            }
+            let buf = saveImage(this.prefix, index, this.getImage(kind), fixed);
+        }
+
+        public saveRule(rid: number) {
+            storeRule(this.prefix, rid, this.getRule(rid));
+        }
+
+        public saveWorld() {
+            let worldBuf = imageToBuffer(this._world);
+            settings.writeBuffer(this.prefix + "TM", worldBuf);
         }
 
         // rules 
@@ -205,7 +224,15 @@ namespace tileworld {
         });
         let p = new Project(prefix, fixedImages, movableImages, rules);
         p.setWorld(world);
+        p.setPlayer(settings.readNumber(prefix + "PL"));
+        p.defaultTile = settings.readNumber(prefix + "DT");
         return p;
+    }
+
+    function saveImage(prefix: string, kind: number, img: Image, fixed: boolean) {
+        let buf = imageToBuffer(img);
+        settings.writeBuffer(prefix + (fixed ? "FS" : "MS") + kind.toString(), buf);
+        return buf;
     }
 
     export function saveEntireProject(p: Project){
@@ -215,21 +242,21 @@ namespace tileworld {
         let length = 8;
         settings.writeNumber(prefix + "FL", p.fixed().length);
         settings.writeNumber(prefix + "ML", p.movable().length);
+        settings.writeNumber(prefix + "PL", p.getPlayer());
+        settings.writeNumber(prefix + "DT", p.defaultTile);
         p.fixed().forEach((img, i) => {
-            let buf = imageToBuffer(img);
+            let buf = saveImage(prefix, i, img, true);
             length += buf.length;
-            settings.writeBuffer(prefix + "FS" + i.toString(), buf);
         });
         p.movable().forEach((img, i) => {
-            let buf = imageToBuffer(img);
+            let buf = saveImage(prefix, i, img, false);
             length += buf.length;
-            settings.writeBuffer(prefix + "MS" + i.toString(), buf);
         });
         let worldBuf = imageToBuffer(p.getWorld());
         length += worldBuf.length;
         settings.writeBuffer(prefix + "TM", worldBuf);
         p.getRules().forEach(r => { 
-            let buf = storeRule(prefix+"RL", r); 
+            let buf = storeRule(prefix, r.id, r.rule); 
             length += buf.length;
         });
         // console.logValue("world Size", length);

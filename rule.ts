@@ -289,9 +289,9 @@ namespace tileworld {
         });
     }
 
-    export function storeRule(prefix: string, r: IdRule) {
-        packRule(r.rule);
-        settings.writeBuffer(prefix + r.id.toString(), buf);
+    export function storeRule(prefix: string, rid: number, rule: Rule) {
+        packRule(rule);
+        settings.writeBuffer(prefix + "RL" + rid.toString(), buf);
         return buf;
     }
 

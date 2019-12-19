@@ -70,8 +70,9 @@ namespace tileworld {
                     this.exitCommandMenu();
                 } else if (this.menu == RuleEditorMenus.MainMenu) {
                     if (this.row() == 6) {
-                        if (this.col() == 0) game.popScene();
-                        else if (this.col() == 2) {
+                        if (this.col() == 0) {
+                            this.saveAndPop();
+                        } else if (this.col() == 2) {
                             //let flip = flipRule(this.rule, FlipRotate.Horizontal);
                             //game.pushScene();
                             // TODO: copy/paste??? rule inventory
@@ -81,8 +82,10 @@ namespace tileworld {
                             let rules = this.currentRules();
                             let index = rules.indexOf(this.rule);
                             if (this.col() == 7 && index > 0) {
+                                this.p.saveRule(this.rule);
                                 this.rule = rules[index-1];
                             } else if (this.col() == 9 && index < rules.length-1) {
+                                this.p.saveRule(this.rule);
                                 this.rule = rules[index+1];
                             }
                         }
@@ -96,9 +99,14 @@ namespace tileworld {
                     this.menu = RuleEditorMenus.MainMenu;
                     this.update();
                 } else {
-                    game.popScene();
+                    this.saveAndPop();
                 }
             });
+        }
+
+        private saveAndPop() {
+            this.p.saveRule(this.rule);
+            game.popScene();
         }
 
         protected currentRules() {

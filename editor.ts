@@ -23,7 +23,7 @@ namespace tileworld {
         constructor(private p: Project) {
             super();
             // this is the world
-            this.world = p.getWorld().clone();
+            this.world = p.getWorld();
             // this is the screen (under our control)
             let empty = emptyTile;
             // cursors
@@ -74,6 +74,7 @@ namespace tileworld {
                 this.cursorAction();
             });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
+                this.p.saveWorld();
                 game.popScene();
             });
         }
@@ -95,16 +96,19 @@ namespace tileworld {
                     this.offsetY = 0;
                 } else if (this.row() == 1) {
                     // paint
+                    this.p.saveWorld();
                     game.pushScene();
                     new ImageEditor(this.p, this.userSpriteIndex);
                     return;
                 } else if (this.row() == 2 && this.userSpriteIndex >= this.p.fixed().length) {
+                    this.p.saveWorld();
                     game.pushScene();
                     new RuleRoom(this.p, this.userSpriteIndex);
                     return;
                 } else if (this.row() == 3) {
                     let rules = this.p.getRuleIds();
                     if (rules.length > 0) {
+                        this.p.saveWorld();
                         game.pushScene();
                         let g = new RunGame(this.p, rules);
                         g.setWorld(this.world);

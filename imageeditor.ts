@@ -32,7 +32,7 @@ namespace tileworld {
             this.original = p.getImage(kind);
             this.image = this.original // i.clone();
             this.update();
-            //game.currentScene().render();
+
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.cursorType== CursorType.Color) {
                     if (this.colorCursor.x > colorsX + colorSize)
@@ -104,19 +104,25 @@ namespace tileworld {
                 } else {
                     let row = (this.cursor.y - yoff) >> 4;
                     if (row == 0) {
-                        game.popScene();
+                        this.saveAndPop();
                     } else
                         this.setCursor(CursorType.Paint)
                 }
             });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.cursorType== CursorType.Paint) 
+                if (this.cursorType== CursorType.Paint) {
                     this.setCursor(CursorType.Color);
-                else if (this.cursorType== CursorType.Color)
-                    game.popScene();
+                } else if (this.cursorType== CursorType.Color) {
+                    this.saveAndPop();
+                }
             });
         }
 
+        private saveAndPop() {
+            this.p.saveImage(this.kind);
+            game.popScene();
+        }
+        
         private setCursor(ct: CursorType) {
             this.cursor.setFlag(SpriteFlag.Invisible, ct != CursorType.Regular);
             this.colorCursor.setFlag(SpriteFlag.Invisible, ct != CursorType.Color);

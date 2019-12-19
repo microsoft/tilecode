@@ -234,6 +234,6 @@ let world = image.create(30, 30);
 world.fill(2);
 project.setWorld(world);
 project.setPlayer(playerId);
+project.defaultTile = 0;
 
-//let mapEditor = new tileworld.MapEditor(project);
-let loadSave = new tileworld.LoadScreen(project);
+let loadSave = new tileworld.LoadScreen(null);
