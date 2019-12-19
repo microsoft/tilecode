@@ -325,11 +325,12 @@ namespace tileworld {
         }
     }
 
-    export class RunGame {
+    export class RunGame extends BackgroundBase {
         private vm: TileWorldVM;
         private signal: TileSprite;
         private state: VMState;
         constructor(private p: Project, rules: number[]) {
+            super();
             this.vm = new TileWorldVM(p, rules)
             //game.consoleOverlay.setVisible(true);
         }

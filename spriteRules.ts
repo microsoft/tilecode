@@ -24,6 +24,7 @@ namespace tileworld {
         }
 
         public update() {
+            background.fill(15);
             background.fillRect(0, yoff + 16, 16, 16, 11);
             background.drawTransparentImage(map, 0, yoff);
             background.drawTransparentImage(pencil, 0, yoff + 16)

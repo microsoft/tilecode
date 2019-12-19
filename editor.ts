@@ -72,7 +72,6 @@ namespace tileworld {
             });
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 this.cursorAction();
-                this.update();
             });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 game.popScene();
@@ -94,14 +93,15 @@ namespace tileworld {
                     // map icon brings us to home in world
                     this.offsetX = 0;
                     this.offsetY = 0;
-                    this.update();
                 } else if (this.row() == 1) {
                     // paint
                     game.pushScene();
-                    let spriteEditor = new ImageEditor(this.p, this.userSpriteIndex);
+                    new ImageEditor(this.p, this.userSpriteIndex);
+                    return;
                 } else if (this.row() == 2 && this.userSpriteIndex >= this.p.fixed().length) {
                     game.pushScene();
-                    let ruleRoom = new RuleRoom(this.p, this.userSpriteIndex);
+                    new RuleRoom(this.p, this.userSpriteIndex);
+                    return;
                 } else if (this.row() == 3) {
                     let rules = this.p.getRuleIds();
                     if (rules.length > 0) {
@@ -109,6 +109,7 @@ namespace tileworld {
                         let g = new RunGame(this.p, rules);
                         g.setWorld(this.world);
                         g.start();
+                        return;
                     }         
                 }
             } else {
@@ -118,6 +119,7 @@ namespace tileworld {
                     this.world.setPixel(x,y,this.userSpriteIndex);
                 }
             }
+            this.update();
         }
 
         private col(current: boolean = true) {
@@ -146,10 +148,7 @@ namespace tileworld {
                     let index = 0 <= x && x < this.world.width && 0 <= y && y < this.world.height ? this.world.getPixel(x,y) : -1;
                     let col = 2 + (x - this.offsetX);
                     let row = (y - this.offsetY);
-                    if (index >= 0)
-                        this.drawImage(this.p.getImage(this.p.defaultTile), col, row)
-                    this.drawImage(index >= 0 ? this.p.getImage(index) : emptyTile, 
-                        col, row);
+                    this.drawImage(index >= 0 ? this.p.getImage(index) : emptyTile, col, row);
                 }    
             }
             background.drawLine(32, yoff, 32, 119, 11)

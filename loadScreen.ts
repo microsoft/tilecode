@@ -12,9 +12,9 @@ namespace tileworld {
                     this.update();
                 } else if (this.p && this.col() == 9 && this.row() ==6) {
                     game.pushScene();
-                    let mapEditor = new MapEditor(this.p);
+                    new MapEditor(this.p);
+                    return;
                 }
-                this.update();
             });
             this.update();
             if (this.bootstrap) {
