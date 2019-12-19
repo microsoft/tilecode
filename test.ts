@@ -1,4 +1,4 @@
-/*namespace bd {
+namespace bd {
     export const player = img`
         . . . . . . f f f f . . . . . .
         . . . . f f f 2 2 f f f . . . .
@@ -234,6 +234,6 @@ let world = image.create(30, 30);
 world.fill(2);
 project.setWorld(world);
 project.setPlayer(playerId);
-*/
+
 //let mapEditor = new tileworld.MapEditor(project);
-let loadSave = new tileworld.LoadScreen(null);
+let loadSave = new tileworld.LoadScreen(project);

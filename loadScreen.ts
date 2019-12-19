@@ -14,6 +14,7 @@ namespace tileworld {
                     game.pushScene();
                     let mapEditor = new MapEditor(this.p);
                 }
+                this.update();
             });
             this.update();
             if (this.bootstrap) {
@@ -21,15 +22,18 @@ namespace tileworld {
             }
         }
         
-        private update() {
-            this.background.fill(15);
+        public update() {
+            background.fill(15);
             this.drawImage(9, 6, this.p ? map : greyImage(map));
-            this.background.print("TileWorld", 0, yoff);
-            this.background.print("Load", 2 << 4, (2 << 4) + 4 + yoff);
+            background.print("TileWorld", 0, yoff);
+            background.print("Load", 2 << 4, (2 << 4) + 4 + yoff);
             this.fillTile(4, 2, 11);
-            this.background.print("1", (4 << 4) + 6, (2 << 4) + 4 + yoff);
+            background.print("1", (4 << 4) + 6, (2 << 4) + 4 + yoff);
             this.fillTile(6, 2, 11);
-            this.background.print("2", (6 << 4) + 6, (2 << 4) + 4 + yoff);
+            background.print("2", (6 << 4) + 6, (2 << 4) + 4 + yoff);
+            if (this.bootstrap) {
+                background.print("bootstrap", 10, 100);
+            }
             if (this.p) {
                 for(let x=0; x<9; x++) {
                     this.drawImage(x,6,rightHand);

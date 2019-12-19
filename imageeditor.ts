@@ -5,7 +5,7 @@ namespace tileworld {
     const colorsY = 30;
     const colorsX = 5;
     enum CursorType {Regular, Color, Paint};
-    export class ImageEditor {
+    export class ImageEditor extends BackgroundBase {
         private cursorType: CursorType;         // are we selecting a color or painting?
         private cursor: Sprite;
         private colorCursor: Sprite;
@@ -13,8 +13,8 @@ namespace tileworld {
         private selectedColor: number;
         private original: Image; // 16x16
         private image: Image;    // 16x16
-        private screen: Image;  // whole screen
         constructor(private p: Project, private kind: number) {
+            super();
             this.cursorType= CursorType.Color;
             this.cursor = sprites.create(cursorIn);
             this.cursor.x = colorsX + 8;
@@ -31,8 +31,8 @@ namespace tileworld {
             this.paintCursor.setFlag(SpriteFlag.Invisible, true)
             this.original = p.getImage(kind);
             this.image = this.original // i.clone();
-            this.screen = image.create(160, 120)
-            scene.setBackgroundImage(this.screen)
+            this.update();
+            //game.currentScene().render();
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.cursorType== CursorType.Color) {
                     if (this.colorCursor.x > colorsX + colorSize)
@@ -115,7 +115,6 @@ namespace tileworld {
                 else if (this.cursorType== CursorType.Color)
                     game.popScene();
             });
-            this.update()
         }
 
         private setCursor(ct: CursorType) {
@@ -125,44 +124,44 @@ namespace tileworld {
             this.cursorType= ct;
         }
 
-        private update() {
-            this.screen.fill(0);
-            this.screen.fillRect(colorsX, yoff+16, 16, 16, 11);
-            this.screen.drawTransparentImage(map, colorsX, yoff);
-            this.screen.drawTransparentImage(paint, colorsX, yoff+16)
-            //this.screen.fill(0)
+        public update() {
+            background.fill(0);
+            background.fillRect(colorsX, yoff+16, 16, 16, 11);
+            background.drawTransparentImage(map, colorsX, yoff);
+            background.drawTransparentImage(paint, colorsX, yoff+16)
+            //background.fill(0)
             // draw the 16 colors
             for (let row = 0; row < 8; row++) {
                 for (let col = 0; col < 2; col++) {
                     let color = row * 2 + col
                     let yOffset = colorsY + colorSize + (colorSize >> 1)
-                    this.screen.fillRect(colorsX + col * colorSize + 1, yOffset + row * colorSize + 1, colorSize-2, colorSize-2, color)
+                    background.fillRect(colorsX + col * colorSize + 1, yOffset + row * colorSize + 1, colorSize-2, colorSize-2, color)
                     if (this.selectedColor == color) {
-                        this.screen.drawRect(colorsX + col * colorSize, yOffset + row * colorSize, colorSize, colorSize, 1)
+                        background.drawRect(colorsX + col * colorSize, yOffset + row * colorSize, colorSize, colorSize, 1)
                     }
                 }
             }
             // take care of transparent
-            this.screen.fillRect(colorsX + 1, colorsY+13, 3, 3, 13)
-            this.screen.fillRect(colorsX + 4, colorsY+16, 3, 3, 13)
+            background.fillRect(colorsX + 1, colorsY+13, 3, 3, 13)
+            background.fillRect(colorsX + 4, colorsY+16, 3, 3, 13)
             // frame the sprite editor
-            this.screen.drawRect(28, 10, paintSize * 16 + (paintSize - 2), paintSize * 16 + (paintSize -2), 1)
+            background.drawRect(28, 10, paintSize * 16 + (paintSize - 2), paintSize * 16 + (paintSize -2), 1)
             // draw the sprite editor
             for (let row = 0; row < this.image.height; row++) {
                 let y = (paintSize << 1) + row * paintSize
                 for (let col = 0; col < this.image.width; col++) {
                     let x = paintSize * 5 + col * paintSize
                     let color = this.image.getPixel(col, row)
-                    this.screen.fillRect(x, y, paintSize-1, paintSize-1, color)
+                    background.fillRect(x, y, paintSize-1, paintSize-1, color)
                     if (color == 0) {
-                        this.screen.fillRect(x, y, (paintSize >> 1) -1, (paintSize >> 1) -1, 13)
-                        this.screen.fillRect(x + (paintSize >> 1), y + (paintSize >> 1), (paintSize >> 1)-1, (paintSize >> 1)-1, 13)
+                        background.fillRect(x, y, (paintSize >> 1) -1, (paintSize >> 1) -1, 13)
+                        background.fillRect(x + (paintSize >> 1), y + (paintSize >> 1), (paintSize >> 1)-1, (paintSize >> 1)-1, 13)
                     }
                 }
             }
             // draw the sprite
-            this.screen.drawImage(this.image, 134, 12)
-            this.screen.drawRect(133, 11, 18, 18, 1)
+            background.drawImage(this.image, 134, 12)
+            background.drawRect(133, 11, 18, 18, 1)
         }
     }
 }

@@ -21,15 +21,12 @@ namespace tileworld {
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 game.popScene();
             });
-            game.addScenePopHandler(() => {
-                this.update();
-            })
         }
 
-        private update() {
-            this.background.fillRect(0, yoff + 16, 16, 16, 11);
-            this.background.drawTransparentImage(map, 0, yoff);
-            this.background.drawTransparentImage(pencil, 0, yoff + 16)
+        public update() {
+            background.fillRect(0, yoff + 16, 16, 16, 11);
+            background.drawTransparentImage(map, 0, yoff);
+            background.drawTransparentImage(pencil, 0, yoff + 16)
             this.showRuleMenu(1, 0);
         }
 

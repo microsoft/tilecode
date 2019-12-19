@@ -2,8 +2,23 @@ namespace tileworld {
 
     export const yoff = 6;
 
-    export class RuleVisualsBase {
-        protected background: Image;
+    export class BackgroundBase {
+        constructor() {
+            backStack.push(this);
+            scene.setBackgroundImage(background);
+            game.addScenePopHandler(() => {
+                backStack.pop();
+                if (backStack.length > 0) {
+                    backStack[backStack.length-1].update();
+                }
+            })
+        }
+        public update() {
+
+        }
+    }
+
+    export class RuleVisualsBase extends BackgroundBase {
         protected cursor: Sprite;
         protected tileSaved: Sprite;      // remember the tile that we are editing
 
@@ -12,12 +27,11 @@ namespace tileworld {
         protected dirMap: Image;          // mapping of tile to direction
 
         constructor(protected p: Project) {
+            super();
             this.ruleTypeMap = image.create(10, 7);
             this.dirMap = image.create(10, 7);
             this.ruleTypeMap.fill(0xf);
             this.dirMap.fill(0xf);
-            this.background = image.create(160, 120);
-            scene.setBackgroundImage(this.background);
             this.cursor = sprites.create(cursorIn);
             this.cursor.setFlag(SpriteFlag.Invisible, false);
             this.cursor.x = 24;
@@ -61,19 +75,19 @@ namespace tileworld {
         }
 
         protected drawImage(c: number, r: number, img: Image) {
-            this.background.drawTransparentImage(img, c << 4, yoff + (r << 4));
+            background.drawTransparentImage(img, c << 4, yoff + (r << 4));
         }
 
         protected drawImageAbs(x: number, y: number, img: Image) {
-            this.background.drawTransparentImage(img, x, y);
+            background.drawTransparentImage(img, x, y);
         }
 
         protected drawOutline(c: number, r: number, col: number = 12) {
-            this.background.drawRect(c << 4, yoff + (r << 4), 17, 17, col);
+            background.drawRect(c << 4, yoff + (r << 4), 17, 17, col);
         }
 
         protected fillTile(c: number, r: number, col: color) {
-            this.background.fillRect(c << 4, yoff + (r << 4), 16, 16, col);
+            background.fillRect(c << 4, yoff + (r << 4), 16, 16, col);
         }
 
         protected setTileSaved() {

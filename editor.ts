@@ -13,21 +13,19 @@ namespace tileworld {
     // TODO: painting of tiles and sprites separately
     // TODO: zoom-out (to 8x8 tiles rather than 16x16) and zoom-in
     // the root of the editing experience is creating a (shared) tile map
-    export class MapEditor {
+    export class MapEditor extends BackgroundBase {
         private world: Image;
         private offsetX: number; // where are we in the world?
         private offsetY: number; 
-        private screen: Image;   // the 160x120 display
         private cursor: Sprite;
         private selected: Sprite;
         private userSpriteIndex: number;
         constructor(private p: Project) {
+            super();
             // this is the world
             this.world = p.getWorld().clone();
             // this is the screen (under our control)
-            this.screen = image.create(160, 120);
             let empty = emptyTile;
-            scene.setBackgroundImage(this.screen)
             // cursors
             this.selected = sprites.create(cursorOut);
             this.selected.x = 24;
@@ -47,7 +45,7 @@ namespace tileworld {
                     this.offsetX -= 1;
                     this.update();
                 }
-            })
+            });
             controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.col() < 9)
                     this.cursor.x += 16
@@ -55,7 +53,7 @@ namespace tileworld {
                     this.offsetX += 1;
                     this.update();
                 }
-            })
+            });
             controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.row() > 0)
                     this.cursor.y -= 16
@@ -63,7 +61,7 @@ namespace tileworld {
                     this.offsetY -= 1;
                     this.update();
                 }
-            })
+            });
             controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.row() < 6)
                     this.cursor.y += 16
@@ -71,14 +69,14 @@ namespace tileworld {
                     this.offsetY += 1;
                     this.update();
                 }
-            })
+            });
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 this.cursorAction();
                 this.update();
-            })
-            game.addScenePopHandler(() => {
-                this.update();
-            })
+            });
+            controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
+                game.popScene();
+            });
         }
 
         private updateSelection() {
@@ -131,12 +129,12 @@ namespace tileworld {
         }
 
         private drawImage(img: Image, col: number, row: number) {
-            this.screen.drawTransparentImage(img, col << 4, (row << 4)+yoff);
+            background.drawTransparentImage(img, col << 4, (row << 4)+yoff);
         }
 
-        private update() {
-            this.screen.fill(0);
-            this.screen.fillRect(0, yoff, 16, 16, 11);
+        public update() {
+            background.fill(0);
+            background.fillRect(0, yoff, 16, 16, 11);
             this.p.all().forEach((img, row) => {
                 this.drawImage(img, 1, row);
             });
@@ -154,7 +152,7 @@ namespace tileworld {
                         col, row);
                 }    
             }
-            this.screen.drawLine(32, yoff, 32, 119, 11)
+            background.drawLine(32, yoff, 32, 119, 11)
         }
     } 
  }

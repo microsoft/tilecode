@@ -21,7 +21,8 @@
         "editor.ts",
         "loadScreen.ts",
         "tileworld.ts",
-        "main.ts"
+        "main.ts",
+        "static.ts"
     ],
     "testFiles": [
         "test.ts"
