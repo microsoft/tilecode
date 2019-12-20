@@ -49,9 +49,18 @@ namespace tileworld {
             this.update();
 
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.askDeleteRule)
-                    return;
-                if (this.manhattanDistance2() <=2 && (this.col() != 2 || this.row() != 2)) {
+                if (this.askDeleteRule) {
+                    let index = this.currentRules().indexOf(this.rule);
+                    this.p.removeRule(this.rule);
+                    let rules = this.currentRules();
+                    if (rules.length == 0) {
+                        game.popScene();
+                        return;
+                    } else {
+                        this.rule = index < rules.length ? index : index - 1;
+                    }
+                    this.askDeleteRule = false;
+                } else if (this.manhattanDistance2() <=2 && (this.col() != 2 || this.row() != 2)) {
                      // otherwise if we are in the diamond, bring up attr menu
                     if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                         this.noMenu();
@@ -88,19 +97,6 @@ namespace tileworld {
                             }
                         } else if (this.col() == 3) {
                             this.askDeleteRule = true;                     
-                            // let ok = game.ask("OK to delete rule?")
-                            if (true) {
-                                let index = this.currentRules().indexOf(this.rule);
-                                this.p.removeRule(this.rule);
-                                let rules = this.currentRules();
-                                if (rules.length == 0) {
-                                    game.popScene();
-                                    return;
-                                } else {
-                                    this.rule = index < rules.length ? index : index - 1;
-                                }
-                            }
-                            this.askDeleteRule = false;
                         }
                     } 
                 }
@@ -108,15 +104,20 @@ namespace tileworld {
             })
 
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.askDeleteRule)
-                    return;
-                if (this.menu != RuleEditorMenus.MainMenu) {
+                if (this.askDeleteRule) {
+                    this.askDeleteRule = false;
+                } else if (this.menu != RuleEditorMenus.MainMenu) {
                     this.menu = RuleEditorMenus.MainMenu;
-                    this.update();
                 } else {
                     this.saveAndPop();
+                    return;
                 }
+                this.update();
             });
+        }
+
+        protected okToMove() {
+            return !this.askDeleteRule;
         }
 
         private saveAndPop() {
@@ -191,6 +192,12 @@ namespace tileworld {
                 this.commandUpdate();
             }
             this.showRuleType(this.p.getType(this.rule), this.p.getDir(this.rule), 2, 2);
+            if (this.askDeleteRule) {
+                this.cursor.setFlag(SpriteFlag.Invisible, true)
+                game.showDialog("OK to delete rule?", "", "A = OK, B = CANCEL");
+            } else {
+                this.cursor.setFlag(SpriteFlag.Invisible, false);
+            }
         }
 
         centerImage() {

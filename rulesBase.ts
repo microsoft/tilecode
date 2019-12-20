@@ -36,38 +36,48 @@ namespace tileworld {
             this.tileSaved.setFlag(SpriteFlag.Invisible, true);
 
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
+                if (!this.okToMove()) return;
                 if (this.col() > 0)
                     this.cursor.x -= 16;
                 this.cursorMove(MoveDirection.Left);
             });
             controller.left.onEvent(ControllerButtonEvent.Released, () => {
+                if (!this.okToMove()) return;
                 this.cursorMove(MoveDirection.Left, false);
             });
             controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
+                if (!this.okToMove()) return;
                 if (this.col() < 9)
                     this.cursor.x += 16;
                 this.cursorMove(MoveDirection.Right);
             });
             controller.right.onEvent(ControllerButtonEvent.Released, () => {
+                if (!this.okToMove()) return;
                 this.cursorMove(MoveDirection.Right, false);
             });
             controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
+                if (!this.okToMove()) return;
                 if (this.row() > 0)
                     this.cursor.y -= 16;
                 this.cursorMove(MoveDirection.Up);
             });
             controller.up.onEvent(ControllerButtonEvent.Released, () => {
+                if (!this.okToMove()) return;
                 this.cursorMove(MoveDirection.Up, false);
             });
             controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
+                if (!this.okToMove()) return;
                 if (this.row() < 6)
                     this.cursor.y += 16;
                 this.cursorMove(MoveDirection.Down);
             });
             controller.down.onEvent(ControllerButtonEvent.Released, () => {
+                if (!this.okToMove()) return;
                 this.cursorMove(MoveDirection.Down, false);
             });
         }
+
+        protected okToMove() { return true; }
 
         protected getRulesForTypeDir(rules: number[], rt: RuleType, dir: MoveDirection) {
             return rules.filter(rid => this.p.getType(rid) == rt && (rt == RuleType.Resting || this.p.getDir(rid) == dir));
