@@ -649,6 +649,24 @@ export const addRule = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
 `;
+export const garbageCan = img`
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . b b b b b . . . . .
+    . . . . . b b . . . b b . . . .
+    . . b b b b b b b b b b b b b .
+    . . . b b b b b b b b b b b . .
+    . . . . b c b c b c b c b . . .
+    . . . . b c b c b c b c b . . .
+    . . . . b c b c b c b c b . . .
+    . . . . b c b c b c b c b . . .
+    . . . . b c b c b c b c b . . .
+    . . . . b c b c b c b c b . . .
+    . . . . b c b c b c b c b . . .
+    . . . . . b b b b b b b . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+`;
 /*
 export const minusOneLife = img`
     . . . . . . . . . . . . . . . .

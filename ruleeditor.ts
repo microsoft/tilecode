@@ -19,6 +19,7 @@ namespace tileworld {
         private rule: number;             // the current rule
         private whenDo: number;           // which WhenDo is being edited
         private currentCommand: number;   // the current command (potentially null)
+        private askDeleteRule: boolean;
 
         constructor(p: Project, 
                     private kind: number, private rt: RuleType, private dir: MoveDirection) {
@@ -29,6 +30,7 @@ namespace tileworld {
                 rules.push(p.makeRule(kind, rt, dir));
             }
             this.rule = rules[0];
+            this.askDeleteRule = false;
 
             // attribute menu view
             this.attrSelected = -1;
@@ -47,6 +49,8 @@ namespace tileworld {
             this.update();
 
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
+                if (this.askDeleteRule)
+                    return;
                 if (this.manhattanDistance2() <=2 && (this.col() != 2 || this.row() != 2)) {
                      // otherwise if we are in the diamond, bring up attr menu
                     if (this.menu == RuleEditorMenus.AttrTypeMenu) {
@@ -66,7 +70,6 @@ namespace tileworld {
                     let yes = this.attrUpdate();
                     if (!yes) this.noMenu();
                 } else if (this.menu == RuleEditorMenus.CommandMenu) {
-                    // look for deletion
                     this.exitCommandMenu();
                 } else if (this.menu == RuleEditorMenus.MainMenu) {
                     if (this.row() == 6) {
@@ -83,6 +86,21 @@ namespace tileworld {
                             } else if (this.col() == 8) {
                                 this.rule = p.makeRule(this.kind, this.rt, this.dir);
                             }
+                        } else if (this.col() == 3) {
+                            this.askDeleteRule = true;                     
+                            let ok = game.ask("OK to delete rule?")
+                            if (ok) {
+                                let index = this.currentRules().indexOf(this.rule);
+                                this.p.removeRule(this.rule);
+                                let rules = this.currentRules();
+                                if (rules.length == 0) {
+                                    game.popScene();
+                                    return;
+                                } else {
+                                    this.rule = index < rules.length ? index : index - 1;
+                                }
+                            }
+                            this.askDeleteRule = false;
                         }
                     } 
                 }
@@ -90,6 +108,8 @@ namespace tileworld {
             })
 
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
+                if (this.askDeleteRule)
+                    return;
                 if (this.menu != RuleEditorMenus.MainMenu) {
                     this.menu = RuleEditorMenus.MainMenu;
                     this.update();
@@ -176,13 +196,13 @@ namespace tileworld {
             return this.p.getImage(this.kind);
         }
 
-        // TODO: delete rule
         private showMainMenu() {
             screen.fillRect(0, yoff + (6 << 4), 160, 19, 0);
             this.fillTile(0, 6, 11);
             this.drawImage(0, 6, pencil);
             this.drawImage(1, 6, play);
             this.drawImage(2, 6, debug);
+            this.drawImage(3, 6, garbageCan);
             let rules = this.currentRules();
             let index = rules.indexOf(this.rule);
             this.drawImage(9, 6, index < rules.length -1 ? rightArrow : greyImage(rightArrow));
