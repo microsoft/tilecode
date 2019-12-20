@@ -57,7 +57,7 @@ namespace tileworld {
                         game.popScene();
                         return;
                     } else {
-                        this.rule = index < rules.length ? index : index - 1;
+                        this.rule = index < rules.length ? rules[index] : rules[index-1];
                     }
                     this.askDeleteRule = false;
                 } else if (this.manhattanDistance2() <=2 && (this.col() != 2 || this.row() != 2)) {
