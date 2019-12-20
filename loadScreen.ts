@@ -11,6 +11,7 @@ namespace tileworld {
                     this.p = loadProject(prefix);
                     this.update();
                     if (this.p) {
+                        this.lastDir = -1;
                         game.pushScene();
                         new MapEditor(this.p);
                     }
@@ -25,6 +26,12 @@ namespace tileworld {
         private lastDir: MoveDirection = -1;
         protected cursorMove(dir: MoveDirection) {
             this.lastDir = dir;
+        }
+
+        private makeIt(col: number, row: number, id: string) {
+            this.drawImage(col-1, row, rightArrow);
+            this.fillTile(col, row, this.col() == col && this.row() == row ? 7 : 11);
+            screen.print(id, (col << 4) + 6, (row << 4) + 4 + yoff);
         }
 
         public update() {
@@ -48,14 +55,10 @@ namespace tileworld {
             this.fillTile(2,2,12); this.fillTile(3,2,12);
             screen.print("Load", (2 << 4) + 4, (2 << 4) + 4 + yoff);
             
-            this.fillTile(5, 2, 11);
-            screen.print("1", (5 << 4) + 6, (2 << 4) + 4 + yoff);
-            this.fillTile(7, 2, 11);
-            screen.print("2", (7 << 4) + 6, (2 << 4) + 4 + yoff);
-            this.fillTile(5, 4, 11);
-            screen.print("3", (5 << 4) + 6, (4 << 4) + 4 + yoff);
-            this.fillTile(7, 4, 11);
-            screen.print("4", (7 << 4) + 6, (4 << 4) + 4 + yoff);
+            this.makeIt(5, 2, "1");
+            this.makeIt(7, 2, "2");
+            this.makeIt(5, 4, "3");
+            this.makeIt(7, 4, "4");
 
             if (this.bootstrap) {
                 screen.print("bootstrap", 10, 100);
