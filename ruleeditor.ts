@@ -70,7 +70,7 @@ namespace tileworld {
                     this.exitCommandMenu();
                 } else if (this.menu == RuleEditorMenus.MainMenu) {
                     if (this.row() == 6) {
-                        if (this.col() == 7 || this.col() == 9) {
+                        if (7 <= this.col() && this.col() <= 9) {
                             // move backward/forward in rule space
                             let rules = this.currentRules();
                             let index = rules.indexOf(this.rule);
@@ -80,6 +80,8 @@ namespace tileworld {
                             } else if (this.col() == 9 && index < rules.length-1) {
                                 this.p.saveRule(this.rule);
                                 this.rule = rules[index+1];
+                            } else if (this.col() == 8) {
+                                this.rule = p.makeRule(this.kind, this.rt, this.dir);
                             }
                         }
                     } 
@@ -153,7 +155,6 @@ namespace tileworld {
             screen.fillRect(0, 0, 80, 120, 12);
             screen.print("When", 0, 0);
             screen.print("Do", 80, 0);
-
             this.makeContext();
             this.showCommands(); 
 
@@ -175,6 +176,7 @@ namespace tileworld {
             return this.p.getImage(this.kind);
         }
 
+        // TODO: delete rule
         private showMainMenu() {
             screen.fillRect(0, yoff + (6 << 4), 160, 19, 0);
             this.fillTile(0, 6, 11);
@@ -184,7 +186,7 @@ namespace tileworld {
             let rules = this.currentRules();
             let index = rules.indexOf(this.rule);
             this.drawImage(9, 6, index < rules.length -1 ? rightArrow : greyImage(rightArrow));
-            this.drawImage(8, 6, this.centerImage());
+            this.drawImage(8, 6, addRule);
             this.drawImage(7, 6, index > 0 ? leftArrow : greyImage(leftArrow));
         }
 

@@ -13,7 +13,6 @@ namespace tileworld {
         private menu: Image;
         constructor(private p: Project) {
             super();
-            // this is the world
             this.world = p.getWorld();
             this.menu = image.create(2, 7);
             // cursors

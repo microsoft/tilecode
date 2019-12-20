@@ -2,18 +2,6 @@
 //    - which rules are ready to run? showing match in world?
 //    - which ones get to run?
 
-//    createSprite: (col: number, row: number, kind: number, dir) => T;
-//    moveSprite: (sprite: T, dir) => void;
-//    reverseSprite: (sprite: T, dir) => void;
-//    stopSprite: (sprite: T) => void;
-//    destroySprite: (sprite: T) => void;
-//    update(): () => void;
-
-// TODO: checking for no more diamonds? how to end game?
-
-// bugs: 
-// - boulder at rest falls through player
-
 namespace tileworld {
 
     class TileSprite extends Sprite {
@@ -31,7 +19,8 @@ namespace tileworld {
             scene.physicsEngine.addSprite(this);
             this.setKind(kind);
             this.dir = -1;
-            this.inst = -1; 
+            this.inst = -1;
+            this.collide = -1;
         }
         public col() { return this.x >> 4; }
         public row() { return this.y >> 4; }

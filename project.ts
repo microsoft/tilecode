@@ -90,7 +90,9 @@ namespace tileworld {
         }
 
         public makeRule(kind: number, rt: RuleType, dir: MoveDirection): number {
-            return this.wrapRule(makeNewRule([kind], rt, dir));
+            let rid = this.wrapRule(makeNewRule([kind], rt, dir));
+            this.saveRule(rid);
+            return rid;
         }
 
         public removeRule(rid: number) {
