@@ -24,8 +24,8 @@ namespace tileworld {
         }
         
         private lastDir: MoveDirection = -1;
-        protected cursorMove(dir: MoveDirection) {
-            this.lastDir = dir;
+        protected cursorMove(dir: MoveDirection, pressed: boolean) {
+            this.lastDir = pressed ? dir : -1;
         }
 
         private makeIt(col: number, row: number, id: string) {

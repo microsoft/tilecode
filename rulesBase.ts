@@ -40,20 +40,32 @@ namespace tileworld {
                     this.cursor.x -= 16;
                 this.cursorMove(MoveDirection.Left);
             });
+            controller.left.onEvent(ControllerButtonEvent.Released, () => {
+                this.cursorMove(MoveDirection.Left, false);
+            });
             controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.col() < 9)
                     this.cursor.x += 16;
                 this.cursorMove(MoveDirection.Right);
+            });
+            controller.right.onEvent(ControllerButtonEvent.Released, () => {
+                this.cursorMove(MoveDirection.Right, false);
             });
             controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.row() > 0)
                     this.cursor.y -= 16;
                 this.cursorMove(MoveDirection.Up);
             });
+            controller.up.onEvent(ControllerButtonEvent.Released, () => {
+                this.cursorMove(MoveDirection.Up, false);
+            });
             controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.row() < 6)
                     this.cursor.y += 16;
                 this.cursorMove(MoveDirection.Down);
+            });
+            controller.down.onEvent(ControllerButtonEvent.Released, () => {
+                this.cursorMove(MoveDirection.Down, false);
             });
         }
 
@@ -92,7 +104,7 @@ namespace tileworld {
             this.tileSaved.setFlag(SpriteFlag.Invisible, false);
         }
 
-        protected cursorMove(dir: MoveDirection) { }
+        protected cursorMove(dir: MoveDirection, pressed: boolean = true) { }
         protected centerImage(): Image { return null; }
 
         protected showRuleType(rt: RuleType, rd: MoveDirection, x: number, y: number, center: boolean = true) {
