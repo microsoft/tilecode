@@ -19,6 +19,7 @@ namespace tileworld {
             });
             this.update();
             if (this.bootstrap) {
+                settings.clear();
                 saveEntireProject(this.bootstrap);
             }
         }

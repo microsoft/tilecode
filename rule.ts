@@ -31,7 +31,6 @@ enum MoveDirection {
 // game next-level
 // game score+1, score-1
 
-
 enum CommandType {
     Move,           // arg (MoveDirection) + Stop, UTurn, ... tie to sprite
     Paint           // arg (index of fixed sprite) - these commands are not tied to sprite

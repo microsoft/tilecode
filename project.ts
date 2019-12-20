@@ -98,7 +98,15 @@ namespace tileworld {
         }
 
         private wrapRule(r: Rule) {
-            let newRule = new IdRule(this.rules.length, r);
+            // find a new id that is not in rule list
+            let rids = this.rules.map(r => r.id).sort((a,b) => a - b );
+            let rid = 0;
+            for(let i = 0; i< rids.length; i++) {
+                if (rid != rids[i])
+                    break;
+                rid = rids[i]+1;
+            }
+            let newRule = new IdRule(rid, r);
             this.rules.push(newRule);
             return newRule.id;
         }
