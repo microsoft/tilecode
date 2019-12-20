@@ -40,17 +40,21 @@ namespace tileworld {
                     this.drawImage(col, row, emptyTile)
                 }
             }
+            for(let i = 0; i < 10; i++) {
+                this.drawImage(i, 0, genericSprite);
+                this.drawImage(i, 6, genericSprite);
+                if (i > 6) continue;
+                this.drawImage(0, i, genericSprite);
+                this.drawImage(9, i, genericSprite);
+            }
             for(let i = 0; i < 4; i++) {
                 this.fillTile(i,0,12);
             }
-            for (let i = 1; i < 7; i++) {
-                this.drawImage(9, i, this.lastDir == MoveDirection.Down ? downHand : genericSprite);
-                if (i != 6) this.drawImage(0, i, this.lastDir == MoveDirection.Up ? upHand : genericSprite);
-            }
-            for (let i = 0; i < 9; i++) {
-                this.drawImage(i, 6, this.lastDir == MoveDirection.Left ? leftHand : genericSprite);
-                if (i > 2 && i < 9) this.drawImage(i + 1, 0, this.lastDir == MoveDirection.Right ? rightHand : genericSprite);
-            }
+            this.drawImage(1, 6, this.lastDir == MoveDirection.Down ? downHand : greyImage(downHand));
+            this.drawImage(1, 4, this.lastDir == MoveDirection.Up ? upHand : greyImage(upHand));
+            this.drawImage(0, 5, this.lastDir == MoveDirection.Left ? leftHand : greyImage(leftHand));
+            this.drawImage(2, 5, this.lastDir == MoveDirection.Right ? rightHand : greyImage(rightHand));
+
             screen.print("TileWorld", 6, yoff + 4);
             this.fillTile(2,2,12); this.fillTile(3,2,12);
             screen.print("Load", (2 << 4) + 4, (2 << 4) + 4 + yoff);
