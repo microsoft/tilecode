@@ -108,7 +108,7 @@ namespace tileworld {
             return this.getRulesForTypeDir(this.p.getRulesForKind(this.kind), this.rt, this.dir);
         }
 
-        protected cursorMove() {
+        protected cursorMove(dir: MoveDirection) {
             if (this.menu == RuleEditorMenus.MainMenu) {
                 this.otherCursorMove();
             } else {
