@@ -234,10 +234,18 @@ namespace tileworld {
                 0 <= row && row < this.gs.nextWorld.height();
         }
 
+        private allTrue(rid: number, whendo: number) {
+            for(let kind = 0; kind < this.gs.all; kind++) {
+                if (this.p.getAttr(rid, whendo, kind) != AttrType.OK)
+                    return false;
+            }
+            return true;
+        }
+
         private evaluateWhenDo(ts: TileSprite, rid: number, 
                 col: number, row: number, witnesses: TileSprite[]) {
             let whendo = this.p.getWhenDo(rid, col, row);
-            if (whendo == -1)
+            if (whendo == -1 || this.allTrue(rid, whendo))
                 return true;
             let wcol = ts.col() + (col - 2);
             let wrow = ts.row() + (row - 2);
