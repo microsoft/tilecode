@@ -45,7 +45,6 @@ namespace tileworld {
     class VMState {
         public fixed: number;
         public all: number;
-        public world: Image;
         public nextWorld: Image;
         public sprites: TileSprite[][];
         constructor() {}
@@ -59,13 +58,13 @@ namespace tileworld {
         }
     }
 
-    enum Phase { Moving, Resting, Colliding};
+    enum Phase { Moving, Resting, Colliding };
 
     class TileWorldVM {
         private ruleClosures: RuleClosure[];
         private gs: VMState;
         private dpad: MoveDirection
-        // special (temporary) state for collision detection
+        // (temporary) state for collision detection
         private moving: TileSprite[];
         private other: TileSprite;
 
@@ -88,6 +87,8 @@ namespace tileworld {
                 ts.y = ((ts.y >> 4) << 4) + 8;
             })
             this.other = null;
+            this.gs.nextWorld.fill(0xf);
+            this.allSprites(ts => { ts.inst = -1; ts.collide = -1; });
             // compute the "pre-effect" of the rules
             this.ruleClosures = [];
             this.applyRules(Phase.Moving);
@@ -120,12 +121,6 @@ namespace tileworld {
         }
 
         private applyRules(phase: Phase) {
-            // clear the state
-            if (phase == Phase.Moving) {
-                this.gs.nextWorld.fill(0xf);
-                this.allSprites(ts => {  ts.inst = -1; });
-            }
-            // apply rules
             this.allSprites(ts => { 
                 if ( (phase == Phase.Moving && ts.dir != -1) ||
                      (phase == Phase.Resting && (ts.dir == -1 ||
@@ -235,8 +230,8 @@ namespace tileworld {
         }
 
         private inBounds(col: number, row: number) {
-            return 0 <= col && col < this.gs.world.width() &&
-                   0 <= row && row < this.gs.world.height();
+            return 0 <= col && col < this.gs.nextWorld.width() &&
+                0 <= row && row < this.gs.nextWorld.height();
         }
 
         private evaluateWhenDo(ts: TileSprite, rid: number, 
@@ -332,7 +327,6 @@ namespace tileworld {
         constructor(private p: Project, rules: number[]) {
             super();
             this.vm = new TileWorldVM(p, rules)
-            //game.consoleOverlay.setVisible(true);
         }
         
         public setWorld(w: Image) {
@@ -342,26 +336,24 @@ namespace tileworld {
             this.state.fixed = this.p.fixed().length;
             this.state.all = this.p.all().length;
             this.state.sprites = [];
-            this.state.world = w.clone();
+            scene.setTileMap(w.clone());
             this.state.nextWorld = w.clone();
-            scene.setTileMap(this.state.world);
-            // set art for fixed sprites
-            for (let code = 0; code < this.p.fixed().length; code++) {
-                let art = this.p.getImage(code);
-                scene.setTile(code, art);
-            }
-            // initialize movable sprites
-            for (let kind = this.p.fixed().length;
-                kind < this.p.all().length; kind++) {
-                this.state.sprites[kind] = [];
-                let tiles = scene.getTilesByType(kind);
+
+            // initialize fixed and movable sprites
+            for (let kind = 0;kind < this.p.all().length; kind++) {
                 let art = this.p.getImage(kind);
-                // now, put a space where every movable sprite was
-                scene.setTile(kind, this.p.getImage(this.p.defaultTile));
-                for (let value of tiles) {
-                    let tileSprite = new TileSprite(art, kind);
-                    this.state.sprites[kind].push(tileSprite);
-                    value.place(tileSprite);
+                if (kind < this.p.fixed().length) {
+                    scene.setTile(kind, art);
+                } else {
+                    this.state.sprites[kind] = [];
+                    let tiles = scene.getTilesByType(kind);
+                    let tm = game.currentScene().tileMap;
+                    for (let t of tiles) {
+                        let tileSprite = new TileSprite(art, kind);
+                        this.state.sprites[kind].push(tileSprite);
+                        t.place(tileSprite);
+                        scene.setTileAt(t, this.p.defaultTile);
+                    } 
                 }
             }
         }
@@ -371,7 +363,7 @@ namespace tileworld {
             signal.setFlag(SpriteFlag.Invisible, true);
             signal.x = signal.y = 8;
             signal.dir = MoveDirection.Right;
-            signal.inst = -1
+            signal.inst = -1;
             this.signal = signal;
 
             // get the game started
