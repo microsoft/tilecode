@@ -10,10 +10,12 @@ namespace tileworld {
         private cursor: Sprite;
         private selected: Sprite;
         private userSpriteIndex: number;
+        private menu: Image;
         constructor(private p: Project) {
             super();
             // this is the world
             this.world = p.getWorld();
+            this.menu = image.create(2, 7);
             // cursors
             this.selected = sprites.create(cursorOut);
             this.selected.x = 24;
@@ -73,27 +75,34 @@ namespace tileworld {
         }
 
         private cursorAction() {
-            if (this.col() == 1) {
+            if (this.col() > 1) {
+                if (this.userSpriteIndex >= 0) {
+                    let x = this.offsetX + this.col() - 2;
+                    let y = this.offsetY + this.row();
+                    this.world.setPixel(x, y, this.userSpriteIndex);
+                    this.update();
+                }
+                return;
+            }
+            let menuItem = this.menu.getPixel(this.col(), this.row());
+            if (this.row() > 2 && 0 <= menuItem && menuItem < this.p.all().length ) {
                 // change user sprite
-                this.userSpriteIndex = this.row();
+                this.userSpriteIndex = menuItem;
                 this.updateSelection();
-            } else if (this.col() == 0) {
-                if (this.row() == 0) {
-                    // map icon brings us to home in world
-                    this.offsetX = 0;
-                    this.offsetY = 0;
-                } else if (this.row() == 1) {
+            } else {
+               let command = commandImages[menuItem];
+               if (command == paint) {
                     // paint
                     this.p.saveWorld();
                     game.pushScene();
                     new ImageEditor(this.p, this.userSpriteIndex);
                     return;
-                } else if (this.row() == 2 && this.userSpriteIndex >= this.p.fixed().length) {
+                } else if (command == pencil && this.userSpriteIndex >= this.p.fixed().length) {
                     this.p.saveWorld();
                     game.pushScene();
                     new RuleRoom(this.p, this.userSpriteIndex);
                     return;
-                } else if (this.row() == 3) {
+                } else if (command == play) {
                     let rules = this.p.getRuleIds();
                     if (rules.length > 0) {
                         this.p.saveWorld();
@@ -103,12 +112,6 @@ namespace tileworld {
                         g.start();
                         return;
                     }         
-                }
-            } else {
-                if (this.userSpriteIndex >= 0) {
-                    let x = this.offsetX + this.col() - 2;
-                    let y = this.offsetY + this.row();
-                    this.world.setPixel(x,y,this.userSpriteIndex);
                 }
             }
             this.update();
@@ -128,13 +131,30 @@ namespace tileworld {
 
         public update() {
             screen.fill(0);
-            screen.fillRect(0, yoff, 16, 16, 11);
-            this.p.all().forEach((img, row) => {
-                this.drawImage(img, 1, row);
-            });
-            commandImages.forEach((img, row) => {
-                this.drawImage(row == 2 ? (this.userSpriteIndex >= this.p.fixed().length ? img : greyImage(img) ) : img, 0, row);
+            this.menu.fill(0xf);
+            let x = 0;
+            let y = 0;
+            commandImages.forEach((img, index) => {
+                this.drawImage(img == pencil ? (this.userSpriteIndex >= this.p.fixed().length ? img : greyImage(img)) : img, x, y);
+                this.menu.setPixel(x, y, index);
+                x++;
+                if (x == 2) { x = 0; y++; }
             })
+            x = 0; y = 3;
+            this.p.fixed().forEach((img, index) => { 
+                this.drawImage(img, x, y); 
+                this.menu.setPixel(x, y, index);
+                x++;
+                if (x == 2) { x = 0; y++; }
+            });
+            x = 0; y = 5;
+            this.p.movable().forEach((img, index) => {
+                this.drawImage(img, x, y);
+                this.menu.setPixel(x, y, this.p.fixed().length + index);
+                x++;
+                if (x == 2) { x = 0; y++; }
+            });
+
             for(let x = this.offsetX; x<this.offsetX+8; x++) {
                 for (let y = this.offsetY; y < this.offsetY + 7; y++) {
                     let index = 0 <= x && x < this.world.width && 0 <= y && y < this.world.height ? this.world.getPixel(x,y) : -1;

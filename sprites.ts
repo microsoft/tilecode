@@ -40,18 +40,36 @@ export const map = img`
 export const play = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
-    . . 7 7 . . . . . . . . . . . .
-    . . 7 7 7 7 . . . . . . . . . .
-    . . 7 7 7 7 7 7 . . . . . . . .
-    . . 7 7 7 7 7 7 7 7 . . . . . .
-    . . 7 7 7 7 7 7 7 7 7 7 . . . .
-    . . 7 7 7 7 7 7 7 7 7 7 1 1 . .
-    . . 7 7 7 7 7 7 7 7 1 1 . . . .
-    . . 7 7 7 7 7 7 1 1 . . . . . .
-    . . 7 7 7 7 1 1 . . . . . . . .
-    . . 7 7 1 1 . . . . . . . . . .
-    . . 1 1 . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
+    . . . 7 7 . . . . . . . . . . .
+    . . . 7 7 7 7 . . . . . . . . .
+    . . . 7 7 7 7 7 7 . . . . . . .
+    . . . 7 7 7 7 7 7 7 7 . . . . .
+    . . . 7 7 7 7 7 7 7 7 7 7 . . .
+    . . . 7 7 7 7 7 7 7 7 . . . . .
+    . . . 7 7 7 7 7 7 . . . . . . .
+    . . . 7 7 7 7 . . . . . . . . .
+    . . . 7 7 . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+`;
+export const debug = img`
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . 2 2 . . . . . . .
+    . . . . . . 1 2 2 1 . . . . . .
+    . . . . . 1 1 2 2 1 1 . . . . .
+    . . 2 . . 2 2 2 2 2 2 . . 2 . .
+    . . 2 2 . e e e e e e . 2 2 . .
+    . . . . e 2 2 2 2 2 2 e . . . .
+    . . . . e 2 f 2 2 f 2 e . . . .
+    . . 2 2 e 2 2 2 2 2 2 e 2 2 . .
+    . . . . e 2 f 2 2 f 2 e . . . .
+    . . . . e 2 2 2 2 2 2 e . . . .
+    . . 2 2 e 2 f 2 2 f 2 e 2 2 . .
+    . . 2 . . e 2 2 2 2 e . . 2 . .
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
 `;
@@ -658,6 +676,6 @@ export const arrowValues = [MoveDirection.Left, MoveDirection.Right, MoveDirecti
 export const attrsCentered = [includeCenter, excludeCenter, okCenter, oneofCenter];
 export const attrImages = [include, exclude, ok, oneof];
 export const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, AttrType.OneOf];
-export const commandImages = [map, paint, pencil, play];
+export const commandImages = [paint, pencil, play, debug];
 
 }

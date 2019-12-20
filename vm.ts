@@ -198,8 +198,8 @@ namespace tileworld {
             this.allSprites(ts => ts.update() );
             // change tiles (can be done with less memory and time assuming few
             // tiles are changed).
-            for(let x = 0; x < this.gs.nextWorld.width(); x++) {
-                for (let y = 0; y < this.gs.nextWorld.height(); y++) {
+            for(let x = 0; x < this.gs.nextWorld.width; x++) {
+                for (let y = 0; y < this.gs.nextWorld.height; y++) {
                     let pixel = this.gs.nextWorld.getPixel(x, y);
                     if (pixel != 0xf) {
                         //this.gs.world.setPixel(x, y, pixel);
@@ -230,8 +230,8 @@ namespace tileworld {
         }
 
         private inBounds(col: number, row: number) {
-            return 0 <= col && col < this.gs.nextWorld.width() &&
-                0 <= row && row < this.gs.nextWorld.height();
+            return 0 <= col && col < this.gs.nextWorld.width &&
+                0 <= row && row < this.gs.nextWorld.height;
         }
 
         private allTrue(rid: number, whendo: number) {

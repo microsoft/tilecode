@@ -46,11 +46,11 @@ namespace tileworld {
         }
 
         public getImage(kind: number) {
-            return 0 <= kind && kind < this.allImages.length ? this.allImages[kind] : null;
+            return 0 <= kind && kind < this.all().length ? this.all()[kind] : null;
         }
 
         public getKind(img: Image) {
-            return this.allImages.indexOf(img);
+            return this.all().indexOf(img);
         }
 
         public saveImage(kind: number) {
