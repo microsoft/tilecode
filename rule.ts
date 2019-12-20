@@ -269,6 +269,7 @@ namespace tileworld {
         // how many when dos do we have
         writeBuf(r.whenDo.length, 4);               // 3 bytes
         // should we establish an order??
+        // TODO: optimization - remove whendo that are true have no command (waste of space and time)
         r.whenDo.forEach(wd => {
             colRowToLRUD(wd.col, wd.row);                       // + .5 byte
             wd.attrs.forEach(a => { writeBuf(a, 2);  });        // +2 bytes
