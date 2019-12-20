@@ -296,6 +296,10 @@ namespace tileworld {
         return buf;
     }
 
+    export function removeRule(prefix: string, rid: number) {
+        settings.remove(prefix + "RL" + rid.toString());
+    }
+
     // first, let's fully unpack
     function unPackRule() {
         bitIndex = 0;

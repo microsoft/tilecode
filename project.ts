@@ -67,6 +67,20 @@ namespace tileworld {
             storeRule(this.prefix, rid, this.getRule(rid));
         }
 
+        public makeRule(kind: number, rt: RuleType, dir: MoveDirection): number {
+            let rid = this.wrapRule(makeNewRule([kind], rt, dir));
+            this.saveRule(rid);
+            return rid;
+        }
+
+        public removeRule(rid: number) {
+            let r = this.rules.find(r => r.id == rid);
+            if (r) {
+                this.rules.removeElement(r);
+                removeRule(this.prefix, rid);
+            }
+        }
+
         public saveWorld() {
             let worldBuf = imageToBuffer(this._world);
             settings.writeBuffer(this.prefix + "TM", worldBuf);
@@ -87,16 +101,6 @@ namespace tileworld {
             let newRule = new IdRule(this.rules.length, r);
             this.rules.push(newRule);
             return newRule.id;
-        }
-
-        public makeRule(kind: number, rt: RuleType, dir: MoveDirection): number {
-            let rid = this.wrapRule(makeNewRule([kind], rt, dir));
-            this.saveRule(rid);
-            return rid;
-        }
-
-        public removeRule(rid: number) {
-            // TODO
         }
 
         public getRuleIds(): number[] {

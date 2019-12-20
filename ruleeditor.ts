@@ -88,8 +88,8 @@ namespace tileworld {
                             }
                         } else if (this.col() == 3) {
                             this.askDeleteRule = true;                     
-                            let ok = game.ask("OK to delete rule?")
-                            if (ok) {
+                            // let ok = game.ask("OK to delete rule?")
+                            if (true) {
                                 let index = this.currentRules().indexOf(this.rule);
                                 this.p.removeRule(this.rule);
                                 let rules = this.currentRules();
@@ -125,6 +125,7 @@ namespace tileworld {
         }
 
         protected currentRules() {
+            // TODO: sort rules by id
             return this.getRulesForTypeDir(this.p.getRulesForKind(this.kind), this.rt, this.dir);
         }
 
