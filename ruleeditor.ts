@@ -70,9 +70,7 @@ namespace tileworld {
                     this.exitCommandMenu();
                 } else if (this.menu == RuleEditorMenus.MainMenu) {
                     if (this.row() == 6) {
-                        if (this.col() == 0) {
-                            this.saveAndPop();
-                        } else if (this.col() == 7 || this.col() == 9) {
+                        if (this.col() == 7 || this.col() == 9) {
                             // move backward/forward in rule space
                             let rules = this.currentRules();
                             let index = rules.indexOf(this.rule);
@@ -179,10 +177,10 @@ namespace tileworld {
 
         private showMainMenu() {
             screen.fillRect(0, yoff + (6 << 4), 160, 19, 0);
-            this.drawImage(0, 6, map);
-            this.fillTile(1, 6, 11);
-            this.drawImage(1, 6, pencil);
-            this.drawImage(2, 6, play)
+            this.fillTile(0, 6, 11);
+            this.drawImage(0, 6, pencil);
+            this.drawImage(1, 6, play);
+            this.drawImage(2, 6, debug);
             let rules = this.currentRules();
             let index = rules.indexOf(this.rule);
             this.drawImage(9, 6, index < rules.length -1 ? rightArrow : greyImage(rightArrow));

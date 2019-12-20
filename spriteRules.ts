@@ -14,8 +14,6 @@ namespace tileworld {
                     game.pushScene();
                     let ruleEditor = new RuleEditor(this.p, kind, rt, dir);
                 }
-                if (this.col() == 0 && this.row() == 0)
-                    game.popScene();
             });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 game.popScene();
@@ -24,9 +22,8 @@ namespace tileworld {
 
         public update() {
             screen.fill(15);
-            screen.fillRect(0, yoff + 16, 16, 16, 11);
-            screen.drawTransparentImage(map, 0, yoff);
-            screen.drawTransparentImage(pencil, 0, yoff + 16)
+            screen.fillRect(0, yoff, 16, 16, 11);
+            screen.drawTransparentImage(pencil, 0, yoff)
             this.showRuleMenu(1, 0);
         }
 
