@@ -72,11 +72,6 @@ namespace tileworld {
                     if (this.row() == 6) {
                         if (this.col() == 0) {
                             this.saveAndPop();
-                        } else if (this.col() == 2) {
-                            //let flip = flipRule(this.rule, FlipRotate.Horizontal);
-                            //game.pushScene();
-                            // TODO: copy/paste??? rule inventory
-                            // let flipRuleEditor = new RuleEditor(this.manager, [flip]);
                         } else if (this.col() == 7 || this.col() == 9) {
                             // move backward/forward in rule space
                             let rules = this.currentRules();
@@ -187,8 +182,7 @@ namespace tileworld {
             this.drawImage(0, 6, map);
             this.fillTile(1, 6, 11);
             this.drawImage(1, 6, pencil);
-            this.drawImage(2, 6,flipHoriz)
-            this.drawImage(3, 6, play)
+            this.drawImage(2, 6, play)
             let rules = this.currentRules();
             let index = rules.indexOf(this.rule);
             this.drawImage(9, 6, index < rules.length -1 ? rightArrow : greyImage(rightArrow));
