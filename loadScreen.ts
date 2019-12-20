@@ -65,7 +65,7 @@ namespace tileworld {
             this.makeIt(7, 4, "4");
 
             if (this.bootstrap) {
-                screen.print("bootstrap", 10, 100);
+                screen.print("bootstrap", 100, 105);
             }
         }
     }
