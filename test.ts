@@ -237,3 +237,4 @@ project.setPlayer(playerId);
 project.defaultTile = 0;
 
 let loadSave = new tileworld.LoadScreen(null);
+

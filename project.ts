@@ -275,5 +275,25 @@ namespace tileworld {
         });
     }
 
-    // TODO: create a blank project with names for tiles and sprites
+    export function emptyProject(prefix: string) {
+        let fixedColors = [3, 4, 5, 6];
+        let moveColors = [7, 8, 9, 10];
+        let fixed: Image[] = []; 
+        let movable: Image[] = [];
+        for(let f=0;f<4;f++) {
+            let fi = image.create(16, 16);
+            fi.fill(fixedColors[f]);
+            fi.printCenter("T"+f.toString(), 4);
+            fixed.push(fi);
+            let mi = image.create(16, 16);
+            mi.fill(moveColors[f]);
+            mi.printCenter("S"+f.toString(), 4);
+            movable.push(mi);
+        }
+        let p = new Project(prefix, fixed, movable, []);
+        p.setWorld(image.create(30,30));
+        p.setPlayer(4);
+        p.defaultTile = 0;
+        return p;
+    }
 } 

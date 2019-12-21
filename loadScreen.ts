@@ -10,11 +10,13 @@ namespace tileworld {
                     // TODO: how to populate empty projects?
                     this.p = loadProject(prefix);
                     this.update();
-                    if (this.p) {
-                        this.lastDir = -1;
-                        game.pushScene();
-                        new MapEditor(this.p);
+                    if (!this.p) {
+                        this.p = emptyProject(prefix);
+                        saveEntireProject(this.p);
                     }
+                    this.lastDir = -1;
+                    game.pushScene();
+                    new MapEditor(this.p);
                 }
             });
             this.update();

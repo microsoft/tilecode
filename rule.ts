@@ -9,6 +9,7 @@ enum RuleType {
 
 enum MoveDirection {
     Left = 0, Right, Up, Down
+    
 }
 
 // move
@@ -33,7 +34,12 @@ enum MoveDirection {
 
 enum CommandType {
     Move,           // arg (MoveDirection) + Stop, UTurn, ... tie to sprite
-    Paint           // arg (index of fixed sprite) - these commands are not tied to sprite
+    Paint,          // arg (index of fixed sprite) - these commands are not tied to sprite
+    Sprite, 
+}
+
+enum SpriteArg {
+    Destroy,
 }
 
 enum AttrType {
