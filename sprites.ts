@@ -109,6 +109,24 @@ export const paint = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
 `;
+export const music = img`
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . 9 . . . . . . .
+    . . . . . . . . 9 9 . . . . . .
+    . . . . . . . . 9 9 9 . . . . .
+    . . . . . . . . 9 . 9 9 . . . .
+    . . . . . . . . 9 . . 9 . . . .
+    . . . . . . . . 9 . . . . . . .
+    . . . . . . . . 9 . . . . . . .
+    . . . . . . . . 9 . . . . . . .
+    . . . . . . . . 9 . . . . . . .
+    . . . . 9 9 9 9 9 . . . . . . .
+    . . . 9 9 9 9 9 9 . . . . . . .
+    . . . 9 9 9 9 9 9 . . . . . . .
+    . . . . 9 9 9 9 . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+`;
 export const emptyTile = img`
     b b b b b b b b b b b b b b b c
     b f f f f f f f f f f f f f f c
@@ -694,6 +712,6 @@ export const arrowValues = [MoveDirection.Left, MoveDirection.Right, MoveDirecti
 export const attrsCentered = [includeCenter, excludeCenter, okCenter, oneofCenter];
 export const attrImages = [include, exclude, ok, oneof];
 export const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, AttrType.OneOf];
-export const commandImages = [paint, pencil, play, debug];
+export const commandImages = [paint, pencil, play, debug, music];
 
 }

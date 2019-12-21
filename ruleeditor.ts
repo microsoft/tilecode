@@ -3,9 +3,8 @@ namespace tileworld {
     enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu };
     enum CommandTokens { MoveArrow, PaintTile, GameCommand, SpriteProperty, SpaceTile, Delete };
 
-    // TODO: rule addition/deletion
+    // TODO: cursor problem...
     // TODO: two-level menu for command+arg
-    // TODO: grey out tiles base on rule type
     export class RuleEditor extends RuleVisualsBase {
         private otherCursor: Sprite;      // show correspondence between left and right
 

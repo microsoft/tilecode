@@ -274,4 +274,6 @@ namespace tileworld {
             length += buf.length;
         });
     }
+
+    // TODO: create a blank project with names for tiles and sprites
 } 
