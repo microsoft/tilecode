@@ -136,7 +136,7 @@ namespace tileworld {
         }
 
         private showCollision(col: number, row: number, dir: MoveDirection, arrowImg: Image) {
-            this.drawImage(col, row, smallSprite);
+            this.drawImage(col, row, collisionSprite);
             let x = (dir == MoveDirection.Left) ? 7 : (dir == MoveDirection.Right) ? -7 : 0;
             let y = (dir == MoveDirection.Up) ? 7 : (dir == MoveDirection.Down) ? -7 : 0;
             this.drawImageAbs((col << 4) + x, (row << 4) + yoff + y, arrowImg);
