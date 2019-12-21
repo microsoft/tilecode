@@ -3,6 +3,7 @@ namespace tileworld {
     const yoff = 6;
 
     // TODO: menu
+    // - option to see all rules in a list, rather than by type
     export class RuleRoom extends RuleVisualsBase {
         constructor(p: Project, private kind: number) {
             super(p);
