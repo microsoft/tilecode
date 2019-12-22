@@ -90,7 +90,7 @@ namespace tileworld {
                                 this.changeRule(rules[index-1]);
                             } else if (this.col() == 9 && index < rules.length-1) {
                                 this.changeRule(rules[index+1]);
-                            } else if (this.col() == 8) {
+                            } else if (this.col() == 8 && this.rt != -1) {
                                 this.changeRule(p.makeRule(this.kind, this.rt, this.dir));
                             }
                         } else if (this.col() == 3) {
@@ -130,7 +130,8 @@ namespace tileworld {
 
         protected currentRules() {
             // TODO: sort rules by id
-            return this.getRulesForTypeDir(this.p.getRulesForKind(this.kind), this.rt, this.dir);
+            let rules = this.p.getRulesForKind(this.kind);
+            return this.rt == -1 ? rules : this.getRulesForTypeDir(rules, this.rt, this.dir);
         }
 
         protected cursorMove(dir: MoveDirection, pressed: boolean) {
@@ -217,7 +218,7 @@ namespace tileworld {
             let rules = this.currentRules();
             let index = rules.indexOf(this.rule);
             this.drawImage(9, 6, index < rules.length -1 ? rightArrow : greyImage(rightArrow));
-            this.drawImage(8, 6, addRule);
+            this.drawImage(8, 6, this.rt != -1 ? addRule : greyImage(addRule));
             this.drawImage(7, 6, index > 0 ? leftArrow : greyImage(leftArrow));
         }
 
