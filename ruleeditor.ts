@@ -270,6 +270,8 @@ namespace tileworld {
                 let img1 = this.collideCol == wcol && this.collideRow == wrow ? collisionSprite : genericSprite;
                 let img2 = index == -1 ? img1 : this.p.getImage(index);
                 this.drawImage(5, crow, img2);
+                if (img1 == collisionSprite)
+                    this.drawImage(5, crow, img1);
             }
             // show the existing commands
             let col = 6;
@@ -398,6 +400,9 @@ namespace tileworld {
             } else if (inst == CommandType.Paint) { 
                 this.tokens = [CommandTokens.PaintTile, CommandTokens.Delete];
                 this.makeCommandMenu();
+            } else if (inst == CommandType.Sprite) {
+                this.tokens = [CommandTokens.Delete];
+                this.makeCommandMenu();
             } else {
                 this.noMenu();
             }
@@ -420,6 +425,8 @@ namespace tileworld {
                 this.setCommand(CommandType.Paint, arg);
             } else if (tok == CommandTokens.Delete && exit) {
                 this.p.removeCommand(this.rule, this.whenDo, this.currentCommand);
+            } else if (tok == CommandTokens.Remove) {
+                this.setCommand(CommandType.Sprite, SpriteArg.Remove)
             }
         }
 
