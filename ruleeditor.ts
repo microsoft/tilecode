@@ -19,8 +19,7 @@ namespace tileworld {
         private whenDo: number;           // which WhenDo is being edited
         private currentCommand: number;   // the current command (potentially null)
         private askDeleteRule: boolean;
-
-        // TODO: allow browsing of all rules of kind (rt and dir == -1)
+        
         constructor(p: Project, 
                     private kind: number, private rt: RuleType, private dir: MoveDirection) {
             super(p);

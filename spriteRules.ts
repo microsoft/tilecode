@@ -2,6 +2,7 @@ namespace tileworld {
 
     const yoff = 6;
 
+    let ruleEditor: RuleEditor = null;
     // TODO: menu
     // - option to see all rules in a list, rather than by type
     export class RuleRoom extends RuleVisualsBase {
@@ -9,15 +10,20 @@ namespace tileworld {
             super(p);
             this.update();
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                let rt = this.ruleTypeMap.getPixel(this.col(), this.row());
-                let dir = this.dirMap.getPixel(this.col(), this.row());
-                if (rt != 0xf) {
-                    game.pushScene();
-                    let ruleEditor = new RuleEditor(this.p, kind, rt, dir);
+                if (this.col() == 0 && this.row() == 0) {
+                    ruleEditor = new RuleEditor(this.p, kind, -1, -1);
+                } else {
+                    let rt = this.ruleTypeMap.getPixel(this.col(), this.row());
+                    let dir = this.dirMap.getPixel(this.col(), this.row());
+                    if (rt != 0xf) {
+                        game.pushScene();
+                        ruleEditor = new RuleEditor(this.p, kind, rt, dir);
+                    }
                 }
             });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 game.popScene();
+                ruleEditor = null;
             });
         }
 
