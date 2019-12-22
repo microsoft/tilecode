@@ -276,18 +276,18 @@ namespace tileworld {
     }
 
     export function emptyProject(prefix: string) {
-        let fixedColors = [3, 4, 5, 6];
+        let fixedColors = [3, 4, 5, 12];
         let moveColors = [7, 8, 9, 10];
         let fixed: Image[] = []; 
         let movable: Image[] = [];
         for(let f=0;f<4;f++) {
             let fi = image.create(16, 16);
-            fi.fill(fixedColors[f]);
-            fi.printCenter("T"+f.toString(), 4);
+            fi.fillRect(1,1,14,14,fixedColors[f]);
+            fi.printCenter(f.toString(), 4);
             fixed.push(fi);
             let mi = image.create(16, 16);
-            mi.fill(moveColors[f]);
-            mi.printCenter("S"+f.toString(), 4);
+            mi.fillCircle(8,8,6,moveColors[f]);
+            mi.printCenter(f.toString(), 4);
             movable.push(mi);
         }
         let p = new Project(prefix, fixed, movable, []);

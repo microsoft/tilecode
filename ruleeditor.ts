@@ -87,13 +87,11 @@ namespace tileworld {
                             let rules = this.currentRules();
                             let index = rules.indexOf(this.rule);
                             if (this.col() == 7 && index > 0) {
-                                this.p.saveRule(this.rule);
-                                this.rule = rules[index-1];
+                                this.changeRule(rules[index-1]);
                             } else if (this.col() == 9 && index < rules.length-1) {
-                                this.p.saveRule(this.rule);
-                                this.rule = rules[index+1];
+                                this.changeRule(rules[index+1]);
                             } else if (this.col() == 8) {
-                                this.rule = p.makeRule(this.kind, this.rt, this.dir);
+                                this.changeRule(p.makeRule(this.kind, this.rt, this.dir));
                             }
                         } else if (this.col() == 3) {
                             this.askDeleteRule = true;                     
@@ -118,6 +116,11 @@ namespace tileworld {
 
         protected okToMove() {
             return !this.askDeleteRule;
+        }
+
+        private changeRule(rid: number) {
+            this.p.saveRule(this.rule);
+            this.rule = rid;
         }
 
         private saveAndPop() {
