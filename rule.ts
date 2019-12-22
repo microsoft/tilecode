@@ -9,7 +9,6 @@ enum RuleType {
 
 enum MoveDirection {
     Left = 0, Right, Up, Down
-    
 }
 
 // move
@@ -39,7 +38,8 @@ enum CommandType {
 }
 
 enum SpriteArg {
-    Destroy,
+    Eat,            // self sprite eats the other sprite
+    LifeDown,       // one less life
 }
 
 enum AttrType {

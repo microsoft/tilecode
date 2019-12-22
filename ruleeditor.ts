@@ -1,8 +1,10 @@
 namespace tileworld {
     
     enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu };
-    enum CommandTokens { MoveArrow, PaintTile, GameCommand, SpriteProperty, SpaceTile, Delete };
+    enum CommandTokens { MoveArrow, PaintTile, GameCommand, Eat, SpaceTile, Delete };
 
+    // TODO: show 1 neighborhood commands?
+    // TODO: identify the "other" sprite tile for collision
     // TODO: cursor problem...
     // TODO: two-level menu for command+arg
     export class RuleEditor extends RuleVisualsBase {
@@ -175,7 +177,10 @@ namespace tileworld {
             return (Math.abs(2 - this.col()) + Math.abs(2 - this.row()));
         }
 
+        private collideCol: number;
+        private collideRow: number;
         public update() {
+            this.collideCol = this.collideRow = -1;
             screen.fill(11);
             screen.fillRect(0, 0, 80, 120, 12);
             screen.print("When", 0, 0);
@@ -201,6 +206,12 @@ namespace tileworld {
             } else {
                 this.cursor.setFlag(SpriteFlag.Invisible, false);
             }
+        }
+
+        protected showCollision(col: number, row: number, dir: MoveDirection, arrowImg: Image) {
+            super.showCollision(col, row, dir, arrowImg);
+            this.collideCol = col;
+            this.collideRow = row;
         }
 
         centerImage() {
@@ -298,10 +309,22 @@ namespace tileworld {
             return col;
         }
 
+        // TODO: commands based on event type
         private getTokens(col: number, row: number) {
-            let tokens = [CommandTokens.PaintTile];
-            if (this.findWitnessColRow(col, row) != -1)
-                tokens.insertAt(0, CommandTokens.MoveArrow);
+            let tokens: CommandTokens[] = [];
+            if (this.rt == RuleType.Colliding) {
+                if (col == 2 && row == 2) {
+                    // self can eat the other
+                    tokens.push(CommandTokens.Eat);
+                    // uturn
+                } else if (col == this.collideCol && row == this.collideRow) {
+                    //
+                }
+            } else {
+                if (this.findWitnessColRow(col, row) != -1)
+                    tokens.push(CommandTokens.MoveArrow);
+                tokens.push(CommandTokens.PaintTile);
+            }
             return tokens;
         }
 
@@ -418,6 +441,9 @@ namespace tileworld {
         // (0,0) always first
         private findWitnessColRow(col: number, row: number) {
             let whendo = this.getWhenDo(col, row);
+            // TODO: if this is a collision event then we have a witness
+            // TODO: already identified by the red sprite (colliding into)
+            // TODO: can be overridden 
             return (col != 2 || row != 2) ? this.findWitnessWhenDo(whendo) : this.kind;
         }
 
@@ -482,7 +508,7 @@ namespace tileworld {
             return false;
         }
 
-        // TODO: move this out to rule.ts
+        // TODO: move this out to project.ts
         private getWhenDo(col: number, row: number) {
             let whendo = this.p.getWhenDo(this.rule, col, row);
             if (whendo == -1) {
