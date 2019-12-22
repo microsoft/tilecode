@@ -1,10 +1,10 @@
 namespace tileworld {
     
     enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu };
-    enum CommandTokens { MoveArrow, PaintTile, GameCommand, Eat, SpaceTile, Delete };
+    enum CommandTokens { MoveArrow, PaintTile, GameCommand, 
+        Remove, SpaceTile, Delete };
 
     // TODO: show 1 neighborhood commands?
-    // TODO: identify the "other" sprite tile for collision
     // TODO: cursor problem...
     // TODO: two-level menu for command+arg
     export class RuleEditor extends RuleVisualsBase {
@@ -186,6 +186,7 @@ namespace tileworld {
             screen.print("When", 0, 0);
             screen.print("Do", 80, 0);
             this.makeContext();
+            this.showRuleType(this.p.getType(this.rule), this.p.getDir(this.rule), 2, 2);
             this.showCommands(); 
 
             if (this.menu == RuleEditorMenus.MainMenu) {
@@ -199,7 +200,6 @@ namespace tileworld {
                 this.modifyCommandMenu();
                 this.commandUpdate();
             }
-            this.showRuleType(this.p.getType(this.rule), this.p.getDir(this.rule), 2, 2);
             if (this.askDeleteRule) {
                 this.cursor.setFlag(SpriteFlag.Invisible, true)
                 game.showDialog("OK to delete rule?", "", "A = OK, B = CANCEL");
@@ -267,7 +267,8 @@ namespace tileworld {
             let whendo = this.getWhenDo(wcol, wrow);
             if (draw) {
                 let index = this.findWitnessColRow(wcol, wrow);
-                let img2 = index == -1 ? genericSprite : this.p.getImage(index);
+                let img1 = this.collideCol == wcol && this.collideRow == wrow ? collisionSprite : genericSprite;
+                let img2 = index == -1 ? img1 : this.p.getImage(index);
                 this.drawImage(5, crow, img2);
             }
             // show the existing commands
@@ -305,20 +306,19 @@ namespace tileworld {
                 if (draw) this.drawImage(col, row, this.p.fixed()[arg]);
                 tokens.removeElement(CommandTokens.PaintTile);
                 col++;
+            } else if (inst == CommandType.Sprite) {
+                if (draw) this.drawImage(col, row, eat);
+                tokens.removeElement(CommandTokens.Remove);
+                col++;
             }
             return col;
         }
 
-        // TODO: commands based on event type
         private getTokens(col: number, row: number) {
             let tokens: CommandTokens[] = [];
             if (this.rt == RuleType.Colliding) {
                 if (col == 2 && row == 2) {
-                    // self can eat the other
-                    tokens.push(CommandTokens.Eat);
-                    // uturn
-                } else if (col == this.collideCol && row == this.collideRow) {
-                    //
+                    tokens.push(CommandTokens.Remove);
                 }
             } else {
                 if (this.findWitnessColRow(col, row) != -1)
@@ -375,6 +375,8 @@ namespace tileworld {
                     })
                 } else if (ct == CommandTokens.Delete) {
                     worker(deleteIcon, ct, 0);
+                } else if (ct == CommandTokens.Remove) {
+                    worker(eat, CommandTokens.Remove, 0);
                 }
             });
         }

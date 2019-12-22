@@ -38,7 +38,7 @@ enum CommandType {
 }
 
 enum SpriteArg {
-    Eat,            // self sprite eats the other sprite
+    Remove,            // self sprite eats the other sprite
     LifeDown,       // one less life
 }
 
