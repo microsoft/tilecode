@@ -4,7 +4,6 @@ namespace tileworld {
     enum CommandTokens { MoveArrow, PaintTile, GameCommand, 
         Remove, SpaceTile, Delete };
 
-    // TODO: show 1 neighborhood commands?
     // TODO: cursor problem...
     // TODO: two-level menu for command+arg
     export class RuleEditor extends RuleVisualsBase {

@@ -6,8 +6,6 @@ namespace tileworld {
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 if ( (this.col() == 5 || this.col() == 7) && (this.row() == 2 || this.row() == 4) ) {
                     let prefix = this.col() == 5 ? (this.row() == 2 ? "TW1-" : "TW3-") : (this.row() == 2 ? "TW2-" : "TW4-");
-                    // TODO: which projects have content? which are empty?
-                    // TODO: how to populate empty projects?
                     this.p = loadProject(prefix);
                     this.update();
                     if (!this.p) {
@@ -72,5 +70,4 @@ namespace tileworld {
             }
         }
     }
-
 }

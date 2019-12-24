@@ -4,7 +4,7 @@ namespace tileworld {
 
     let ruleEditor: RuleEditor = null;
     // TODO: menu
-    // - option to see all rules in a list, rather than by type
+    // TODO: make this work for fixed sprites
     export class RuleRoom extends RuleVisualsBase {
         constructor(p: Project, private kind: number) {
             super(p);
