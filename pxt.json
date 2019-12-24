@@ -20,7 +20,6 @@
         "ruleeditor.ts",
         "editor.ts",
         "loadScreen.ts",
-        "tileworld.ts",
         "main.ts",
         "analysis.ts",
         "parser.ts"

@@ -181,6 +181,7 @@ namespace tileworld {
                     // eliminate duplicates
                     if (done.indexOf(val) == -1) {
                         done.push(val);
+                        // TODO: draw each one, without overlap, four quadrants
                         this.drawImage(col, row, attrImages[attrValues.indexOf(val)]);
                     }
                 });
