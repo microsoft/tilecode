@@ -22,7 +22,8 @@
         "loadScreen.ts",
         "tileworld.ts",
         "main.ts",
-        "analysis.ts"
+        "analysis.ts",
+        "parser.ts"
     ],
     "testFiles": [
         "test.ts"

@@ -376,7 +376,7 @@ namespace tileworld {
                         worker(image, CommandTokens.PaintTile, i);
                     })
                 } else if (ct == CommandTokens.Delete) {
-                    worker(deleteIcon, ct, 0);
+                    worker(garbageCan, ct, 0);
                 } else if (ct == CommandTokens.Remove) {
                     worker(eat, CommandTokens.Remove, 0);
                 }
@@ -460,8 +460,10 @@ namespace tileworld {
             // which tile in the diamond are we attributing?
             let whenDo = this.getWhenDo(this.col(false), this.row(false));
             // for all user-defined sprites
-            attrsCentered.forEach((img, i) => {
-                this.drawImage(i, 5, img);
+            attrImages.forEach((img, i) => {
+                // draw 8x8 sprites centered
+                screen.drawTransparentImage(img, (i << 4) + 4, yoff + (5 << 4) + 4);
+                this.drawOutline(i, 5);
             });
             this.p.all().forEach((image, i ) => {
                 let a = this.p.getAttr(this.rule, whenDo, i);
