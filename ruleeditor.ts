@@ -1,9 +1,9 @@
 namespace tileworld {
     
     enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu };
-    enum CommandTokens { MoveArrow, PaintTile, GameCommand, 
-        Remove, SpaceTile, Delete };
-
+    // TODO: Command Tokens is a super set of CommandType
+    enum CommandTokens { MoveArrow, PaintTile, GameCommand, Remove, 
+                         SpaceTile, Delete };
     // TODO: cursor problem...
     // TODO: two-level menu for command+arg
     export class RuleEditor extends RuleVisualsBase {

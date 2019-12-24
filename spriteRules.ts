@@ -4,7 +4,6 @@ namespace tileworld {
 
     let ruleEditor: RuleEditor = null;
     // TODO: menu
-    // TODO: make this work for fixed sprites
     export class RuleRoom extends RuleVisualsBase {
         constructor(p: Project, private kind: number) {
             super(p);
@@ -76,6 +75,9 @@ namespace tileworld {
             this.rules = this.p.getRulesForKind(this.kind);
             this.makeContext(x + 2, y + 1)
             this.doBoth(RuleType.Resting, 0, x + 2, y + 1);
+
+            if (this.kind < this.p.fixed().length)
+                return;
 
             this.makeContext(x + 6, y + 1)
             this.doBoth(RuleType.Moving, MoveDirection.Right, x + 7, y + 1);

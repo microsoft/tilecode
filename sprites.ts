@@ -237,7 +237,7 @@ export const ok = img`
     7 f f f f f f 7
     7 7 f f f f 7 7
     f 7 7 f f 7 7 f
-    . f 7 7 7 7 f 1
+    . f 7 7 7 7 f .
 `;
 export const downArrow = img`
     . . . . . . . . . . . . . . . .
