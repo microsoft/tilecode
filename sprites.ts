@@ -186,14 +186,14 @@ export const genericSprite = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . c c c . . . . . .
-    . . . . . . c c c c c . . . . .
-    . . . . . . c c c c c . . . . .
-    . . . . . . c c c c c . . . . .
-    . . . . . . . c c c . . . . . .
-    . . . . . . . . . . . . . . . .
+    . . . . . . f f f f . . . . . .
+    . . . . . f b b b b f . . . . .
+    . . . . f b b b b b b f . . . .
+    . . . . f b b b b b b f . . . .
+    . . . . f b b b b b b f . . . .
+    . . . . f b b b b b b f . . . .
+    . . . . . f b b b b f . . . . .
+    . . . . . . f f f f . . . . . .
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
@@ -320,7 +320,7 @@ export const rightArrow = img`
     . . . . f f f f f f 9 9 f . . .
     . . . . f 9 9 9 9 9 9 9 9 f . .
     . . . . f 9 9 9 9 9 9 9 9 9 f .
-    . . . . f 9 9 9 9 9 9 9 9 6 . .
+    . . . . f 9 9 9 9 9 9 9 9 f . .
     . . . . f f f f f f 9 9 f . . .
     . . . . . . . . . f 9 f . . . .
     . . . . . . . . . f f . . . . .
@@ -545,6 +545,45 @@ export const garbageCan = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
 `;
+export const help = img`
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . d d d d d d d d . . . .
+    . . . d d d a a a a d d d . . .
+    . . d d d a c c c c a d d d . .
+    . . d d a c d d d d a c d d . .
+    . . d d a c d d d d a c d d . .
+    . . d d d d d d d a c d d d . .
+    . . d d d d d d a c d d d d . .
+    . . d d d d d a a c d d d d . .
+    . . d d d d d a c d d d d d . .
+    . . d d d d d d d d d d d d . .
+    . . . d d d d a c d d d d . . .
+    . . . . d d d d d d d d . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+`;
+export const trophy = img`
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . 4 5 5 5 5 5 5 5 5 5 5 1 . .
+    . . . 4 5 5 5 5 5 5 5 5 1 . . .
+    . 5 5 5 4 5 5 5 5 5 5 5 5 5 5 .
+    . 5 . . 4 5 5 5 5 5 5 1 . . 5 .
+    . 5 . . 4 5 5 5 5 5 5 1 . . 5 .
+    . . 5 . 4 5 5 5 5 5 5 1 . 5 . .
+    . . . 5 4 5 5 5 5 5 5 1 5 . . .
+    . . . . 4 5 5 5 5 5 5 1 . . . .
+    . . . . . 4 5 5 5 5 1 . . . . .
+    . . . . . . 4 4 4 4 . . . . . .
+    . . . . . 4 5 5 5 5 1 . . . . .
+    . . . . 4 5 5 5 5 5 5 1 . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+`;
+// game lost 
+// game won
+// equal zero?
 /*
 export const minusOneLife = img`
     . . . . . . . . . . . . . . . .
@@ -571,6 +610,6 @@ export const handImages = [leftHand, rightHand, upHand, downHand];
 export const arrowValues = [MoveDirection.Left, MoveDirection.Right, MoveDirection.Up, MoveDirection.Down];
 export const attrImages = [include, exclude, ok, oneof];
 export const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, AttrType.OneOf];
-export const commandImages = [paint, pencil, play, debug, music];
+export const commandImages = [paint, pencil, play, debug, music, help];
 
 }
