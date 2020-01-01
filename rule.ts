@@ -11,25 +11,27 @@ enum MoveDirection {
     Left = 0, Right, Up, Down
 }
 
-// move
-// - left, right, up, down, uturn, stop, ...
-
-// tile-based commands
-// - paint art (of tile)
-// - create sprite (at tile)
-// - 
-
-// sprite property
-// - zero-remaining
-// - one remaining
-// - health up
-// - health down
-
-// game reset
-// game win
-// game end
-// game next-level
-// game score+1, score-1
+enum InstType {             // 255 at most, 0xff being sentinel
+    // move commands (M: apply to sprites only)
+    Move = 0,               // 4 directions
+    Stop = Move + 4,
+    UTurn,
+    // tile-based commands (T:)
+    PaintTile,
+    CreateSpriteAtTile = PaintTile + 4, // 4 tiles
+    // sprite-based commands (S:)
+    Remove = CreateSpriteAtTile + 20,   // 4 sprites * (4 directions + 1 no-direction)
+    Destroy,
+    Eat,
+    CountZero,              // this predicate applies to the identified sprite/tile kind
+    // game commands (G:)
+    GameLose,
+    GameWin,
+    GameScoreUp,
+    GameScoreDown,
+    GameReset,
+    GameNextLevel
+}
 
 enum CommandType {
     Move,           // arg (MoveDirection) + Stop, UTurn, ... tie to sprite

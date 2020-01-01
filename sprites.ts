@@ -599,7 +599,6 @@ export const trophyDown = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
 `;
-
 export const equalZero = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
@@ -618,7 +617,6 @@ export const equalZero = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
 `;
-
 
 export const arrowImages = [leftArrow, rightArrow, upArrow, downArrow];
 export const handImages = [leftHand, rightHand, upHand, downHand];

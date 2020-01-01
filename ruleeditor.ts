@@ -2,6 +2,8 @@ namespace tileworld {
     
     enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu };
     // TODO: Command Tokens is a super set of CommandType
+    // TODO: need to group commands together
+    // - move commmands (M)
     enum CommandTokens { MoveArrow, PaintTile, GameCommand, Remove, 
                          SpaceTile, Delete };
     // TODO: cursor problem...
@@ -292,6 +294,9 @@ namespace tileworld {
             return cid+1;
         }
 
+        // TODO: data-driven approach to two-level commands (command, arg)
+        // TODO: make as context-independent as possible (sprite, tile)
+        // TODO: command -> icon, command+arg -> icon
         private showCommand(col: number, row: number, 
                             whendo: number, cid: number, tokens: CommandTokens[],
                             draw: boolean) {
