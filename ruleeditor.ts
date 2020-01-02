@@ -1,8 +1,21 @@
 namespace tileworld {
     
     enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu };
-    enum CommandTokens { MoveArrow, PaintTile, GameCommand, Remove, 
-                         SpaceTile, Delete };
+    enum CommandTokens { Last=CommandType.Last, SpaceTile, Delete };
+
+    // design:
+    // 1. inst -> category
+    // 2. category -> [inst]
+    // 3. inst -> icon
+    // 4. inst -> [command, arg]
+    // 5. inst -> [other possible insts]
+
+    // - enabled commands (depends on tile kind, sprite kind, witness, rule type)
+
+    // - what commands can be done together?
+    // - sprite: move + {destroy, u-turn}, predicate
+    // - tile: paint, sprite-create
+    // - predicate: over what commands???
 
     export class RuleEditor extends RuleVisualsBase {
         private otherCursor: Sprite;      // show correspondence between left and right
@@ -259,7 +272,7 @@ namespace tileworld {
             })
         }
 
-        private tokens: CommandTokens[];
+        private tokens: number[];
         private showCommandsAt(crow: number, wcol: number, wrow: number, draw: boolean = true) {
             let whendo = this.getWhenDo(wcol, wrow);
             if (draw) {
@@ -293,15 +306,15 @@ namespace tileworld {
         // what categories are possible, given rule type and witness
         // this defines the menu to present at the top-level
         private getTokens(col: number, row: number) {
-            let tokens: CommandTokens[] = [];
+            let tokens: number[] = [];
             if (this.rt == RuleType.Colliding) {
                 if (col == 2 && row == 2) {
-                    tokens.push(CommandTokens.Remove);
+                    tokens.push(CommandType.Sprite);
                 }
             } else {
                 if (this.findWitnessColRow(col, row) != -1)
-                    tokens.push(CommandTokens.MoveArrow);
-                tokens.push(CommandTokens.PaintTile);
+                    tokens.push(CommandType.Move);
+                tokens.push(CommandType.Paint);
             }
             return tokens;
         }
@@ -310,7 +323,7 @@ namespace tileworld {
         // TODO: make as context-independent as possible (sprite, tile)
         // TODO: command -> icon, command+arg -> icon
         private showCommand(col: number, row: number, 
-                            whendo: number, cid: number, tokens: CommandTokens[],
+                            whendo: number, cid: number, tokens: number[],
                             draw: boolean) {
             let inst = this.p.getInst(this.rule, whendo, cid);
             let arg = this.p.getArg(this.rule, whendo, cid);
@@ -318,15 +331,15 @@ namespace tileworld {
                 if (draw) this.drawImage(col, row, emptyTile);
             } else if (inst == CommandType.Move) {
                 if (draw) this.drawImage(col, row, arrowImages[arrowValues.indexOf(arg)]);
-                tokens.removeElement(CommandTokens.MoveArrow);
+                tokens.removeElement(inst);
                 col++;
             } else if (inst == CommandType.Paint) {
                 if (draw) this.drawImage(col, row, this.p.fixed()[arg]);
-                tokens.removeElement(CommandTokens.PaintTile);
+                tokens.removeElement(inst);
                 col++;
             } else if (inst == CommandType.Sprite) {
                 if (draw) this.drawImage(col, row, eat);
-                tokens.removeElement(CommandTokens.Remove);
+                tokens.removeElement(inst);
                 col++;
             }
             return col;
@@ -359,7 +372,7 @@ namespace tileworld {
         private makeCommandMenu() {
             let col = 5;
             let row = 5;
-            let worker = (img: Image, tok: CommandTokens, arg: number) => {
+            let worker = (img: Image, tok: number, arg: number) => {
                 this.drawImage(col, row, img);
                 this.drawOutline(col, row);
                 this.ruleTypeMap.setPixel(col, row, tok);
@@ -368,19 +381,19 @@ namespace tileworld {
             };
             // show the commands
             this.tokens.forEach(ct => {
-                if (ct == CommandTokens.MoveArrow) {
+                if (ct == CommandType.Move) {
                     arrowValues.forEach(v => {
                         worker(arrowImages[arrowValues.indexOf(v)], ct, v);
                     })
-                } else if (ct == CommandTokens.PaintTile) {
+                } else if (ct == CommandType.Paint) {
                     col = 5; row = 6;
                     this.p.fixed().forEach((image, i) => {
-                        worker(image, CommandTokens.PaintTile, i);
+                        worker(image, CommandType.Paint, i);
                     })
                 } else if (ct == CommandTokens.Delete) {
                     worker(garbageCan, ct, 0);
-                } else if (ct == CommandTokens.Remove) {
-                    worker(eat, CommandTokens.Remove, 0);
+                } else if (ct == CommandType.Sprite) {
+                    worker(eat, CommandType.Sprite, 0);
                 }
             });
         }
@@ -397,10 +410,10 @@ namespace tileworld {
             if (this.tokens.length > 0) {
                 this.makeCommandMenu();
             } else if (inst == CommandType.Move) {
-                this.tokens = [CommandTokens.MoveArrow, CommandTokens.Delete];
+                this.tokens = [inst, CommandTokens.Delete];
                 this.makeCommandMenu();
             } else if (inst == CommandType.Paint) { 
-                this.tokens = [CommandTokens.PaintTile, CommandTokens.Delete];
+                this.tokens = [inst, CommandTokens.Delete];
                 this.makeCommandMenu();
             } else if (inst == CommandType.Sprite) {
                 this.tokens = [CommandTokens.Delete];
@@ -420,15 +433,12 @@ namespace tileworld {
                 return;
             let tok = this.ruleTypeMap.getPixel(this.col(), this.row());
             let arg = this.dirMap.getPixel(this.col(), this.row());
-            // find coordinate and look up.
-            if (tok == CommandTokens.MoveArrow) {
-                this.setCommand(CommandType.Move, arg);
-            } else if (tok == CommandTokens.PaintTile) {
-                this.setCommand(CommandType.Paint, arg);
+            if (tok == CommandType.Move || tok == CommandType.Paint) {
+                this.setCommand(tok, arg);
             } else if (tok == CommandTokens.Delete && exit) {
                 this.p.removeCommand(this.rule, this.whenDo, this.currentCommand);
-            } else if (tok == CommandTokens.Remove) {
-                this.setCommand(CommandType.Sprite, SpriteArg.Remove)
+            } else if (tok == CommandType.Sprite) {
+                this.setCommand(tok, SpriteArg.Remove)
             }
         }
 

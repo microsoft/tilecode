@@ -11,20 +11,6 @@ enum MoveDirection {
     Left = 0, Right, Up, Down
 }
 
-// design:
-// 1. inst -> category
-// 2. category -> [inst]
-// 3. inst -> icon
-// 4. inst -> [command, arg]
-// 5. inst -> [other possible insts]
-
-// - enabled commands (depends on tile kind, sprite kind, witness, rule type)
-
-// - what commands can be done together?
-// - sprite: move + {destroy, u-turn}, predicate
-// - tile: paint, sprite-create
-// - predicate: over what commands???
-
 enum CommandType {
     Move,           // arg (MoveDirection) + Stop, UTurn, ... tie to sprite
     Paint,          // 4 tiles
@@ -34,6 +20,7 @@ enum CommandType {
     TilePred,       // 4 tiles, operator
     CreateInMotion,   // 4 sprites, 4 directions
     CreateAtRest,     // 4 sprites
+    Last,
 }
 
 enum MoveArg {
@@ -42,7 +29,6 @@ enum MoveArg {
 
 enum SpriteArg {
     Remove,         // self sprite eats the other sprite
-    LifeDown,       // one less life
 }
 
 enum GameArg {
