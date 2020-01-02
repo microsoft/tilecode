@@ -319,9 +319,6 @@ namespace tileworld {
             return tokens;
         }
 
-        // TODO: data-driven approach to two-level commands (command, arg)
-        // TODO: make as context-independent as possible (sprite, tile)
-        // TODO: command -> icon, command+arg -> icon
         private showCommand(col: number, row: number, 
                             whendo: number, cid: number, tokens: number[],
                             draw: boolean) {
@@ -329,16 +326,8 @@ namespace tileworld {
             let arg = this.p.getArg(this.rule, whendo, cid);
             if (inst == -1) {
                 if (draw) this.drawImage(col, row, emptyTile);
-            } else if (inst == CommandType.Move) {
-                if (draw) this.drawImage(col, row, arrowImages[arrowValues.indexOf(arg)]);
-                tokens.removeElement(inst);
-                col++;
-            } else if (inst == CommandType.Paint) {
-                if (draw) this.drawImage(col, row, this.p.fixed()[arg]);
-                tokens.removeElement(inst);
-                col++;
-            } else if (inst == CommandType.Sprite) {
-                if (draw) this.drawImage(col, row, eat);
+            } else {
+                if (draw) this.drawImage(col, row, this.instToImage(inst,arg));
                 tokens.removeElement(inst);
                 col++;
             }
@@ -368,7 +357,24 @@ namespace tileworld {
             return true;
         }
 
-        // row will be commands, need tileCursor for this...
+        private instToImage(inst: number, arg: number): Image {
+            switch (inst) {
+                case CommandType.Move: return arrowImages[arg];
+                case CommandType.Paint: return this.p.fixed()[arg];
+                case CommandType.Sprite: return eat;
+            }
+            return help;
+        }
+        
+        private instToArgs(inst: number) {
+
+        }
+
+        private instToCategoryImage(inst: number): Image {
+            return null;
+        }
+
+        // TODO: two level command (inst category, + full inst argument second level)
         private makeCommandMenu() {
             let col = 5;
             let row = 5;
@@ -379,11 +385,11 @@ namespace tileworld {
                 this.dirMap.setPixel(col, row, arg);
                 col++;
             };
-            // show the commands
+            // show the categories
             this.tokens.forEach(ct => {
                 if (ct == CommandType.Move) {
-                    arrowValues.forEach(v => {
-                        worker(arrowImages[arrowValues.indexOf(v)], ct, v);
+                    arrowImages.forEach((img, i) => {
+                        worker(img, ct, i);
                     })
                 } else if (ct == CommandType.Paint) {
                     col = 5; row = 6;

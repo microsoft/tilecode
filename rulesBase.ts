@@ -121,16 +121,14 @@ namespace tileworld {
             let selCol = 11;
             if (center) this.drawImage(x, y, this.centerImage());
             if (rt == RuleType.Moving) {
-                let indexOf = arrowValues.indexOf(rd);
-                this.drawImage(x, y, arrowImages[indexOf])
+                this.drawImage(x, y, arrowImages[rd])
             } else if (rt == RuleType.Pushing || rt == RuleType.Colliding) {
-                let indexOf = arrowValues.indexOf(rd);
                 let ax = rd == MoveDirection.Left ? 1 : (rd == MoveDirection.Right ? -1 : 0)
                 let ay = rd == MoveDirection.Down ? -1 : (rd == MoveDirection.Up ? 1 : 0)
                 if (rt == RuleType.Pushing) {
-                    this.drawImage(x + ax, y + ay, handImages[indexOf])
+                    this.drawImage(x + ax, y + ay, handImages[rd])
                 } else {
-                    this.showCollision(x - ax, y - ay, rd, arrowImages[indexOf]);
+                    this.showCollision(x - ax, y - ay, rd, arrowImages[rd]);
                 }
             }
         }

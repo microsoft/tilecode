@@ -383,6 +383,7 @@ export const leftHand = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
 `;
+/*
 export const flipHoriz = img`
     . . . . . . . . . . . . . . . .
     . . . . . b b . . 9 9 . . . . .
@@ -437,6 +438,7 @@ export const rotateLeft = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
 `;
+*/
 export const eat = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
@@ -471,24 +473,6 @@ export const stopSign = img`
     . . . 1 2 2 2 2 2 2 2 2 1 . . .
     . . . . 1 2 2 2 2 2 2 1 . . . .
     . . . . . 1 1 1 1 1 1 . . . . .
-    . . . . . . . . . . . . . . . .
-`;
-export const zero = img`
-    . . . . . . . . . . . . . . . .
-    . . . . 2 2 2 2 2 2 2 . . . . .
-    . . . 2 . . . . . . . 2 . . . .
-    . . 2 . . . . . . . . . 2 . . .
-    . 2 . . 2 2 2 2 2 2 2 . . 2 . .
-    . 2 . . . . . . 2 2 2 . . 2 . .
-    . 2 . . . . . 2 2 2 . . . 2 . .
-    . 2 . . . . 2 2 2 . . . . 2 . .
-    . 2 . . . 2 2 2 . . . . . 2 . .
-    . 2 . . 2 2 2 . . . . . . 2 . .
-    . 2 . . 2 2 2 2 2 2 2 . . 2 . .
-    . . 2 . . . . . . . . . 2 . . .
-    . . . 2 . . . . . . . 2 . . . .
-    . . . . 2 2 2 2 2 2 2 . . . . .
-    . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
 `;
 export const uTurn = img`
@@ -563,6 +547,24 @@ export const help = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
 `;
+export const gameIcon = img`
+    . . . . . . . . . . . . . . . .
+    . . f 7 7 7 7 f . . . . . . . .
+    . f 7 7 7 7 7 7 f . . . . . . .
+    . 7 7 7 f f f f f . . . . . . .
+    . 7 7 f f f f f f . . . . . . .
+    . 7 7 f f 7 7 7 f . . . . . . .
+    . 7 7 f f f f 7 7 . . . . . . .
+    . 7 7 7 f f f 7 7 . . . . . . .
+    . f 7 7 7 7 7 7 f 5 5 5 5 5 . .
+    . . f 7 7 7 7 f . 5 5 5 5 . 5 .
+    . . . . . . . 5 . 5 5 5 5 . 5 .
+    . . . . . . . 5 . 5 5 5 5 . 5 .
+    . . . . . . . . 5 5 5 5 5 5 . .
+    . . . . . . . . . 5 5 5 5 . . .
+    . . . . . . . . 5 5 5 5 5 5 . .
+    . . . . . . . . . . . . . . . .
+`;
 export const trophyUp = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
@@ -601,28 +603,29 @@ export const trophyDown = img`
 `;
 export const equalZero = img`
     . . . . . . . . . . . . . . . .
+    . . . . . . . . . 1 1 1 1 1 . .
+    . . . . . . . . 1 1 . . . 1 1 .
+    . . 1 1 1 1 . . 1 . . . 1 . 1 .
+    . . . . . . . . 1 . . 1 . . 1 .
+    . . 1 1 1 1 . . 1 . . 1 . . 1 .
+    . . . . . . . . 1 . 1 . . . 1 .
+    . . . . . . . . 1 1 . . . 1 1 .
+    . . . . . . . . . 1 1 1 1 1 . .
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
-    . . . . . . . . . 1 1 1 1 . . .
-    . . . . . . . . 1 1 . . 1 1 . .
-    . . . . . . . 1 1 . . . . 1 1 .
-    . . . . . . . 1 . . . . 1 1 1 .
-    . . 1 1 1 1 . 1 . . . 1 1 . 1 .
-    . . . . . . . 1 . . 1 1 . . 1 .
-    . . 1 1 1 1 . 1 . 1 1 . . . 1 .
-    . . . . . . . 1 1 1 . . . . 1 .
-    . . . . . . . 1 1 . . . . 1 1 .
-    . . . . . . . . 1 1 . . 1 1 . .
-    . . . . . . . . . 1 1 1 1 . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
 `;
 
 export const arrowImages = [leftArrow, rightArrow, upArrow, downArrow];
 export const handImages = [leftHand, rightHand, upHand, downHand];
-export const arrowValues = [MoveDirection.Left, MoveDirection.Right, MoveDirection.Up, MoveDirection.Down];
 export const attrImages = [include, exclude, ok, oneof];
 export const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, AttrType.OneOf];
 export const commandImages = [paint, pencil, play, debug, music, help];
+export const gameImages = [ trophyUp, trophyDown ];
+export const categoryImages = [rightArrow, paint, collisionSprite, gameIcon ];
 
 }
