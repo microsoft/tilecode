@@ -33,6 +33,21 @@ enum InstType {             // 255 at most, 0xff being sentinel
     GameNextLevel
 }
 
+// design:
+// 1. inst -> category
+// 2. category -> [inst]
+// 3. inst -> icon
+// 4. inst -> [command, arg]
+// 5. inst -> [other possible insts]
+
+// - enabled commands (depends on tile kind, sprite kind, witness, rule type)
+
+// - what commands can be done together?
+// - sprite: move + {destroy, u-turn}, predicate
+// - tile: paint, sprite-create
+// - game: lose/win/reset/nextLevel -> game ends, scoreUp/scoreDown
+// - predicate: over what commands???
+
 enum CommandType {
     Move,           // arg (MoveDirection) + Stop, UTurn, ... tie to sprite
     Paint,          // arg (index of fixed sprite) - these commands are not tied to sprite

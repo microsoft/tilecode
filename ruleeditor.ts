@@ -1,13 +1,9 @@
 namespace tileworld {
     
     enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu };
-    // TODO: Command Tokens is a super set of CommandType
-    // TODO: need to group commands together
-    // - move commmands (M)
     enum CommandTokens { MoveArrow, PaintTile, GameCommand, Remove, 
                          SpaceTile, Delete };
-    // TODO: cursor problem...
-    // TODO: two-level menu for command+arg
+
     export class RuleEditor extends RuleVisualsBase {
         private otherCursor: Sprite;      // show correspondence between left and right
 
@@ -294,6 +290,22 @@ namespace tileworld {
             return cid+1;
         }
 
+        // what categories are possible, given rule type and witness
+        // this defines the menu to present at the top-level
+        private getTokens(col: number, row: number) {
+            let tokens: CommandTokens[] = [];
+            if (this.rt == RuleType.Colliding) {
+                if (col == 2 && row == 2) {
+                    tokens.push(CommandTokens.Remove);
+                }
+            } else {
+                if (this.findWitnessColRow(col, row) != -1)
+                    tokens.push(CommandTokens.MoveArrow);
+                tokens.push(CommandTokens.PaintTile);
+            }
+            return tokens;
+        }
+
         // TODO: data-driven approach to two-level commands (command, arg)
         // TODO: make as context-independent as possible (sprite, tile)
         // TODO: command -> icon, command+arg -> icon
@@ -318,20 +330,6 @@ namespace tileworld {
                 col++;
             }
             return col;
-        }
-
-        private getTokens(col: number, row: number) {
-            let tokens: CommandTokens[] = [];
-            if (this.rt == RuleType.Colliding) {
-                if (col == 2 && row == 2) {
-                    tokens.push(CommandTokens.Remove);
-                }
-            } else {
-                if (this.findWitnessColRow(col, row) != -1)
-                    tokens.push(CommandTokens.MoveArrow);
-                tokens.push(CommandTokens.PaintTile);
-            }
-            return tokens;
         }
 
         private tryEditCommand() {
