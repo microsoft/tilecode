@@ -11,28 +11,6 @@ enum MoveDirection {
     Left = 0, Right, Up, Down
 }
 
-enum InstType {             // 255 at most, 0xff being sentinel
-    // move commands (M: apply to sprites only)
-    Move = 0,               // 4 directions
-    Stop = Move + 4,
-    UTurn,
-    // tile-based commands (T:)
-    PaintTile,
-    CreateSpriteAtTile = PaintTile + 4, // 4 tiles
-    // sprite-based commands (S:)
-    Remove = CreateSpriteAtTile + 20,   // 4 sprites * (4 directions + 1 no-direction)
-    Destroy,
-    Eat,
-    CountZero,              // this predicate applies to the identified sprite/tile kind
-    // game commands (G:)
-    GameLose,
-    GameWin,
-    GameScoreUp,
-    GameScoreDown,
-    GameReset,
-    GameNextLevel
-}
-
 // design:
 // 1. inst -> category
 // 2. category -> [inst]
@@ -45,18 +23,30 @@ enum InstType {             // 255 at most, 0xff being sentinel
 // - what commands can be done together?
 // - sprite: move + {destroy, u-turn}, predicate
 // - tile: paint, sprite-create
-// - game: lose/win/reset/nextLevel -> game ends, scoreUp/scoreDown
 // - predicate: over what commands???
 
 enum CommandType {
     Move,           // arg (MoveDirection) + Stop, UTurn, ... tie to sprite
-    Paint,          // arg (index of fixed sprite) - these commands are not tied to sprite
-    Sprite, 
+    Paint,          // 4 tiles
+    Sprite,         // various commands
+    Game,           // various commands
+    SpritePred,     // 4 sprites, operator
+    TilePred,       // 4 tiles, operator
+    CreateInMotion,   // 4 sprites, 4 directions
+    CreateAtRest,     // 4 sprites
+}
+
+enum MoveArg {
+    Left, Right, Up, Down, Stop, UTurn,
 }
 
 enum SpriteArg {
-    Remove,            // self sprite eats the other sprite
+    Remove,         // self sprite eats the other sprite
     LifeDown,       // one less life
+}
+
+enum GameArg {
+    Lose, Win, Reset, ScoreUp, ScoreDown, NextLevel
 }
 
 enum AttrType {
