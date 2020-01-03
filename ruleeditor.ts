@@ -404,7 +404,7 @@ namespace tileworld {
             if (inst == -1 || arg == -1)
                 return emptyTile;
             switch (inst) {
-                case CommandType.Move: return arrowImages[arg];
+                case CommandType.Move: return moveImages[arg];
                 case CommandType.Paint: return this.p.fixed()[arg];
                 case CommandType.Sprite: return eat;
                 case CommandType.Game: return gameImages[arg];
@@ -419,7 +419,7 @@ namespace tileworld {
 
         private instToNumArgs(inst: number) {
             switch (inst) {
-                case CommandType.Move: return 4;
+                case CommandType.Move: return this.rt != RuleType.Colliding ? 4:  5;
                 case CommandType.Paint: return 3;  // TODO: goto 4
                 case CommandType.Sprite: return 1;
                 case CommandType.Game: return 2;

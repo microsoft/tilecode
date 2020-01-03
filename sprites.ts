@@ -620,15 +620,15 @@ export const trophyDown = img`
     . . . . . . . . . . . . . . . .
 `;
 export const equalZero = img`
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . 1 1 1 1 1 . .
-    . . . . . . . . 1 1 . . . 1 1 .
-    . . 1 1 1 1 . . 1 . . . 1 . 1 .
-    . . . . . . . . 1 . . 1 . . 1 .
-    . . 1 1 1 1 . . 1 . . 1 . . 1 .
-    . . . . . . . . 1 . 1 . . . 1 .
-    . . . . . . . . 1 1 . . . 1 1 .
-    . . . . . . . . . 1 1 1 1 1 . .
+    . . . . . . . . . f f f f f . .
+    . . . . . . . . f 1 1 1 1 1 f .
+    . f f f f f f f 1 1 f f f 1 1 f
+    . f 1 1 1 1 f f 1 f f f 1 f 1 f
+    . f f f f f f f 1 f f 1 f f 1 f
+    . f 1 1 1 1 f f 1 f 1 f f f 1 f
+    . f f f f f f f 1 1 f f f f 1 f
+    . . . . . . . . f 1 1 1 1 1 f .
+    . . . . . . . . . f f f f f . .
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
@@ -638,7 +638,7 @@ export const equalZero = img`
     . . . . . . . . . . . . . . . .
 `;
 
-export const arrowImages = [leftArrow, rightArrow, upArrow, downArrow];
+export const moveImages = [leftArrow, rightArrow, upArrow, downArrow, stopSign];
 export const handImages = [leftHand, rightHand, upHand, downHand];
 export const attrImages = [include, exclude, ok, oneof];
 export const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, AttrType.OneOf];
