@@ -433,6 +433,7 @@ namespace tileworld {
                     halfway = false;
                 } else if (!halfway && this.signal.x >= 16) {
                     if (this.state.game != GameState.InPlay) {
+                        gameover(this.state.game == GameState.Won);
                         game.popScene();
                     }
                     halfway = true;
@@ -488,4 +489,46 @@ namespace tileworld {
                 this.dirQueue.push(index);
         }
     }
+
+    function gameover(win: boolean = false, effect?: effects.BackgroundEffect) {
+        /*
+            if (!effect) {
+                effect = win ? winEffect : loseEffect;
+            }
+*/
+            // collect the scores before poping the scenes
+            const scoreInfo = info.player1.getState();
+            const highScore = info.highScore();
+            if (scoreInfo.score > highScore)
+                info.saveHighScore();
+
+            game.pushScene();
+            scene.setBackgroundImage(screen.clone());
+
+            /*
+            if (win)
+                winSound.play();
+            else
+                loseSound.play();
+
+            effect.startScreenEffect();
+            */
+
+            pause(400);
+
+            const overDialog = new game.GameOverDialog(win, scoreInfo.score, highScore);
+            scene.createRenderable(scene.HUD_Z, target => {
+                overDialog.update();
+                target.drawTransparentImage(
+                    overDialog.image,
+                    0,
+                    (screen.height - overDialog.image.height()) >> 1
+                );
+            });
+
+            pause(500); // wait for users to stop pressing keys
+            overDialog.displayCursor();
+            game.waitAnyButton();
+            game.popScene();
+        }
 }
