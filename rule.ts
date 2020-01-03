@@ -15,8 +15,8 @@ enum CommandType {
     Move,           // arg (MoveDirection) + Stop, UTurn, ... tie to sprite
     Paint,          // 4 tiles
     Sprite,         // various commands
-    Game,           // various commands
     SpritePred,     // 4 sprites, operator
+    Game,           // various commands
     TilePred,       // 4 tiles, operator
     CreateInMotion,   // 4 sprites, 4 directions
     CreateAtRest,     // 4 sprites
@@ -32,7 +32,7 @@ enum SpriteArg {
 }
 
 enum GameArg {
-    Lose, Win, Reset, ScoreUp, ScoreDown, NextLevel
+    Win, Lose, Reset, ScoreUp, ScoreDown, NextLevel
 }
 
 enum AttrType {

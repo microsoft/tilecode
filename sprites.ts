@@ -626,6 +626,6 @@ export const attrImages = [include, exclude, ok, oneof];
 export const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, AttrType.OneOf];
 export const commandImages = [paint, pencil, play, debug, music, help];
 export const gameImages = [ trophyUp, trophyDown ];
-export const categoryImages = [rightArrow, paint, collisionSprite, gameIcon ];
+export const categoryImages = [rightArrow, paint, collisionSprite, equalZero, gameIcon ];
 
 }

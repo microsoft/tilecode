@@ -256,20 +256,15 @@ namespace tileworld {
             }
         }
 
-        // - jump cursor to selected on start of menu ???
-        private rowToCoord = [ 
-            { lr: 0, col: 2, row: 1}, 
-            { lr: 1, col: 1, row: 2 },
-            { lr: 2, col: 2, row: 2 }, 
-            { lr: 3, col: 3, row: 2 },
-            { lr: 4, col: 2, row: 3 } ];
-        
+        private rowToColCoord(lr: number) { return lr % 2 == 0 ? 2 : lr; }
+        private rowToRowCoord(lr: number) { return lr == 0 ? 1 : (lr == 4 ? 3 : 2); }
+
         private showCommands() {
             this.commandLengths = [];
-            this.rowToCoord.forEach(r => {
-                let len = this.showCommandsAt(r.lr, r.col, r.row); 
+            for(let lr = 0; lr < 5; lr) {
+                let len = this.showCommandsAt(lr, this.rowToColCoord(lr), this.rowToRowCoord(lr)); 
                 this.commandLengths.push(len);
-            })
+            }
         }
 
         private tokens: number[];
@@ -303,7 +298,7 @@ namespace tileworld {
             return cid+1;
         }
 
-        // what categories are possible, given rule type and witness
+        // what instructions are possible, given rule type and witness
         // this defines the menu to present at the top-level
         private getTokens(col: number, row: number) {
             let tokens: number[] = [];
@@ -316,6 +311,8 @@ namespace tileworld {
                     tokens.push(CommandType.Move);
                 tokens.push(CommandType.Paint);
             }
+            tokens.push(CommandType.SpritePred);
+            tokens.push(CommandType.Game);
             return tokens;
         }
 
@@ -343,13 +340,14 @@ namespace tileworld {
             this.menu = RuleEditorMenus.CommandMenu;
             this.ruleTypeMap.fill(0xf);
             this.dirMap.fill(0xf);
-            let r = this.rowToCoord.find(r => r.lr == row);
-            this.whenDo = this.getWhenDo(r.col, r.row);
+            let newCol = this.rowToColCoord(row);
+            let newRow = this.rowToRowCoord(row);
+            this.whenDo = this.getWhenDo(newCol, newRow);
             this.setTileSaved();
             this.currentCommand = col - 1;
             if (this.p.getInst(this.rule, this.whenDo, col -1) == -1) {
-                this.showCommandsAt(row, r.col, r.row, false);
-                this.makeCommandMenu();
+                this.showCommandsAt(row, newCol, newRow, false);
+                this.makeCommandMenu(-1,-1);
             } else {
                 this.tokens = [];
                 this.modifyCommandMenu();
@@ -357,73 +355,73 @@ namespace tileworld {
             return true;
         }
 
+        // inst != -1, arg != -1
         private instToImage(inst: number, arg: number): Image {
             switch (inst) {
                 case CommandType.Move: return arrowImages[arg];
                 case CommandType.Paint: return this.p.fixed()[arg];
                 case CommandType.Sprite: return eat;
+                case CommandType.Game: return gameImages[arg];
+                case CommandType.SpritePred: {
+                    let img = this.p.getImage(arg).clone();
+                    img.drawTransparentImage(equalZero, 0, 0);
+                    return img;
+                }
             }
             return help;
         }
-        
-        private instToArgs(inst: number) {
 
-        }
-
-        private instToCategoryImage(inst: number): Image {
-            return null;
-        }
-
-        // TODO: two level command (inst category, + full inst argument second level)
-        private makeCommandMenu() {
+        private makeCommandMenu(inst: number, arg: number) {
             let col = 5;
             let row = 5;
-            let worker = (img: Image, tok: number, arg: number) => {
-                this.drawImage(col, row, img);
-                this.drawOutline(col, row);
-                this.ruleTypeMap.setPixel(col, row, tok);
-                this.dirMap.setPixel(col, row, arg);
-                col++;
-            };
             // show the categories
+            // which one is currently selected?
             this.tokens.forEach(ct => {
-                if (ct == CommandType.Move) {
-                    arrowImages.forEach((img, i) => {
-                        worker(img, ct, i);
-                    })
-                } else if (ct == CommandType.Paint) {
-                    col = 5; row = 6;
-                    this.p.fixed().forEach((image, i) => {
-                        worker(image, CommandType.Paint, i);
-                    })
-                } else if (ct == CommandTokens.Delete) {
-                    worker(garbageCan, ct, 0);
-                } else if (ct == CommandType.Sprite) {
-                    worker(eat, CommandType.Sprite, 0);
-                }
+                // if ct == inst then highlight
+                this.drawImage(col, row, categoryImages[ct]);
+                this.drawOutline(col, row, inst == ct ? 1 : 12);
+                this.ruleTypeMap.setPixel(col, row, ct);
+                col++;
             });
+            if (inst != -1) {
+                this.makeArgMenu(inst, arg);
+            }
         }
 
-        // row 6 will be args
-        private makeArgMenu() {
+        private instToNumArgs(inst: number) {
+            switch (inst) {
+                case CommandType.Move: 4;
+                case CommandType.Paint: 4;
+                case CommandType.Sprite: 1;
+                case CommandType.Game: 2;
+                case CommandType.SpritePred: 4;
+            }
+            return -1;
+        }
 
+        // inst must be -1, arg might be -1;
+        private makeArgMenu(inst: number, arg: number) {
+            let col = 4;
+            let row = 6;
+            this.dirMap.fill(0xf);
+            let len = this.instToNumArgs(inst);
+            for(let i=0;i<len;i++) {
+                this.drawImage(col, row, this.instToImage(inst, i));
+                this.drawOutline(col, row, arg == i ? 1 : 12);
+                this.dirMap.setPixel(col, row, i);
+                col++;
+            }
         }
 
         private modifyCommandMenu() {
             if (this.menu != RuleEditorMenus.CommandMenu)
                 return;
-            let inst = this.p.getInst(this.rule, this.whenDo, this.currentCommand)
+            let inst = this.p.getInst(this.rule, this.whenDo, this.currentCommand);
             if (this.tokens.length > 0) {
-                this.makeCommandMenu();
-            } else if (inst == CommandType.Move) {
+                this.makeCommandMenu(-1,-1);
+            } else if (inst != -1) {
                 this.tokens = [inst, CommandTokens.Delete];
-                this.makeCommandMenu();
-            } else if (inst == CommandType.Paint) { 
-                this.tokens = [inst, CommandTokens.Delete];
-                this.makeCommandMenu();
-            } else if (inst == CommandType.Sprite) {
-                this.tokens = [CommandTokens.Delete];
-                this.makeCommandMenu();
+                this.makeCommandMenu(inst, this.p.getArg(this.rule, this.whenDo, this.currentCommand));
             } else {
                 this.noMenu();
             }
@@ -438,13 +436,16 @@ namespace tileworld {
             if (this.menu != RuleEditorMenus.CommandMenu)
                 return;
             let tok = this.ruleTypeMap.getPixel(this.col(), this.row());
-            let arg = this.dirMap.getPixel(this.col(), this.row());
-            if (tok == CommandType.Move || tok == CommandType.Paint) {
-                this.setCommand(tok, arg);
-            } else if (tok == CommandTokens.Delete && exit) {
+            if (tok == CommandTokens.Delete && exit) {
                 this.p.removeCommand(this.rule, this.whenDo, this.currentCommand);
-            } else if (tok == CommandType.Sprite) {
-                this.setCommand(tok, SpriteArg.Remove)
+            } else if (tok != -1) {
+                // we've selected instruction
+                this.setCommand(tok, -1);
+            } else {
+                let arg = this.dirMap.getPixel(this.col(), this.row());
+                if (arg != -1) {
+                    this.p.setArg(this.rule, this.whenDo, this.currentCommand, arg);
+                }
             }
         }
 
