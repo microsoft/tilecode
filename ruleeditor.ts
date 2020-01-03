@@ -389,11 +389,12 @@ namespace tileworld {
             if (this.menu != RuleEditorMenus.CommandMenu)
                 return;
             let inst = this.p.getInst(this.rule, this.whenDo, this.currentCommand);
+            let arg = this.p.getArg(this.rule, this.whenDo, this.currentCommand)
             if (this.tokens.length > 0) {
-                this.makeCommandMenu(-1, -1);
+                this.makeCommandMenu(inst, arg);
             } else if (inst != -1) {
                 this.tokens = [inst, CommandTokens.Delete];
-                this.makeCommandMenu(inst, this.p.getArg(this.rule, this.whenDo, this.currentCommand));
+                this.makeCommandMenu(inst, arg);
             } else {
                 this.noMenu();
             }
@@ -440,7 +441,7 @@ namespace tileworld {
             if (tok == CommandTokens.Delete && exit) {
                 this.p.removeCommand(this.rule, this.whenDo, this.currentCommand);
             } else if (this.row() == 5 && tok != 0xf) {
-                this.setCommand(tok, -1);
+                this.setCommand(tok, 0);
             } else if (this.row() == 6 && arg != 0xf) {
                 this.p.setArg(this.rule, this.whenDo, this.currentCommand, arg);
             }
