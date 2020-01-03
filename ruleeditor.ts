@@ -261,7 +261,7 @@ namespace tileworld {
 
         private showCommands() {
             this.commandLengths = [];
-            for(let lr = 0; lr < 5; lr) {
+            for(let lr = 0; lr < 5; lr++) {
                 let len = this.showCommandsAt(lr, this.rowToColCoord(lr), this.rowToRowCoord(lr)); 
                 this.commandLengths.push(len);
             }
