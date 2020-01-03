@@ -239,6 +239,24 @@ export const ok = img`
     f 7 7 f f 7 7 f
     . f 7 7 7 7 f .
 `;
+export const allFour = img`
+    . . . . . . . . . . . . . . . .
+    . . . . . . . 9 . . . . . . . .
+    . . . . . . 9 9 9 . . . . . . .
+    . . . . . 9 9 9 9 9 . . . . . .
+    . . . . . . 9 9 9 . . . . . . .
+    . . . 9 . . 9 9 9 . . 9 . . . .
+    . . 9 9 9 9 9 9 9 9 9 9 9 . . .
+    . 9 9 9 9 9 9 9 9 9 9 9 9 9 . .
+    . . 9 9 9 9 9 9 9 9 9 9 9 . . .
+    . . . 9 . . 9 9 9 . . 9 . . . .
+    . . . . . . 9 9 9 . . . . . . .
+    . . . . . 9 9 9 9 9 . . . . . .
+    . . . . . . 9 9 9 . . . . . . .
+    . . . . . . . 9 . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+`;
 export const downArrow = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
@@ -626,6 +644,6 @@ export const attrImages = [include, exclude, ok, oneof];
 export const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, AttrType.OneOf];
 export const commandImages = [paint, pencil, play, debug, music, help];
 export const gameImages = [ trophyUp, trophyDown ];
-export const categoryImages = [rightArrow, paint, collisionSprite, equalZero, gameIcon ];
+export const categoryImages = [allFour, paint, collisionSprite, equalZero, gameIcon ];
 
 }

@@ -424,7 +424,7 @@ namespace tileworld {
                 case CommandType.Game: return 2;
                 case CommandType.SpritePred: return 4;
             }
-            return -1;
+            return 0;
         }
 
         private exitCommandMenu() {
