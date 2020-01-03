@@ -357,6 +357,8 @@ namespace tileworld {
 
         // inst != -1, arg != -1
         private instToImage(inst: number, arg: number): Image {
+            if (inst == -1 || arg == -1)
+                return emptyTile;
             switch (inst) {
                 case CommandType.Move: return arrowImages[arg];
                 case CommandType.Paint: return this.p.fixed()[arg];
@@ -377,8 +379,7 @@ namespace tileworld {
             // show the categories
             // which one is currently selected?
             this.tokens.forEach(ct => {
-                // if ct == inst then highlight
-                this.drawImage(col, row, categoryImages[ct]);
+                this.drawImage(col, row, ct < CommandType.Last ? categoryImages[ct] : garbageCan);
                 this.drawOutline(col, row, inst == ct ? 1 : 12);
                 this.ruleTypeMap.setPixel(col, row, ct);
                 col++;
