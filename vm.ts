@@ -31,13 +31,14 @@ namespace tileworld {
         }
     }
 
+    enum GameState { InPlay, Won, Lost, };
+
     class VMState {
+        public game: GameState;
         public fixed: number;
         public all: number;
         public nextWorld: Image;
         public sprites: TileSprite[][];
-        public globalCommands: number[];
-        public globalArgs: number[];
         constructor() {}
     }
 
@@ -58,6 +59,9 @@ namespace tileworld {
         // (temporary) state for collision detection
         private moving: TileSprite[];
         private other: TileSprite;
+        // (temporary) state for global commands
+        private globalInsts: number[];
+        private globalArgs: number[];
 
         constructor(private p: Project, private rules: number[]) {
             this.gs = null;
@@ -72,6 +76,8 @@ namespace tileworld {
                 return;
             this.dpad = currDir;
             this.moving = [];
+            this.globalInsts = [];
+            this.globalArgs = [];
             // make sure everyone is centered
             this.allSprites(ts => {
                 ts.x = ((ts.x >> 4) << 4) + 8;
@@ -199,12 +205,12 @@ namespace tileworld {
                     }
                 }                
             }
-            for(let i = 0; i<this.gs.globalCommands.length; i++) {
-                let arg = this.gs.globalArgs[i];
-                switch(this.gs.globalCommands[i]) {
+            for(let i = 0; i<this.globalInsts.length; i++) {
+                let arg = this.globalArgs[i];
+                switch (this.globalInsts[i]) {
                     case CommandType.Game: {
                         if (arg == GameArg.Win || arg == GameArg.Lose) {
-                            game.over(arg == GameArg.Win);
+                            this.gs.game = arg == GameArg.Win ? GameState.Won : GameState.Lost;
                         }
                         break;
                     }
@@ -218,8 +224,6 @@ namespace tileworld {
                     }
                 }
             }
-            this.gs.globalCommands = [];
-            this.gs.globalArgs = [];
         }
 
         // store the sprite witnesses identified by guards
@@ -348,8 +352,8 @@ namespace tileworld {
                     }
                     case CommandType.Game:
                     case CommandType.SpritePred: {
-                        this.gs.globalCommands.push(inst);
-                        this.gs.globalCommands.push(arg);
+                        this.globalInsts.push(inst);
+                        this.globalArgs.push(arg);
                         break;
                     }
                 }
@@ -370,11 +374,10 @@ namespace tileworld {
             this.dirQueue = [];
             this.signal = null;
             this.state = new VMState();
+            this.state.game = GameState.InPlay;
             this.state.fixed = this.p.fixed().length;
             this.state.all = this.p.all().length;
             this.state.sprites = [];
-            this.state.globalCommands = [];
-            this.state.globalArgs = [];
             scene.setTileMap(w.clone());
             this.state.nextWorld = w.clone();
 
@@ -404,6 +407,7 @@ namespace tileworld {
             signal.dir = MoveDirection.Right;
             signal.inst = -1;
             this.signal = signal;
+            let halfway = false;
 
             // get the game started
  
@@ -414,6 +418,7 @@ namespace tileworld {
 
             this.vm.setState(this.state);
             this.vm.round(-1);
+
             game.onUpdate(() => {
                 // has signal sprite moved to new tile
                 // then do a worldUpdate and reset the signal sprite
@@ -425,6 +430,12 @@ namespace tileworld {
                         if (!this.keyDowns[currentDirection])
                             this.dirQueue.removeElement(currentDirection);
                     }
+                    halfway = false;
+                } else if (!halfway && this.signal.x >= 16) {
+                    if (this.state.game != GameState.InPlay) {
+                        game.popScene();
+                    }
+                    halfway = true;
                 }
             });
 
