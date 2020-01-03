@@ -324,14 +324,14 @@ namespace tileworld {
             let self = col == 2 && row == 2;
             for (let cid = 0; cid < 4; cid++) {
                 let inst = this.p.getInst(rc.rid, wid, cid);
-                let arg = this.p.getArg(rc.rid, wid, cid);
                 if (inst == -1) break;
+                let arg = this.p.getArg(rc.rid, wid, cid);
                 switch(inst) {
                     case CommandType.Paint: {
                         if (this.gs.nextWorld.getPixel(wcol, wrow) == 0xf) {
                             this.gs.nextWorld.setPixel(wcol, wrow, arg);
                         }
-                        return;
+                        break;
                     }
                     case CommandType.Move: {
                         let witness = self ? rc.self : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
@@ -341,16 +341,16 @@ namespace tileworld {
                                 witness.arg = arg;
                             }
                         }
-                        return;
+                        break;
                     }
                     case CommandType.Sprite: {
-                        return;
+                        break;
                     }
                     case CommandType.Game:
                     case CommandType.SpritePred: {
                         this.gs.globalCommands.push(inst);
                         this.gs.globalCommands.push(arg);
-                        return;
+                        break;
                     }
                 }
             }
