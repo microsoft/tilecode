@@ -36,6 +36,8 @@ namespace tileworld {
         public all: number;
         public nextWorld: Image;
         public sprites: TileSprite[][];
+        public globalCommands: number[];
+        public globalArgs: number[];
         constructor() {}
     }
 
@@ -197,6 +199,27 @@ namespace tileworld {
                     }
                 }                
             }
+            for(let i = 0; i<this.gs.globalCommands.length; i++) {
+                let arg = this.gs.globalArgs[i];
+                switch(this.gs.globalCommands[i]) {
+                    case CommandType.Game: {
+                        if (arg == GameArg.Win || arg == GameArg.Lose) {
+                            game.over(arg == GameArg.Win);
+                        }
+                        break;
+                    }
+                    case CommandType.SpritePred: {
+                        let check = this.gs.sprites[arg];
+                        if (check && check.length > 0) {
+                            // skip next instruction if predicate = 0 doesn't hold
+                            i = i + 1;
+                        }
+                        break;
+                    }
+                }
+            }
+            this.gs.globalCommands = [];
+            this.gs.globalArgs = [];
         }
 
         // store the sprite witnesses identified by guards
@@ -301,16 +324,33 @@ namespace tileworld {
             let self = col == 2 && row == 2;
             for (let cid = 0; cid < 4; cid++) {
                 let inst = this.p.getInst(rc.rid, wid, cid);
+                let arg = this.p.getArg(rc.rid, wid, cid);
                 if (inst == -1) break;
-                if (inst == CommandType.Paint) {
-                    if (this.gs.nextWorld.getPixel(wcol, wrow) == 0xf) {
-                        this.gs.nextWorld.setPixel(wcol, wrow, this.p.getArg(rc.rid, wid, cid));
+                switch(inst) {
+                    case CommandType.Paint: {
+                        if (this.gs.nextWorld.getPixel(wcol, wrow) == 0xf) {
+                            this.gs.nextWorld.setPixel(wcol, wrow, arg);
+                        }
+                        return;
                     }
-                } else if (inst == CommandType.Move) {
-                    let witness = self ? rc.self : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
-                    if (witness && witness.inst == -1) {
-                        witness.inst = inst;
-                        witness.arg = this.p.getArg(rc.rid, wid, cid);
+                    case CommandType.Move: {
+                        let witness = self ? rc.self : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
+                        if (witness) {
+                            if (witness.inst == -1 || (witness.inst == CommandType.Move && arg == MoveArg.Stop)) {
+                                witness.inst = inst;
+                                witness.arg = arg;
+                            }
+                        }
+                        return;
+                    }
+                    case CommandType.Sprite: {
+                        return;
+                    }
+                    case CommandType.Game:
+                    case CommandType.SpritePred: {
+                        this.gs.globalCommands.push(inst);
+                        this.gs.globalCommands.push(arg);
+                        return;
                     }
                 }
             }
@@ -333,6 +373,8 @@ namespace tileworld {
             this.state.fixed = this.p.fixed().length;
             this.state.all = this.p.all().length;
             this.state.sprites = [];
+            this.state.globalCommands = [];
+            this.state.globalArgs = [];
             scene.setTileMap(w.clone());
             this.state.nextWorld = w.clone();
 
