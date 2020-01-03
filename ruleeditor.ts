@@ -420,7 +420,7 @@ namespace tileworld {
         private instToNumArgs(inst: number) {
             switch (inst) {
                 case CommandType.Move: return 4;
-                case CommandType.Paint: return 4;
+                case CommandType.Paint: return 3;  // TODO: goto 4
                 case CommandType.Sprite: return 1;
                 case CommandType.Game: return 2;
                 case CommandType.SpritePred: return 4;
