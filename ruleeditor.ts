@@ -3,22 +3,8 @@ namespace tileworld {
     enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu };
     enum CommandTokens { Last=CommandType.Last, SpaceTile, Delete };
 
-    // design:
-    // 1. inst -> category
-    // 2. category -> [inst]
-    // 3. inst -> icon
-    // 4. inst -> [command, arg]
-    // 5. inst -> [other possible insts]
-
-    // - enabled commands (depends on tile kind, sprite kind, witness, rule type)
-
-    // - what commands can be done together?
-    // - sprite: move + {destroy, u-turn}, predicate
-    // - tile: paint, sprite-create
-    // - predicate: over what commands???
-
     export class RuleEditor extends RuleVisualsBase {
-        private otherCursor: Sprite;      // show correspondence between left and right
+        private otherCursor: Sprite;    // show correspondence between left and right
 
         // in-world menus
         private menu: RuleEditorMenus;  // which menu is active?
@@ -27,9 +13,9 @@ namespace tileworld {
         // for editing commands
         private commandLengths: number[];
 
-        private rule: number;             // the current rule
-        private whenDo: number;           // which WhenDo is being edited
-        private currentCommand: number;   // the current command (potentially null)
+        private rule: number;           // the current rule
+        private whenDo: number;         // which WhenDo is being edited
+        private currentCommand: number; // the current command (potentially null)
         private askDeleteRule: boolean;
         
         constructor(p: Project, 
@@ -158,18 +144,11 @@ namespace tileworld {
 
         private otherCursorMove() {
             if (this.cursor.x >= 80 && (this.cursor.y - yoff) < 80) {
-                let col = this.col();
                 let row = this.row();
                 this.otherCursor.setFlag(SpriteFlag.Invisible, false);
                 // compute mapping from right to left hand side
-                if (row == 0 || row == 2 || row == 4)
-                    this.otherCursor.x = 40;
-                else
-                    this.otherCursor.x = (row == 1) ? 24 : 56;
-                if (1 <= row && row <= 3)
-                    this.otherCursor.y = yoff+40;
-                else
-                    this.otherCursor.y = yoff + ((row == 0) ? 24 : 56);
+                this.otherCursor.x = this.rowToColCoord(row) * 16 + 8;
+                this.otherCursor.y = this.rowToRowCoord(row) * 16 + 8 + yoff;
             } else {
                 this.otherCursor.setFlag(SpriteFlag.Invisible, true);
             }
