@@ -256,6 +256,7 @@ namespace tileworld {
             }
         }
 
+        // map from row 0-4 to (col,row) in diamond
         private rowToColCoord(lr: number) { return lr % 2 == 0 ? 2 : lr; }
         private rowToRowCoord(lr: number) { return lr == 0 ? 1 : (lr == 4 ? 3 : 2); }
 
@@ -290,7 +291,6 @@ namespace tileworld {
                 } else {
                     if (tokens.length > 0) {
                         this.showCommand(col, crow, whendo, cid, tokens, draw);
-                        return -(cid+1);
                     }
                     break;
                 }
@@ -334,8 +334,8 @@ namespace tileworld {
         private tryEditCommand() {
             let row = this.row();
             if (row > 4) return false;
-            let col = this.col() - 5;  // 1 based
-            if (col > Math.abs(this.commandLengths[row])) return false;
+            let col = this.col() - 6;
+            if (col >= Math.abs(this.commandLengths[row])) return false;
             // set up the state
             this.menu = RuleEditorMenus.CommandMenu;
             this.ruleTypeMap.fill(0xf);
@@ -344,8 +344,8 @@ namespace tileworld {
             let newRow = this.rowToRowCoord(row);
             this.whenDo = this.getWhenDo(newCol, newRow);
             this.setTileSaved();
-            this.currentCommand = col - 1;
-            if (this.p.getInst(this.rule, this.whenDo, col -1) == -1) {
+            this.currentCommand = col;
+            if (this.p.getInst(this.rule, this.whenDo, col) == -1) {
                 this.showCommandsAt(row, newCol, newRow, false);
                 this.makeCommandMenu(-1,-1);
             } else {
@@ -436,16 +436,13 @@ namespace tileworld {
             if (this.menu != RuleEditorMenus.CommandMenu)
                 return;
             let tok = this.ruleTypeMap.getPixel(this.col(), this.row());
+            let arg = this.dirMap.getPixel(this.col(), this.row());
             if (tok == CommandTokens.Delete && exit) {
                 this.p.removeCommand(this.rule, this.whenDo, this.currentCommand);
-            } else if (tok != 0xf) {
-                // we've selected instruction
+            } else if (this.row() == 5 && tok != 0xf) {
                 this.setCommand(tok, -1);
-            } else {
-                let arg = this.dirMap.getPixel(this.col(), this.row());
-                if (arg != 0xf) {
-                    this.p.setArg(this.rule, this.whenDo, this.currentCommand, arg);
-                }
+            } else if (this.row() == 6 && arg != 0xf) {
+                this.p.setArg(this.rule, this.whenDo, this.currentCommand, arg);
             }
         }
 
