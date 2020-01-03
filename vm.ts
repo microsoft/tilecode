@@ -206,8 +206,10 @@ namespace tileworld {
                 }                
             }
             for(let i = 0; i<this.globalInsts.length; i++) {
+                let inst = this.globalInsts[i];
+                if (inst == -1) break;
                 let arg = this.globalArgs[i];
-                switch (this.globalInsts[i]) {
+                switch (inst) {
                     case CommandType.Game: {
                         if (arg == GameArg.Win || arg == GameArg.Lose) {
                             this.gs.game = arg == GameArg.Win ? GameState.Won : GameState.Lost;
@@ -215,7 +217,7 @@ namespace tileworld {
                         break;
                     }
                     case CommandType.SpritePred: {
-                        let check = this.gs.sprites[arg];
+                        let check = this.gs.sprites[this.gs.fixed+arg];
                         if (check && check.length > 0) {
                             // skip next instruction if predicate = 0 doesn't hold
                             i = i + 1;
@@ -348,10 +350,13 @@ namespace tileworld {
                         break;
                     }
                     case CommandType.Sprite: {
+                        // TODO: remove command
                         break;
                     }
                     case CommandType.Game:
                     case CommandType.SpritePred: {
+                        // TODO: if the next instruction is a local instruction, then we need to evaluate the 
+                        // TODO: sprite predicate now, otherwise it is global
                         this.globalInsts.push(inst);
                         this.globalArgs.push(arg);
                         break;
