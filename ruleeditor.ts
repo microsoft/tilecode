@@ -408,7 +408,7 @@ namespace tileworld {
                 case CommandType.Sprite: return eat;
                 case CommandType.Game: return gameImages[arg];
                 case CommandType.SpritePred: {
-                    let img = this.p.getImage(arg).clone();
+                    let img = this.p.movable()[arg].clone();
                     img.drawTransparentImage(equalZero, 0, 0);
                     return img;
                 }
@@ -438,12 +438,12 @@ namespace tileworld {
             let tok = this.ruleTypeMap.getPixel(this.col(), this.row());
             if (tok == CommandTokens.Delete && exit) {
                 this.p.removeCommand(this.rule, this.whenDo, this.currentCommand);
-            } else if (tok != -1) {
+            } else if (tok != 0xf) {
                 // we've selected instruction
                 this.setCommand(tok, -1);
             } else {
                 let arg = this.dirMap.getPixel(this.col(), this.row());
-                if (arg != -1) {
+                if (arg != 0xf) {
                     this.p.setArg(this.rule, this.whenDo, this.currentCommand, arg);
                 }
             }
