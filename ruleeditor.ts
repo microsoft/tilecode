@@ -355,7 +355,50 @@ namespace tileworld {
             return true;
         }
 
-        // inst != -1, arg != -1
+        private makeCommandMenu(inst: number, arg: number) {
+            let col = 5;
+            let row = 5;
+            // show the categories
+            // which one is currently selected?
+            this.tokens.forEach(ct => {
+                this.drawImage(col, row, ct < CommandType.Last ? categoryImages[ct] : garbageCan);
+                this.drawOutline(col, row, inst == ct ? 1 : 12);
+                this.ruleTypeMap.setPixel(col, row, ct);
+                col++;
+            });
+            if (inst != -1) {
+                this.makeArgMenu(inst, arg);
+            }
+        }
+
+        // inst must be -1, arg might be -1;
+        private makeArgMenu(inst: number, arg: number) {
+            let col = 4;
+            let row = 6;
+            this.dirMap.fill(0xf);
+            let len = this.instToNumArgs(inst);
+            for (let i = 0; i < len; i++) {
+                this.drawImage(col, row, this.instToImage(inst, i));
+                this.drawOutline(col, row, arg == i ? 1 : 12);
+                this.dirMap.setPixel(col, row, i);
+                col++;
+            }
+        }
+
+        private modifyCommandMenu() {
+            if (this.menu != RuleEditorMenus.CommandMenu)
+                return;
+            let inst = this.p.getInst(this.rule, this.whenDo, this.currentCommand);
+            if (this.tokens.length > 0) {
+                this.makeCommandMenu(-1, -1);
+            } else if (inst != -1) {
+                this.tokens = [inst, CommandTokens.Delete];
+                this.makeCommandMenu(inst, this.p.getArg(this.rule, this.whenDo, this.currentCommand));
+            } else {
+                this.noMenu();
+            }
+        }
+
         private instToImage(inst: number, arg: number): Image {
             if (inst == -1 || arg == -1)
                 return emptyTile;
@@ -373,59 +416,15 @@ namespace tileworld {
             return help;
         }
 
-        private makeCommandMenu(inst: number, arg: number) {
-            let col = 5;
-            let row = 5;
-            // show the categories
-            // which one is currently selected?
-            this.tokens.forEach(ct => {
-                this.drawImage(col, row, ct < CommandType.Last ? categoryImages[ct] : garbageCan);
-                this.drawOutline(col, row, inst == ct ? 1 : 12);
-                this.ruleTypeMap.setPixel(col, row, ct);
-                col++;
-            });
-            if (inst != -1) {
-                this.makeArgMenu(inst, arg);
-            }
-        }
-
         private instToNumArgs(inst: number) {
             switch (inst) {
-                case CommandType.Move: 4;
-                case CommandType.Paint: 4;
-                case CommandType.Sprite: 1;
-                case CommandType.Game: 2;
-                case CommandType.SpritePred: 4;
+                case CommandType.Move: return 4;
+                case CommandType.Paint: return 4;
+                case CommandType.Sprite: return 1;
+                case CommandType.Game: return 2;
+                case CommandType.SpritePred: return 4;
             }
             return -1;
-        }
-
-        // inst must be -1, arg might be -1;
-        private makeArgMenu(inst: number, arg: number) {
-            let col = 4;
-            let row = 6;
-            this.dirMap.fill(0xf);
-            let len = this.instToNumArgs(inst);
-            for(let i=0;i<len;i++) {
-                this.drawImage(col, row, this.instToImage(inst, i));
-                this.drawOutline(col, row, arg == i ? 1 : 12);
-                this.dirMap.setPixel(col, row, i);
-                col++;
-            }
-        }
-
-        private modifyCommandMenu() {
-            if (this.menu != RuleEditorMenus.CommandMenu)
-                return;
-            let inst = this.p.getInst(this.rule, this.whenDo, this.currentCommand);
-            if (this.tokens.length > 0) {
-                this.makeCommandMenu(-1,-1);
-            } else if (inst != -1) {
-                this.tokens = [inst, CommandTokens.Delete];
-                this.makeCommandMenu(inst, this.p.getArg(this.rule, this.whenDo, this.currentCommand));
-            } else {
-                this.noMenu();
-            }
         }
 
         private exitCommandMenu() {
