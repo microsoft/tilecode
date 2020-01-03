@@ -362,7 +362,8 @@ namespace tileworld {
             // which one is currently selected?
             this.tokens.forEach(ct => {
                 this.drawImage(col, row, ct < CommandType.Last ? categoryImages[ct] : garbageCan);
-                this.drawOutline(col, row, inst == ct ? 1 : 12);
+                this.drawOutline(col, row);
+                if (inst == ct) this.drawImage(col, row, cursorOut);
                 this.ruleTypeMap.setPixel(col, row, ct);
                 col++;
             });
@@ -379,7 +380,8 @@ namespace tileworld {
             let len = this.instToNumArgs(inst);
             for (let i = 0; i < len; i++) {
                 this.drawImage(col, row, this.instToImage(inst, i));
-                this.drawOutline(col, row, arg == i ? 1 : 12);
+                this.drawOutline(col, row);
+                if (arg == i) this.drawImage(col, row, cursorOut);
                 this.dirMap.setPixel(col, row, i);
                 col++;
             }
