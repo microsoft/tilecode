@@ -190,6 +190,7 @@ namespace tileworld {
             let witnesses: TileSprite[] = [];
             let ret = this.evaluateWhenDo(ts, rid, ocol, orow, witnesses);
             if (ret) {
+                // TODO: need to remember ocol, orow for collision
                 this.ruleClosures.push(new RuleClosure(rid, ts, witnesses));
             }
         }
@@ -336,7 +337,6 @@ namespace tileworld {
                 let inst = this.p.getInst(rc.rid, wid, cid);
                 if (inst == -1) break;
                 let arg = this.p.getArg(rc.rid, wid, cid);
-                let witness = self ? rc.self : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
                 switch(inst) {
                     case CommandType.Paint: {
                         if (this.gs.nextWorld.getPixel(wcol, wrow) == 0xf) {
@@ -345,6 +345,7 @@ namespace tileworld {
                         break;
                     }
                     case CommandType.Move: {
+                        let witness = self ? rc.self : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
                         if (witness) {
                             if (witness.inst == -1 || (witness.inst == CommandType.Move && arg == MoveArg.Stop)) {
                                 witness.inst = inst;
@@ -354,6 +355,8 @@ namespace tileworld {
                         break;
                     }
                     case CommandType.Sprite: {
+                        // TODO: collision witness logic needed, which one is the witness?
+                        let witness = rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
                         if (arg == SpriteArg.Remove && witness) {
                             witness.state = SpriteState.Dead;
                             this.gs.deadSprites.push(witness);
