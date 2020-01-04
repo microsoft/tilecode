@@ -4,15 +4,16 @@
 
 namespace tileworld {
 
+    enum SpriteState { Alive, Dead, }
+
     class TileSprite extends Sprite {
+        public state: SpriteState;
         // the direction the sprite is currently moving
         public dir: MoveDirection;
         // the one instruction history to apply to the sprite to 
         // create the next sprite state
         public inst: number;
         public arg: number;
-        // collision instruction
-        public collide: number;
         constructor(img: Image, kind: number) {
             super(img);
             const scene = game.currentScene();
@@ -20,7 +21,7 @@ namespace tileworld {
             this.setKind(kind);
             this.dir = -1;
             this.inst = -1;
-            this.collide = -1;
+            this.state = SpriteState.Alive;
         }
         public col() { return this.x >> 4; }
         public row() { return this.y >> 4; }
@@ -39,6 +40,7 @@ namespace tileworld {
         public all: number;
         public nextWorld: Image;
         public sprites: TileSprite[][];
+        public deadSprites: TileSprite[];
         constructor() {}
     }
 
@@ -78,6 +80,7 @@ namespace tileworld {
             this.moving = [];
             this.globalInsts = [];
             this.globalArgs = [];
+            this.gs.deadSprites = [];
             // make sure everyone is centered
             this.allSprites(ts => {
                 ts.x = ((ts.x >> 4) << 4) + 8;
@@ -85,7 +88,7 @@ namespace tileworld {
             })
             this.other = null;
             this.gs.nextWorld.fill(0xf);
-            this.allSprites(ts => { ts.inst = -1; ts.collide = -1; });
+            this.allSprites(ts => { ts.inst = -1; });
             // compute the "pre-effect" of the rules
             this.ruleClosures = [];
             this.applyRules(Phase.Moving);
@@ -113,7 +116,7 @@ namespace tileworld {
             });
         }
 
-        private allSprites(handler: (ts:TileSprite) => void) {
+        public allSprites(handler: (ts:TileSprite) => void) {
             this.gs.sprites.forEach(ls => { if (ls) ls.forEach(ts => handler(ts)); });
         }
 
@@ -207,7 +210,6 @@ namespace tileworld {
             }
             for(let i = 0; i<this.globalInsts.length; i++) {
                 let inst = this.globalInsts[i];
-                if (inst == -1) break;
                 let arg = this.globalArgs[i];
                 switch (inst) {
                     case CommandType.Game: {
@@ -332,6 +334,7 @@ namespace tileworld {
                 let inst = this.p.getInst(rc.rid, wid, cid);
                 if (inst == -1) break;
                 let arg = this.p.getArg(rc.rid, wid, cid);
+                let witness = self ? rc.self : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
                 switch(inst) {
                     case CommandType.Paint: {
                         if (this.gs.nextWorld.getPixel(wcol, wrow) == 0xf) {
@@ -340,7 +343,6 @@ namespace tileworld {
                         break;
                     }
                     case CommandType.Move: {
-                        let witness = self ? rc.self : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
                         if (witness) {
                             if (witness.inst == -1 || (witness.inst == CommandType.Move && arg == MoveArg.Stop)) {
                                 witness.inst = inst;
@@ -350,10 +352,14 @@ namespace tileworld {
                         break;
                     }
                     case CommandType.Sprite: {
-                        // TODO: remove command
+                        if (arg == SpriteArg.Remove && witness) {
+                            witness.state = SpriteState.Dead;
+                            this.gs.deadSprites.push(witness);
+                        }
                         break;
                     }
                     case CommandType.Game:
+                        // all game commands are global
                     case CommandType.SpritePred: {
                         // TODO: if the next instruction is a local instruction, then we need to evaluate the 
                         // TODO: sprite predicate now, otherwise it is global
@@ -440,6 +446,11 @@ namespace tileworld {
                     if (this.state.game != GameState.InPlay) {
                         gameover(this.state.game == GameState.Won);
                         game.popScene();
+                    } else {
+                        this.state.deadSprites.forEach(ts => {
+                            this.state.sprites[ts.kind()].removeElement(ts);
+                            ts.destroy();
+                        })
                     }
                     halfway = true;
                 }
