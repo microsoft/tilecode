@@ -98,8 +98,8 @@ namespace tileworld {
             this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
             // now, look for collisions
             this.ruleClosures = [];
-            //this.collisionDetection();
-            //this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
+            this.collisionDetection();
+            this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
             // finally, update the rules
             this.updateWorld();
         }
@@ -219,10 +219,12 @@ namespace tileworld {
                         break;
                     }
                     case CommandType.SpritePred: {
-                        let check = this.gs.sprites[this.gs.fixed+arg];
-                        if (check && check.length > 0) {
+                        let cc: TileSprite[] = this.gs.sprites[this.gs.fixed+arg];
+                        if (cc && cc.length > 0) {
+                            let liveCount = cc.filter(ts => ts.state == SpriteState.Alive);
                             // skip next instruction if predicate = 0 doesn't hold
-                            i = i + 1;
+                            if (liveCount.length > 0)
+                                i = i + 1;
                         }
                         break;
                     }
@@ -450,7 +452,7 @@ namespace tileworld {
                         this.state.deadSprites.forEach(ts => {
                             this.state.sprites[ts.kind()].removeElement(ts);
                             ts.destroy();
-                        })
+                        });
                     }
                     halfway = true;
                 }
