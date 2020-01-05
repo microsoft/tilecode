@@ -76,14 +76,14 @@ namespace tileworld {
             this.makeContext(x + 2, y + 1)
             this.doBoth(RuleType.Resting, 0, x + 2, y + 1);
 
-            if (this.kind < this.p.fixed().length)
-                return;
+            // if (this.kind < this.p.fixed().length)
+            //    return;
 
-            this.makeContext(x + 6, y + 1)
-            this.doBoth(RuleType.Moving, MoveDirection.Right, x + 7, y + 1);
-            this.doBoth(RuleType.Moving, MoveDirection.Left, x + 5, y + 1);
-            this.doBoth(RuleType.Moving, MoveDirection.Up, x + 6, y);
-            this.doBoth(RuleType.Moving, MoveDirection.Down, x+6, y+2);
+            //this.makeContext(x + 6, y + 1)
+            this.doBoth(RuleType.Moving, MoveDirection.Right, x + 3, y + 1);
+            this.doBoth(RuleType.Moving, MoveDirection.Left, x + 1, y + 1);
+            this.doBoth(RuleType.Moving, MoveDirection.Up, x + 2, y);
+            this.doBoth(RuleType.Moving, MoveDirection.Down, x+2, y+2);
 
             this.makeContext(x + 2, y + 5);
             this.doBoth(RuleType.Colliding, MoveDirection.Right, x + 2, y + 5, false);
@@ -92,11 +92,11 @@ namespace tileworld {
             this.doBoth(RuleType.Colliding, MoveDirection.Down, x + 2, y + 5, false);
             this.showRuleType(RuleType.Resting, 0, x + 2, y + 5);
 
-            this.makeContext(x + 6, y + 5)
-            this.doBoth(RuleType.Pushing, MoveDirection.Right, x + 8, y + 5, false);
-            this.doBoth(RuleType.Pushing, MoveDirection.Left, x + 4, y + 5, false);
-            this.doBoth(RuleType.Pushing, MoveDirection.Down, x + 6, y + 7, false);
-            this.doBoth(RuleType.Pushing, MoveDirection.Up, x + 6, y + 3, false);
+            this.makeContext(x + 6, y + 1)
+            this.doBoth(RuleType.Pushing, MoveDirection.Right, x + 8, y + 1, false);
+            this.doBoth(RuleType.Pushing, MoveDirection.Left, x + 4, y + 1, false);
+            this.doBoth(RuleType.Pushing, MoveDirection.Down, x + 6, y + 3, false);
+            this.doBoth(RuleType.Pushing, MoveDirection.Up, x + 6, y - 1, false);
         }
     }
 }
