@@ -54,7 +54,7 @@ namespace tileworld {
         private doBoth(rt: RuleType, rd: MoveDirection, col: number, row: number, center: boolean = true) {
             let scol = 13;
             let rules = this.getRulesForTypeDir(this.rules, rt, rd);
-            if (rt == RuleType.Colliding) {
+            if (rt >= RuleType.CollidingResting) {
                 let tcol = col + moveXdelta(rd);
                 let trow = row + moveYdelta(rd);
                 this.setRuleType(rt, rd, tcol, trow);
@@ -94,10 +94,10 @@ namespace tileworld {
             this.makeContext(x + 2, y + 5);
 
             this.makeContext(x + 6, y + 5);
-            this.doBoth(RuleType.Colliding, MoveDirection.Right, x + 6, y + 5, false);
-            this.doBoth(RuleType.Colliding, MoveDirection.Left, x + 6, y + 5, false);
-            this.doBoth(RuleType.Colliding, MoveDirection.Up, x + 6, y + 5, false);
-            this.doBoth(RuleType.Colliding, MoveDirection.Down, x + 6, y + 5, false);
+            this.doBoth(RuleType.CollidingMoving, MoveDirection.Right, x + 6, y + 5, false);
+            this.doBoth(RuleType.CollidingMoving, MoveDirection.Left, x + 6, y + 5, false);
+            this.doBoth(RuleType.CollidingMoving, MoveDirection.Up, x + 6, y + 5, false);
+            this.doBoth(RuleType.CollidingMoving, MoveDirection.Down, x + 6, y + 5, false);
             this.showRuleType(RuleType.Resting, 0, x + 6, y + 5);
         }
     }

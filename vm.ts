@@ -138,7 +138,7 @@ namespace tileworld {
         private collidingRules(ts: TileSprite, handler: (ts: TileSprite, rid: number) => void) {
             this.rules.forEach(rid => {
                 if (this.p.getKinds(rid).indexOf(ts.kind()) != -1 && 
-                    this.p.getType(rid) == RuleType.Colliding &&
+                    this.p.getType(rid) >= RuleType.CollidingMoving &&
                     this.p.getDir(rid) == ts.dir) {
                         handler(ts, rid);
                 }

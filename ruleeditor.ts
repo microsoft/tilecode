@@ -281,7 +281,7 @@ namespace tileworld {
         // this defines the menu to present at the top-level
         private getTokens(col: number, row: number) {
             let tokens: number[] = [];
-            if (this.rt == RuleType.Colliding) {
+            if (this.rt >= RuleType.CollidingResting) {
                 if (col == 2 && row == 2) {
                     tokens.push(CommandType.Sprite);
                 }
@@ -400,7 +400,7 @@ namespace tileworld {
 
         private instToNumArgs(inst: number) {
             switch (inst) {
-                case CommandType.Move: return this.rt != RuleType.Colliding ? 4:  5;
+                case CommandType.Move: return this.rt < RuleType.CollidingResting ? 4:  5;
                 case CommandType.Paint: return 3;  // TODO: goto 4
                 case CommandType.Sprite: return 1;
                 case CommandType.Game: return 2;

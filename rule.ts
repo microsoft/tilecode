@@ -4,7 +4,8 @@ enum RuleType {
     Resting = 0,     // a sprite at rest 
     Moving,      // a sprite moving in a given direction
     Pushing,     // a sprite being pushed in a given direction
-    Colliding    // a moving sprite about to collide with another sprite
+    CollidingResting,    // a moving sprite about to collide with another sprite
+    CollidingMoving,
 }
 
 enum MoveDirection {
@@ -186,6 +187,8 @@ namespace tileworld {
         let shift = bitIndex - (byteIndex << 3);
         if (shift + bits > 8) {
             // packing error - can't have value that spans byte boundary
+            console.logValue("shift", shift);
+            console.logValue("bits", bits);
             control.assert(false, 44);
         }
         let byte = buf.getUint8(byteIndex);
@@ -252,7 +255,7 @@ namespace tileworld {
         bitIndex = 0;
         // compute length (at most 13 whenDo, at most 5 whenDo have commands)
         // so max = 3 + 39 + 20 = 62
-        let len = 3 + r.whenDo.length * 3;
+        let len = 4 + r.whenDo.length * 3;
         for (let i = 0; i<r.whenDo.length; i++) {
             len += (r.whenDo[i].commands.length > 0 ? 4 : 0);
         }
@@ -262,10 +265,10 @@ namespace tileworld {
         // pad out the rest with 0xf
         for(let i = r.kind.length; i < 4; i++) { writeBuf(0xf, 4); }
 
-        writeBuf(r.rt, 2);
-        writeBuf(r.dir, 2);                         // 2.5 bytes
+        writeBuf(r.rt, 4);
+        writeBuf(r.dir, 4);                         // 3 bytes
         // how many when dos do we have
-        writeBuf(r.whenDo.length, 4);               // 3 bytes
+        writeBuf(r.whenDo.length, 4);               // 3.5 bytes
         // should we establish an order??
         // TODO: optimization - remove whendo that are true have no command (waste of space and time)
         r.whenDo.forEach(wd => {
@@ -274,6 +277,8 @@ namespace tileworld {
             for(let cnt = wd.attrs.length; cnt < 8; cnt++) { writeBuf(0, 2); }
             writeBuf(wd.commands.length, 4);                    // +.5 byte
         });
+        // align to byte
+        writeBuf(0,4);
         // now, write out the commands (at most 5 non-zero)
         r.whenDo.forEach(wd => {
             if (wd.commands.length > 0) {
@@ -306,8 +311,8 @@ namespace tileworld {
           let kind = readBuf(4);
           if (kind != 0xf) kinds.push(kind);
         }
-        let rt = readBuf(2);
-        let dir = readBuf(2);
+        let rt = readBuf(4);
+        let dir = readBuf(4);
         let rule = new Rule(kinds, rt, dir, []);
         let whenDoLen = readBuf(4);
         let hasCommands: WhenDo[] = [];
@@ -337,6 +342,7 @@ namespace tileworld {
             if (cmdLen > 0) hasCommands.push(whenDo);
             rule.whenDo.push(whenDo);
         }
+        readBuf(4);
         hasCommands.forEach(wd => {
             for(let i = 0; i < 4; i++) {
                 let inst = readBuf(4);
