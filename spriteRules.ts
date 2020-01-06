@@ -85,18 +85,20 @@ namespace tileworld {
             this.doBoth(RuleType.Moving, MoveDirection.Up, x + 2, y);
             this.doBoth(RuleType.Moving, MoveDirection.Down, x+2, y+2);
 
-            this.makeContext(x + 2, y + 5);
-            this.doBoth(RuleType.Colliding, MoveDirection.Right, x + 2, y + 5, false);
-            this.doBoth(RuleType.Colliding, MoveDirection.Left, x + 2, y + 5, false);
-            this.doBoth(RuleType.Colliding, MoveDirection.Up, x + 2, y + 5, false);
-            this.doBoth(RuleType.Colliding, MoveDirection.Down, x + 2, y + 5, false);
-            this.showRuleType(RuleType.Resting, 0, x + 2, y + 5);
-
             this.makeContext(x + 6, y + 1)
             this.doBoth(RuleType.Pushing, MoveDirection.Right, x + 8, y + 1, false);
             this.doBoth(RuleType.Pushing, MoveDirection.Left, x + 4, y + 1, false);
             this.doBoth(RuleType.Pushing, MoveDirection.Down, x + 6, y + 3, false);
             this.doBoth(RuleType.Pushing, MoveDirection.Up, x + 6, y - 1, false);
+
+            this.makeContext(x + 2, y + 5);
+
+            this.makeContext(x + 6, y + 5);
+            this.doBoth(RuleType.Colliding, MoveDirection.Right, x + 6, y + 5, false);
+            this.doBoth(RuleType.Colliding, MoveDirection.Left, x + 6, y + 5, false);
+            this.doBoth(RuleType.Colliding, MoveDirection.Up, x + 6, y + 5, false);
+            this.doBoth(RuleType.Colliding, MoveDirection.Down, x + 6, y + 5, false);
+            this.showRuleType(RuleType.Resting, 0, x + 6, y + 5);
         }
     }
 }
