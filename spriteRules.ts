@@ -92,6 +92,11 @@ namespace tileworld {
             this.doBoth(RuleType.Pushing, MoveDirection.Up, x + 6, y - 1, false);
 
             this.makeContext(x + 2, y + 5);
+            this.doBoth(RuleType.CollidingResting, MoveDirection.Right, x + 2, y + 5, false);
+            this.doBoth(RuleType.CollidingResting, MoveDirection.Left, x + 2, y + 5, false);
+            this.doBoth(RuleType.CollidingResting, MoveDirection.Up, x + 2, y + 5, false);
+            this.doBoth(RuleType.CollidingResting, MoveDirection.Down, x + 2, y + 5, false);
+            this.showRuleType(RuleType.Resting, 0, x + 2, y + 5);
 
             this.makeContext(x + 6, y + 5);
             this.doBoth(RuleType.CollidingMoving, MoveDirection.Right, x + 6, y + 5, false);

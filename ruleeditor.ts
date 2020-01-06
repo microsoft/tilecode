@@ -197,8 +197,8 @@ namespace tileworld {
             }
         }
 
-        protected showCollision(col: number, row: number, dir: MoveDirection, arrowImg: Image) {
-            super.showCollision(col, row, dir, arrowImg);
+        protected showCollision(col: number, row: number, dir: MoveDirection, arrowImg: Image, rt: RuleType) {
+            super.showCollision(col, row, dir, arrowImg, rt);
             this.collideCol = col;
             this.collideRow = row;
         }

@@ -128,13 +128,13 @@ namespace tileworld {
                 if (rt == RuleType.Pushing) {
                     this.drawImage(x + ax, y + ay, handImages[rd])
                 } else {
-                    this.showCollision(x - ax, y - ay, rd, moveImages[rd]);
+                    this.showCollision(x - ax, y - ay, rd, moveImages[rd], rt);
                 }
             }
         }
 
-        protected showCollision(col: number, row: number, dir: MoveDirection, arrowImg: Image) {
-            this.drawImage(col, row, collisionSprite);
+        protected showCollision(col: number, row: number, dir: MoveDirection, arrowImg: Image, rt: RuleType) {
+            this.drawImage(col, row, rt == RuleType.CollidingMoving ? collisionSprite : genericSprite);
             let x = (dir == MoveDirection.Left) ? 7 : (dir == MoveDirection.Right) ? -7 : 0;
             let y = (dir == MoveDirection.Up) ? 7 : (dir == MoveDirection.Down) ? -7 : 0;
             this.drawImageAbs((col << 4) + x, (row << 4) + yoff + y, arrowImg);
