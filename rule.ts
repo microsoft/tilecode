@@ -25,7 +25,7 @@ enum CommandType {
 }
 
 enum MoveArg {
-    Left, Right, Up, Down, Stop
+    Left, Right, Up, Down, Stop, UTurn,
 }
 
 enum SpriteArg {

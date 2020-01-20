@@ -357,7 +357,7 @@ namespace tileworld {
             let row = 6;
             this.dirMap.fill(0xf);
             let len = this.instToNumArgs(inst);
-            for (let i = 0; i < len; i++) {
+            for (let i = this.instToStart(inst); i < len; i++) {
                 this.drawImage(col, row, this.instToImage(inst, i));
                 this.drawOutline(col, row);
                 if (arg == i) this.drawImage(col, row, cursorOut);
@@ -398,9 +398,20 @@ namespace tileworld {
             return help;
         }
 
+        private instToStart(inst: number) {
+            switch (inst) {
+                case CommandType.Move: return this.rt < RuleType.CollidingResting ? 0 : 4;
+                case CommandType.Paint: 
+                case CommandType.Sprite:
+                case CommandType.Game:
+                case CommandType.SpritePred:
+            }
+            return 0;            
+        }
+
         private instToNumArgs(inst: number) {
             switch (inst) {
-                case CommandType.Move: return this.rt < RuleType.CollidingResting ? 4:  5;
+                case CommandType.Move: return this.rt < RuleType.CollidingResting ? 4:  2;
                 case CommandType.Paint: return 3;  // TODO: goto 4
                 case CommandType.Sprite: return 1;
                 case CommandType.Game: return 2;

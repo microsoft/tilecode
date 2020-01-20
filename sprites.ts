@@ -458,21 +458,21 @@ export const rotateLeft = img`
 `;
 */
 export const eat = img`
-    . . . f f f f . . . . . . . . .
-    . . f 5 5 5 5 f . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . f f f f f f . . . . .
+    . . . . f 5 5 5 5 5 5 f . . . .
+    . . . f 5 5 5 5 5 5 5 5 f . . .
+    . . f 5 5 5 5 5 5 5 5 5 5 f . .
+    . f 5 5 5 5 5 5 5 5 5 f f . . .
+    . f 5 5 5 5 5 5 5 f f . . . . .
     . f 5 5 5 5 5 5 f . . . . . . .
-    . 5 5 5 5 5 5 5 5 . . . . . . .
-    . 5 5 5 5 f . . . . . . . . . .
-    . 5 5 5 5 f . . . . . . . . . .
-    . 5 5 5 5 5 5 5 5 . . . . . . .
     . f 5 5 5 5 5 5 f . . . . . . .
-    . . f 5 5 5 5 f . . . . . . . .
-    . . . f f f f . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
+    . f 5 5 5 5 5 5 5 f f . . . . .
+    . f 5 5 5 5 5 5 5 5 5 f f . . .
+    . . f 5 5 5 5 5 5 5 5 5 5 f . .
+    . . . f 5 5 5 5 5 5 5 5 f . . .
+    . . . . f 5 5 5 5 5 5 f . . . .
+    . . . . . f f f f f f . . . . .
     . . . . . . . . . . . . . . . .
 `;
 export const stopSign = img`
@@ -638,7 +638,7 @@ export const equalZero = img`
     . . . . . . . . . . . . . . . .
 `;
 
-export const moveImages = [leftArrow, rightArrow, upArrow, downArrow, stopSign];
+export const moveImages = [leftArrow, rightArrow, upArrow, downArrow, stopSign, uTurn];
 export const handImages = [leftHand, rightHand, upHand, downHand];
 export const attrImages = [include, exclude, ok, oneof];
 export const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, AttrType.OneOf];
