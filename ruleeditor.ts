@@ -277,24 +277,6 @@ namespace tileworld {
             return cid+1;
         }
 
-        // what instructions are possible, given rule type and witness
-        // this defines the menu to present at the top-level
-        private getTokens(col: number, row: number) {
-            let tokens: number[] = [];
-            if (this.rt >= RuleType.CollidingResting) {
-                if (col == 2 && row == 2) {
-                    tokens.push(CommandType.Sprite);
-                }
-            } else {
-                if (this.findWitnessColRow(col, row) != -1)
-                    tokens.push(CommandType.Move);
-                tokens.push(CommandType.Paint);
-            }
-            tokens.push(CommandType.SpritePred);
-            tokens.push(CommandType.Game);
-            return tokens;
-        }
-
         private showCommand(col: number, row: number, 
                             whendo: number, cid: number, tokens: number[],
                             draw: boolean) {
@@ -356,8 +338,8 @@ namespace tileworld {
             let col = 4;
             let row = 6;
             this.dirMap.fill(0xf);
-            let len = this.instToNumArgs(inst);
-            for (let i = this.instToStart(inst); i < len; i++) {
+            let last = this.instToStartArg(inst) + this.instToNumArgs(inst);
+            for (let i = this.instToStartArg(inst); i < last; i++) {
                 this.drawImage(col, row, this.instToImage(inst, i));
                 this.drawOutline(col, row);
                 if (arg == i) this.drawImage(col, row, cursorOut);
@@ -381,24 +363,26 @@ namespace tileworld {
             }
         }
 
-        private instToImage(inst: number, arg: number): Image {
-            if (inst == -1 || arg == -1)
-                return emptyTile;
-            switch (inst) {
-                case CommandType.Move: return moveImages[arg];
-                case CommandType.Paint: return this.p.fixed()[arg];
-                case CommandType.Sprite: return eat;
-                case CommandType.Game: return gameImages[arg];
-                case CommandType.SpritePred: {
-                    let img = this.p.movable()[arg].clone();
-                    img.drawTransparentImage(equalZero, 0, 0);
-                    return img;
-                }
+        // what instructions are possible, given rule type and witness
+        // this defines the menu to present at the top-level 
+        private getTokens(col: number, row: number) {
+            let tokens: number[] = [];
+            if (this.findWitnessColRow(col, row) != -1) {
+                tokens.push(CommandType.Move);
             }
-            return help;
+            if (this.rt < RuleType.CollidingResting) {
+                tokens.push(CommandType.Paint);
+            }
+            if (this.findWitnessColRow(col, row) != -1) {
+                tokens.push(CommandType.Sprite);
+            }
+            tokens.push(CommandType.SpritePred);
+            tokens.push(CommandType.Game);
+            return tokens;
         }
 
-        private instToStart(inst: number) {
+        // argument range for command
+        private instToStartArg(inst: number) {
             switch (inst) {
                 case CommandType.Move: return this.rt < RuleType.CollidingResting ? 0 : 4;
                 case CommandType.Paint: 
@@ -418,6 +402,23 @@ namespace tileworld {
                 case CommandType.SpritePred: return 4;
             }
             return 0;
+        }
+
+        private instToImage(inst: number, arg: number): Image {
+            if (inst == -1 || arg == -1)
+                return emptyTile;
+            switch (inst) {
+                case CommandType.Move: return moveImages[arg];
+                case CommandType.Paint: return this.p.fixed()[arg];
+                case CommandType.Sprite: return spriteImages[arg];
+                case CommandType.Game: return gameImages[arg];
+                case CommandType.SpritePred: {
+                    let img = this.p.movable()[arg].clone();
+                    img.drawTransparentImage(equalZero, 0, 0);
+                    return img;
+                }
+            }
+            return help;
         }
 
         private exitCommandMenu() {
