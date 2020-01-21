@@ -163,18 +163,36 @@ export const cursorOut = img`
     1 1 . . . . . . . . . . . . 1 1
     . 1 1 1 1 1 1 1 1 1 1 1 1 1 1 .
 `;
-export const collisionSprite = img`
+export const collisionRestingSprite = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
-    . . . . 2 2 2 2 . . . . . . . .
-    . . . 2 2 2 2 2 2 . 2 2 2 2 . .
-    . . . 2 2 2 2 2 2 . . . . . . .
-    . . . 2 2 2 2 2 2 . 2 2 2 . . .
-    . . . 2 2 2 2 2 2 . . . . . . .
-    . . . . 2 2 2 2 . . . . . . . .
+    . . . . . . 2 2 2 2 . . . . . .
+    . . . . . 2 2 2 2 2 2 . . . . .
+    . . . . . 2 2 2 2 2 2 . . . . .
+    . . . . . 2 2 2 2 2 2 . . . . .
+    . . . . . 2 2 2 2 2 2 . . . . .
+    . . . . . . 2 2 2 2 . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+`;
+export const collisionMovingSprite = img`
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . 2 2 2 2 . . . . . .
+    . . . . . 2 2 2 2 2 2 . 2 2 2 2
+    . . . . . 2 2 2 2 2 2 . . . . .
+    . . . . . 2 2 2 2 2 2 . 2 2 2 .
+    . . . . . 2 2 2 2 2 2 . . . . .
+    . . . . . . 2 2 2 2 . . . . . .
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
@@ -644,6 +662,6 @@ export const attrImages = [include, exclude, ok, oneof];
 export const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, AttrType.OneOf];
 export const commandImages = [paint, pencil, play, debug, music, help];
 export const gameImages = [ trophyUp, trophyDown ];
-export const categoryImages = [allFour, paint, collisionSprite, equalZero, gameIcon ];
+export const categoryImages = [allFour, paint, collisionRestingSprite, equalZero, gameIcon ];
 
 }
