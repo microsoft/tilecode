@@ -253,7 +253,7 @@ namespace tileworld {
             if (draw) {
                 let index = this.findWitnessColRow(wcol, wrow);
                 let img1 = this.collideCol == wcol && this.collideRow == wrow ? collisionRestingSprite : genericSprite;
-                let img2 = index == -1 ? img1 : this.p.getImage(index);
+                let img2 = index == -1 || index == 100 ? img1 : this.p.getImage(index);
                 this.drawImage(5, crow, img2);
                 if (img1 == collisionRestingSprite)
                     this.drawImage(5, crow, img1);
@@ -462,14 +462,12 @@ namespace tileworld {
 
         // what is ordering of sprites?
         // (0,0) always first
-        private findWitnessColRow(col: number, row: number) {
+        private findWitnessColRow(col: number, row: number): number {
+            if (col == 2 && row == 2) return this.kind;
             let whendo = this.getWhenDo(col, row);
-            // TODO: if this is a collision event then we have a witness
-            // TODO: already identified by the red sprite (colliding into)
-            // TODO: can be overridden 
-            // this.collideCol == col && this.collideRow == row
-
-            return (col != 2 || row != 2) ? this.findWitnessWhenDo(whendo) : this.kind;
+            let wit = this.findWitnessWhenDo(whendo);
+            if (wit != -1) return wit;
+            return this.collideCol == col && this.collideRow == row ? 100 : -1;
         }
 
         private attrMenu() {
