@@ -496,6 +496,8 @@ namespace tileworld {
                 this.drawOutline(i, 5);
             });
             this.p.all().forEach((image, i ) => {
+                if (i < this.p.fixed().length && this.rt >= RuleType.CollidingResting)
+                    return;
                 let a = this.p.getAttr(this.rule, whenDo, i);
                 this.drawImage(i, 6, image);
                 this.drawImage(i, 6, attrImages[attrValues.indexOf(a)]);
@@ -517,6 +519,8 @@ namespace tileworld {
             }
             let m = this.row() == 6 ? this.col() : -1; 
             if (m != -1 && m < this.p.all().length) { 
+                if (m < this.p.fixed().length && this.rt >= RuleType.CollidingResting)
+                    return false;
                 let val = attrValues[this.attrSelected];
                 if (val == AttrType.Include) { 
                     if (m < this.p.fixed().length) {
