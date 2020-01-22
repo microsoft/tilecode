@@ -467,6 +467,8 @@ namespace tileworld {
             // TODO: if this is a collision event then we have a witness
             // TODO: already identified by the red sprite (colliding into)
             // TODO: can be overridden 
+            // this.collideCol == col && this.collideRow == row
+
             return (col != 2 || row != 2) ? this.findWitnessWhenDo(whendo) : this.kind;
         }
 
