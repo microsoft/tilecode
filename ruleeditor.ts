@@ -452,7 +452,7 @@ namespace tileworld {
             } else if (this.row() == 5 && tok != 0xf) {
                 let inst = this.p.getInst(this.rule, this.whenDo, this.currentCommand);
                 if (tok != inst) {
-                    this.setCommand(tok, 0);
+                    this.setCommand(tok, this.instToStartArg(tok));
                 }
             } else if (this.row() == 6 && arg != 0xf) {
                 this.p.setArg(this.rule, this.whenDo, this.currentCommand, arg);
