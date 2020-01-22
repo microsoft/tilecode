@@ -59,7 +59,6 @@ namespace tileworld {
         private gs: VMState;
         private dpad: MoveDirection
         // (temporary) state for collision detection
-        private moving: TileSprite[];
         private other: TileSprite;
         // (temporary) state for global commands
         private globalInsts: number[];
@@ -77,7 +76,6 @@ namespace tileworld {
             if (!this.gs)
                 return;
             this.dpad = currDir;
-            this.moving = [];
             this.globalInsts = [];
             this.globalArgs = [];
             this.gs.deadSprites = [];
@@ -98,7 +96,11 @@ namespace tileworld {
             this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
             // now, look for collisions
             this.ruleClosures = [];
-            this.collisionDetection();
+            // TODO: need a fix point around this, as new collisions may occur
+            // TODO: as moving sprites transition to resting sprites
+            let moving: TileSprite[] = []
+            this.allSprites(ts => { if (ts.inst == CommandType.Move) moving.push(ts) }); 
+            this.collisionDetection(moving);
             this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
             // finally, update the rules
             this.updateWorld();
@@ -150,9 +152,8 @@ namespace tileworld {
         //   (a) os in square T, resting or moving towards ts, or
         //   (b) os moving into T
         // TODO: this can be optimized, a lot
-        private collisionDetection() {
-            this.allSprites(ts => { if (ts.inst == CommandType.Move) this.moving.push(ts) }); 
-            this.moving.forEach(ts => {
+        private collisionDetection(against: TileSprite[]) {
+            against.forEach(ts => {
                 if (ts.inst != CommandType.Move) return;
                 this.collidingRules(ts, (ts,rid) => {
                     let wcol = ts.col() + moveXdelta(ts.arg);
