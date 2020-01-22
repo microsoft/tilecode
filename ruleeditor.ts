@@ -57,7 +57,7 @@ namespace tileworld {
                         this.rule = index < rules.length ? rules[index] : rules[index-1];
                     }
                     this.askDeleteRule = false;
-                } else if (this.manhattanDistance2() <=2 && (this.col() != 2 || this.row() != 2)) {
+                } else if (this.manhattanDistance2() <=2 && (this.col() != 2 || this.row() != 2) && this.active(this.col(),this.row())) {
                      // otherwise if we are in the diamond, bring up attr menu
                     if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                         this.noMenu();
@@ -174,6 +174,8 @@ namespace tileworld {
             screen.fillRect(0, 0, 80, 120, 12);
             screen.print("When", 0, 0);
             screen.print("Do", 80, 0);
+            // sets collideCol and collideRow
+            this.showRuleType(this.p.getType(this.rule), this.p.getDir(this.rule), 2, 2);
             this.makeContext();
             this.showRuleType(this.p.getType(this.rule), this.p.getDir(this.rule), 2, 2);
             this.showCommands(); 
@@ -221,11 +223,18 @@ namespace tileworld {
             this.drawImage(7, 6, index > 0 ? leftArrow : greyImage(leftArrow));
         }
 
+        private active(col: number, row: number) {
+            if (this.collideCol != -1) {
+                return col == 2 && row == 2 || col == this.collideCol && row == this.collideRow;
+            }
+            return true;
+        }
+
         private makeContext() {
             for (let i = 0; i <= 4; i++) {
                 for (let j = 0; j <= 4; j++) {
                     let dist = Math.abs(2-j) + Math.abs(2-i);
-                    if (dist <= 2) {
+                    if (dist <= 2 && this.active(i,j)) {
                         // TODO: limit the context base on the rule type
                         this.drawImage(i, j, emptyTile);
                         if (i != 2 || j != 2)
