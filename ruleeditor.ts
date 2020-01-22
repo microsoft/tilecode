@@ -383,7 +383,8 @@ namespace tileworld {
         private getTokens(col: number, row: number) {
             let tokens: number[] = [];
             if (this.findWitnessColRow(col, row) != -1) {
-                tokens.push(CommandType.Move);
+                if ((col == 2 && row == 2) || this.rt != RuleType.CollidingResting)
+                    tokens.push(CommandType.Move);
             }
             if (this.rt < RuleType.CollidingResting) {
                 tokens.push(CommandType.Paint);
