@@ -251,8 +251,12 @@ namespace tileworld {
         private showCommands() {
             this.commandLengths = [];
             for(let lr = 0; lr < 5; lr++) {
-                let len = this.showCommandsAt(lr, this.rowToColCoord(lr), this.rowToRowCoord(lr)); 
-                this.commandLengths.push(len);
+                let col = this.rowToColCoord(lr);
+                let row = this.rowToRowCoord(lr);
+                if (this.active(col,row)) {
+                    let len = this.showCommandsAt(lr, col, row); 
+                    this.commandLengths.push(len);
+                }
             }
         }
 
@@ -312,6 +316,8 @@ namespace tileworld {
             this.dirMap.fill(0xf);
             let newCol = this.rowToColCoord(row);
             let newRow = this.rowToRowCoord(row);
+            if (!this.active(newCol, newRow))
+                return false;
             this.whenDo = this.getWhenDo(newCol, newRow);
             this.setTileSaved();
             this.currentCommand = col;
