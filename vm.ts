@@ -58,8 +58,6 @@ namespace tileworld {
         private ruleClosures: RuleClosure[];
         private gs: VMState;
         private dpad: MoveDirection
-        // (temporary) state for collision detection
-        private other: TileSprite;
         // (temporary) state for global commands
         private globalInsts: number[];
         private globalArgs: number[];
@@ -84,7 +82,6 @@ namespace tileworld {
                 ts.x = ((ts.x >> 4) << 4) + 8;
                 ts.y = ((ts.y >> 4) << 4) + 8;
             })
-            this.other = null;
             this.gs.nextWorld.fill(0xf);
             this.allSprites(ts => { ts.inst = -1; });
             // compute the "pre-effect" of the rules
@@ -158,7 +155,6 @@ namespace tileworld {
                 this.collidingRules(ts, (ts,rid) => {
                     let wcol = ts.col() + moveXdelta(ts.arg);
                     let wrow = ts.row() + moveYdelta(ts.arg);
-                    this.other = null;
                     // T = (wcol, wrow)
                     this.allSprites(os => {
                         if (os == ts) return;
@@ -181,6 +177,12 @@ namespace tileworld {
                                 os.inst == CommandType.Move && oppDir(rightRotate, os.arg)) {
                                 this.collide(rid, ts, os);
                             }
+                            osCol = wcol + moveXdelta(ts.arg);
+                            osRow = wrow + moveYdelta(ts.arg);
+                            if (os.col() == osCol && os.row() == osRow &&
+                                os.inst == CommandType.Move && oppDir(ts.arg, os.arg)) {
+                                this.collide(rid, ts, os);
+                            }
                         }
                     });
                 });
@@ -188,8 +190,11 @@ namespace tileworld {
         }
 
         private collide(rid: number, ts: TileSprite, os: TileSprite) {
-            let witnesses: TileSprite[] = [];
-            let ret = this.evaluateWhenDo(ts, rid, os.col(), os.row(), witnesses);
+            let wcol = ts.col() + moveXdelta(ts.arg);
+            let wrow = ts.row() + moveYdelta(ts.arg);
+            // we already have the witness
+            let witnesses: TileSprite[] = [ os ];
+            let ret = this.evaluateWhenDo(ts, rid, wcol, wrow, witnesses);
             if (ret) {
                 this.ruleClosures.push(new RuleClosure(rid, ts, witnesses));
             }
@@ -245,6 +250,8 @@ namespace tileworld {
                         return null;
                 }
             }
+            // all the whendos passed and we've collected witnesses (other sprites)
+            // so, we will execute the rule on the self sprite ts
             return new RuleClosure(rid, ts, witnesses);
         }
 
@@ -293,8 +300,10 @@ namespace tileworld {
             for(let kind = this.gs.fixed; kind<this.gs.all; kind++) {
                 let attr = this.p.getAttr(rid, whendo, kind);
                 let witness = this.getWitness(kind, wcol, wrow);
-                if (this.other && this.other.kind() == kind)
-                    witness = this.other;
+                // special case for collisions
+                if (this.p.getType(rid) >= RuleType.CollidingResting) {
+                    witness = witnesses[0].kind() == kind ? witnesses[0] : null;
+                }
                 if (attr == AttrType.Exclude && witness) {
                     return false;
                 } else if (attr == AttrType.Include) {
@@ -310,7 +319,7 @@ namespace tileworld {
             }
             let ret = !oneOf || oneOfPassed;
             if (ret && Math.abs(2 - col) + Math.abs(2 - row) <= 1) {
-                if (captureWitness)
+                if (captureWitness && this.p.getType(rid) < RuleType.CollidingResting)
                     witnesses.push(captureWitness);
             }
             return ret;
@@ -355,8 +364,12 @@ namespace tileworld {
                         break;
                     }
                     case CommandType.Sprite: {
-                        // TODO: collision witness logic needed, which one is the witness?
+                        // the witness is found where expected
                         let witness = rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
+                        // except in the case of collisions with moving sprites
+                        if (this.p.getType(rc.rid) == RuleType.CollidingMoving) {
+                            witness = rc.witnesses[0];
+                        }
                         if (arg == SpriteArg.Remove && witness) {
                             witness.state = SpriteState.Dead;
                             this.gs.deadSprites.push(witness);
