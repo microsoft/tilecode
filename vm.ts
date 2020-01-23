@@ -162,25 +162,22 @@ namespace tileworld {
                         if (os.col() == wcol && os.row() == wrow) {
                             if (os.inst != CommandType.Move || oppDir(ts.arg,os.arg))
                                 this.collide(rid, ts, os);
-                        } else {
+                        } else if (os.inst == CommandType.Move) {
                             let leftRotate = flipRotateDir(ts.arg, FlipRotate.Left);
                             let osCol = wcol + moveXdelta(leftRotate);
                             let osRow = wrow + moveYdelta(leftRotate);
-                            if (os.col() == osCol && os.row() == osRow && 
-                                os.inst == CommandType.Move && oppDir(leftRotate,os.arg)) {
+                            if (os.col() == osCol && os.row() == osRow && oppDir(leftRotate,os.arg)) {
                                 this.collide(rid, ts, os);
                             }
                             let rightRotate = flipRotateDir(ts.arg, FlipRotate.Right);
                             osCol = wcol + moveXdelta(rightRotate);
                             osRow = wrow + moveYdelta(rightRotate);
-                            if (os.col() == osCol && os.row() == osRow &&
-                                os.inst == CommandType.Move && oppDir(rightRotate, os.arg)) {
+                            if (os.col() == osCol && os.row() == osRow && oppDir(rightRotate, os.arg)) {
                                 this.collide(rid, ts, os);
                             }
                             osCol = wcol + moveXdelta(ts.arg);
                             osRow = wrow + moveYdelta(ts.arg);
-                            if (os.col() == osCol && os.row() == osRow &&
-                                os.inst == CommandType.Move && oppDir(ts.arg, os.arg)) {
+                            if (os.col() == osCol && os.row() == osRow && oppDir(ts.arg, os.arg)) {
                                 this.collide(rid, ts, os);
                             }
                         }
