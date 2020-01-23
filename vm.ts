@@ -54,6 +54,9 @@ namespace tileworld {
 
     enum Phase { Moving, Resting, Colliding };
 
+    // TODO: some weird interaction with multiple sprites
+    // TODO: and collisions (witness issue), where first collision
+    // TODO: is not recognized, but second is
     class TileWorldVM {
         private ruleClosures: RuleClosure[];
         private gs: VMState;
@@ -95,12 +98,19 @@ namespace tileworld {
             this.ruleClosures = [];
             // TODO: need a fix point around this, as new collisions may occur
             // TODO: as moving sprites transition to resting sprites
-            let moving: TileSprite[] = []
-            this.allSprites(ts => { if (ts.inst == CommandType.Move) moving.push(ts) }); 
-            this.collisionDetection(moving);
+            // a collision can only take place between two sprites if one of
+            // them is going to move in the next round, against is initially
+            // all sprites and will dimish over time 
+            let against: TileSprite[] = []
+            this.allSprites(ts => { against.push(ts) }); 
+            this.collisionDetection( against );
             this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
             // finally, update the rules
             this.updateWorld();
+        }
+
+        private moving(ts: TileSprite) {
+            return ts.inst == CommandType.Move && ts.arg < MoveArg.Stop;
         }
 
         private matchingRules(phase: Phase, ts: TileSprite, handler: (ts: TileSprite, rid:number) => void) {
@@ -122,8 +132,7 @@ namespace tileworld {
         private applyRules(phase: Phase) {
             this.allSprites(ts => { 
                 if ( (phase == Phase.Moving && ts.dir != -1) ||
-                     (phase == Phase.Resting && (ts.dir == -1 ||
-                         ts.inst != CommandType.Move)) ) {
+                     (phase == Phase.Resting && (ts.dir == -1 || !this.moving(ts)))) {
                     let witnesses: TileSprite[] = [];
                     this.matchingRules(phase, ts, (ts,rid) => {
                         let closure = this.evaluateRule(ts, rid);
@@ -150,19 +159,19 @@ namespace tileworld {
         //   (b) os moving into T
         // TODO: this can be optimized, a lot
         private collisionDetection(against: TileSprite[]) {
-            against.forEach(ts => {
-                if (ts.inst != CommandType.Move) return;
+            this.allSprites(ts => {
+                if (!this.moving(ts)) return;
                 this.collidingRules(ts, (ts,rid) => {
                     let wcol = ts.col() + moveXdelta(ts.arg);
                     let wrow = ts.row() + moveYdelta(ts.arg);
                     // T = (wcol, wrow)
-                    this.allSprites(os => {
+                    against.forEach(os => {
                         if (os == ts) return;
                         // (a) os in square T, resting or moving towards ts, or
                         if (os.col() == wcol && os.row() == wrow) {
-                            if (os.inst != CommandType.Move || oppDir(ts.arg,os.arg))
+                            if (this.moving(os) || oppDir(ts.arg,os.arg))
                                 this.collide(rid, ts, os);
-                        } else if (os.inst == CommandType.Move) {
+                        } else if (this.moving(os)) {
                             let leftRotate = flipRotateDir(ts.arg, FlipRotate.Left);
                             let osCol = wcol + moveXdelta(leftRotate);
                             let osRow = wrow + moveYdelta(leftRotate);
