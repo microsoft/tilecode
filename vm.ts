@@ -129,6 +129,8 @@ namespace tileworld {
         private applyRules(phase: Phase) {
             this.allSprites(ts => { 
                 if ( (phase == Phase.Moving && ts.dir != -1) ||
+                    // resting rules will apply to sprites that were previously moving 
+                    // but have not issued a moving command (in the Moving phase)
                      (phase == Phase.Resting && (ts.dir == -1 || !this.moving(ts)))) {
                     let witnesses: TileSprite[] = [];
                     this.matchingRules(phase, ts, (ts,rid) => {
