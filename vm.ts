@@ -140,7 +140,7 @@ namespace tileworld {
         private collidingRules(ts: TileSprite, handler: (ts: TileSprite, rid: number) => void) {
             this.rules.forEach(rid => {
                 if (this.p.getKinds(rid).indexOf(ts.kind()) != -1 && 
-                    this.p.getType(rid) >= RuleType.CollidingMoving &&
+                    this.p.getType(rid) >= RuleType.CollidingResting &&
                     this.p.getDir(rid) == ts.dir) {
                         handler(ts, rid);
                 }
@@ -165,21 +165,21 @@ namespace tileworld {
                         // (a) os in square T, resting or moving towards ts, or
                         if (os.col() == wcol && os.row() == wrow) {
                             if (os.inst != CommandType.Move || oppDir(ts.arg,os.arg))
-                                this.collide(rid, ts, os, wcol, wrow);
+                                this.collide(rid, ts, os);
                         } else {
                             let leftRotate = flipRotateDir(ts.arg, FlipRotate.Left);
                             let osCol = wcol + moveXdelta(leftRotate);
                             let osRow = wrow + moveYdelta(leftRotate);
                             if (os.col() == osCol && os.row() == osRow && 
                                 os.inst == CommandType.Move && oppDir(leftRotate,os.arg)) {
-                                this.collide(rid, ts, os, wcol, wrow);
+                                this.collide(rid, ts, os);
                             }
                             let rightRotate = flipRotateDir(ts.arg, FlipRotate.Right);
                             osCol = wcol + moveXdelta(rightRotate);
                             osRow = wrow + moveYdelta(rightRotate);
                             if (os.col() == osCol && os.row() == osRow &&
                                 os.inst == CommandType.Move && oppDir(rightRotate, os.arg)) {
-                                this.collide(rid, ts, os, wcol, wrow);
+                                this.collide(rid, ts, os);
                             }
                         }
                     });
@@ -187,11 +187,10 @@ namespace tileworld {
             });
         }
 
-        private collide(rid: number, ts: TileSprite, os: TileSprite, ocol: number, orow: number) {
+        private collide(rid: number, ts: TileSprite, os: TileSprite) {
             let witnesses: TileSprite[] = [];
-            let ret = this.evaluateWhenDo(ts, rid, ocol, orow, witnesses);
+            let ret = this.evaluateWhenDo(ts, rid, os.col(), os.row(), witnesses);
             if (ret) {
-                // TODO: need to remember ocol, orow for collision
                 this.ruleClosures.push(new RuleClosure(rid, ts, witnesses));
             }
         }
