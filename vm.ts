@@ -54,9 +54,6 @@ namespace tileworld {
 
     enum Phase { Moving, Resting, Colliding };
 
-    // TODO: some weird interaction with multiple sprites
-    // TODO: and collisions (witness issue), where first collision
-    // TODO: is not recognized, but second is
     class TileWorldVM {
         private ruleClosures: RuleClosure[];
         private gs: VMState;
@@ -169,7 +166,7 @@ namespace tileworld {
                         if (os == ts) return;
                         // (a) os in square T, resting or moving towards ts, or
                         if (os.col() == wcol && os.row() == wrow) {
-                            if (this.moving(os) || oppDir(ts.arg,os.arg))
+                            if (!this.moving(os) || oppDir(ts.arg,os.arg))
                                 this.collide(rid, ts, os);
                         } else if (this.moving(os)) {
                             let leftRotate = flipRotateDir(ts.arg, FlipRotate.Left);
