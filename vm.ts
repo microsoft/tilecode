@@ -110,14 +110,14 @@ namespace tileworld {
             return ts.inst == CommandType.Move && ts.arg < MoveArg.Stop;
         }
 
-        private matchingRules(phase: Phase, ts: TileSprite, handler: (ts: TileSprite, rid:number) => void) {
+        private matchingRules(phase: Phase, ts: TileSprite, handler: (rid:number) => void) {
             this.rules.forEach(rid => {
                 if (   this.p.getKinds(rid).indexOf(ts.kind()) != -1 && 
                     (  phase == Phase.Moving && this.p.getDir(rid) == ts.dir && this.p.getType(rid) == RuleType.Moving
                     || phase == Phase.Resting && this.p.getType(rid) == RuleType.Resting
                     || this.p.getDir(rid) == this.dpad && this.p.getType(rid) == RuleType.Pushing) ) 
                 {
-                    handler(ts,rid);
+                    handler(rid);
                 }
             });
         }
@@ -132,8 +132,7 @@ namespace tileworld {
                     // resting rules will apply to sprites that were previously moving 
                     // but have not issued a moving command (in the Moving phase)
                      (phase == Phase.Resting && (ts.dir == -1 || !this.moving(ts)))) {
-                    let witnesses: TileSprite[] = [];
-                    this.matchingRules(phase, ts, (ts,rid) => {
+                    this.matchingRules(phase, ts, (rid) => {
                         let closure = this.evaluateRule(ts, rid);
                         if (closure)
                             this.ruleClosures.push(closure);
@@ -142,12 +141,12 @@ namespace tileworld {
             });
         }
 
-        private collidingRules(ts: TileSprite, handler: (ts: TileSprite, rid: number) => void) {
+        private collidingRules(ts: TileSprite, handler: (rid: number) => void) {
             this.rules.forEach(rid => {
                 if (this.p.getKinds(rid).indexOf(ts.kind()) != -1 && 
                     this.p.getType(rid) >= RuleType.CollidingResting &&
                     this.p.getDir(rid) == ts.dir) {
-                        handler(ts, rid);
+                        handler(rid);
                 }
             });
         }
@@ -160,7 +159,7 @@ namespace tileworld {
         private collisionDetection(against: TileSprite[]) {
             this.allSprites(ts => {
                 if (!this.moving(ts)) return;
-                this.collidingRules(ts, (ts,rid) => {
+                this.collidingRules(ts, (rid) => {
                     let wcol = ts.col() + moveXdelta(ts.arg);
                     let wrow = ts.row() + moveYdelta(ts.arg);
                     // T = (wcol, wrow)
