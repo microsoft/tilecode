@@ -26,7 +26,7 @@ namespace tileworld {
         public col() { return this.x >> 4; }
         public row() { return this.y >> 4; }
         public update() {
-            this.dir = this.inst == CommandType.Move ? this.arg : -1;
+            this.dir = this.inst == CommandType.Move && this.arg < MoveArg.Stop  ? this.arg : -1;
             this.vx = this.dir == MoveDirection.Left ? -100 : this.dir == MoveDirection.Right ? 100 : 0;
             this.vy = this.dir == MoveDirection.Up ? -100 : this.dir == MoveDirection.Down ? 100 : 0;
         }
@@ -168,25 +168,31 @@ namespace tileworld {
                         if (os == ts) return;
                         // (a) os in square T, resting or moving towards ts, or
                         if (os.col() == wcol && os.row() == wrow) {
-                            if (!this.moving(os) || oppDir(ts.arg,os.arg))
+                            if (!this.moving(os) || oppDir(ts.arg,os.arg)) {
                                 this.collide(rid, ts, os);
-                        } else if (this.moving(os)) {
+                                return;
+                            }
+                        }
+                        if (this.moving(os)) {
                             let leftRotate = flipRotateDir(ts.arg, FlipRotate.Left);
                             let osCol = wcol + moveXdelta(leftRotate);
                             let osRow = wrow + moveYdelta(leftRotate);
                             if (os.col() == osCol && os.row() == osRow && oppDir(leftRotate,os.arg)) {
                                 this.collide(rid, ts, os);
-                            }
+                                return;
+                            } 
                             let rightRotate = flipRotateDir(ts.arg, FlipRotate.Right);
                             osCol = wcol + moveXdelta(rightRotate);
                             osRow = wrow + moveYdelta(rightRotate);
                             if (os.col() == osCol && os.row() == osRow && oppDir(rightRotate, os.arg)) {
                                 this.collide(rid, ts, os);
+                                return;
                             }
                             osCol = wcol + moveXdelta(ts.arg);
                             osRow = wrow + moveYdelta(ts.arg);
                             if (os.col() == osCol && os.row() == osRow && oppDir(ts.arg, os.arg)) {
                                 this.collide(rid, ts, os);
+                                return;
                             }
                         }
                     });
@@ -359,11 +365,11 @@ namespace tileworld {
                         break;
                     }
                     case CommandType.Move: {
+                        let colliding = this.p.getType(rc.rid) >= RuleType.CollidingResting;
                         let witness = self ? rc.self : 
-                                ((this.p.getType(rc.rid) < RuleType.CollidingResting)
-                                    ? rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow)
-                                : rc.witnesses[0]);
-                        if (witness && witness.inst == -1) {
+                                (colliding ? rc.witnesses[0]
+                                    : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow));
+                        if (witness && (witness.inst == -1 || colliding)) {
                             witness.inst = inst;
                             witness.arg = arg;
                         }
