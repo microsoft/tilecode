@@ -141,11 +141,12 @@ namespace tileworld {
             });
         }
 
+        // precondition: moving(ts)
         private collidingRules(ts: TileSprite, handler: (rid: number) => void) {
             this.rules.forEach(rid => {
                 if (this.p.getKinds(rid).indexOf(ts.kind()) != -1 && 
                     this.p.getType(rid) >= RuleType.CollidingResting &&
-                    this.p.getDir(rid) == ts.dir) {
+                    this.p.getDir(rid) == ts.arg) {
                         handler(rid);
                 }
             });
@@ -159,9 +160,9 @@ namespace tileworld {
         private collisionDetection(against: TileSprite[]) {
             this.allSprites(ts => {
                 if (!this.moving(ts)) return;
+                let wcol = ts.col() + moveXdelta(ts.arg);
+                let wrow = ts.row() + moveYdelta(ts.arg);
                 this.collidingRules(ts, (rid) => {
-                    let wcol = ts.col() + moveXdelta(ts.arg);
-                    let wrow = ts.row() + moveYdelta(ts.arg);
                     // T = (wcol, wrow)
                     against.forEach(os => {
                         if (os == ts) return;
