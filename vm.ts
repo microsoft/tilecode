@@ -359,12 +359,16 @@ namespace tileworld {
                         break;
                     }
                     case CommandType.Move: {
-                        let witness = self ? rc.self : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
-                        if (witness) {
-                            if (witness.inst == -1 || (witness.inst == CommandType.Move && arg == MoveArg.Stop)) {
-                                witness.inst = inst;
-                                witness.arg = arg;
+                        if (this.p.getType(rc.rid) < RuleType.CollidingResting) {
+                            let witness = self ? rc.self : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
+                            if (witness) {
+                                if (witness.inst == -1 || (witness.inst == CommandType.Move && arg == MoveArg.Stop)) {
+                                    witness.inst = inst;
+                                    witness.arg = arg;
+                                }
                             }
+                        } else {
+                            // TODO: stop/u-turn as part of collision
                         }
                         break;
                     }
