@@ -26,6 +26,7 @@ namespace tileworld {
         public col() { return this.x >> 4; }
         public row() { return this.y >> 4; }
         public update() {
+            // TODO: implement U-turn
             this.dir = this.inst == CommandType.Move && this.arg < MoveArg.Stop  ? this.arg : -1;
             this.vx = this.dir == MoveDirection.Left ? -100 : this.dir == MoveDirection.Right ? 100 : 0;
             this.vy = this.dir == MoveDirection.Up ? -100 : this.dir == MoveDirection.Down ? 100 : 0;

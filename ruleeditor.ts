@@ -257,6 +257,7 @@ namespace tileworld {
                     let len = this.showCommandsAt(lr, col, row); 
                     this.commandLengths.push(len);
                 }
+                this.commandLengths.push(-1);
             }
         }
 
@@ -379,7 +380,7 @@ namespace tileworld {
         }
 
         // what instructions are possible, given rule type and witness
-        // this defines the menu to present at the top-level 
+        // this defines the menu to present at the top-level
         private getTokens(col: number, row: number) {
             let tokens: number[] = [];
             if (this.findWitnessColRow(col, row) != -1) {
