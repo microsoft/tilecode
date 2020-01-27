@@ -211,12 +211,12 @@ namespace tileworld {
                         if (os == ts) return;
                         // (a) os in square T, resting or moving towards ts, or
                         if (os.col() == wcol && os.row() == wrow) {
-                            if (!moving && !this.moving(os) || moving && oppDir(ts.arg,os.arg)) {
+                            if (!moving && !this.moving(os) || 
+                                 moving && this.moving(os) && oppDir(ts.arg,os.arg)) {
                                 this.collide(rid, ts, os);
                                 return;
                             }
-                        }
-                        if (moving && this.moving(os)) {
+                        } else if (moving && this.moving(os)) {
                             let leftRotate = flipRotateDir(ts.arg, FlipRotate.Left);
                             let osCol = wcol + moveXdelta(leftRotate);
                             let osRow = wrow + moveYdelta(leftRotate);
