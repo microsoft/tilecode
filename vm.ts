@@ -318,9 +318,9 @@ namespace tileworld {
                     if (hasKind) oneOfPassed = true;
                 }
             }
+            let adjacent = Math.abs(2 - col) + Math.abs(2 - row) <= 1;
             for(let kind = this.gs.fixed; kind<this.gs.all; kind++) {
                 let attr = this.p.getAttr(rid, whendo, kind);
-                // TODO: only capture witness if adacent tile
                 let witness = this.getWitness(kind, wcol, wrow);
                 // special case for collisions
                 if (this.p.getType(rid) >= RuleType.CollidingResting) {
@@ -330,21 +330,20 @@ namespace tileworld {
                     return false;
                 } else if (attr == AttrType.Include) {
                     if (!witness) return false;
-                    if (!captureWitness)
+                    if (adjacent && !captureWitness)
                         captureWitness = witness;
                 } else if (attr == AttrType.OneOf) {
                     oneOf = true;
                     if (witness) oneOfPassed = true;
-                    if (!captureWitness)
+                    if (adjacent && !captureWitness)
                         captureWitness = witness;
                 }
             }
             // collision case: if we made it through here then 
             // we have witness and oneOf is false, as expected
             let ret = !oneOf || oneOfPassed;
-            if (ret && Math.abs(2 - col) + Math.abs(2 - row) <= 1) {
-                if (captureWitness && this.p.getType(rid) < RuleType.CollidingResting)
-                    witnesses.push(captureWitness);
+            if (ret && captureWitness && this.p.getType(rid) < RuleType.CollidingResting) {
+                witnesses.push(captureWitness);
             }
             return ret;
         }
