@@ -258,8 +258,9 @@ namespace tileworld {
                 if (this.active(col,row)) {
                     let len = this.showCommandsAt(lr, col, row); 
                     this.commandLengths.push(len);
+                } else {
+                    this.commandLengths.push(-1);
                 }
-                this.commandLengths.push(-1);
             }
         }
 

@@ -206,17 +206,17 @@ namespace tileworld {
                 let wrow = ts.row() + moveYdelta(ts.arg);
                 this.collidingRules(ts, (rid) => {
                     // T = (wcol, wrow)
+                    let moving = this.p.getType(rid) == RuleType.CollidingMoving;
                     against.forEach(os => {
                         if (os == ts) return;
                         // (a) os in square T, resting or moving towards ts, or
                         if (os.col() == wcol && os.row() == wrow) {
-                            if (!this.moving(os) && this.p.getType(rid) == RuleType.CollidingResting || 
-                                oppDir(ts.arg,os.arg) && this.p.getType(rid) == RuleType.CollidingMoving) {
+                            if (!moving && !this.moving(os) || moving && oppDir(ts.arg,os.arg)) {
                                 this.collide(rid, ts, os);
                                 return;
                             }
                         }
-                        if (this.moving(os)) {
+                        if (moving && this.moving(os)) {
                             let leftRotate = flipRotateDir(ts.arg, FlipRotate.Left);
                             let osCol = wcol + moveXdelta(leftRotate);
                             let osRow = wrow + moveYdelta(leftRotate);
@@ -246,15 +246,16 @@ namespace tileworld {
         private collide(rid: number, ts: TileSprite, os: TileSprite) {
             let wcol = ts.col() + moveXdelta(ts.arg);
             let wrow = ts.row() + moveYdelta(ts.arg);
-            console.logValue("rid", rid);
-            console.logValue("ts.cnt", ts.cnt);
-            console.logValue("os.cnt", os.cnt);
-            console.logValue("col", wcol);
-            console.logValue("row", wrow);
+            if (this.p.debug) {
+                console.logValue("rid", rid);
+                console.logValue("ts.cnt", ts.cnt);
+                console.logValue("os.cnt", os.cnt);
+                console.logValue("col", wcol);
+                console.logValue("row", wrow);
+            }
             // we already have the witness
             let witnesses: TileSprite[] = [ os ];
             if (this.evaluateWhenDo(ts, rid, wcol, wrow, witnesses)) {
-                console.log("here");
                 this.ruleClosures.push(new RuleClosure(rid, ts, witnesses));
             }
         }
