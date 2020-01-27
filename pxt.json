@@ -22,7 +22,8 @@
         "loadScreen.ts",
         "main.ts",
         "analysis.ts",
-        "parser.ts"
+        "parser.ts",
+        "debugger.ts"
     ],
     "testFiles": [
         "test.ts"
