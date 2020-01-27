@@ -115,6 +115,10 @@ namespace tileworld {
             return !this.askDeleteRule;
         }
 
+        private getType() {
+            return this.p.getType(this.rule);
+        }
+
         private changeRule(rid: number) {
             this.p.saveRule(this.rule);
             this.rule = rid;
@@ -387,10 +391,10 @@ namespace tileworld {
         private getTokens(col: number, row: number) {
             let tokens: number[] = [];
             if (this.findWitnessColRow(col, row) != -1) {
-                if ((col == 2 && row == 2) || this.rt != RuleType.CollidingResting)
+                if ((col == 2 && row == 2) || this.getType() != RuleType.CollidingResting)
                     tokens.push(CommandType.Move);
             }
-            if (this.rt < RuleType.CollidingResting) {
+            if (this.getType() < RuleType.CollidingResting) {
                 tokens.push(CommandType.Paint);
             }
             if (this.findWitnessColRow(col, row) != -1) {
@@ -404,7 +408,7 @@ namespace tileworld {
         // argument range for command
         private instToStartArg(inst: number) {
             switch (inst) {
-                case CommandType.Move: return this.rt < RuleType.CollidingResting ? 0 : 4;
+                case CommandType.Move: return this.getType() < RuleType.CollidingResting ? 0 : 4;
                 case CommandType.Paint: 
                 case CommandType.Sprite:
                 case CommandType.Game:
@@ -415,7 +419,7 @@ namespace tileworld {
 
         private instToNumArgs(inst: number) {
             switch (inst) {
-                case CommandType.Move: return this.rt < RuleType.CollidingResting ? 4:  2;
+                case CommandType.Move: return this.getType() < RuleType.CollidingResting ? 4:  2;
                 case CommandType.Paint: return 3;  // TODO: goto 4
                 case CommandType.Sprite: return 1;
                 case CommandType.Game: return 2;
@@ -500,7 +504,7 @@ namespace tileworld {
                 this.drawOutline(i, 5);
             });
             this.p.all().forEach((image, i ) => {
-                if (i < this.p.fixed().length && this.rt >= RuleType.CollidingResting)
+                if (i < this.p.fixed().length && this.getType() >= RuleType.CollidingResting)
                     return;
                 let a = this.p.getAttr(this.rule, whenDo, i);
                 this.drawImage(i, 6, image);
@@ -523,7 +527,7 @@ namespace tileworld {
             }
             let m = this.row() == 6 ? this.col() : -1; 
             if (m != -1 && m < this.p.all().length) { 
-                if (m < this.p.fixed().length && this.rt >= RuleType.CollidingResting)
+                if (m < this.p.fixed().length && this.getType() >= RuleType.CollidingResting)
                     return false;
                 let val = attrValues[this.attrSelected];
                 if (val == AttrType.Include) { 

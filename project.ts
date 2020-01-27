@@ -6,7 +6,7 @@ namespace tileworld {
         private allImages: Image[] = null;
         private _player: number = -1;
         private _world: Image = null;
-        public debug: boolean = false;
+        public debug: boolean = true;
 
         constructor(
             public prefix: string,
