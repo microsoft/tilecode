@@ -255,7 +255,7 @@ namespace tileworld {
             }
             // we already have the witness
             let witnesses: TileSprite[] = [ os ];
-            if (this.evaluateWhenDo(ts, rid, wcol, wrow, witnesses)) {
+            if (this.evaluateWhenDo(ts, rid, 2+moveXdelta(ts.arg), 2+moveYdelta(ts.arg), witnesses)) {
                 this.ruleClosures.push(new RuleClosure(rid, ts, witnesses));
             }
         }
@@ -320,6 +320,7 @@ namespace tileworld {
             }
             for(let kind = this.gs.fixed; kind<this.gs.all; kind++) {
                 let attr = this.p.getAttr(rid, whendo, kind);
+                // TODO: only capture witness if adacent tile
                 let witness = this.getWitness(kind, wcol, wrow);
                 // special case for collisions
                 if (this.p.getType(rid) >= RuleType.CollidingResting) {
