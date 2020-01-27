@@ -173,6 +173,8 @@ namespace tileworld {
             screen.fill(11);
             screen.fillRect(0, 0, 80, 120, 12);
             screen.print("When", 0, 0);
+            if (this.p.debug)
+                screen.print(this.rule.toString(), 30, 0);
             screen.print("Do", 80, 0);
             // sets collideCol and collideRow
             this.showRuleType(this.p.getType(this.rule), this.p.getDir(this.rule), 2, 2);

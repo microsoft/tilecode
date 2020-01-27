@@ -6,6 +6,7 @@ namespace tileworld {
 
     enum SpriteState { Alive, Dead, }
 
+    let spriteCount = 0;
     class TileSprite extends Sprite {
         public state: SpriteState;
         // the direction the sprite is currently moving
@@ -14,8 +15,10 @@ namespace tileworld {
         // create the next sprite state
         public inst: number;
         public arg: number;
+        public cnt: number;
         constructor(img: Image, kind: number) {
             super(img);
+            this.cnt = spriteCount++;
             const scene = game.currentScene();
             scene.physicsEngine.addSprite(this);
             this.setKind(kind);
@@ -107,6 +110,44 @@ namespace tileworld {
             this.updateWorld();
         }
 
+        private updateWorld() {
+            this.allSprites(ts => ts.update());
+            // change tiles (can be done with less memory and time assuming few
+            // tiles are changed).
+            for (let x = 0; x < this.gs.nextWorld.width; x++) {
+                for (let y = 0; y < this.gs.nextWorld.height; y++) {
+                    let pixel = this.gs.nextWorld.getPixel(x, y);
+                    if (pixel != 0xf) {
+                        //this.gs.world.setPixel(x, y, pixel);
+                        const tm = game.currentScene().tileMap;
+                        tm.setTileAt(x, y, pixel);
+                    }
+                }
+            }
+            for (let i = 0; i < this.globalInsts.length; i++) {
+                let inst = this.globalInsts[i];
+                let arg = this.globalArgs[i];
+                switch (inst) {
+                    case CommandType.Game: {
+                        if (arg == GameArg.Win || arg == GameArg.Lose) {
+                            this.gs.game = arg == GameArg.Win ? GameState.Won : GameState.Lost;
+                        }
+                        break;
+                    }
+                    case CommandType.SpritePred: {
+                        let cc: TileSprite[] = this.gs.sprites[this.gs.fixed + arg];
+                        if (cc && cc.length > 0) {
+                            let liveCount = cc.filter(ts => ts.state == SpriteState.Alive);
+                            // skip next instruction if predicate = 0 doesn't hold
+                            if (liveCount.length > 0)
+                                i = i + 1;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
         private moving(ts: TileSprite) {
             return ts.inst == CommandType.Move && ts.arg < MoveArg.Stop;
         }
@@ -169,7 +210,8 @@ namespace tileworld {
                         if (os == ts) return;
                         // (a) os in square T, resting or moving towards ts, or
                         if (os.col() == wcol && os.row() == wrow) {
-                            if (!this.moving(os) || oppDir(ts.arg,os.arg)) {
+                            if (!this.moving(os) && this.p.getType(rid) == RuleType.CollidingResting || 
+                                oppDir(ts.arg,os.arg) && this.p.getType(rid) == RuleType.CollidingMoving) {
                                 this.collide(rid, ts, os);
                                 return;
                             }
@@ -204,49 +246,16 @@ namespace tileworld {
         private collide(rid: number, ts: TileSprite, os: TileSprite) {
             let wcol = ts.col() + moveXdelta(ts.arg);
             let wrow = ts.row() + moveYdelta(ts.arg);
+            console.logValue("rid", rid);
+            console.logValue("ts.cnt", ts.cnt);
+            console.logValue("os.cnt", os.cnt);
+            console.logValue("col", wcol);
+            console.logValue("row", wrow);
             // we already have the witness
             let witnesses: TileSprite[] = [ os ];
-            let ret = this.evaluateWhenDo(ts, rid, wcol, wrow, witnesses);
-            if (ret) {
+            if (this.evaluateWhenDo(ts, rid, wcol, wrow, witnesses)) {
+                console.log("here");
                 this.ruleClosures.push(new RuleClosure(rid, ts, witnesses));
-            }
-        }
-
-        private updateWorld() {
-            this.allSprites(ts => ts.update() );
-            // change tiles (can be done with less memory and time assuming few
-            // tiles are changed).
-            for(let x = 0; x < this.gs.nextWorld.width; x++) {
-                for (let y = 0; y < this.gs.nextWorld.height; y++) {
-                    let pixel = this.gs.nextWorld.getPixel(x, y);
-                    if (pixel != 0xf) {
-                        //this.gs.world.setPixel(x, y, pixel);
-                        const tm = game.currentScene().tileMap;
-                        tm.setTileAt(x, y, pixel);
-                    }
-                }                
-            }
-            for(let i = 0; i<this.globalInsts.length; i++) {
-                let inst = this.globalInsts[i];
-                let arg = this.globalArgs[i];
-                switch (inst) {
-                    case CommandType.Game: {
-                        if (arg == GameArg.Win || arg == GameArg.Lose) {
-                            this.gs.game = arg == GameArg.Win ? GameState.Won : GameState.Lost;
-                        }
-                        break;
-                    }
-                    case CommandType.SpritePred: {
-                        let cc: TileSprite[] = this.gs.sprites[this.gs.fixed+arg];
-                        if (cc && cc.length > 0) {
-                            let liveCount = cc.filter(ts => ts.state == SpriteState.Alive);
-                            // skip next instruction if predicate = 0 doesn't hold
-                            if (liveCount.length > 0)
-                                i = i + 1;
-                        }
-                        break;
-                    }
-                }
             }
         }
 
@@ -297,7 +306,6 @@ namespace tileworld {
             let oneOfPassed: boolean = false;
             let captureWitness: TileSprite = null;
             for(let kind = 0; kind < this.gs.fixed; kind++) {
-                // let hasKind = this.gs.world.getPixel(wcol, wrow) == kind;
                 const tm = game.currentScene().tileMap;
                 let hasKind = tm.getTile(wcol, wrow).tileSet == kind;
                 let attr = this.p.getAttr(rid, whendo, kind);
@@ -329,6 +337,8 @@ namespace tileworld {
                         captureWitness = witness;
                 }
             }
+            // collision case: if we made it through here then 
+            // we have witness and oneOf is false, as expected
             let ret = !oneOf || oneOfPassed;
             if (ret && Math.abs(2 - col) + Math.abs(2 - row) <= 1) {
                 if (captureWitness && this.p.getType(rid) < RuleType.CollidingResting)
