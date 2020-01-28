@@ -23,7 +23,13 @@ jobs:
           pxt target arcade
       - name: build
         run: |
-          pxt install
-          pxt build --cloud
+          pxt clean
+          pxt install --hw samd51
+          pxt build --hw samd51 --cloud
+          cp built/binary.uf2 samd51.uf2
+          pxt clean
+          pxt install --hw stm32f401
+          pxt build --hw stm32f401 --cloud
+          cp built/binary.uf2 stm32f401.uf2          
         env:
           CI: true
