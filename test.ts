@@ -191,33 +191,14 @@ namespace sample {
         [new WhenDo(2,2,[],[new Command(CommandType.Paint,spaceId)])]
     );
 
-    let playerMoveRight = new Rule([playerId], RuleType.Pushing, MoveDirection.Right,
-        [new WhenDo(2, 2, [], 
-            [new Command(CommandType.Move, MoveDirection.Right), 
-            new Command(CommandType.Paint, spaceId) ]),
-        new WhenDo(3, 2, playerMove, []) ]
-    );
-
-    let playerMoveLeft = new Rule([playerId], RuleType.Pushing, MoveDirection.Left,
-        [new WhenDo(2, 2, [], 
-            [new Command(CommandType.Move, MoveDirection.Left), 
-            new Command(CommandType.Paint, spaceId)]),
-        new WhenDo(1, 2, playerMove, [])]
-    );
-
-    let playerMoveUp = new Rule([playerId], RuleType.Pushing, MoveDirection.Up,
-        [new WhenDo(2, 2, [],
-            [new Command(CommandType.Move, MoveDirection.Up), 
-            new Command(CommandType.Paint, spaceId)]),
-        new WhenDo(2, 1, playerMove, [])]
-    );
-
-    let playerMoveDown = new Rule([playerId], RuleType.Pushing, MoveDirection.Down,
-        [new WhenDo(2, 2, [],
-            [new Command(CommandType.Move, MoveDirection.Down),
-            new Command(CommandType.Paint, spaceId)]),
-        new WhenDo(2, 3, playerMove, [])]
-    );
+    function playerMoveRule(dir: MoveDirection) {
+        return new Rule([playerId], RuleType.Pushing, dir,
+            [new WhenDo(2, 2, [], 
+                [new Command(CommandType.Move, dir), 
+                new Command(CommandType.Paint, spaceId) ]),
+            new WhenDo(2 + tileworld.moveXdelta(dir), 2+tileworld.moveYdelta(dir), playerMove, []) ]
+        );
+    }
 
     let playerMoveBoulderRight = new Rule([playerId], RuleType.Pushing, MoveDirection.Right,
         [new WhenDo(2, 2, [], moveRight), boulderRight, TileAt(spaceId, 4, 2)]
@@ -245,7 +226,7 @@ namespace sample {
         fixed,
         movable,
         tileworld.makeIds([boulderFallDown, boulderFallLeft, boulderFallingDown, 
-        playerPaint, playerMoveRight, playerMoveLeft, playerMoveUp, playerMoveDown, 
+        playerPaint, playerMoveRule(0), playerMoveRule(1), playerMoveRule(2), playerMoveRule(3), 
         playerMoveBoulderRight, playerMoveBoulderLeft])
     );
     let world = image.create(30, 30);
