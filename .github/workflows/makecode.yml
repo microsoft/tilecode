@@ -1,7 +1,9 @@
-name: MakeCode
+name: MakeCode Arcade Binary Release
 
-on: [release]
-
+on: 
+  release:
+    types:
+      - created
 jobs:
   build:
 
@@ -21,31 +23,46 @@ jobs:
         run: |
           npm install -g pxt
           pxt target arcade
-          mkdir -p artifacts
-      - name: build samd51
+      - name: build D51
         run: |
           pxt clean
           pxt install --hw samd51
           pxt build --hw samd51 --cloud
-          cp built/binary.uf2 artifacts/samd51.uf2
+      - name: upload D51
+        uses: actions/upload-release-asset@v1.0.1
         env:
-          CI: true
-      - name: build stm32f401
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./built/binary.uf2
+          asset_name: arcade-d51.uf2
+          asset_content_type: application/octet-stream
+      - name: build F4
         run: |
           pxt clean
           pxt install --hw stm32f401
           pxt build --hw stm32f401 --cloud
-          cp built/binary.uf2 artifacts/stm32f401.uf2          
-      - name: build rpi
+      - name: upload F4
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./built/binary.uf2
+          asset_name: arcade-f4.uf2
+          asset_content_type: application/octet-stream
+      - name: build P0
         run: |
           pxt clean
           pxt install --hw rpi
           pxt build --hw rpi --cloud
-          cp built/binary.uf2 artifacts/rpi.uf2          
+      - name: upload P0
+        uses: actions/upload-release-asset@v1.0.1
         env:
-          CI: true
-      - name: upload artifacts
-        uses: actions/upload-artifact@v1
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: uf2s
-          path: artifacts
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./built/binary.uf2
+          asset_name: arcade-p0.uf2
+          asset_content_type: application/octet-stream
+          
