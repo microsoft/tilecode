@@ -9,7 +9,7 @@ namespace tileworld {
             super(p);
             this.update();
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.col() == 0 && this.row() == 0) {
+                if (this.col() == 0 && this.row() == 0 && this.p.getRulesForKind(this.kind).length > 0) {
                     ruleEditor = new RuleEditor(this.p, kind, -1, -1);
                 } else {
                     let rt = this.ruleTypeMap.getPixel(this.col(), this.row());

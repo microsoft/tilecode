@@ -276,6 +276,10 @@ namespace tileworld {
         });
     }
 
+    function makePushRule(dir: MoveDirection) {
+        return new Rule([4], RuleType.Pushing, dir, [new WhenDo(2, 2, [], [new Command(CommandType.Move, dir)])]);
+    }
+
     export function emptyProject(prefix: string) {
         let fixedColors = [3, 4, 5, 12];
         let moveColors = [7, 8, 9, 10];
@@ -291,7 +295,9 @@ namespace tileworld {
             mi.printCenter(f.toString(), 4);
             movable.push(mi);
         }
-        let p = new Project(prefix, fixed, movable, []);
+        let rules: Rule[] = [];
+        for(let dir = 0; dir < 4; dir++) { rules.push(makePushRule(dir)); }
+        let p = new Project(prefix, fixed, movable, makeIds(rules));
         p.setWorld(image.create(30,30));
         p.setPlayer(4);
         p.defaultTile = 0;

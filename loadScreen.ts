@@ -13,6 +13,7 @@ namespace tileworld {
                         saveEntireProject(this.p);
                     }
                     this.lastDir = -1;
+                    this.lastDir = -1;
                     game.pushScene();
                     new MapEditor(this.p);
                 }
