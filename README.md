@@ -1,4 +1,4 @@
-# pxt-tileworld
+# TileWorld
 
 TileWorld is a game creation app that allows you to design and play games directly on [MakeCode Arcade](https://arcade.makecode.com/) devices.  TileWorld games are based on the familiar paradigm of a board with pieces that can move from one tile of the board to an adjacent tile.  TileWorld can be used to introduce computational concepts and its games are simple enough to design and simulate using basic classroom materials before programming them on an Arcade device. 
 
