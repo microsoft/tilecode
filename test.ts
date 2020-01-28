@@ -89,6 +89,24 @@ namespace bd {
         d 6 6 6 6 6 6 6 8 8 6 6 6 8 6 8
         8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
     `;
+    export const wall2 = img`
+        c c c c c c c c c c c c c c c 8
+        c b b b 8 8 8 b b b b b b b 8 8
+        c b b 8 b b b 8 b b b b b b 8 8
+        c b 8 b 8 8 8 b 8 8 8 8 8 8 8 8
+        c 8 b 8 8 6 8 8 b b b b b b 8 8
+        c 8 b 8 6 6 6 8 b 8 8 8 8 8 b 8
+        c 8 b 8 8 6 8 8 b b b b b b 8 8
+        c b 8 b 8 8 8 b 8 8 8 8 8 8 8 8
+        c b b b b b b b b 8 b b b b 8 8
+        c 8 8 8 b b b b b 8 8 b b 8 b 8
+        c b b b b b b b b 8 8 8 8 8 b 8
+        c 8 8 8 b b b b b b b b b b b 8
+        c b b b b b b b b b b b b b b 8
+        c 8 8 8 8 b b b b 8 8 8 8 8 b 8
+        c b b b b b b b 8 8 b b b 8 b 8
+        8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8
+    `;
     export const dirt = img`
         f e e e e e f e e e e 4 4 4 4 e
         e e 4 4 e e e f f f e e e e e e
@@ -126,7 +144,7 @@ namespace bd {
         f f f f f f f f f c c c c c c f
     `;
     export const movable = [boulder, player, diamond, enemy];
-    export const fixed = [space, wall, dirt];
+    export const fixed = [space, wall, dirt, wall2];
     export const all = [].concat(fixed).concat(movable);
 }
 let wallId = bd.all.indexOf(bd.wall);
@@ -239,7 +257,7 @@ project.defaultTile = 0;
 // to get start with a small program uncomment this line:
 // let loadSave = new tileworld.LoadScreen(project);
 // and comment out this line:
-let loadSave = new tileworld.LoadScreen(null);
+let loadSave = new tileworld.LoadScreen(project);
 // then run the simulator once (or download to device). 
 
 // After this, revert the change and run the simulattor again (download a second time). 
