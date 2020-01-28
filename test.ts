@@ -257,7 +257,7 @@ project.defaultTile = 0;
 // to get start with a small program uncomment this line:
 // let loadSave = new tileworld.LoadScreen(project);
 // and comment out this line:
-let loadSave = new tileworld.LoadScreen(project);
+let loadSave = new tileworld.LoadScreen(null);
 // then run the simulator once (or download to device). 
 
 // After this, revert the change and run the simulattor again (download a second time). 
