@@ -1,6 +1,6 @@
 {
     "name": "pxt-tileworld",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "description": "",
     "dependencies": {
         "device": "*",
