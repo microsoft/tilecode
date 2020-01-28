@@ -1,6 +1,6 @@
 name: MakeCode
 
-on: [push]
+on: [release]
 
 jobs:
   build:
