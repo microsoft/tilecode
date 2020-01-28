@@ -381,7 +381,7 @@ namespace tileworld {
                         let witness = self ? rc.self : 
                                 (colliding ? rc.witnesses[0]
                                     : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow));
-                        if (witness && (witness.inst == -1 || colliding)) {
+                        if (witness && (witness.inst == -1 || Math.randomRange(0,1) < 0.5 || colliding)) {
                             witness.inst = inst;
                             witness.arg = arg;
                         }
