@@ -1,2 +1,3 @@
  // empty - see test.ts
-let TileWorld = new tileworld.LoadScreen(null);
+//settings.clear();
+let TileWorld = new tileworld.LoadScreen(sample.project);

@@ -18,8 +18,7 @@ namespace tileworld {
                 }
             });
             this.update();
-            if (this.bootstrap) {
-                settings.clear();
+            if (this.bootstrap && !settings.exists("TW1-TM")) {
                 saveEntireProject(this.bootstrap);
             }
         }
@@ -65,9 +64,9 @@ namespace tileworld {
             this.makeIt(5, 4, "3");
             this.makeIt(7, 4, "4");
 
-            if (this.bootstrap) {
-                screen.print("bootstrap", 100, 105);
-            }
+            //if (this.bootstrap) {
+            //    screen.print("bootstrap", 100, 105);
+            //}
         }
     }
 }

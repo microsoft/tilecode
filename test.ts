@@ -1,4 +1,4 @@
-namespace bd {
+namespace sample {
     export const player = img`
         . . . . . . f f f f . . . . . .
         . . . . f f f 2 2 f f f . . . .
@@ -146,122 +146,114 @@ namespace bd {
     export const movable = [boulder, player, diamond, enemy];
     export const fixed = [space, wall, dirt, wall2];
     export const all = [].concat(fixed).concat(movable);
-}
-let wallId = bd.all.indexOf(bd.wall);
-let spaceId = bd.all.indexOf(bd.space);
-let playerId = bd.all.indexOf(bd.player);
-let enemyId = bd.all.indexOf(bd.enemy);
-let boulderId = bd.all.indexOf(bd.boulder);
-let diamondId = bd.all.indexOf(bd.diamond);
 
-function fillAttr(f: number, n: number, i: number, g: number) {
-    let res: AttrType[] = [];
-    for(let j=0;j<n;j++) {
-        res.push(j == i ? g : f);
+    let wallId = all.indexOf(wall);
+    let spaceId = all.indexOf(space);
+    let playerId = all.indexOf(player);
+    let enemyId = all.indexOf(enemy);
+    let boulderId = all.indexOf(boulder);
+    let diamondId = all.indexOf(diamond);
+
+    function fillAttr(f: number, n: number, i: number, g: number) {
+        let res: AttrType[] = [];
+        for(let j=0;j<n;j++) {
+            res.push(j == i ? g : f);
+        }
+        return res;
     }
-    return res;
+
+    function TileAt(id: number, col: number, row: number): WhenDo {
+        return new WhenDo(col, row, fillAttr(AttrType.Exclude, 7, id, AttrType.Include), []);
+    }
+
+    function SpriteAt(id: number, col: number, row: number): WhenDo {
+        let attrs = fillAttr(AttrType.Exclude, 7, id, AttrType.Include);
+        attrs[0] = attrs[1] = attrs[2] = AttrType.OK;
+        return new WhenDo(col, row, attrs, []);
+    }
+
+    let tp = TileAt(spaceId, 2, 3)
+    tp.attrs[playerId] = AttrType.OK;
+    tp.attrs[enemyId] = AttrType.OK;
+    let playerMove = fillAttr(AttrType.OK, 7, boulderId, AttrType.Exclude);
+    playerMove[wallId] = AttrType.Exclude;
+
+    let moveRight = [new Command(CommandType.Move, MoveDirection.Right)]
+    let moveLeft = [new Command(CommandType.Move, MoveDirection.Left)]
+
+    let boulderRight = SpriteAt(boulderId, 3, 2)
+    boulderRight.commands = moveRight;
+
+    let boulderLeft = SpriteAt(boulderId, 1, 2)
+    boulderLeft.commands = moveLeft;
+
+    let playerPaint = new Rule([playerId], RuleType.Resting, MoveDirection.Left,
+        [new WhenDo(2,2,[],[new Command(CommandType.Paint,spaceId)])]
+    );
+
+    let playerMoveRight = new Rule([playerId], RuleType.Pushing, MoveDirection.Right,
+        [new WhenDo(2, 2, [], 
+            [new Command(CommandType.Move, MoveDirection.Right), 
+            new Command(CommandType.Paint, spaceId) ]),
+        new WhenDo(3, 2, playerMove, []) ]
+    );
+
+    let playerMoveLeft = new Rule([playerId], RuleType.Pushing, MoveDirection.Left,
+        [new WhenDo(2, 2, [], 
+            [new Command(CommandType.Move, MoveDirection.Left), 
+            new Command(CommandType.Paint, spaceId)]),
+        new WhenDo(1, 2, playerMove, [])]
+    );
+
+    let playerMoveUp = new Rule([playerId], RuleType.Pushing, MoveDirection.Up,
+        [new WhenDo(2, 2, [],
+            [new Command(CommandType.Move, MoveDirection.Up), 
+            new Command(CommandType.Paint, spaceId)]),
+        new WhenDo(2, 1, playerMove, [])]
+    );
+
+    let playerMoveDown = new Rule([playerId], RuleType.Pushing, MoveDirection.Down,
+        [new WhenDo(2, 2, [],
+            [new Command(CommandType.Move, MoveDirection.Down),
+            new Command(CommandType.Paint, spaceId)]),
+        new WhenDo(2, 3, playerMove, [])]
+    );
+
+    let playerMoveBoulderRight = new Rule([playerId], RuleType.Pushing, MoveDirection.Right,
+        [new WhenDo(2, 2, [], moveRight), boulderRight, TileAt(spaceId, 4, 2)]
+    );
+
+    let playerMoveBoulderLeft = new Rule([playerId], RuleType.Pushing, MoveDirection.Left,
+        [new WhenDo(2, 2, [], moveLeft), boulderLeft, TileAt(spaceId, 0, 2)]
+    );
+
+    let boulderFallDown = new Rule([boulderId], RuleType.Resting, MoveDirection.Left,
+        [new WhenDo(2, 2, [], [new Command(CommandType.Move, MoveDirection.Down)]), TileAt(spaceId, 2, 3)]
+    );
+
+    let boulderFallingDown = new Rule([boulderId], RuleType.Moving, MoveDirection.Down,
+        [new WhenDo(2, 2, [], [new Command(CommandType.Move, MoveDirection.Down)]), tp]
+    );
+
+    let boulderFallLeft: Rule = new Rule([boulderId], RuleType.Resting, MoveDirection.Left,
+        [new WhenDo(2, 2, [], [new Command(CommandType.Move, MoveDirection.Left)]),
+        SpriteAt(boulderId, 2, 3), TileAt(spaceId, 1, 2), TileAt(spaceId,1,3) ]
+    );
+
+    export let project = new tileworld.Project(
+        "TW1-",
+        fixed,
+        movable,
+        tileworld.makeIds([boulderFallDown, boulderFallLeft, boulderFallingDown, 
+        playerPaint, playerMoveRight, playerMoveLeft, playerMoveUp, playerMoveDown, 
+        playerMoveBoulderRight, playerMoveBoulderLeft])
+    );
+    let world = image.create(30, 30);
+    world.fill(2);
+    project.setWorld(world);
+    project.setPlayer(playerId);
+    project.defaultTile = 0;
 }
-
-function TileAt(id: number, col: number, row: number): WhenDo {
-    return new WhenDo(col, row, fillAttr(AttrType.Exclude, 7, id, AttrType.Include), []);
-}
-
-function SpriteAt(id: number, col: number, row: number): WhenDo {
-    let attrs = fillAttr(AttrType.Exclude, 7, id, AttrType.Include);
-    attrs[0] = attrs[1] = attrs[2] = AttrType.OK;
-    return new WhenDo(col, row, attrs, []);
-}
-
-let tp = TileAt(spaceId, 2, 3)
-tp.attrs[playerId] = AttrType.OK;
-tp.attrs[enemyId] = AttrType.OK;
-let playerMove = fillAttr(AttrType.OK, 7, boulderId, AttrType.Exclude);
-playerMove[wallId] = AttrType.Exclude;
-
-let moveRight = [new Command(CommandType.Move, MoveDirection.Right)]
-let moveLeft = [new Command(CommandType.Move, MoveDirection.Left)]
-
-let boulderRight = SpriteAt(boulderId, 3, 2)
-boulderRight.commands = moveRight;
-
-let boulderLeft = SpriteAt(boulderId, 1, 2)
-boulderLeft.commands = moveLeft;
-
-let playerPaint = new Rule([playerId], RuleType.Resting, MoveDirection.Left,
-    [new WhenDo(2,2,[],[new Command(CommandType.Paint,spaceId)])]
-);
-
-let playerMoveRight = new Rule([playerId], RuleType.Pushing, MoveDirection.Right,
-    [new WhenDo(2, 2, [], 
-        [new Command(CommandType.Move, MoveDirection.Right), 
-         new Command(CommandType.Paint, spaceId) ]),
-     new WhenDo(3, 2, playerMove, []) ]
-);
-
-let playerMoveLeft = new Rule([playerId], RuleType.Pushing, MoveDirection.Left,
-    [new WhenDo(2, 2, [], 
-        [new Command(CommandType.Move, MoveDirection.Left), 
-         new Command(CommandType.Paint, spaceId)]),
-     new WhenDo(1, 2, playerMove, [])]
-);
-
-let playerMoveUp = new Rule([playerId], RuleType.Pushing, MoveDirection.Up,
-    [new WhenDo(2, 2, [],
-        [new Command(CommandType.Move, MoveDirection.Up), 
-         new Command(CommandType.Paint, spaceId)]),
-     new WhenDo(2, 1, playerMove, [])]
-);
-
-let playerMoveDown = new Rule([playerId], RuleType.Pushing, MoveDirection.Down,
-    [new WhenDo(2, 2, [],
-        [new Command(CommandType.Move, MoveDirection.Down),
-        new Command(CommandType.Paint, spaceId)]),
-    new WhenDo(2, 3, playerMove, [])]
-);
-
-let playerMoveBoulderRight = new Rule([playerId], RuleType.Pushing, MoveDirection.Right,
-    [new WhenDo(2, 2, [], moveRight), boulderRight, TileAt(spaceId, 4, 2)]
-);
-
-let playerMoveBoulderLeft = new Rule([playerId], RuleType.Pushing, MoveDirection.Left,
-    [new WhenDo(2, 2, [], moveLeft), boulderLeft, TileAt(spaceId, 0, 2)]
-);
-
-let boulderFallDown = new Rule([boulderId], RuleType.Resting, MoveDirection.Left,
-    [new WhenDo(2, 2, [], [new Command(CommandType.Move, MoveDirection.Down)]), TileAt(spaceId, 2, 3)]
-);
-
-let boulderFallingDown = new Rule([boulderId], RuleType.Moving, MoveDirection.Down,
-    [new WhenDo(2, 2, [], [new Command(CommandType.Move, MoveDirection.Down)]), tp]
-);
-
-let boulderFallLeft: Rule = new Rule([boulderId], RuleType.Resting, MoveDirection.Left,
-    [new WhenDo(2, 2, [], [new Command(CommandType.Move, MoveDirection.Left)]),
-     SpriteAt(boulderId, 2, 3), TileAt(spaceId, 1, 2), TileAt(spaceId,1,3) ]
-);
-
-let project = new tileworld.Project(
-    "TW1-",
-    bd.fixed,
-    bd.movable,
-    tileworld.makeIds([boulderFallDown, boulderFallLeft, boulderFallingDown, 
-      playerPaint, playerMoveRight, playerMoveLeft, playerMoveUp, playerMoveDown, 
-      playerMoveBoulderRight, playerMoveBoulderLeft])
-);
-let world = image.create(30, 30);
-world.fill(2);
-project.setWorld(world);
-project.setPlayer(playerId);
-project.defaultTile = 0;
-
-// to get start with a small program uncomment this line:
-// let loadSave = new tileworld.LoadScreen(project);
-// and comment out this line:
-// let loadSave = new tileworld.LoadScreen(null);
-// then run the simulator once (or download to device). 
-
-// After this, revert the change and run the simulattor again (download a second time). 
-// The sample project will be safely in the flash settings.
 
 
 
