@@ -17,16 +17,17 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: npm install
+      - name: install
         run: |
           npm install -g pxt
           pxt target arcade
+          mkdir -p artifacts
       - name: build samd51
         run: |
           pxt clean
           pxt install --hw samd51
           pxt build --hw samd51 --cloud
-          cp built/binary.uf2 samd51.uf2
+          cp built/binary.uf2 artifacts/samd51.uf2
         env:
           CI: true
       - name: build stm32f401
@@ -34,12 +35,17 @@ jobs:
           pxt clean
           pxt install --hw stm32f401
           pxt build --hw stm32f401 --cloud
-          cp built/binary.uf2 stm32f401.uf2          
+          cp built/binary.uf2 artifacts/stm32f401.uf2          
       - name: build rpi
         run: |
           pxt clean
           pxt install --hw rpi
           pxt build --hw rpi --cloud
-          cp built/binary.uf2 rpi.uf2          
+          cp built/binary.uf2 artifacts/rpi.uf2          
         env:
           CI: true
+      - name: upload artifacts
+        uses: actions/upload-artifact@v1
+        with:
+          name: uf2s
+          path: artifacts
