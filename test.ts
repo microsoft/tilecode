@@ -209,15 +209,15 @@ let playerMoveBoulderLeft = new Rule([playerId], RuleType.Pushing, MoveDirection
     [new WhenDo(2, 2, [], moveLeft), boulderLeft, TileAt(spaceId, 0, 2)]
 );
 
-let boulderFallDown = new Rule([boulderId, diamondId], RuleType.Resting, MoveDirection.Left,
+let boulderFallDown = new Rule([boulderId], RuleType.Resting, MoveDirection.Left,
     [new WhenDo(2, 2, [], [new Command(CommandType.Move, MoveDirection.Down)]), TileAt(spaceId, 2, 3)]
 );
 
-let boulderFallingDown = new Rule([boulderId, diamondId], RuleType.Moving, MoveDirection.Down,
+let boulderFallingDown = new Rule([boulderId], RuleType.Moving, MoveDirection.Down,
     [new WhenDo(2, 2, [], [new Command(CommandType.Move, MoveDirection.Down)]), tp]
 );
 
-let boulderFallLeft: Rule = new Rule([boulderId, diamondId], RuleType.Resting, MoveDirection.Left,
+let boulderFallLeft: Rule = new Rule([boulderId], RuleType.Resting, MoveDirection.Left,
     [new WhenDo(2, 2, [], [new Command(CommandType.Move, MoveDirection.Left)]),
      SpriteAt(boulderId, 2, 3), TileAt(spaceId, 1, 2), TileAt(spaceId,1,3) ]
 );
@@ -236,4 +236,14 @@ project.setWorld(world);
 project.setPlayer(playerId);
 project.defaultTile = 0;
 
+// to get start with a small program uncomment this line:
+// let loadSave = new tileworld.LoadScreen(project);
+// and comment out this line:
 let loadSave = new tileworld.LoadScreen(null);
+// then run the simulator once (or download to device). 
+
+// After this, revert the change and run the simulattor again (download a second time). 
+// The sample project will be safely in the flash settings.
+
+
+
