@@ -112,21 +112,17 @@ namespace tileworld {
             } else {
                let command = commandImages[menuItem];
                if (command == paint) {
-                    // paint
-                    this.p.saveWorld();
-                    game.pushScene();
+                    this.pushIt();
                     new ImageEditor(this.p, this.userSpriteIndex);
                     return;
                 } else if (command == pencil) {
-                    this.p.saveWorld();
-                    game.pushScene();
+                    this.pushIt();
                     new RuleRoom(this.p, this.userSpriteIndex);
                     return;
                 } else if (command == play) {
                     let rules = this.p.getRuleIds();
                     if (rules.length > 0) {
-                        this.p.saveWorld();
-                        game.pushScene();
+                        this.pushIt();
                         let g = new RunGame(this.p, rules);
                         g.setWorld(this.world);
                         g.start();
@@ -135,6 +131,12 @@ namespace tileworld {
                 }
             }
             this.update();
+        }
+
+        private pushIt() {
+            this.p.saveWorld();
+            game.pushScene();
+            this.aDown = false;
         }
 
         private col(current: boolean = true) {
