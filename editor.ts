@@ -19,8 +19,8 @@ namespace tileworld {
             this.menu = image.create(2, 7);
             // cursors
             this.selected = sprites.create(cursorOut);
-            this.selected.x = 24;
-            this.selected.y = 8 + yoff;
+            this.selected.x = 8;
+            this.selected.y = 48 + 8 + yoff;
             this.userSpriteIndex = 0;
             this.cursor = sprites.create(cursorIn);
             this.cursor.x = 40
@@ -117,7 +117,7 @@ namespace tileworld {
                     game.pushScene();
                     new ImageEditor(this.p, this.userSpriteIndex);
                     return;
-                } else if (command == pencil && this.userSpriteIndex >= this.p.fixed().length) {
+                } else if (command == pencil) {
                     this.p.saveWorld();
                     game.pushScene();
                     new RuleRoom(this.p, this.userSpriteIndex);
@@ -155,7 +155,7 @@ namespace tileworld {
             let x = 0;
             let y = 0;
             commandImages.forEach((img, index) => {
-                this.drawImage(img == pencil ? (this.userSpriteIndex >= this.p.fixed().length ? img : greyImage(img)) : img, x, y);
+                this.drawImage(img, x, y);
                 this.menu.setPixel(x, y, index);
                 x++;
                 if (x == 2) { x = 0; y++; }

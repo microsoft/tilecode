@@ -3,20 +3,37 @@ namespace tileworld {
     const yoff = 6;
 
     let ruleEditor: RuleEditor = null;
-    // TODO: menu
+
     export class RuleRoom extends RuleVisualsBase {
+        // TODO: selected sprite
         constructor(p: Project, private kind: number) {
             super(p);
+            if (this.kind < this.p.fixed().length) {
+                this.kind = this.p.fixed().length();
+            }
+            // set cursor
+            this.setCol(0);
+            this.setRow(this.kind - this.p.fixed().length + 1)
+            this.setTileSaved();
+            this.setRow(0);
+
             this.update();
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.col() == 0 && this.row() == 0 && this.p.getRulesForKind(this.kind).length > 0) {
-                    ruleEditor = new RuleEditor(this.p, kind, -1, -1);
+                if (this.col() == 0) {
+                    if (this.row() == 0 && this.p.getRulesForKind(this.kind).length > 0) {
+                        game.pushScene();
+                        ruleEditor = new RuleEditor(this.p, this.kind, -1, -1);
+                    } else if (this.row() >= 1 && this.row() <= this.p.movable().length) {
+                        this.kind = this.p.fixed().length + this.row() - 1;
+                        this.setTileSaved();
+                    }
+                    this.update();
                 } else {
                     let rt = this.ruleTypeMap.getPixel(this.col(), this.row());
                     let dir = this.dirMap.getPixel(this.col(), this.row());
                     if (rt != 0xf) {
                         game.pushScene();
-                        ruleEditor = new RuleEditor(this.p, kind, rt, dir);
+                        ruleEditor = new RuleEditor(this.p, this.kind, rt, dir);
                     }
                 }
             });
@@ -30,6 +47,9 @@ namespace tileworld {
             screen.fill(15);
             screen.fillRect(0, yoff, 16, 16, 11);
             screen.drawTransparentImage(pencil, 0, yoff)
+            this.p.movable().forEach((img,i) => {
+                this.drawImage(0, i+1, img);
+            })
             this.showRuleMenu(1, 0);
         }
 

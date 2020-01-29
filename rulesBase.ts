@@ -89,6 +89,14 @@ namespace tileworld {
             return rules.filter(rid => this.p.getType(rid) == rt && (rt == RuleType.Resting || this.p.getDir(rid) == dir));
         }
         
+        protected setCol(col: number) {
+            this.cursor.x = (col << 4) + 8;
+        }
+
+        protected setRow(row: number) {
+            this.cursor.y = (row << 4) + 8 + yoff;
+        }
+
         protected col(curr: boolean = true) {
             return curr ? this.cursor.x >> 4 : this.tileSaved.x >> 4;
         }
