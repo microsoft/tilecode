@@ -11,8 +11,10 @@ namespace tileworld {
         private selected: Sprite;
         private userSpriteIndex: number;
         private menu: Image;
+        private aDown: boolean;
         constructor(private p: Project) {
             super();
+            this.aDown = false;
             this.world = p.getWorld();
             this.menu = image.create(2, 7);
             // cursors
@@ -35,9 +37,8 @@ namespace tileworld {
             controller.up.onEvent(ControllerButtonEvent.Repeated, () => this.moveUp());
             controller.down.onEvent(ControllerButtonEvent.Pressed, () => this.moveDown());
             controller.down.onEvent(ControllerButtonEvent.Repeated, () => this.moveDown());
-            controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                this.cursorAction();
-            });
+            controller.A.onEvent(ControllerButtonEvent.Pressed, () => { this.aDown = true; this.cursorAction(); });
+            controller.A.onEvent(ControllerButtonEvent.Released, () => { this.aDown = false; });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 this.p.saveWorld();
                 game.popScene();
@@ -51,6 +52,7 @@ namespace tileworld {
                 this.offsetX -= 1;
                 this.update();
             }
+            this.cursorAction(true);
         }
 
         private moveRight() {
@@ -60,6 +62,7 @@ namespace tileworld {
                 this.offsetX += 1;
                 this.update();
             }
+            this.cursorAction(true);
         }
 
         private moveUp() {
@@ -69,6 +72,7 @@ namespace tileworld {
                 this.offsetY -= 1;
                 this.update();
             }
+            this.cursorAction(true);
         }
 
         private moveDown() {
@@ -78,6 +82,7 @@ namespace tileworld {
                 this.offsetY += 1;
                 this.update();
             }
+            this.cursorAction(true);
         }
 
         private updateSelection() {
@@ -85,7 +90,9 @@ namespace tileworld {
             this.selected.y = this.cursor.y;
         }
 
-        private cursorAction() {
+        private cursorAction(repeated: boolean = false) {
+            if (!this.aDown)
+                return;
             if (this.col() > 1) {
                 if (this.userSpriteIndex >= 0) {
                     let x = this.offsetX + this.col() - 2;
@@ -95,6 +102,8 @@ namespace tileworld {
                 }
                 return;
             }
+            if (repeated)
+                return;
             let menuItem = this.menu.getPixel(this.col(), this.row());
             if (this.row() > 2 && 0 <= menuItem && menuItem < this.p.all().length ) {
                 // change user sprite
