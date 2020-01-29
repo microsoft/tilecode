@@ -140,7 +140,7 @@ namespace tileworld {
                 let ax = rd == MoveDirection.Left ? 1 : (rd == MoveDirection.Right ? -1 : 0)
                 let ay = rd == MoveDirection.Down ? -1 : (rd == MoveDirection.Up ? 1 : 0)
                 if (rt == RuleType.Pushing) {
-                    this.drawImage(x + ax, y + ay, handImages[rd])
+                    this.drawImage(x + ax, y + ay, buttonImages[rd])
                 } else {
                     this.showCollision(x - ax, y - ay, rd, moveImages[rd], rt);
                 }

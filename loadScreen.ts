@@ -3,6 +3,7 @@ namespace tileworld {
     export class LoadScreen extends RuleVisualsBase {
         constructor(private bootstrap: Project) {
             super(null);
+            controller.setRepeatDefault(300, 60);
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 if ( (this.col() == 5 || this.col() == 7) && (this.row() == 2 || this.row() == 4) ) {
                     let prefix = this.col() == 5 ? (this.row() == 2 ? "TW1-" : "TW3-") : (this.row() == 2 ? "TW2-" : "TW4-");
@@ -51,10 +52,10 @@ namespace tileworld {
             for(let i = 0; i < 4; i++) {
                 this.fillTile(i,0,12);
             }
-            this.drawImage(1, 6, this.lastDir == MoveDirection.Down ? downHand : greyImage(downHand));
-            this.drawImage(1, 4, this.lastDir == MoveDirection.Up ? upHand : greyImage(upHand));
-            this.drawImage(0, 5, this.lastDir == MoveDirection.Left ? leftHand : greyImage(leftHand));
-            this.drawImage(2, 5, this.lastDir == MoveDirection.Right ? rightHand : greyImage(rightHand));
+            this.drawImage(1, 6, this.lastDir == MoveDirection.Down ? downButton : greyImage(downButton));
+            this.drawImage(1, 4, this.lastDir == MoveDirection.Up ? upButton : greyImage(upButton));
+            this.drawImage(0, 5, this.lastDir == MoveDirection.Left ? leftButton : greyImage(leftButton));
+            this.drawImage(2, 5, this.lastDir == MoveDirection.Right ? rightButton : greyImage(rightButton));
 
             screen.print("TileWorld", 6, yoff + 4);
             this.fillTile(2,2,12); this.fillTile(3,2,12);
