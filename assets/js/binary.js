@@ -1,4 +1,4 @@
-// meta={"simUrl":"https://trg-arcade.userpxt.io/v0.16.21/---simulator","cdnUrl":"https://pxt.azureedge.net","version":"3.1.1","target":"arcade","targetVersion":"0.16.21"}
+// meta={"simUrl":"https://trg-arcade.userpxt.io/v0.16.21/---simulator","cdnUrl":"https://pxt.azureedge.net","version":"3.1.2","target":"arcade","targetVersion":"0.16.21"}
 // total=2771045 new=30.57% cached=63.95% other=5.48%
 (function (ectx) {
 'use strict';
@@ -704,7 +704,7 @@ const pxsim_pxtrt = pxsim.pxtrt;
 const pxsim_numops = pxsim.numops;
 
 
-function _main___P481929(s) {
+function _main___P491578(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -1724,19 +1724,19 @@ switch (step) {
     s.pc = 75; return s.tmp_1;
   case 75:
     r0 = s.retval;
-    globals.TileWorld___478089 = (s.tmp_0);
+    globals.TileWorld___490144 = (s.tmp_0);
     r0 = undefined;
     return leave(s, r0)
   default: oops()
 } } }
-_main___P481929.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"main.ts","functionName":"<main>","argumentNames":[]}
-_main___P481929.continuations = [  ]
-_main___P481929.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"main.ts","functionName":"<main>","argumentNames":[]}
+_main___P491578.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"main.ts","functionName":"<main>","argumentNames":[]}
+_main___P491578.continuations = [  ]
+_main___P491578.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"main.ts","functionName":"<main>","argumentNames":[]}
 
-function _main___P481929_mk(s) {
+function _main___P491578_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: _main___P481929, depth: s.depth + 1,
+        parent: s, fn: _main___P491578, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   tmp_1: undefined,
@@ -34660,8 +34660,8 @@ switch (step) {
     s.tiles___277761 = undefined;
     s.tm___277764 = undefined;
     s.t___277769 = undefined;
-    s.unnamed2962___U5 = undefined;
-    s.unnamed2963___U6 = undefined;
+    s.unnamed3026___U5 = undefined;
+    s.unnamed3027___U6 = undefined;
     s.tileSprite___277771 = undefined;
     if (s.lambdaArgs) {
       s.arg0 = (s.lambdaArgs[0]);
@@ -34784,15 +34784,15 @@ switch (step) {
     r0 = r0.fields["tileMap"];
     s.tm___277764 = (r0);
     s.t___277769 = (undefined);
-    s.unnamed2962___U5 = (s.tiles___277761);
-    s.unnamed2963___U6 = (0);
+    s.unnamed3026___U5 = (s.tiles___277761);
+    s.unnamed3027___U6 = (0);
   case 3:
-    s.tmp_0 = r0 = s.unnamed2963___U6;
-    r0 = pxsim_Array__length(s.unnamed2962___U5);
+    s.tmp_0 = r0 = s.unnamed3027___U6;
+    r0 = pxsim_Array__length(s.unnamed3026___U5);
     s.tmp_1 = r0;
     r0 = (s.tmp_0 < s.tmp_1);
     if (!r0) { step = 4; continue; }
-    r0 = pxsim_Array__getAt(s.unnamed2962___U5, s.unnamed2963___U6);
+    r0 = pxsim_Array__getAt(s.unnamed3026___U5, s.unnamed3027___U6);
     s.t___277769 = (r0);
     r0 = pxsim_pxtcore_mkClassInstance(tileworld_TileSprite__C276305_VT);
     s.tmp_2 = r0;
@@ -34824,11 +34824,11 @@ switch (step) {
     s.pc = 16; return s.tmp_0;
   case 16:
     r0 = s.retval;
-    r0 = (s.unnamed2963___U6 + 1);
-    s.unnamed2963___U6 = (r0);
+    r0 = (s.unnamed3027___U6 + 1);
+    s.unnamed3027___U6 = (r0);
     { step = 3; continue; }
   case 4:
-    s.unnamed2962___U5 = (undefined);
+    s.unnamed3026___U5 = (undefined);
   case 5:
     r0 = (s.kind___277732 + 1);
     s.kind___277732 = (r0);
@@ -34857,8 +34857,8 @@ function tileworld_RunGame_setWorld__P277664_mk(s) {
   tiles___277761: undefined,
   tm___277764: undefined,
   t___277769: undefined,
-  unnamed2962___U5: undefined,
-  unnamed2963___U6: undefined,
+  unnamed3026___U5: undefined,
+  unnamed3027___U6: undefined,
   tileSprite___277771: undefined,
   arg0: undefined,
   arg1: undefined,
@@ -90044,7 +90044,7 @@ const effects_SceneAnchor__C271362_VT = mkVTable({
   },
 });
 
-const breakpoints = setupDebugger(1, ["colorCursor___276144","paintCursor___276147","play___276150","debug___276153","pencil___276156","paint___276159","music___276162","emptyTile___276165","cursorIn___276168","cursorOut___276171","collisionRestingSprite___276174","collisionMovingSprite___276177","genericSprite___276180","exclude___276183","include___276186","oneof___276189","ok___276192","allFour___276195","downArrow___276198","downHand___276201","upArrow___276204","upHand___276207","rightArrow___276210","rightHand___276213","leftArrow___276216","leftHand___276219","eat___276222","stopSign___276225","uTurn___276228","addRule___276231","garbageCan___276234","help___276237","gameIcon___276240","trophyUp___276243","trophyDown___276246","equalZero___276249","moveImages___276252","handImages___276260","attrImages___276266","commandImages___276282","gameImages___276290","categoryImages___276294","spriteImages___276301","player___461963","diamond___461966","boulder___461969","enemy___461972","wall___461975","wall2___461978","dirt___461981","space___461984","movable___461987","fixed___461993","all___462000","wallId___462007","spaceId___462013","playerId___462019","enemyId___462025","boulderId___462031","diamondId___462037","tp___462100","playerMove___462114","moveRight___462124","moveLeft___462130","boulderRight___462136","boulderLeft___462143","playerPaint___462150","playerMoveBoulderRight___462201","playerMoveBoulderLeft___462216","boulderFallDown___462231","boulderFallingDown___462249","boulderFallLeft___462266","project___462288","world___462305","TileWorld___478089","spriteCount___276304","ruleEditor___446271","buf___274604","bitIndex___274606","attrValues___276279"])
+const breakpoints = setupDebugger(1, ["colorCursor___276144","paintCursor___276147","play___276150","debug___276153","pencil___276156","paint___276159","music___276162","emptyTile___276165","cursorIn___276168","cursorOut___276171","collisionRestingSprite___276174","collisionMovingSprite___276177","genericSprite___276180","exclude___276183","include___276186","oneof___276189","ok___276192","allFour___276195","downArrow___276198","downHand___276201","upArrow___276204","upHand___276207","rightArrow___276210","rightHand___276213","leftArrow___276216","leftHand___276219","eat___276222","stopSign___276225","uTurn___276228","addRule___276231","garbageCan___276234","help___276237","gameIcon___276240","trophyUp___276243","trophyDown___276246","equalZero___276249","moveImages___276252","handImages___276260","attrImages___276266","commandImages___276282","gameImages___276290","categoryImages___276294","spriteImages___276301","player___461963","diamond___461966","boulder___461969","enemy___461972","wall___461975","wall2___461978","dirt___461981","space___461984","movable___461987","fixed___461993","all___462000","wallId___462007","spaceId___462013","playerId___462019","enemyId___462025","boulderId___462031","diamondId___462037","tp___462100","playerMove___462114","moveRight___462124","moveLeft___462130","boulderRight___462136","boulderLeft___462143","playerPaint___462150","playerMoveBoulderRight___462201","playerMoveBoulderLeft___462216","boulderFallDown___462231","boulderFallingDown___462249","boulderFallLeft___462266","project___462288","world___462305","TileWorld___490144","spriteCount___276304","ruleEditor___446271","buf___274604","bitIndex___274606","attrValues___276279"])
 
-return _main___P481929
+return _main___P491578
 })
