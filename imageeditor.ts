@@ -11,8 +11,10 @@ namespace tileworld {
         private paintCursor: Sprite;
         private selectedColor: number;
         private image: Image;    // 16x16
+        private Adown: boolean;
         constructor(private p: Project, private kind: number) {
             super();
+            this.Adown = false;
             this.cursorType= CursorType.Color;
 
             this.colorCursor = sprites.create(colorCursor)
@@ -35,19 +37,8 @@ namespace tileworld {
             controller.down.onEvent(ControllerButtonEvent.Pressed, () => this.moveDown());
             controller.down.onEvent(ControllerButtonEvent.Repeated, () => this.moveDown());
 
-            controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.cursorType== CursorType.Color) {
-                    let col = ((this.colorCursor.x - colorsX) / colorSize ) | 0x0
-                    let row = ((this.colorCursor.y - (colorSize << 1) - colorsY) / colorSize) | 0x0
-                    this.selectedColor = row * 2 + col
-                    this.update()
-                } else {
-                    let col = ((this.paintCursor.x - (paintSize*5 + 2)) / paintSize) | 0x0
-                    let row = ((this.paintCursor.y - (paintSize*2 + 2)) / paintSize) | 0x0
-                    this.image.setPixel(col, row, this.selectedColor)
-                    this.update()
-                }
-            });
+            controller.A.onEvent(ControllerButtonEvent.Pressed, () => { this.Adown = true; this.paintPixel() });
+            controller.A.onEvent(ControllerButtonEvent.Released, () => { this.Adown = false; });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.cursorType== CursorType.Paint) {
                     this.setCursor(CursorType.Color);
@@ -55,6 +46,22 @@ namespace tileworld {
                     this.saveAndPop();
                 }
             });
+        }
+
+        private paintPixel() {
+            if (!this.Adown)
+                return;
+            if (this.cursorType == CursorType.Color) {
+                let col = ((this.colorCursor.x - colorsX) / colorSize) | 0x0
+                let row = ((this.colorCursor.y - (colorSize << 1) - colorsY) / colorSize) | 0x0
+                this.selectedColor = row * 2 + col
+                this.update()
+            } else {
+                let col = ((this.paintCursor.x - (paintSize * 5 + 2)) / paintSize) | 0x0
+                let row = ((this.paintCursor.y - (paintSize * 2 + 2)) / paintSize) | 0x0
+                this.image.setPixel(col, row, this.selectedColor)
+                this.update()
+            }
         }
 
         private moveLeft() {
@@ -69,6 +76,7 @@ namespace tileworld {
                     this.setCursor(CursorType.Color);
                 }
             }
+            this.paintPixel();
         }
 
         private moveRight() {
@@ -83,6 +91,7 @@ namespace tileworld {
                 if (this.paintCursor.x < (paintSize * 5 + 2) + paintSize * 15)
                     this.paintCursor.x += paintSize
             }
+            this.paintPixel();
         }
 
         private moveUp() {
@@ -93,6 +102,7 @@ namespace tileworld {
                 if (this.paintCursor.y > (paintSize * 3 + 1))
                     this.paintCursor.y -= paintSize
             }
+            this.paintPixel();
         }
 
         private moveDown() {
@@ -103,6 +113,7 @@ namespace tileworld {
                 if (this.paintCursor.y < (paintSize * 2) + 2 + paintSize * 15)
                     this.paintCursor.y += paintSize
             }
+            this.paintPixel();
         }
 
         private saveAndPop() {
