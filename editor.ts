@@ -128,6 +128,10 @@ namespace tileworld {
                         g.start();
                         return;
                     }         
+                } else if (command == help) {
+                    this.pushIt();
+                    new Gallery(this.p);
+                    return;
                 }
             }
             this.update();

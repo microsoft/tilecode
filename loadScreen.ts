@@ -38,7 +38,7 @@ namespace tileworld {
             screen.print(id, (col << 4) + 6, (row << 4) + 4 + yoff);
         }
 
-        public update() {
+        protected update() {
             for(let col = 0; col < 10; col ++) {
                 for (let row = 0; row < 7; row++) {
                     this.drawImage(col, row, emptyTile)

@@ -172,7 +172,7 @@ namespace tileworld {
 
         private collideCol: number;
         private collideRow: number;
-        public update() {
+        protected update() {
             this.collideCol = this.collideRow = -1;
             screen.fill(11);
             screen.fillRect(0, 0, 80, 120, 12);

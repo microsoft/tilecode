@@ -23,7 +23,8 @@
         "loadScreen.ts",
         "main.ts",
         "analysis.ts",
-        "manual.md"
+        "manual.md",
+        "gallery.ts"
     ],
     "testFiles": [
         "test.ts"

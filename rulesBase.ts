@@ -8,7 +8,7 @@ namespace tileworld {
                 this.update();
             })
         }
-        public update() {
+        protected update() {
 
         }
     }

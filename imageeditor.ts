@@ -127,7 +127,7 @@ namespace tileworld {
             this.cursorType= ct;
         }
 
-        public update() {
+        protected update() {
             screen.fill(0);
             screen.fillRect(colorsX, yoff, 16, 16, 11);
             screen.drawTransparentImage(paint, colorsX, yoff)
