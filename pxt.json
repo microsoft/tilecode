@@ -22,7 +22,8 @@
         "editor.ts",
         "loadScreen.ts",
         "main.ts",
-        "analysis.ts"
+        "analysis.ts",
+        "manual.md"
     ],
     "testFiles": [
         "test.ts"
