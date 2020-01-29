@@ -42,7 +42,7 @@ namespace tileworld {
                 this.cursorMove(MoveDirection.Left, false);
             });
             controller.right.onEvent(ControllerButtonEvent.Pressed, () => this.moveInX(MoveDirection.Right));
-            controller.right.onEvent(ControllerButtonEvent.Repeated, () => this.moveInX(MoveDirection.Left));
+            controller.right.onEvent(ControllerButtonEvent.Repeated, () => this.moveInX(MoveDirection.Right));
             controller.right.onEvent(ControllerButtonEvent.Released, () => {
                 if (!this.okToMove()) return;
                 this.cursorMove(MoveDirection.Right, false);

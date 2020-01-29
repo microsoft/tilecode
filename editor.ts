@@ -27,38 +27,14 @@ namespace tileworld {
             this.offsetX = this.offsetY = 0;
             this.update();
 
-            controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.col() > 0)
-                    this.cursor.x -= 16
-                else {
-                    this.offsetX -= 1;
-                    this.update();
-                }
-            });
-            controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.col() < 9)
-                    this.cursor.x += 16
-                else {
-                    this.offsetX += 1;
-                    this.update();
-                }
-            });
-            controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.row() > 0)
-                    this.cursor.y -= 16
-                else {
-                    this.offsetY -= 1;
-                    this.update();
-                }
-            });
-            controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.row() < 6)
-                    this.cursor.y += 16
-                else {
-                    this.offsetY += 1;
-                    this.update();
-                }
-            });
+            controller.left.onEvent(ControllerButtonEvent.Pressed, () => this.moveLeft());
+            controller.left.onEvent(ControllerButtonEvent.Repeated, () => this.moveLeft());
+            controller.right.onEvent(ControllerButtonEvent.Pressed, () => this.moveRight());
+            controller.right.onEvent(ControllerButtonEvent.Repeated, () => this.moveRight());
+            controller.up.onEvent(ControllerButtonEvent.Pressed, () => this.moveUp());
+            controller.up.onEvent(ControllerButtonEvent.Repeated, () => this.moveUp());
+            controller.down.onEvent(ControllerButtonEvent.Pressed, () => this.moveDown());
+            controller.down.onEvent(ControllerButtonEvent.Repeated, () => this.moveDown());
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 this.cursorAction();
             });
@@ -66,6 +42,42 @@ namespace tileworld {
                 this.p.saveWorld();
                 game.popScene();
             });
+        }
+
+        private moveLeft() {
+            if (this.col() > 0)
+                this.cursor.x -= 16
+            else {
+                this.offsetX -= 1;
+                this.update();
+            }
+        }
+
+        private moveRight() {
+            if (this.col() < 9)
+                this.cursor.x += 16
+            else {
+                this.offsetX += 1;
+                this.update();
+            }
+        }
+
+        private moveUp() {
+            if(this.row() > 0)
+                this.cursor.y -= 16
+            else {
+                this.offsetY -= 1;
+                this.update();
+            }
+        }
+
+        private moveDown() {
+            if (this.row() < 6)
+                this.cursor.y += 16
+            else {
+                this.offsetY += 1;
+                this.update();
+            }
         }
 
         private updateSelection() {
