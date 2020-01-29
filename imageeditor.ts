@@ -26,50 +26,15 @@ namespace tileworld {
             this.image = p.getImage(kind);
             this.update();
 
-            controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.cursorType== CursorType.Color) {
-                    if (this.colorCursor.x > colorsX + colorSize)
-                        this.colorCursor.x -= colorSize
-                } else  {
-                    if (this.paintCursor.x > paintSize * 6 - 1)
-                        this.paintCursor.x -= paintSize
-                    else {
-                        // transition cursor to color editor
-                        this.setCursor(CursorType.Color);
-                    }
-                } 
-            })
-            controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.cursorType== CursorType.Color) {
-                    if (this.colorCursor.x < colorsX + colorSize)
-                        this.colorCursor.x += colorSize
-                    else {
-                        // transition cursor to paint editor
-                        this.setCursor(CursorType.Paint);
-                    }
-                } else {
-                    if (this.paintCursor.x < (paintSize*5 +2) + paintSize * 15)
-                        this.paintCursor.x += paintSize
-                }
-            })
-            controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.cursorType== CursorType.Color) {
-                    if (this.colorCursor.y > colorsY + (colorSize << 1) + (colorSize-1))
-                        this.colorCursor.y -= colorSize;
-                } else { 
-                    if (this.paintCursor.y > (paintSize * 3 + 1))
-                        this.paintCursor.y -= paintSize
-                }
-            });
-            controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.cursorType== CursorType.Color) {
-                    if (this.colorCursor.y < colorsY + (colorSize << 1) + colorSize * (colorSize-1))
-                        this.colorCursor.y += colorSize
-                } else {
-                    if (this.paintCursor.y < (paintSize*2) + 2 + paintSize * 15)
-                        this.paintCursor.y += paintSize
-                }
-            });
+            controller.left.onEvent(ControllerButtonEvent.Pressed, () => this.moveLeft());
+            controller.left.onEvent(ControllerButtonEvent.Repeated, () => this.moveLeft());
+            controller.right.onEvent(ControllerButtonEvent.Pressed, () => this.moveRight());
+            controller.right.onEvent(ControllerButtonEvent.Repeated, () => this.moveRight());
+            controller.up.onEvent(ControllerButtonEvent.Pressed, () => this.moveUp());
+            controller.up.onEvent(ControllerButtonEvent.Repeated, () => this.moveUp());
+            controller.down.onEvent(ControllerButtonEvent.Pressed, () => this.moveDown());
+            controller.down.onEvent(ControllerButtonEvent.Repeated, () => this.moveDown());
+
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.cursorType== CursorType.Color) {
                     let col = ((this.colorCursor.x - colorsX) / colorSize ) | 0x0
@@ -90,6 +55,54 @@ namespace tileworld {
                     this.saveAndPop();
                 }
             });
+        }
+
+        private moveLeft() {
+            if (this.cursorType == CursorType.Color) {
+                if (this.colorCursor.x > colorsX + colorSize)
+                    this.colorCursor.x -= colorSize
+            } else {
+                if (this.paintCursor.x > paintSize * 6 - 1)
+                    this.paintCursor.x -= paintSize
+                else {
+                    // transition cursor to color editor
+                    this.setCursor(CursorType.Color);
+                }
+            }
+        }
+
+        private moveRight() {
+            if (this.cursorType == CursorType.Color) {
+                if (this.colorCursor.x < colorsX + colorSize)
+                    this.colorCursor.x += colorSize
+                else {
+                    // transition cursor to paint editor
+                    this.setCursor(CursorType.Paint);
+                }
+            } else {
+                if (this.paintCursor.x < (paintSize * 5 + 2) + paintSize * 15)
+                    this.paintCursor.x += paintSize
+            }
+        }
+
+        private moveUp() {
+            if (this.cursorType == CursorType.Color) {
+                if (this.colorCursor.y > colorsY + (colorSize << 1) + (colorSize - 1))
+                    this.colorCursor.y -= colorSize;
+            } else {
+                if (this.paintCursor.y > (paintSize * 3 + 1))
+                    this.paintCursor.y -= paintSize
+            }
+        }
+
+        private moveDown() {
+            if (this.cursorType == CursorType.Color) {
+                if (this.colorCursor.y < colorsY + (colorSize << 1) + colorSize * (colorSize - 1))
+                    this.colorCursor.y += colorSize
+            } else {
+                if (this.paintCursor.y < (paintSize * 2) + 2 + paintSize * 15)
+                    this.paintCursor.y += paintSize
+            }
         }
 
         private saveAndPop() {

@@ -35,46 +35,52 @@ namespace tileworld {
             this.tileSaved = sprites.create(cursorOut);
             this.tileSaved.setFlag(SpriteFlag.Invisible, true);
 
-            controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (!this.okToMove()) return;
-                if (this.col() > 0)
-                    this.cursor.x -= 16;
-                this.cursorMove(MoveDirection.Left);
-            });
+            controller.left.onEvent(ControllerButtonEvent.Pressed, () => this.moveInX(MoveDirection.Left) );
+            controller.left.onEvent(ControllerButtonEvent.Repeated, () => this.moveInX(MoveDirection.Left));
             controller.left.onEvent(ControllerButtonEvent.Released, () => {
                 if (!this.okToMove()) return;
                 this.cursorMove(MoveDirection.Left, false);
             });
-            controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (!this.okToMove()) return;
-                if (this.col() < 9)
-                    this.cursor.x += 16;
-                this.cursorMove(MoveDirection.Right);
-            });
+            controller.right.onEvent(ControllerButtonEvent.Pressed, () => this.moveInX(MoveDirection.Right));
+            controller.right.onEvent(ControllerButtonEvent.Repeated, () => this.moveInX(MoveDirection.Left));
             controller.right.onEvent(ControllerButtonEvent.Released, () => {
                 if (!this.okToMove()) return;
                 this.cursorMove(MoveDirection.Right, false);
             });
-            controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (!this.okToMove()) return;
-                if (this.row() > 0)
-                    this.cursor.y -= 16;
-                this.cursorMove(MoveDirection.Up);
-            });
+            controller.up.onEvent(ControllerButtonEvent.Pressed, () => this.moveUp());
+            controller.up.onEvent(ControllerButtonEvent.Repeated, () => this.moveUp());
             controller.up.onEvent(ControllerButtonEvent.Released, () => {
                 if (!this.okToMove()) return;
                 this.cursorMove(MoveDirection.Up, false);
             });
-            controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (!this.okToMove()) return;
-                if (this.row() < 6)
-                    this.cursor.y += 16;
-                this.cursorMove(MoveDirection.Down);
-            });
+            controller.down.onEvent(ControllerButtonEvent.Pressed, () => this.moveDown());
+            controller.down.onEvent(ControllerButtonEvent.Repeated, () => this.moveDown());
             controller.down.onEvent(ControllerButtonEvent.Released, () => {
                 if (!this.okToMove()) return;
                 this.cursorMove(MoveDirection.Down, false);
             });
+        }
+
+        private moveInX(dir: MoveDirection) {
+            if (!this.okToMove()) return;
+            if (dir == MoveDirection.Left && this.col() > 0 ||
+                dir == MoveDirection.Right && this.col() < 9)
+                this.cursor.x += 16 * moveXdelta(dir);
+            this.cursorMove(dir);
+        }
+
+        private moveUp() {
+            if (!this.okToMove()) return;
+            if (this.row() > 0)
+                this.cursor.y -= 16;
+            this.cursorMove(MoveDirection.Up);
+        }
+
+        private moveDown() {
+            if (!this.okToMove()) return;
+            if (this.row() < 6)
+                this.cursor.y += 16;
+            this.cursorMove(MoveDirection.Down);
         }
 
         protected okToMove() { return true; }
