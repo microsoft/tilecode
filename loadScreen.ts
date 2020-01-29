@@ -5,8 +5,10 @@ namespace tileworld {
             super(null);
             controller.setRepeatDefault(300, 60);
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                if ( (this.col() == 5 || this.col() == 7) && (this.row() == 2 || this.row() == 4) ) {
-                    let prefix = this.col() == 5 ? (this.row() == 2 ? "TW1-" : "TW3-") : (this.row() == 2 ? "TW2-" : "TW4-");
+                let first = this.col() >= 4 && this.col() <= 5;
+                let second = this.col() >= 6 && this.col() <= 7;
+                if ( ( first || second) && (this.row() == 2 || this.row() == 4) ) {
+                    let prefix = first ? (this.row() == 2 ? "TW1-" : "TW3-") : (this.row() == 2 ? "TW2-" : "TW4-");
                     this.p = loadProject(prefix);
                     this.update();
                     if (!this.p) {
@@ -31,8 +33,8 @@ namespace tileworld {
         }
 
         private makeIt(col: number, row: number, id: string) {
-            this.drawImage(col-1, row, rightArrow);
-            this.fillTile(col, row, this.col() == col && this.row() == row ? 7 : 11);
+            this.drawImage(col-1, row, diskIcon);
+            this.fillTile(col, row, (this.col() == col || this.col() == col -1) && this.row() == row ? 7 : 11);
             screen.print(id, (col << 4) + 6, (row << 4) + 4 + yoff);
         }
 
@@ -60,7 +62,9 @@ namespace tileworld {
             screen.print("TileWorld", 6, yoff + 4);
             this.fillTile(2,2,12); this.fillTile(3,2,12);
             screen.print("Load", (2 << 4) + 4, (2 << 4) + 4 + yoff);
-            
+            this.fillTile(2, 3, 12); this.fillTile(3, 3, 12);
+            screen.print("Game", (2 << 4) + 4, (3 << 4) + 4 + yoff);
+
             this.makeIt(5, 2, "1");
             this.makeIt(7, 2, "2");
             this.makeIt(5, 4, "3");
