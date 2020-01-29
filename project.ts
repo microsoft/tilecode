@@ -280,19 +280,39 @@ namespace tileworld {
         return new Rule([4], RuleType.Pushing, dir, [new WhenDo(2, 2, [], [new Command(CommandType.Move, dir)])]);
     }
 
+    const player = img`
+        . . . . . . f f f f . . . . . .
+        . . . . f f f 2 2 f f f . . . .
+        . . . f f f 2 3 2 2 f f f . . .
+        . . f f f e e e e e e f f f . .
+        . . f f e 2 2 2 2 2 2 e e f . .
+        . . f e 2 f f f f f f 2 e f . .
+        . . f f f f e e e e f f f f . .
+        . f f e f b f 4 4 f b f e f f .
+        . f e e 4 1 f d d f 1 4 e e f .
+        . . f e e d d d d d d e e f . .
+        . . . f e e 4 4 4 4 e e f . . .
+        . . e 4 f 2 2 2 2 2 2 f 4 e . .
+        . . 4 d f 2 2 2 2 2 2 f d 4 . .
+        . . 4 4 f 4 4 5 5 4 4 f 4 4 . .
+        . . . . . f f f f f f . . . . .
+        . . . . . f f . . f f . . . . .
+    `;
+
     export function emptyProject(prefix: string) {
         let fixedColors = [3, 4, 5, 12];
-        let moveColors = [7, 8, 9, 10];
+        let moveColors = [7, 8, 9];
         let fixed: Image[] = []; 
         let movable: Image[] = [];
         for(let f=0;f<4;f++) {
             let fi = image.create(16, 16);
             fi.fillRect(1,1,14,14,fixedColors[f]);
-            fi.printCenter(f.toString(), 4);
             fixed.push(fi);
+        }
+        movable.push(player);
+        for (let f = 0; f < 3; f++) {
             let mi = image.create(16, 16);
             mi.fillCircle(8,8,6,moveColors[f]);
-            mi.printCenter(f.toString(), 4);
             movable.push(mi);
         }
         let rules: Rule[] = [];
