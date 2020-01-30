@@ -174,8 +174,7 @@ namespace tileworld {
         private collideRow: number;
         protected update() {
             this.collideCol = this.collideRow = -1;
-            screen.fill(11);
-            screen.fillRect(0, 0, 80, 120, 12);
+            screen.fill(0);
             screen.print("When", 0, 0);
             if (this.p.debug)
                 screen.print(this.rule.toString(), 30, 0);
