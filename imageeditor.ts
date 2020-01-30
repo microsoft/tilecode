@@ -50,7 +50,7 @@ namespace tileworld {
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.cursorType== CursorType.Paint) {
                     this.setCursor(CursorType.Color);
-                } else if (this.cursorType== CursorType.Color) {
+                } else {
                     this.saveAndPop();
                 }
             });
@@ -70,13 +70,11 @@ namespace tileworld {
                 this.image.setPixel(col, row, this.selectedColor)
                 this.update()
             } else {
-                if (this.menuCursor.y == yoff + 8) {
-                    this.saveAndPop();
-                } else {
+                if (this.menuCursor.y > yoff + 8) {
                     this.p.saveImage(this.kind);
-                    // gallery
+                    this.Adown = false;
                     game.pushScene();
-                    new Gallery(this.p, this.image);
+                    new Gallery(this.p, this.kind);
                 }
             }
         }
@@ -163,6 +161,7 @@ namespace tileworld {
             screen.fill(0);
             screen.fillRect(colorsX, yoff, 16, 16, 11);
             screen.drawTransparentImage(paint, colorsX, yoff)
+            screen.drawImage(gallery[0], colorsX, yoff + 16);
             //screen.fill(0)
             // draw the 16 colors
             for (let row = 0; row < 8; row++) {

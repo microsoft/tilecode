@@ -1,5 +1,3 @@
-// give user access to all the images we have at our disposal
-
 namespace tileworld {
     // sprites from makecode
 
@@ -145,26 +143,30 @@ namespace tileworld {
     `;
 
     // up to 15 max
-    const gallery = [cat, fish, dog, chimp, brick, grass, water, dirt, trophyUp, debug, eat, garbageCan, stopSign ];
+    export const gallery = [cat, fish, dog, chimp, brick, grass, water, dirt, trophyUp, debug, eat, garbageCan, stopSign ];
 
     export class Gallery extends RuleVisualsBase {
-        constructor(p: Project, private current: Image) {
+        private current: Image;
+        constructor(p: Project, private kind: number) {
             super(p);
-
+            this.current = this.p.getImage(kind).clone();
             this.setCol(2); this.setRow(0);
             this.setTileSaved();
             this.setCol(0); this.setRow(0);
 
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.col() == 2 && this.row() == 0 || 
-                    this.dirMap.getPixel(this.col(), this.row()) != 0xf) {
+                let isCurrent = this.col() == 2 && this.row() == 0 ;
+                let index = this.dirMap.getPixel(this.col(), this.row());
+                if (isCurrent || index != 0xf) {
                     this.setTileSaved();
+                    this.p.getImage(this.kind).copyFrom(isCurrent ? this.current : gallery[index]);
                 }
             });
+
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
+                this.p.saveImage(this.kind);
                 game.popScene();
             });
-
         }
 
         protected update() {
