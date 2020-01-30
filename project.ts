@@ -7,6 +7,7 @@ namespace tileworld {
         private _player: number = -1;
         private _world: Image = null;
         public debug: boolean = false;
+        public help: boolean = true;
 
         constructor(
             public prefix: string,

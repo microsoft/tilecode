@@ -20,6 +20,24 @@ export const paintCursor = img`
     5 . . . . 5
     5 5 5 5 5 5
 `;
+export const map = img`
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . 2 2 2 2 2 . . . . . .
+    . . . . 2 2 2 2 2 2 2 . . . . .
+    . . . 2 2 2 1 1 1 2 2 2 . . . .
+    . . . 2 2 1 1 1 1 1 2 2 . . . .
+    . . . 2 2 1 1 1 1 1 2 2 . . . .
+    . . . 2 2 2 1 1 1 2 2 2 . . . .
+    . . . 2 2 2 2 2 2 2 2 2 . . . .
+    . . . . 2 2 2 2 2 2 2 . . . . .
+    . . . . 2 2 2 2 2 2 2 . . . . .
+    . . . . . 2 2 2 2 2 . . . . . .
+    . . . . . 2 2 2 2 2 . . . . . .
+    . . . . . . 2 2 2 . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+`;
 export const play = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
@@ -56,7 +74,7 @@ export const debug = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
 `;
-export const pencil = img`
+export const code = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
@@ -697,7 +715,7 @@ export const moveImages = [leftArrow, rightArrow, upArrow, downArrow, stopSign, 
 export const buttonImages = [leftButton, rightButton, upButton, downButton];
 export const attrImages = [include, exclude, ok, oneof];
 export const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, AttrType.OneOf];
-export const commandImages = [paint, pencil, play, debug, music, help];
+export const commandImages = [map, paint, code, play, debug, music, help];
 export const gameImages = [ trophyUp, trophyDown ];
 export const categoryImages = [allFour, paint, genericSprite, equalZero, gameIcon ];
 export const spriteImages = [eat];

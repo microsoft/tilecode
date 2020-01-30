@@ -18,7 +18,7 @@ namespace tileworld {
                     this.lastDir = -1;
                     this.lastDir = -1;
                     game.pushScene();
-                    new MapEditor(this.p);
+                    new GameHome(this.p);
                 }
             });
             this.update();

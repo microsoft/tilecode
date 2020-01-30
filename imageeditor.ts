@@ -13,8 +13,10 @@ namespace tileworld {
         private selectedColor: number;
         private image: Image;    // 16x16
         private Adown: boolean;
-        constructor(private p: Project, private kind: number) {
+        private kind: number;
+        constructor(private p: Project) {
             super();
+            this.kind = 0;
             this.Adown = false;
             this.cursorType= CursorType.Color;
 
@@ -33,7 +35,7 @@ namespace tileworld {
             this.menuCursor.y = yoff + 24;
             this.menuCursor.setFlag(SpriteFlag.Invisible, true);
 
-            this.image = p.getImage(kind);
+            this.image = p.getImage(this.kind);
             this.update();
 
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => this.moveLeft());

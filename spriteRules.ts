@@ -5,12 +5,10 @@ namespace tileworld {
     let ruleEditor: RuleEditor = null;
 
     export class RuleRoom extends RuleVisualsBase {
-        // TODO: selected sprite
-        constructor(p: Project, private kind: number) {
+        private kind: number;
+        constructor(p: Project) {
             super(p);
-            if (this.kind < this.p.fixed().length) {
-                this.kind = this.p.fixed().length();
-            }
+            this.kind = this.p.fixed().length();
             // set cursor
             this.setCol(0);
             this.setRow(this.kind - this.p.fixed().length + 1)
@@ -46,7 +44,7 @@ namespace tileworld {
         public update() {
             screen.fill(15);
             screen.fillRect(0, yoff, 16, 16, 11);
-            screen.drawTransparentImage(pencil, 0, yoff)
+            screen.drawTransparentImage(code, 0, yoff)
             this.p.movable().forEach((img,i) => {
                 this.drawImage(0, i+1, img);
             })

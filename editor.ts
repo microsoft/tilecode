@@ -132,27 +132,7 @@ namespace tileworld {
                 this.userSpriteIndex = menuItem;
                 this.updateSelection();
             } else {
-               let command = commandImages[menuItem];
-               if (command == paint) {
-                    this.pushIt();
-                    new ImageEditor(this.p, this.userSpriteIndex);
-                    return;
-                } else if (command == pencil) {
-                    this.pushIt();
-                    new RuleRoom(this.p, this.userSpriteIndex);
-                    return;
-                } else if (command == play) {
-                    let rules = this.p.getRuleIds();
-                    if (rules.length > 0) {
-                        this.pushIt();
-                        let g = new RunGame(this.p, rules);
-                        g.setWorld(this.world);
-                        g.start();
-                        return;
-                    }         
-                } else if (command == help) {
-                    this.helpOn = !this.helpOn;
-                }
+
             }
             this.update();
         }

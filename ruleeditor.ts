@@ -217,7 +217,7 @@ namespace tileworld {
         private showMainMenu() {
             screen.fillRect(0, yoff + (6 << 4), 160, 19, 0);
             this.fillTile(0, 6, 11);
-            this.drawImage(0, 6, pencil);
+            this.drawImage(0, 6, code);
             this.drawImage(1, 6, play);
             this.drawImage(2, 6, debug);
             this.drawImage(3, 6, garbageCan);
