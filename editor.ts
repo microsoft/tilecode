@@ -47,8 +47,6 @@ namespace tileworld {
             this.cursor.y = 56 + yoff;
             this.helpCursor = sprites.create(cursorIn);
             this.helpCursor.setFlag(SpriteFlag.Invisible, true);
-            this.helpCursor.x = 100;
-            this.helpCursor.y = 7 + 16*7;
 
             this.offsetX = this.offsetY = 0;
             this.update();
@@ -116,8 +114,19 @@ namespace tileworld {
 
         private cursorAction(repeated: boolean = false) {
             if (this.helpOn) {
-                let message = getHelp(this.col(), this.row());
-                this.helpCursor.say(message ? message : "help on");
+                this.helpCursor.x = this.cursor.x + 40;
+                this.helpCursor.y = this.cursor.y + 16;
+                if (this.col() < 2) {
+                    let message = getHelp(this.col(), this.row());
+                    this.helpCursor.say(message);
+                } else {
+                    let x = this.offsetX + this.col() - 2;
+                    let y = this.offsetY + this.row();
+                    if (x >=0 && y >= 0 && x < this.p.getWorld().width && y < this.p.getWorld().height)
+                        this.helpCursor.say("map("+x.toString()+","+y.toString()+")");
+                    else
+                        this.helpCursor.say(null);
+                }
             }
             if (!this.aDown)
                 return;
@@ -159,7 +168,6 @@ namespace tileworld {
                 } else if (command == help) {
                     this.helpOn = !this.helpOn;
                     this.cursor.say("?")
-                    this.helpCursor.say(this.helpOn ? "help on" : null)
                 }
             }
             this.update();
