@@ -3,6 +3,8 @@ namespace tileworld {
     enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu };
     enum CommandTokens { Last=CommandType.Last, SpaceTile, Delete };
 
+    const editorRow = 2;
+
     export class RuleEditor extends RuleVisualsBase {
         private otherCursor: Sprite;    // show correspondence between left and right
 
@@ -57,7 +59,8 @@ namespace tileworld {
                         this.rule = index < rules.length ? rules[index] : rules[index-1];
                     }
                     this.askDeleteRule = false;
-                } else if (this.manhattanDistance2() <=2 && (this.col() != 2 || this.row() != 2) && this.active(this.col(),this.row())) {
+                } else if (this.manhattanDistance2() <=2 && 
+                          (this.col() != 2 || this.row() != (2+editorRow) && this.active(this.col(),this.row()-editorRow))) {
                      // otherwise if we are in the diamond, bring up attr menu
                     if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                         this.noMenu();
@@ -65,7 +68,7 @@ namespace tileworld {
                         this.menu = RuleEditorMenus.AttrTypeMenu;
                         this.setTileSaved()
                     }
-                } else if (this.cursor.x >= 96 && (this.cursor.y -yoff) < 80) {
+                } else if (this.col() > 5 && this.row() >= editorRow) {
                     if (this.menu == RuleEditorMenus.CommandMenu) {
                         this.noMenu();
                     } else {
@@ -78,7 +81,7 @@ namespace tileworld {
                 } else if (this.menu == RuleEditorMenus.CommandMenu) {
                     this.exitCommandMenu();
                 } else if (this.menu == RuleEditorMenus.MainMenu) {
-                    if (this.row() == 6) {
+                    if (this.row() == 0) {
                         if (7 <= this.col() && this.col() <= 9) {
                             // move backward/forward in rule space
                             let rules = this.currentRules();
@@ -147,12 +150,12 @@ namespace tileworld {
         }
 
         private otherCursorMove() {
-            if (this.cursor.x >= 80 && (this.cursor.y - yoff) < 80) {
-                let row = this.row();
+            if (this.col() >= 5 && this.row() >= editorRow) {
+                let row = this.row() - editorRow;
                 this.otherCursor.setFlag(SpriteFlag.Invisible, false);
                 // compute mapping from right to left hand side
                 this.otherCursor.x = this.rowToColCoord(row) * 16 + 8;
-                this.otherCursor.y = this.rowToRowCoord(row) * 16 + 8 + yoff;
+                this.otherCursor.y = this.rowToRowCoord(row) * 16 + 8 + yoff + (editorRow *16);
             } else {
                 this.otherCursor.setFlag(SpriteFlag.Invisible, true);
             }
@@ -167,7 +170,7 @@ namespace tileworld {
         }
         
         private manhattanDistance2() {
-            return (Math.abs(2 - this.col()) + Math.abs(2 - this.row()));
+            return (Math.abs(2 - this.col()) + Math.abs(2 - (this.row() - editorRow)));
         }
 
         private collideCol: number;
@@ -175,24 +178,24 @@ namespace tileworld {
         protected update() {
             this.collideCol = this.collideRow = -1;
             screen.fill(0);
-            screen.print("When", 0, 0);
+            screen.print("When", 0, (editorRow << 4) + 8);
             if (this.p.debug)
                 screen.print(this.rule.toString(), 30, 0);
-            screen.print("Do", 80, 0);
+            screen.print("Do", 70, (editorRow << 4) + 8);
             // sets collideCol and collideRow
-            this.showRuleType(this.p.getType(this.rule), this.p.getDir(this.rule), 2, 2);
+            this.showRuleType(this.p.getType(this.rule), this.p.getDir(this.rule), 2, 2+editorRow);
             this.makeContext();
-            this.showRuleType(this.p.getType(this.rule), this.p.getDir(this.rule), 2, 2);
+            this.showRuleType(this.p.getType(this.rule), this.p.getDir(this.rule), 2, 2+editorRow);
             this.showCommands(); 
 
             if (this.menu == RuleEditorMenus.MainMenu) {
                 this.showMainMenu();
             } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                 this.dirMap.fill(0xf);
-                screen.fillRect(0, yoff + 80, 160, 36, 0);
+                screen.fillRect(0, yoff, 160, 36, 0);
                 this.attrMenu()
             } else if (this.menu == RuleEditorMenus.CommandMenu) {
-                screen.fillRect(0, yoff + 80, 160, 36, 0);
+                screen.fillRect(0, yoff, 160, 36, 0);
                 this.modifyCommandMenu();
                 this.commandUpdate();
             }
@@ -215,22 +218,22 @@ namespace tileworld {
         }
 
         private showMainMenu() {
-            screen.fillRect(0, yoff + (6 << 4), 160, 19, 0);
-            this.fillTile(0, 6, 11);
-            this.drawImage(0, 6, code);
-            this.drawImage(1, 6, play);
-            this.drawImage(2, 6, debug);
-            this.drawImage(3, 6, garbageCan);
+            screen.fillRect(0, yoff, 160, 19, 0);
+            this.fillTile(0, 0, 11);
+            this.drawImage(0, 0, code);
+            this.drawImage(1, 0, play);
+            this.drawImage(2, 0, debug);
+            this.drawImage(3, 0, garbageCan);
             let rules = this.currentRules();
             let index = rules.indexOf(this.rule);
-            this.drawImage(9, 6, index < rules.length -1 ? rightArrow : greyImage(rightArrow));
-            this.drawImage(8, 6, this.rt != -1 ? addRule : greyImage(addRule));
-            this.drawImage(7, 6, index > 0 ? leftArrow : greyImage(leftArrow));
+            this.drawImage(9, 0, index < rules.length -1 ? rightArrow : greyImage(rightArrow));
+            this.drawImage(8, 0, this.rt != -1 ? addRule : greyImage(addRule));
+            this.drawImage(7, 0, index > 0 ? leftArrow : greyImage(leftArrow));
         }
 
         private active(col: number, row: number) {
             if (this.collideCol != -1) {
-                return col == 2 && row == 2 || col == this.collideCol && row == this.collideRow;
+                return col == 2 && row == 2 || col == this.collideCol && (row + editorRow) == this.collideRow;
             }
             return true;
         }
@@ -241,7 +244,7 @@ namespace tileworld {
                     let dist = Math.abs(2-j) + Math.abs(2-i);
                     if (dist <= 2 && this.active(i,j)) {
                         // TODO: limit the context base on the rule type
-                        this.drawImage(i, j, emptyTile);
+                        this.drawImage(i, j+editorRow, emptyTile);
                         if (i != 2 || j != 2)
                             this.showAttributes(this.rule, i, j);
                     }
@@ -274,9 +277,9 @@ namespace tileworld {
                 let index = this.findWitnessColRow(wcol, wrow);
                 let img1 = this.collideCol == wcol && this.collideRow == wrow ? collisionRestingSprite : genericSprite;
                 let img2 = index == -1 || index == 100 ? img1 : this.p.getImage(index);
-                this.drawImage(5, crow, img2);
+                this.drawImage(5, crow + editorRow, img2);
                 if (img1 == collisionRestingSprite)
-                    this.drawImage(5, crow, img1);
+                    this.drawImage(5, crow + editorRow, img1);
             }
             // show the existing commands
             let col = 6;
@@ -303,9 +306,9 @@ namespace tileworld {
             let inst = this.p.getInst(this.rule, whendo, cid);
             let arg = this.p.getArg(this.rule, whendo, cid);
             if (inst == -1) {
-                if (draw) this.drawImage(col, row, emptyTile);
+                if (draw) this.drawImage(col, row + editorRow, emptyTile);
             } else {
-                if (draw) this.drawImage(col, row, this.instToImage(inst,arg));
+                if (draw) this.drawImage(col, row + editorRow, this.instToImage(inst,arg));
                 tokens.removeElement(inst);
                 col++;
             }
@@ -313,7 +316,7 @@ namespace tileworld {
         }
 
         private tryEditCommand() {
-            let row = this.row();
+            let row = this.row()-editorRow;
             if (row > 4) return false;
             let col = this.col() - 6;
             if (col >= Math.abs(this.commandLengths[row])) return false;
@@ -340,7 +343,7 @@ namespace tileworld {
 
         private makeCommandMenu(inst: number, arg: number) {
             let col = 5;
-            let row = 5;
+            let row = 0;
             // show the categories
             // which one is currently selected?
             this.tokens.forEach(ct => {
@@ -358,7 +361,7 @@ namespace tileworld {
         // inst must be -1, arg might be -1;
         private makeArgMenu(inst: number, arg: number) {
             let col = 4;
-            let row = 6;
+            let row = 1;
             this.dirMap.fill(0xf);
             let last = this.instToStartArg(inst) + this.instToNumArgs(inst);
             for (let i = this.instToStartArg(inst); i < last; i++) {
@@ -457,12 +460,12 @@ namespace tileworld {
             if (tok == CommandTokens.Delete) {
                 if (exit)
                     this.p.removeCommand(this.rule, this.whenDo, this.currentCommand);
-            } else if (this.row() == 5 && tok != 0xf) {
+            } else if (this.row() == 0 && tok != 0xf) {
                 let inst = this.p.getInst(this.rule, this.whenDo, this.currentCommand);
                 if (tok != inst) {
                     this.setCommand(tok, this.instToStartArg(tok));
                 }
-            } else if (this.row() == 6 && arg != 0xf) {
+            } else if (this.row() == 1 && arg != 0xf) {
                 this.p.setArg(this.rule, this.whenDo, this.currentCommand, arg);
             }
         }
@@ -495,24 +498,24 @@ namespace tileworld {
 
         private attrMenu() {
             // which tile in the diamond are we attributing?
-            let whenDo = this.getWhenDo(this.col(false), this.row(false));
+            let whenDo = this.getWhenDo(this.col(false), this.row(false)-editorRow);
             // for all user-defined sprites
             attrImages.forEach((img, i) => {
                 // draw 8x8 sprites centered
-                screen.drawTransparentImage(img, (i << 4) + 4, yoff + (5 << 4) + 4);
-                this.drawOutline(i, 5);
+                screen.drawTransparentImage(img, (i << 4) + 4, yoff + 4);
+                this.drawOutline(i, 0);
             });
             this.p.all().forEach((image, i ) => {
                 if (i < this.p.fixed().length && this.getType() >= RuleType.CollidingResting)
                     return;
                 let a = this.p.getAttr(this.rule, whenDo, i);
-                this.drawImage(i, 6, image);
-                this.drawImage(i, 6, attrImages[attrValues.indexOf(a)]);
-                this.dirMap.setPixel(i,6,a);
+                this.drawImage(i, 1, image);
+                this.drawImage(i, 1, attrImages[attrValues.indexOf(a)]);
+                this.dirMap.setPixel(i, 1, a);
             });
             if (this.attrSelected == -1)
                 this.selectAttr(0);
-            this.drawImage(this.attrSelected, 5, cursorOut);
+            this.drawImage(this.attrSelected, 0, cursorOut);
         }
 
         private selectAttr(a: number) {
@@ -520,11 +523,11 @@ namespace tileworld {
         }
 
         private attrUpdate() {
-            let a = this.row() == 5 ? this.col() : -1
+            let a = this.row() == 0 ? this.col() : -1
             if (a != -1 && a < attrValues.length) { 
                 this.selectAttr(a); return true; 
             }
-            let m = this.row() == 6 ? this.col() : -1; 
+            let m = this.row() == 1 ? this.col() : -1; 
             if (m != -1 && m < this.p.all().length) { 
                 if (m < this.p.fixed().length && this.getType() >= RuleType.CollidingResting)
                     return false;
@@ -550,7 +553,7 @@ namespace tileworld {
                         }
                     }
                     if (cnt == 2) {
-                        let whenDo = this.getWhenDo(this.col(false), this.row(false));
+                        let whenDo = this.getWhenDo(this.col(false), this.row(false)-editorRow);
                         this.setAttr(i, this.p.getAttr(this.rule, whenDo, m));
                     }
                 }
@@ -574,7 +577,7 @@ namespace tileworld {
         }
         
         private setFixedOther(m: number, src: number, val: number) {
-            let whenDo = this.getWhenDo(this.col(false), this.row(false));
+            let whenDo = this.getWhenDo(this.col(false), this.row(false)-editorRow);
             for(let o =0; o<this.p.fixed().length; o++) {
                 if (o != m) {
                     if (src == -1 || this.p.getAttr(this.rule, whenDo, o) == src)
@@ -583,7 +586,7 @@ namespace tileworld {
             }
         }
         private setMovableOther(m: number, src: number, val: number) {
-            let whenDo = this.getWhenDo(this.col(false), this.row(false));
+            let whenDo = this.getWhenDo(this.col(false), this.row(false)-editorRow);
             for (let o = this.p.fixed().length; o< this.p.all().length; o++) {
                 if (o != m) {
                     if (src == -1 || this.p.getAttr(this.rule, whenDo, o) == src)
@@ -593,8 +596,76 @@ namespace tileworld {
         }
 
         private setAttr(m: number, val: AttrType) {
-            let whenDo = this.getWhenDo(this.col(false), this.row(false));
+            let whenDo = this.getWhenDo(this.col(false), this.row(false)-editorRow);
             this.p.setAttr(this.rule, whenDo, m, val)
+        }
+
+        protected attrIndex(rid: number, whendo: number, a: AttrType, begin: number = 0) {
+            for (let i = begin; i < this.p.all().length; i++) {
+                if (this.p.getAttr(rid, whendo, i) == a)
+                    return i;
+            }
+            return -1;
+        }
+
+        private showAttributes(rid: number, col: number, row: number) {
+            let whendo = this.p.getWhenDo(rid, col, row);
+            if (whendo >= 0) {
+                // if there is an include or single oneOf, show it.
+                let index = this.attrIndex(rid, whendo, AttrType.Include);
+                if (index == -1) {
+                    index = this.attrIndex(rid, whendo, AttrType.OneOf);
+                    if (index != -1) {
+                        let index2 = this.attrIndex(rid, whendo, AttrType.OneOf, index + 1);
+                        if (index2 != -1)
+                            index = -1;
+                    }
+                }
+                // and skip to the other (if it exists)
+                let begin = 0;
+                let end = this.p.all().length - 1;
+                if (index != -1) {
+                    this.drawImage(col, row + editorRow, this.p.getImage(index));
+                    if (index < this.p.fixed().length) {
+                        begin = this.p.fixed().length;
+                    } else {
+                        end = this.p.fixed().length - 1;
+                    }
+                }
+                let project = this.projectAttrs(rid, whendo, begin, end);
+                let done: AttrType[] = [];
+                project.forEach(index => {
+                    let val = this.p.getAttr(rid, whendo, index);
+                    // eliminate duplicates
+                    if (done.indexOf(val) == -1) {
+                        done.push(val);
+                        // TODO: draw each one, without overlap, four quadrants
+                        this.drawImage(col, row + editorRow, attrImages[attrValues.indexOf(val)]);
+                    }
+                });
+            }
+        }
+
+        private projectAttrs(rid: number, whendo: number, begin: number, end: number): number[] {
+            let attrCnt = (a: AttrType) => {
+                let cnt = 0;
+                for (let i = begin; i <= end; i++) {
+                    if (this.p.getAttr(rid, whendo, i) == a) cnt++;
+                }
+                return cnt;
+            }
+            let res: number[] = [];
+            let excludeCnt = attrCnt(AttrType.Exclude);
+            let okCnt = attrCnt(AttrType.OK);
+            let cnt = end - begin + 1;
+            if (okCnt == this.p.all().length || excludeCnt == cnt || (begin == 0 && okCnt == cnt))
+                return res;
+            let remove = (okCnt != 0 && excludeCnt != 0) ?
+                ((excludeCnt < okCnt) ? AttrType.OK : AttrType.Exclude) : -1;
+            for (let i = begin; i <= end; i++) {
+                if (this.p.getAttr(rid, whendo, i) != remove) res.push(i);
+            }
+            return res;
         }
     } 
 }
