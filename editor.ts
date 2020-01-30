@@ -12,9 +12,12 @@ namespace tileworld {
         private userSpriteIndex: number;
         private menu: Image;
         private aDown: boolean;
+        private helpOn: boolean;
+        private helpCursor: Sprite;
         constructor(private p: Project) {
             super();
             this.aDown = false;
+            this.helpOn = false;
             this.world = p.getWorld();
             this.menu = image.create(2, 7);
             // cursors
@@ -25,6 +28,10 @@ namespace tileworld {
             this.cursor = sprites.create(cursorIn);
             this.cursor.x = 40
             this.cursor.y = 56 + yoff;
+            this.helpCursor = sprites.create(cursorIn);
+            this.helpCursor.setFlag(SpriteFlag.Invisible, true);
+            this.helpCursor.x = 100;
+            this.helpCursor.y = 7 + 16*7;
 
             this.offsetX = this.offsetY = 0;
             this.update();
@@ -129,7 +136,9 @@ namespace tileworld {
                         return;
                     }         
                 } else if (command == help) {
-                    // TODO
+                    this.helpOn = !this.helpOn;
+                    this.cursor.say("?")
+                    this.helpCursor.say(this.helpOn ? "help on" : null)
                 }
             }
             this.update();
@@ -139,6 +148,7 @@ namespace tileworld {
             this.p.saveWorld();
             game.pushScene();
             this.aDown = false;
+            this.helpOn = false;
         }
 
         private col(current: boolean = true) {
@@ -154,6 +164,10 @@ namespace tileworld {
         }
 
         public update() {
+            if (!this.helpOn) {
+                this.helpCursor.say(null);
+                this.cursor.say(null);
+            }
             screen.fill(0);
             this.menu.fill(0xf);
             let x = 0;
