@@ -3,7 +3,7 @@ namespace tileworld {
     export class LoadScreen extends RuleVisualsBase {
         constructor(private bootstrap: Project) {
             super(null);
-            controller.setRepeatDefault(300, 60);
+            controller.setRepeatDefault(500, 80);
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 let first = this.col() >= 4 && this.col() <= 5;
                 let second = this.col() >= 6 && this.col() <= 7;
