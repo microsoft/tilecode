@@ -18,10 +18,12 @@ namespace tileworld {
         private image: Image;    // 16x16
         private Adown: boolean;
         private kind: number;
+        private dirty: boolean;
         constructor(private p: Project) {
             super();
             this.kind = 0;
             this.Adown = false;
+            this.dirty = false;
             this.cursorType= CursorType.Color;
 
             this.colorCursor = sprites.create(colorCursor)
@@ -68,19 +70,22 @@ namespace tileworld {
             if (!this.Adown)
                 return;
             if (this.cursorType == CursorType.Color) {
-                let col = ((this.colorCursor.x - colorsX) / colorSize) | 0x0
-                let row = ((this.colorCursor.y - (colorSize << 1) - colorsY) / colorSize) | 0x0
-                this.selectedColor = row * 2 + col
+                let col = ((this.colorCursor.x - colorsX) / colorSize) | 0x0;
+                let row = ((this.colorCursor.y - (colorSize << 1) - colorsY) / colorSize) | 0x0;
+                this.selectedColor = row * 2 + col;
             } else if (this.cursorType == CursorType.Paint) {
-                let col = ((this.paintCursor.x - (paintSize * 5 + 2)) / paintSize) | 0x0
-                let row = ((this.paintCursor.y - (editorY + 2)) / paintSize) | 0x0
-                this.image.setPixel(col, row, this.selectedColor)
+                this.dirty = true;
+                let col = ((this.paintCursor.x - (paintSize * 5 + 2)) / paintSize) | 0x0;
+                let row = ((this.paintCursor.y - (editorY + 2)) / paintSize) | 0x0;
+                this.image.setPixel(col, row, this.selectedColor);
             } else {
                 let col = this.menuCursor.x >> 4;
                 if (2 <= col && col < 2 + this.p.all().length) {
-                    this.p.saveImage(this.kind);
+                    if (this.dirty)
+                        this.p.saveImage(this.kind);
                     this.kind = col - 2;
                     this.image = this.p.getImage(this.kind);
+                    this.dirty = false;
                 }
                 /*
                 if (this.menuCursor.y > yoff + 8) {
@@ -172,11 +177,10 @@ namespace tileworld {
             screen.fill(0);
             screen.fillRect(0, yoff, 16, 16, 11);
             screen.drawTransparentImage(paint, 0, yoff)
-            //screen.drawImage(gallery[0], colorsX, yoff + 16);
             this.p.all().forEach((img, index) => {
                 screen.drawImage(img, (2 + index)*16, yoff);
                 if (index == this.kind) {
-                    screen.drawImage(cursorOut, (2+index)*16, yoff);
+                    screen.drawTransparentImage(cursorOut, (2+index)*16, yoff);
                 }
             });
             //screen.fill(0)
