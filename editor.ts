@@ -2,7 +2,8 @@ namespace tileworld {
 
     const yoff = 4;
 
-    const helpString = "00paint,10code,01play,11debug,02music,12help,03tile#1,13tile#2,04tile#3,14tile#4,05sprite#1,15sprite#2,06sprite#3,16sprite#4,";
+
+    const tileSprite = "03tile#1,13tile#2,04tile#3,14tile#4,05sprite#1,15sprite#2,06sprite#3,16sprite#4,";
 
     // the root of the editing experience is creating a (shared) tile map
     export class MapEditor extends BackgroundBase {
@@ -12,24 +13,21 @@ namespace tileworld {
         private cursor: Sprite;
         private selected: Sprite;
         private userSpriteIndex: number;
-        private menu: Image;
         private aDown: boolean;
         private helpOn: boolean;
         private helpCursor: Sprite;
         constructor(private p: Project) {
             super();
             this.aDown = false;
-            this.helpOn = false;
             this.world = p.getWorld();
-            this.menu = image.create(2, 7);
             // cursors
             this.selected = sprites.create(cursorOut);
-            this.selected.x = 8;
-            this.selected.y = 48 + 8 + yoff;
+            this.selected.x = 16 + 8;
+            this.selected.y = 8 + yoff;
             this.userSpriteIndex = 0;
             this.cursor = sprites.create(cursorIn);
-            this.cursor.x = 40
-            this.cursor.y = 56 + yoff;
+            this.cursor.x = 8
+            this.cursor.y = 8 + yoff;
             this.helpCursor = sprites.create(cursorIn);
             this.helpCursor.setFlag(SpriteFlag.Invisible, true);
 
@@ -101,8 +99,8 @@ namespace tileworld {
             if (this.helpOn) {
                 this.helpCursor.x = this.cursor.x + 40;
                 this.helpCursor.y = this.cursor.y + 16;
-                if (this.col() < 2) {
-                    let message = getHelp(helpString, this.col(), this.row());
+                if (this.row() < 1) {
+                    let message = getHelp(tileSprite, this.col(), this.row());
                     this.helpCursor.say(message);
                 } else {
                     let x = this.offsetX + this.col() - 2;
@@ -115,7 +113,7 @@ namespace tileworld {
             }
             if (!this.aDown)
                 return;
-            if (this.col() > 1) {
+            if (this.row() > 0) {
                 if (this.userSpriteIndex >= 0) {
                     let x = this.offsetX + this.col() - 2;
                     let y = this.offsetY + this.row();
@@ -126,13 +124,10 @@ namespace tileworld {
             }
             if (repeated)
                 return;
-            let menuItem = this.menu.getPixel(this.col(), this.row());
-            if (this.row() > 2 && 0 <= menuItem && menuItem < this.p.all().length ) {
+            if (this.row() == 0 && 1 <= this.col() && this.col() <= this.p.all().length ) {
                 // change user sprite
-                this.userSpriteIndex = menuItem;
+                this.userSpriteIndex = this.col()-1;
                 this.updateSelection();
-            } else {
-
             }
             this.update();
         }
@@ -162,39 +157,19 @@ namespace tileworld {
                 this.cursor.say(null);
             }
             screen.fill(0);
-            this.menu.fill(0xf);
-            let x = 0;
-            let y = 0;
-            commandImages.forEach((img, index) => {
-                this.drawImage(img, x, y);
-                this.menu.setPixel(x, y, index);
-                x++;
-                if (x == 2) { x = 0; y++; }
-            })
-            x = 0; y = 3;
-            this.p.fixed().forEach((img, index) => { 
-                this.drawImage(img, x, y); 
-                this.menu.setPixel(x, y, index);
-                x++;
-                if (x == 2) { x = 0; y++; }
+            this.drawImage(map, 0, 0);
+            this.p.all().forEach((img, index) => { 
+                this.drawImage(img, 1+index, 0); 
             });
-            x = 0; y = 5;
-            this.p.movable().forEach((img, index) => {
-                this.drawImage(img, x, y);
-                this.menu.setPixel(x, y, this.p.fixed().length + index);
-                x++;
-                if (x == 2) { x = 0; y++; }
-            });
-
-            for(let x = this.offsetX; x<this.offsetX+8; x++) {
-                for (let y = this.offsetY; y < this.offsetY + 7; y++) {
+            for(let x = this.offsetX; x<this.offsetX+10; x++) {
+                for (let y = this.offsetY; y < this.offsetY + 6; y++) {
                     let index = 0 <= x && x < this.world.width && 0 <= y && y < this.world.height ? this.world.getPixel(x,y) : -1;
-                    let col = 2 + (x - this.offsetX);
-                    let row = (y - this.offsetY);
+                    let col = x - this.offsetX;
+                    let row = 1 + (y - this.offsetY);
                     this.drawImage(index >= 0 ? this.p.getImage(index) : emptyTile, col, row);
                 }    
             }
-            screen.drawLine(32, yoff, 32, 119, 11)
+            screen.drawLine(0, yoff + 16, 159, yoff+16, 11)
         }
     } 
  }

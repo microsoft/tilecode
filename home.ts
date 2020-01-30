@@ -3,6 +3,7 @@ namespace tileworld {
 
     // menu bar
 
+    const helpString = "00paint,10code,01play,11debug,02music,12help,"
     
     export class GameHome extends RuleVisualsBase {
         constructor(p: Project) {
