@@ -168,6 +168,9 @@ namespace tileworld {
 
         protected update() {
             screen.fill(12);
+            screen.fillRect(0, 0, 32, 120, 0)
+            screen.fillRect(0, yoff, 16, 16, 11);
+            screen.drawTransparentImage(paint, 0, yoff);
             let row = 0;
             let col = 2;
             gallery.forEach((img,i) => {
