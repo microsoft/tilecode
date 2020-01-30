@@ -3,21 +3,6 @@ namespace tileworld {
     const yoff = 4;
 
     const helpString = "00paint,10code,01play,11debug,02music,12help,03tile#1,13tile#2,04tile#3,14tile#4,05sprite#1,15sprite#2,06sprite#3,16sprite#4,";
-    const zeroCode = "0".charCodeAt(0);
-
-    function getHelp(col:number, row: number) {
-        let index = 0;
-        while(index >=0 && index < helpString.length) {
-            let curr = index;
-            let nextCol =  helpString.substr(curr,1).charCodeAt(0) - zeroCode;
-            let nextRow = helpString.substr(curr + 1, 1).charCodeAt(0) - zeroCode;
-            let comma = helpString.indexOf(",", index);
-            if (nextCol == col && nextRow == row)
-                return helpString.substr(curr+2, comma-curr-2);
-            index = comma + 1;            
-        }
-        return null;
-    }
 
     // the root of the editing experience is creating a (shared) tile map
     export class MapEditor extends BackgroundBase {
@@ -117,7 +102,7 @@ namespace tileworld {
                 this.helpCursor.x = this.cursor.x + 40;
                 this.helpCursor.y = this.cursor.y + 16;
                 if (this.col() < 2) {
-                    let message = getHelp(this.col(), this.row());
+                    let message = getHelp(helpString, this.col(), this.row());
                     this.helpCursor.say(message);
                 } else {
                     let x = this.offsetX + this.col() - 2;
@@ -167,7 +152,6 @@ namespace tileworld {
                     }         
                 } else if (command == help) {
                     this.helpOn = !this.helpOn;
-                    this.cursor.say("?")
                 }
             }
             this.update();

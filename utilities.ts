@@ -1,6 +1,24 @@
 // Add your code here
 
 namespace tileworld {
+
+    const zeroCode = "0".charCodeAt(0);
+
+    export function getHelp(help: string, col: number, row: number) {
+        let index = 0;
+        while (index >= 0 && index < help.length) {
+            let curr = index;
+            let nextCol = help.substr(curr, 1).charCodeAt(0) - zeroCode;
+            let nextRow = help.substr(curr + 1, 1).charCodeAt(0) - zeroCode;
+            let comma = help.indexOf(",", index);
+            if (nextCol == col && nextRow == row)
+                return help.substr(curr + 2, comma - curr - 2);
+            index = comma + 1;
+        }
+        return null;
+    }
+
+
     // cache these???
     export function greyImage(img: Image): Image {
         let ret: Image = img.clone();
