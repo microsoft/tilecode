@@ -129,9 +129,7 @@ namespace tileworld {
                         return;
                     }         
                 } else if (command == help) {
-                    this.pushIt();
-                    new Gallery(this.p);
-                    return;
+                    // TODO
                 }
             }
             this.update();

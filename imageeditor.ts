@@ -4,11 +4,12 @@ namespace tileworld {
     const paintSize = 6;
     const colorsY = 30;
     const colorsX = 5;
-    enum CursorType { Color, Paint};
+    enum CursorType { Color, Paint, Menu };
     export class ImageEditor extends BackgroundBase {
         private cursorType: CursorType;         // are we selecting a color or painting?
         private colorCursor: Sprite;
         private paintCursor: Sprite;
+        private menuCursor: Sprite;
         private selectedColor: number;
         private image: Image;    // 16x16
         private Adown: boolean;
@@ -21,10 +22,17 @@ namespace tileworld {
             this.colorCursor.x = colorsX  + (colorSize>>1);
             this.colorCursor.y = colorsY + colorSize*8;
             this.selectedColor = 0;
+
             this.paintCursor = sprites.create(paintCursor)
             this.paintCursor.x = paintSize * 5 + 2 
             this.paintCursor.y = paintSize * 2 + 2
-            this.paintCursor.setFlag(SpriteFlag.Invisible, true)
+            this.paintCursor.setFlag(SpriteFlag.Invisible, true);
+
+            this.menuCursor = sprites.create(cursorIn);
+            this.menuCursor.x = colorsX + 8;
+            this.menuCursor.y = yoff + 24;
+            this.menuCursor.setFlag(SpriteFlag.Invisible, true);
+
             this.image = p.getImage(kind);
             this.update();
 
@@ -56,11 +64,20 @@ namespace tileworld {
                 let row = ((this.colorCursor.y - (colorSize << 1) - colorsY) / colorSize) | 0x0
                 this.selectedColor = row * 2 + col
                 this.update()
-            } else {
+            } else if (this.cursorType == CursorType.Paint) {
                 let col = ((this.paintCursor.x - (paintSize * 5 + 2)) / paintSize) | 0x0
                 let row = ((this.paintCursor.y - (paintSize * 2 + 2)) / paintSize) | 0x0
                 this.image.setPixel(col, row, this.selectedColor)
                 this.update()
+            } else {
+                if (this.menuCursor.y == yoff + 8) {
+                    this.saveAndPop();
+                } else {
+                    this.p.saveImage(this.kind);
+                    // gallery
+                    game.pushScene();
+                    new Gallery(this.p, this.image);
+                }
             }
         }
 
@@ -87,6 +104,8 @@ namespace tileworld {
                     // transition cursor to paint editor
                     this.setCursor(CursorType.Paint);
                 }
+            } else if (this.cursorType == CursorType.Menu) {
+                this.setCursor(CursorType.Paint);
             } else {
                 if (this.paintCursor.x < (paintSize * 5 + 2) + paintSize * 15)
                     this.paintCursor.x += paintSize
@@ -98,6 +117,12 @@ namespace tileworld {
             if (this.cursorType == CursorType.Color) {
                 if (this.colorCursor.y > colorsY + (colorSize << 1) + (colorSize - 1))
                     this.colorCursor.y -= colorSize;
+                else {
+                    this.setCursor(CursorType.Menu);
+                }
+            } else if (this.cursorType == CursorType.Menu) {
+                if (this.menuCursor.y > yoff + 8)
+                    this.menuCursor.y -= 16;
             } else {
                 if (this.paintCursor.y > (paintSize * 3 + 1))
                     this.paintCursor.y -= paintSize
@@ -109,6 +134,12 @@ namespace tileworld {
             if (this.cursorType == CursorType.Color) {
                 if (this.colorCursor.y < colorsY + (colorSize << 1) + colorSize * (colorSize - 1))
                     this.colorCursor.y += colorSize
+            } else if (this.cursorType == CursorType.Menu) {
+                if (this.menuCursor.y == yoff + 24) {
+                    this.setCursor(CursorType.Color);
+                } else {
+                    this.menuCursor.y += 16;
+                }
             } else {
                 if (this.paintCursor.y < (paintSize * 2) + 2 + paintSize * 15)
                     this.paintCursor.y += paintSize
@@ -124,6 +155,7 @@ namespace tileworld {
         private setCursor(ct: CursorType) {
             this.colorCursor.setFlag(SpriteFlag.Invisible, ct != CursorType.Color);
             this.paintCursor.setFlag(SpriteFlag.Invisible, ct != CursorType.Paint);
+            this.menuCursor.setFlag(SpriteFlag.Invisible, ct != CursorType.Menu);
             this.cursorType= ct;
         }
 

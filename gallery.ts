@@ -148,7 +148,7 @@ namespace tileworld {
     const gallery = [cat, fish, dog, chimp, brick, grass, water, dirt, trophyUp, debug, eat, garbageCan, stopSign ];
 
     export class Gallery extends RuleVisualsBase {
-        constructor(p: Project) {
+        constructor(p: Project, private current: Image) {
             super(p);
 
             this.setCol(2); this.setRow(0);
@@ -156,7 +156,8 @@ namespace tileworld {
             this.setCol(0); this.setRow(0);
 
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.dirMap.getPixel(this.col(), this.row()) != 0xf) {
+                if (this.col() == 2 && this.row() == 0 || 
+                    this.dirMap.getPixel(this.col(), this.row()) != 0xf) {
                     this.setTileSaved();
                 }
             });
@@ -171,8 +172,9 @@ namespace tileworld {
             screen.fillRect(0, 0, 32, 120, 0)
             screen.fillRect(0, yoff, 16, 16, 11);
             screen.drawTransparentImage(paint, 0, yoff);
+            let col = 4;
             let row = 0;
-            let col = 2;
+            this.drawImage(2, 0, this.current);
             gallery.forEach((img,i) => {
                 this.drawImage(col, row, img);
                 this.dirMap.setPixel(col, row, i);
