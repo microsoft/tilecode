@@ -1,4 +1,4 @@
-// meta={"simUrl":"https://trg-arcade.userpxt.io/v0.16.21/---simulator","cdnUrl":"https://pxt.azureedge.net","version":"3.3.0","target":"arcade","targetVersion":"0.16.21"}
+// meta={"simUrl":"https://trg-arcade.userpxt.io/v0.16.21/---simulator","cdnUrl":"https://pxt.azureedge.net","version":"3.3.1","target":"arcade","targetVersion":"0.16.21"}
 // total=2431472 new=37.54% cached=57.41% other=5.05%
 (function (ectx) {
 'use strict';
@@ -619,7 +619,7 @@ const pxsim_pxtrt = pxsim.pxtrt;
 const pxsim_numops = pxsim.numops;
 
 
-function _main___P518063(s) {
+function _main___P527296(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -1652,9 +1652,9 @@ switch (step) {
   case 72:
     r0 = s.retval;
     r0 = (globals.project___360603).fields["defaultTile"] = (0);
-    r0 = pxsim_pxtcore_mkClassInstance(tileworld_LoadScreen__C359889_VT);
+    r0 = pxsim_pxtcore_mkClassInstance(tileworld_LoadScreen__C524915_VT);
     s.tmp_0 = r0;
-    s.tmp_1 = tileworld_LoadScreen_constructor__P359894_mk(s);
+    s.tmp_1 = tileworld_LoadScreen_constructor__P524920_mk(s);
     s.tmp_1.arg0 = s.tmp_0;
     s.tmp_1.arg1 = globals.project___360603;
     s.pc = 73; return s.tmp_1;
@@ -1665,14 +1665,14 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-_main___P518063.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"main.ts","functionName":"<main>","argumentNames":[]}
-_main___P518063.continuations = [  ]
-_main___P518063.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"main.ts","functionName":"<main>","argumentNames":[]}
+_main___P527296.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"main.ts","functionName":"<main>","argumentNames":[]}
+_main___P527296.continuations = [  ]
+_main___P527296.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"main.ts","functionName":"<main>","argumentNames":[]}
 
-function _main___P518063_mk(s) {
+function _main___P527296_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: _main___P518063, depth: s.depth + 1,
+        parent: s, fn: _main___P527296, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   tmp_1: undefined,
@@ -2479,7 +2479,7 @@ function inline__P349827_mk(s) {
 
 
 
-function tileworld_LoadScreen_constructor__P359894(s) {
+function tileworld_LoadScreen_constructor__P524920(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -2495,7 +2495,7 @@ switch (step) {
       s.lambdaArgs = null;
     }
     r0 = s.arg0;
-    if (!checkSubtype(r0, tileworld_LoadScreen__C359889_VT)) failedCast(r0);
+    if (!checkSubtype(r0, tileworld_LoadScreen__C524915_VT)) failedCast(r0);
     r0 = (s.arg0).fields["bootstrap"] = (s.arg1);
     r0 = (s.arg0).fields["lastDir"] = (-1);
     s.tmp_0 = tileworld_RuleVisualsBase_constructor__P356400_mk(s);
@@ -2505,12 +2505,12 @@ switch (step) {
   case 5:
     r0 = s.retval;
     s.tmp_0 = controller_setRepeatDefault__P348480_mk(s);
-    s.tmp_0.arg0 = 300;
-    s.tmp_0.arg1 = 60;
+    s.tmp_0.arg0 = 500;
+    s.tmp_0.arg1 = 80;
     s.pc = 6; return s.tmp_0;
   case 6:
     r0 = s.retval;
-    r0 = pxsim_pxtcore_mkAction(1, inline__P359906);
+    r0 = pxsim_pxtcore_mkAction(1, inline__P524932);
     s.tmp_0 = r0;
     r0 = pxsim_pxtrt_stclo(s.tmp_0, 0, s.arg0);
     s.tmp_1 = controller_Button_onEvent__P348470_mk(s);
@@ -2520,9 +2520,9 @@ switch (step) {
     s.pc = 7; return s.tmp_1;
   case 7:
     r0 = s.retval;
-    s.tmp_0 = tileworld_LoadScreen__C359889_v0_1_mk(s);
+    s.tmp_0 = tileworld_LoadScreen__C524915_v0_1_mk(s);
     s.tmp_0.arg0 = s.arg0;
-    if (!checkSubtype(s.tmp_0.arg0, tileworld_LoadScreen__C359889_VT)) failedCast(s.tmp_0.arg0);
+    if (!checkSubtype(s.tmp_0.arg0, tileworld_LoadScreen__C524915_VT)) failedCast(s.tmp_0.arg0);
     s.tmp_0.fn = s.tmp_0.arg0.vtable.methods.update;
     s.pc = 8; return s.tmp_0;
   case 8:
@@ -2556,13 +2556,13 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-tileworld_LoadScreen_constructor__P359894.info = {"start":88,"length":1148,"line":3,"column":8,"endLine":27,"endColumn":9,"fileName":"loadScreen.ts","functionName":"inline","argumentNames":["this","bootstrap"]}
-tileworld_LoadScreen_constructor__P359894.info = {"start":88,"length":1148,"line":3,"column":8,"endLine":27,"endColumn":9,"fileName":"loadScreen.ts","functionName":"inline","argumentNames":["this","bootstrap"]}
+tileworld_LoadScreen_constructor__P524920.info = {"start":88,"length":1148,"line":3,"column":8,"endLine":27,"endColumn":9,"fileName":"loadScreen.ts","functionName":"inline","argumentNames":["this","bootstrap"]}
+tileworld_LoadScreen_constructor__P524920.info = {"start":88,"length":1148,"line":3,"column":8,"endLine":27,"endColumn":9,"fileName":"loadScreen.ts","functionName":"inline","argumentNames":["this","bootstrap"]}
 
-function tileworld_LoadScreen_constructor__P359894_mk(s) {
+function tileworld_LoadScreen_constructor__P524920_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: tileworld_LoadScreen_constructor__P359894, depth: s.depth + 1,
+        parent: s, fn: tileworld_LoadScreen_constructor__P524920, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   tmp_1: undefined,
@@ -2577,7 +2577,7 @@ function tileworld_LoadScreen_constructor__P359894_mk(s) {
 
 
 
-function inline__P359906(s) {
+function inline__P524932(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -2587,9 +2587,9 @@ if (yieldSteps-- < 0 && maybeYield(s, step, r0)) return null;
 switch (step) {
   case 0:
 
-    s.first___359907 = undefined;
-    s.second___359915 = undefined;
-    s.prefix___359935 = undefined;
+    s.first___524933 = undefined;
+    s.second___524941 = undefined;
+    s.prefix___524961 = undefined;
     s.tmp_2 = tileworld_RuleVisualsBase_col__P356386_mk(s);
     s.tmp_2.arg0 = s.caps[0];
     s.tmp_2.arg1 = true;
@@ -2615,7 +2615,7 @@ switch (step) {
   case 2:
     // jmp value (already in r0)
     s.tmp_5 = r0;
-    s.first___359907 = (s.tmp_5);
+    s.first___524933 = (s.tmp_5);
     s.tmp_2 = tileworld_RuleVisualsBase_col__P356386_mk(s);
     s.tmp_2.arg0 = s.caps[0];
     s.tmp_2.arg1 = true;
@@ -2641,14 +2641,14 @@ switch (step) {
   case 4:
     // jmp value (already in r0)
     s.tmp_5 = r0;
-    s.second___359915 = (s.tmp_5);
-    s.tmp_0 = r0 = s.first___359907;
+    s.second___524941 = (s.tmp_5);
+    s.tmp_0 = r0 = s.first___524933;
     r0 = pxsim_numops_toBool(s.tmp_0);
     if (!r0) { step = 5; continue; }
     r0 = s.tmp_0;
     { step = 6; continue; }
   case 5:
-    r0 = s.second___359915;
+    r0 = s.second___524941;
   case 6:
     // jmp value (already in r0)
     s.tmp_1 = r0;
@@ -2688,7 +2688,7 @@ switch (step) {
     s.tmp_8 = r0;
     r0 = pxsim_numops_toBoolDecr(s.tmp_8);
     if (!r0) { step = 19; continue; }
-    r0 = pxsim_numops_toBoolDecr(s.first___359907);
+    r0 = pxsim_numops_toBoolDecr(s.first___524933);
     if (!r0) { step = 13; continue; }
     s.tmp_11 = tileworld_RuleVisualsBase_row__P356387_mk(s);
     s.tmp_11.arg0 = s.caps[0];
@@ -2733,18 +2733,18 @@ switch (step) {
   case 16:
     // jmp value (already in r0)
     s.tmp_17 = r0;
-    s.prefix___359935 = (s.tmp_17);
+    s.prefix___524961 = (s.tmp_17);
     s.tmp_0 = r0 = s.caps[0];
     s.tmp_2 = tileworld_loadProject__P353274_mk(s);
-    s.tmp_2.arg0 = s.prefix___359935;
+    s.tmp_2.arg0 = s.prefix___524961;
     s.pc = 29; return s.tmp_2;
   case 29:
     r0 = s.retval;
     s.tmp_1 = r0;
     r0 = (s.tmp_0).fields["p"] = (s.tmp_1);
-    s.tmp_0 = tileworld_LoadScreen__C359889_v0_1_mk(s);
+    s.tmp_0 = tileworld_LoadScreen__C524915_v0_1_mk(s);
     s.tmp_0.arg0 = s.caps[0];
-    if (!checkSubtype(s.tmp_0.arg0, tileworld_LoadScreen__C359889_VT)) failedCast(s.tmp_0.arg0);
+    if (!checkSubtype(s.tmp_0.arg0, tileworld_LoadScreen__C524915_VT)) failedCast(s.tmp_0.arg0);
     s.tmp_0.fn = s.tmp_0.arg0.vtable.methods.update;
     s.pc = 30; return s.tmp_0;
   case 30:
@@ -2759,7 +2759,7 @@ switch (step) {
     if (!r0) { step = 17; continue; }
     s.tmp_3 = r0 = s.caps[0];
     s.tmp_5 = tileworld_emptyProject__P353660_mk(s);
-    s.tmp_5.arg0 = s.prefix___359935;
+    s.tmp_5.arg0 = s.prefix___524961;
     s.pc = 31; return s.tmp_5;
   case 31:
     r0 = s.retval;
@@ -2794,13 +2794,13 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-inline__P359906.info = {"start":272,"length":791,"line":6,"column":64,"endLine":22,"endColumn":13,"fileName":"loadScreen.ts","functionName":"inline","argumentNames":[]}
-inline__P359906.info = {"start":272,"length":791,"line":6,"column":64,"endLine":22,"endColumn":13,"fileName":"loadScreen.ts","functionName":"inline","argumentNames":[]}
+inline__P524932.info = {"start":272,"length":791,"line":6,"column":64,"endLine":22,"endColumn":13,"fileName":"loadScreen.ts","functionName":"inline","argumentNames":[]}
+inline__P524932.info = {"start":272,"length":791,"line":6,"column":64,"endLine":22,"endColumn":13,"fileName":"loadScreen.ts","functionName":"inline","argumentNames":[]}
 
-function inline__P359906_mk(s) {
+function inline__P524932_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: inline__P359906, depth: s.depth + 1,
+        parent: s, fn: inline__P524932, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   tmp_1: undefined,
@@ -2820,9 +2820,9 @@ function inline__P359906_mk(s) {
   tmp_15: undefined,
   tmp_16: undefined,
   tmp_17: undefined,
-  first___359907: undefined,
-  second___359915: undefined,
-  prefix___359935: undefined,
+  first___524933: undefined,
+  second___524941: undefined,
+  prefix___524961: undefined,
 } }
 
 
@@ -34745,8 +34745,8 @@ switch (step) {
     s.tiles___355363 = undefined;
     s.tm___355366 = undefined;
     s.t___355371 = undefined;
-    s.unnamed2022___U5 = undefined;
-    s.unnamed2023___U6 = undefined;
+    s.unnamed2078___U5 = undefined;
+    s.unnamed2079___U6 = undefined;
     s.tileSprite___355373 = undefined;
     if (s.lambdaArgs) {
       s.arg0 = (s.lambdaArgs[0]);
@@ -34869,15 +34869,15 @@ switch (step) {
     r0 = r0.fields["tileMap"];
     s.tm___355366 = (r0);
     s.t___355371 = (undefined);
-    s.unnamed2022___U5 = (s.tiles___355363);
-    s.unnamed2023___U6 = (0);
+    s.unnamed2078___U5 = (s.tiles___355363);
+    s.unnamed2079___U6 = (0);
   case 3:
-    s.tmp_0 = r0 = s.unnamed2023___U6;
-    r0 = pxsim_Array__length(s.unnamed2022___U5);
+    s.tmp_0 = r0 = s.unnamed2079___U6;
+    r0 = pxsim_Array__length(s.unnamed2078___U5);
     s.tmp_1 = r0;
     r0 = (s.tmp_0 < s.tmp_1);
     if (!r0) { step = 4; continue; }
-    r0 = pxsim_Array__getAt(s.unnamed2022___U5, s.unnamed2023___U6);
+    r0 = pxsim_Array__getAt(s.unnamed2078___U5, s.unnamed2079___U6);
     s.t___355371 = (r0);
     r0 = pxsim_pxtcore_mkClassInstance(tileworld_TileSprite__C353908_VT);
     s.tmp_2 = r0;
@@ -34909,11 +34909,11 @@ switch (step) {
     s.pc = 16; return s.tmp_0;
   case 16:
     r0 = s.retval;
-    r0 = (s.unnamed2023___U6 + 1);
-    s.unnamed2023___U6 = (r0);
+    r0 = (s.unnamed2079___U6 + 1);
+    s.unnamed2079___U6 = (r0);
     { step = 3; continue; }
   case 4:
-    s.unnamed2022___U5 = (undefined);
+    s.unnamed2078___U5 = (undefined);
   case 5:
     r0 = (s.kind___355334 + 1);
     s.kind___355334 = (r0);
@@ -34942,8 +34942,8 @@ function tileworld_RunGame_setWorld__P355266_mk(s) {
   tiles___355363: undefined,
   tm___355366: undefined,
   t___355371: undefined,
-  unnamed2022___U5: undefined,
-  unnamed2023___U6: undefined,
+  unnamed2078___U5: undefined,
+  unnamed2079___U6: undefined,
   tileSprite___355373: undefined,
   arg0: undefined,
   arg1: undefined,
@@ -53342,7 +53342,7 @@ function helpers_imageFillCircle__P348293_mk(s) {
 
 
 
-function tileworld_LoadScreen_update__P359893(s) {
+function tileworld_LoadScreen_update__P524919(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -53352,53 +53352,53 @@ if (yieldSteps-- < 0 && maybeYield(s, step, r0)) return null;
 switch (step) {
   case 0:
 
-    s.col___360038 = undefined;
-    s.row___360042 = undefined;
-    s.i___360054 = undefined;
-    s.i___360074 = undefined;
+    s.col___525064 = undefined;
+    s.row___525068 = undefined;
+    s.i___525080 = undefined;
+    s.i___525100 = undefined;
     if (s.lambdaArgs) {
       s.arg0 = (s.lambdaArgs[0]);
       s.lambdaArgs = null;
     }
     r0 = s.arg0;
-    if (!checkSubtype(r0, tileworld_LoadScreen__C359889_VT)) failedCast(r0);
-    s.col___360038 = (0);
+    if (!checkSubtype(r0, tileworld_LoadScreen__C524915_VT)) failedCast(r0);
+    s.col___525064 = (0);
   case 1:
-    r0 = (s.col___360038 < 10);
+    r0 = (s.col___525064 < 10);
     s.tmp_0 = r0;
     r0 = pxsim_numops_toBoolDecr(s.tmp_0);
     if (!r0) { step = 4; continue; }
-    s.row___360042 = (0);
+    s.row___525068 = (0);
   case 2:
-    r0 = (s.row___360042 < 7);
+    r0 = (s.row___525068 < 7);
     s.tmp_0 = r0;
     r0 = pxsim_numops_toBoolDecr(s.tmp_0);
     if (!r0) { step = 3; continue; }
     s.tmp_1 = tileworld_RuleVisualsBase_drawImage__P356388_mk(s);
     s.tmp_1.arg0 = s.arg0;
-    s.tmp_1.arg1 = s.col___360038;
-    s.tmp_1.arg2 = s.row___360042;
+    s.tmp_1.arg1 = s.col___525064;
+    s.tmp_1.arg2 = s.row___525068;
     s.tmp_1.arg3 = globals.emptyTile___423836;
     s.pc = 20; return s.tmp_1;
   case 20:
     r0 = s.retval;
-    r0 = (s.row___360042 + 1);
-    s.row___360042 = (r0);
+    r0 = (s.row___525068 + 1);
+    s.row___525068 = (r0);
     { step = 2; continue; }
   case 3:
-    r0 = (s.col___360038 + 1);
-    s.col___360038 = (r0);
+    r0 = (s.col___525064 + 1);
+    s.col___525064 = (r0);
     { step = 1; continue; }
   case 4:
-    s.i___360054 = (0);
+    s.i___525080 = (0);
   case 5:
-    r0 = (s.i___360054 < 10);
+    r0 = (s.i___525080 < 10);
     s.tmp_0 = r0;
     r0 = pxsim_numops_toBoolDecr(s.tmp_0);
     if (!r0) { step = 9; continue; }
     s.tmp_1 = tileworld_RuleVisualsBase_drawImage__P356388_mk(s);
     s.tmp_1.arg0 = s.arg0;
-    s.tmp_1.arg1 = s.i___360054;
+    s.tmp_1.arg1 = s.i___525080;
     s.tmp_1.arg2 = 0;
     s.tmp_1.arg3 = globals.genericSprite___423851;
     s.pc = 21; return s.tmp_1;
@@ -53406,13 +53406,13 @@ switch (step) {
     r0 = s.retval;
     s.tmp_0 = tileworld_RuleVisualsBase_drawImage__P356388_mk(s);
     s.tmp_0.arg0 = s.arg0;
-    s.tmp_0.arg1 = s.i___360054;
+    s.tmp_0.arg1 = s.i___525080;
     s.tmp_0.arg2 = 6;
     s.tmp_0.arg3 = globals.genericSprite___423851;
     s.pc = 22; return s.tmp_0;
   case 22:
     r0 = s.retval;
-    r0 = (s.i___360054 > 6);
+    r0 = (s.i___525080 > 6);
     s.tmp_0 = r0;
     r0 = pxsim_numops_toBoolDecr(s.tmp_0);
     if (!r0) { step = 6; continue; }
@@ -53422,7 +53422,7 @@ switch (step) {
     s.tmp_1 = tileworld_RuleVisualsBase_drawImage__P356388_mk(s);
     s.tmp_1.arg0 = s.arg0;
     s.tmp_1.arg1 = 0;
-    s.tmp_1.arg2 = s.i___360054;
+    s.tmp_1.arg2 = s.i___525080;
     s.tmp_1.arg3 = globals.genericSprite___423851;
     s.pc = 23; return s.tmp_1;
   case 23:
@@ -53430,32 +53430,32 @@ switch (step) {
     s.tmp_0 = tileworld_RuleVisualsBase_drawImage__P356388_mk(s);
     s.tmp_0.arg0 = s.arg0;
     s.tmp_0.arg1 = 9;
-    s.tmp_0.arg2 = s.i___360054;
+    s.tmp_0.arg2 = s.i___525080;
     s.tmp_0.arg3 = globals.genericSprite___423851;
     s.pc = 24; return s.tmp_0;
   case 24:
     r0 = s.retval;
   case 8:
-    r0 = (s.i___360054 + 1);
-    s.i___360054 = (r0);
+    r0 = (s.i___525080 + 1);
+    s.i___525080 = (r0);
     { step = 5; continue; }
   case 9:
-    s.i___360074 = (0);
+    s.i___525100 = (0);
   case 10:
-    r0 = (s.i___360074 < 4);
+    r0 = (s.i___525100 < 4);
     s.tmp_0 = r0;
     r0 = pxsim_numops_toBoolDecr(s.tmp_0);
     if (!r0) { step = 11; continue; }
     s.tmp_1 = tileworld_RuleVisualsBase_fillTile__P356391_mk(s);
     s.tmp_1.arg0 = s.arg0;
-    s.tmp_1.arg1 = s.i___360074;
+    s.tmp_1.arg1 = s.i___525100;
     s.tmp_1.arg2 = 0;
     s.tmp_1.arg3 = 12;
     s.pc = 25; return s.tmp_1;
   case 25:
     r0 = s.retval;
-    r0 = (s.i___360074 + 1);
-    s.i___360074 = (r0);
+    r0 = (s.i___525100 + 1);
+    s.i___525100 = (r0);
     { step = 10; continue; }
   case 11:
     r0 = s.arg0.fields["lastDir"];
@@ -53631,7 +53631,7 @@ switch (step) {
     s.pc = 40; return s.tmp_0;
   case 40:
     r0 = s.retval;
-    s.tmp_0 = tileworld_LoadScreen_makeIt__P359892_mk(s);
+    s.tmp_0 = tileworld_LoadScreen_makeIt__P524918_mk(s);
     s.tmp_0.arg0 = s.arg0;
     s.tmp_0.arg1 = 5;
     s.tmp_0.arg2 = 2;
@@ -53639,7 +53639,7 @@ switch (step) {
     s.pc = 41; return s.tmp_0;
   case 41:
     r0 = s.retval;
-    s.tmp_0 = tileworld_LoadScreen_makeIt__P359892_mk(s);
+    s.tmp_0 = tileworld_LoadScreen_makeIt__P524918_mk(s);
     s.tmp_0.arg0 = s.arg0;
     s.tmp_0.arg1 = 7;
     s.tmp_0.arg2 = 2;
@@ -53647,7 +53647,7 @@ switch (step) {
     s.pc = 42; return s.tmp_0;
   case 42:
     r0 = s.retval;
-    s.tmp_0 = tileworld_LoadScreen_makeIt__P359892_mk(s);
+    s.tmp_0 = tileworld_LoadScreen_makeIt__P524918_mk(s);
     s.tmp_0.arg0 = s.arg0;
     s.tmp_0.arg1 = 5;
     s.tmp_0.arg2 = 4;
@@ -53655,7 +53655,7 @@ switch (step) {
     s.pc = 43; return s.tmp_0;
   case 43:
     r0 = s.retval;
-    s.tmp_0 = tileworld_LoadScreen_makeIt__P359892_mk(s);
+    s.tmp_0 = tileworld_LoadScreen_makeIt__P524918_mk(s);
     s.tmp_0.arg0 = s.arg0;
     s.tmp_0.arg1 = 7;
     s.tmp_0.arg2 = 4;
@@ -53667,23 +53667,23 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-tileworld_LoadScreen_update__P359893.info = {"start":1744,"length":1642,"line":40,"column":8,"endLine":75,"endColumn":9,"fileName":"loadScreen.ts","functionName":"update","argumentNames":["this"]}
-tileworld_LoadScreen_update__P359893.info = {"start":1744,"length":1642,"line":40,"column":8,"endLine":75,"endColumn":9,"fileName":"loadScreen.ts","functionName":"update","argumentNames":["this"]}
+tileworld_LoadScreen_update__P524919.info = {"start":1744,"length":1642,"line":40,"column":8,"endLine":75,"endColumn":9,"fileName":"loadScreen.ts","functionName":"update","argumentNames":["this"]}
+tileworld_LoadScreen_update__P524919.info = {"start":1744,"length":1642,"line":40,"column":8,"endLine":75,"endColumn":9,"fileName":"loadScreen.ts","functionName":"update","argumentNames":["this"]}
 
-function tileworld_LoadScreen_update__P359893_mk(s) {
+function tileworld_LoadScreen_update__P524919_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: tileworld_LoadScreen_update__P359893, depth: s.depth + 1,
+        parent: s, fn: tileworld_LoadScreen_update__P524919, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   tmp_1: undefined,
   tmp_2: undefined,
   tmp_3: undefined,
   tmp_4: undefined,
-  col___360038: undefined,
-  row___360042: undefined,
-  i___360054: undefined,
-  i___360074: undefined,
+  col___525064: undefined,
+  row___525068: undefined,
+  i___525080: undefined,
+  i___525100: undefined,
   arg0: undefined,
 } }
 
@@ -53691,7 +53691,7 @@ function tileworld_LoadScreen_update__P359893_mk(s) {
 
 
 
-function tileworld_LoadScreen_makeIt__P359892(s) {
+function tileworld_LoadScreen_makeIt__P524918(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -53709,7 +53709,7 @@ switch (step) {
       s.lambdaArgs = null;
     }
     r0 = s.arg0;
-    if (!checkSubtype(r0, tileworld_LoadScreen__C359889_VT)) failedCast(r0);
+    if (!checkSubtype(r0, tileworld_LoadScreen__C524915_VT)) failedCast(r0);
     s.tmp_0 = tileworld_RuleVisualsBase_drawImage__P356388_mk(s);
     s.tmp_0.arg0 = s.arg0;
     r0 = (s.arg1 - 1);
@@ -53802,13 +53802,13 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-tileworld_LoadScreen_makeIt__P359892.info = {"start":1433,"length":299,"line":34,"column":8,"endLine":38,"endColumn":9,"fileName":"loadScreen.ts","functionName":"makeIt","argumentNames":["this","col","row","id"]}
-tileworld_LoadScreen_makeIt__P359892.info = {"start":1433,"length":299,"line":34,"column":8,"endLine":38,"endColumn":9,"fileName":"loadScreen.ts","functionName":"makeIt","argumentNames":["this","col","row","id"]}
+tileworld_LoadScreen_makeIt__P524918.info = {"start":1433,"length":299,"line":34,"column":8,"endLine":38,"endColumn":9,"fileName":"loadScreen.ts","functionName":"makeIt","argumentNames":["this","col","row","id"]}
+tileworld_LoadScreen_makeIt__P524918.info = {"start":1433,"length":299,"line":34,"column":8,"endLine":38,"endColumn":9,"fileName":"loadScreen.ts","functionName":"makeIt","argumentNames":["this","col","row","id"]}
 
-function tileworld_LoadScreen_makeIt__P359892_mk(s) {
+function tileworld_LoadScreen_makeIt__P524918_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: tileworld_LoadScreen_makeIt__P359892, depth: s.depth + 1,
+        parent: s, fn: tileworld_LoadScreen_makeIt__P524918, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   tmp_1: undefined,
@@ -73524,7 +73524,7 @@ function sprites_BaseSprite___visible__P348411_mk(s) {
 
 
 
-function tileworld_LoadScreen_cursorMove__P359891(s) {
+function tileworld_LoadScreen_cursorMove__P524917(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -73541,7 +73541,7 @@ switch (step) {
       s.lambdaArgs = null;
     }
     r0 = s.arg0;
-    if (!checkSubtype(r0, tileworld_LoadScreen__C359889_VT)) failedCast(r0);
+    if (!checkSubtype(r0, tileworld_LoadScreen__C524915_VT)) failedCast(r0);
     r0 = pxsim_numops_toBoolDecr(s.arg2);
     if (!r0) { step = 1; continue; }
     r0 = s.arg1;
@@ -73556,13 +73556,13 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-tileworld_LoadScreen_cursorMove__P359891.info = {"start":1302,"length":119,"line":30,"column":8,"endLine":32,"endColumn":9,"fileName":"loadScreen.ts","functionName":"cursorMove","argumentNames":["this","dir","pressed"]}
-tileworld_LoadScreen_cursorMove__P359891.info = {"start":1302,"length":119,"line":30,"column":8,"endLine":32,"endColumn":9,"fileName":"loadScreen.ts","functionName":"cursorMove","argumentNames":["this","dir","pressed"]}
+tileworld_LoadScreen_cursorMove__P524917.info = {"start":1302,"length":119,"line":30,"column":8,"endLine":32,"endColumn":9,"fileName":"loadScreen.ts","functionName":"cursorMove","argumentNames":["this","dir","pressed"]}
+tileworld_LoadScreen_cursorMove__P524917.info = {"start":1302,"length":119,"line":30,"column":8,"endLine":32,"endColumn":9,"fileName":"loadScreen.ts","functionName":"cursorMove","argumentNames":["this","dir","pressed"]}
 
-function tileworld_LoadScreen_cursorMove__P359891_mk(s) {
+function tileworld_LoadScreen_cursorMove__P524917_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: tileworld_LoadScreen_cursorMove__P359891, depth: s.depth + 1,
+        parent: s, fn: tileworld_LoadScreen_cursorMove__P524917, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   arg0: undefined,
@@ -76836,7 +76836,7 @@ function if_up_2_mk(s) {
 } }
 
 
-function tileworld_LoadScreen__C359889_v0_1_mk(s) {
+function tileworld_LoadScreen__C524915_v0_1_mk(s) {
     checkStack(s.depth);
     return {
         parent: s, fn: null, depth: s.depth + 1,
@@ -77290,16 +77290,16 @@ const tileworld_RuleVisualsBase__C356377_VT = mkVTable({
     "update": tileworld_BackgroundBase_update__P355265,
   },
 });
-const tileworld_LoadScreen__C359889_VT = mkVTable({
+const tileworld_LoadScreen__C524915_VT = mkVTable({
   name: "LoadScreen",
   numFields: 7,
   classNo: 26,
   lastSubtypeNo: 26,
   maxBgInstances: null,
   methods: {
-    "update": tileworld_LoadScreen_update__P359893,
+    "update": tileworld_LoadScreen_update__P524919,
     "okToMove": tileworld_RuleVisualsBase_okToMove__P356382,
-    "cursorMove": tileworld_LoadScreen_cursorMove__P359891,
+    "cursorMove": tileworld_LoadScreen_cursorMove__P524917,
     "centerImage": tileworld_RuleVisualsBase_centerImage__P356394,
     "showCollision": tileworld_RuleVisualsBase_showCollision__P356396,
   },
@@ -77318,9 +77318,9 @@ const tileworld_LoadScreen__C359889_VT = mkVTable({
     "set/bootstrap": null,
     "lastDir": null,
     "set/lastDir": null,
-    "cursorMove": tileworld_LoadScreen_cursorMove__P359891,
-    "makeIt": tileworld_LoadScreen_makeIt__P359892,
-    "update": tileworld_LoadScreen_update__P359893,
+    "cursorMove": tileworld_LoadScreen_cursorMove__P524917,
+    "makeIt": tileworld_LoadScreen_makeIt__P524918,
+    "update": tileworld_LoadScreen_update__P524919,
     "moveInX": tileworld_RuleVisualsBase_moveInX__P356379,
     "moveUp": tileworld_RuleVisualsBase_moveUp__P356380,
     "moveDown": tileworld_RuleVisualsBase_moveDown__P356381,
@@ -79339,5 +79339,5 @@ const effects_SceneAnchor__C349594_VT = mkVTable({
 
 const breakpoints = setupDebugger(1, ["player___353658","colorCursor___423815","paintCursor___423818","play___423821","debug___423824","pencil___423827","paint___423830","music___423833","emptyTile___423836","cursorIn___423839","cursorOut___423842","collisionRestingSprite___423845","collisionMovingSprite___423848","genericSprite___423851","exclude___423854","include___423857","oneof___423860","ok___423863","allFour___423866","downArrow___423869","downButton___423872","upArrow___423875","upButton___423878","rightArrow___423881","rightButton___423884","leftArrow___423887","leftButton___423890","Abutton___423893","eat___423896","stopSign___423899","uTurn___423902","addRule___423905","garbageCan___423908","diskIcon___423911","help___423914","gameIcon___423917","trophyUp___423920","trophyDown___423923","equalZero___423926","moveImages___423929","buttonImages___423937","attrImages___423943","commandImages___423955","gameImages___423963","categoryImages___423967","spriteImages___423974","cat___512433","fish___512606","dog___512609","chimp___512612","brick___512615","grass___512618","water___512621","dirt___512624","gallery___512431","player___360277","diamond___360280","boulder___360283","enemy___360286","wall___360289","wall2___360292","dirt___360295","space___360298","movable___360301","fixed___360307","all___360314","wallId___360322","spaceId___360328","playerId___360334","enemyId___360340","boulderId___360346","diamondId___360352","tp___360415","playerMove___360429","moveRight___360439","moveLeft___360445","boulderRight___360451","boulderLeft___360458","playerPaint___360465","playerMoveBoulderRight___360516","playerMoveBoulderLeft___360531","boulderFallDown___360546","boulderFallingDown___360564","boulderFallLeft___360581","project___360603","world___360620","TileWorld___360634","spriteCount___353907","ruleEditor___357111","buf___352172","bitIndex___352174","attrValues___423952"])
 
-return _main___P518063
+return _main___P527296
 })
