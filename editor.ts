@@ -6,6 +6,9 @@ namespace tileworld {
     const tileSprite = "03tile#1,13tile#2,04tile#3,14tile#4,05sprite#1,15sprite#2,06sprite#3,16sprite#4,";
 
     // the root of the editing experience is creating a (shared) tile map
+
+    enum CursorType { Top, Map };
+
     export class MapEditor extends BackgroundBase {
         private world: Image;
         private offsetX: number; // where are we in the world?
@@ -14,7 +17,6 @@ namespace tileworld {
         private selected: Sprite;
         private userSpriteIndex: number;
         private aDown: boolean;
-        private helpOn: boolean;
         private helpCursor: Sprite;
         constructor(private p: Project) {
             super();
@@ -22,7 +24,7 @@ namespace tileworld {
             this.world = p.getWorld();
             // cursors
             this.selected = sprites.create(cursorOut);
-            this.selected.x = 16 + 8;
+            this.selected.x = 32 + 8;
             this.selected.y = 8 + yoff;
             this.userSpriteIndex = 0;
             this.cursor = sprites.create(cursorIn);
@@ -96,7 +98,7 @@ namespace tileworld {
         }
 
         private cursorAction(repeated: boolean = false) {
-            if (this.helpOn) {
+            if (this.p.help) {
                 this.helpCursor.x = this.cursor.x + 40;
                 this.helpCursor.y = this.cursor.y + 16;
                 if (this.row() < 1) {
@@ -124,9 +126,9 @@ namespace tileworld {
             }
             if (repeated)
                 return;
-            if (this.row() == 0 && 1 <= this.col() && this.col() <= this.p.all().length ) {
+            if (this.row() == 0 && 2 <= this.col() && this.col() < 2+this.p.all().length ) {
                 // change user sprite
-                this.userSpriteIndex = this.col()-1;
+                this.userSpriteIndex = this.col()-2;
                 this.updateSelection();
             }
             this.update();
@@ -136,7 +138,6 @@ namespace tileworld {
             this.p.saveWorld();
             game.pushScene();
             this.aDown = false;
-            this.helpOn = false;
         }
 
         private col(current: boolean = true) {
@@ -152,14 +153,15 @@ namespace tileworld {
         }
 
         public update() {
-            if (!this.helpOn) {
+            if (!this.p.help) {
                 this.helpCursor.say(null);
                 this.cursor.say(null);
             }
             screen.fill(0);
+            screen.fillRect(0, yoff, 16, 16, 11);
             this.drawImage(map, 0, 0);
             this.p.all().forEach((img, index) => { 
-                this.drawImage(img, 1+index, 0); 
+                this.drawImage(img, 2+index, 0); 
             });
             for(let x = this.offsetX; x<this.offsetX+10; x++) {
                 for (let y = this.offsetY; y < this.offsetY + 6; y++) {

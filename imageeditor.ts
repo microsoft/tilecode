@@ -4,7 +4,11 @@ namespace tileworld {
     const paintSize = 6;
     const colorsY = 30;
     const colorsX = 5;
+    const editorY = paintSize * 4; 
+    
     enum CursorType { Color, Paint, Menu };
+
+    // TODO: sprite selection
     export class ImageEditor extends BackgroundBase {
         private cursorType: CursorType;         // are we selecting a color or painting?
         private colorCursor: Sprite;
@@ -27,7 +31,7 @@ namespace tileworld {
 
             this.paintCursor = sprites.create(paintCursor)
             this.paintCursor.x = paintSize * 5 + 2 
-            this.paintCursor.y = paintSize * 2 + 2
+            this.paintCursor.y = editorY + 2
             this.paintCursor.setFlag(SpriteFlag.Invisible, true);
 
             this.menuCursor = sprites.create(cursorIn);
@@ -52,6 +56,8 @@ namespace tileworld {
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.cursorType== CursorType.Paint) {
                     this.setCursor(CursorType.Color);
+                } else if (this.cursorType == CursorType.Color) {
+                    this.setCursor(CursorType.Paint);
                 } else {
                     this.saveAndPop();
                 }
@@ -68,7 +74,7 @@ namespace tileworld {
                 this.update()
             } else if (this.cursorType == CursorType.Paint) {
                 let col = ((this.paintCursor.x - (paintSize * 5 + 2)) / paintSize) | 0x0
-                let row = ((this.paintCursor.y - (paintSize * 2 + 2)) / paintSize) | 0x0
+                let row = ((this.paintCursor.y - (editorY + 2)) / paintSize) | 0x0
                 this.image.setPixel(col, row, this.selectedColor)
                 this.update()
             } else {
@@ -124,7 +130,7 @@ namespace tileworld {
                 if (this.menuCursor.y > yoff + 8)
                     this.menuCursor.y -= 16;
             } else {
-                if (this.paintCursor.y > (paintSize * 3 + 1))
+                if (this.paintCursor.y > (editorY + paintSize + 1))
                     this.paintCursor.y -= paintSize
             }
             this.paintPixel();
@@ -141,7 +147,7 @@ namespace tileworld {
                     this.menuCursor.y += 16;
                 }
             } else {
-                if (this.paintCursor.y < (paintSize * 2) + 2 + paintSize * 15)
+                if (this.paintCursor.y < editorY + 2 + paintSize * 15)
                     this.paintCursor.y += paintSize
             }
             this.paintPixel();
@@ -180,10 +186,9 @@ namespace tileworld {
             screen.fillRect(colorsX + 1, colorsY+13, 3, 3, 13)
             screen.fillRect(colorsX + 4, colorsY+16, 3, 3, 13)
             // frame the sprite editor
-            screen.drawRect(28, 10, paintSize * 16 + (paintSize - 2), paintSize * 16 + (paintSize -2), 1)
             // draw the sprite editor
             for (let row = 0; row < this.image.height; row++) {
-                let y = (paintSize << 1) + row * paintSize
+                let y = editorY + row * paintSize
                 for (let col = 0; col < this.image.width; col++) {
                     let x = paintSize * 5 + col * paintSize
                     let color = this.image.getPixel(col, row)
@@ -194,9 +199,10 @@ namespace tileworld {
                     }
                 }
             }
+            screen.drawRect(28, 10 + paintSize*2, paintSize * 16 + (paintSize - 2), paintSize * 16 + (paintSize - 2), 1)
             // draw the sprite
-            screen.drawImage(this.image, 134, 12)
-            screen.drawRect(133, 11, 18, 18, 1)
+            screen.drawImage(this.image, 134, 12 + paintSize* 2)
+            screen.drawRect(133, 11 + paintSize* 2, 18, 18, 1)
         }
     }
 }
