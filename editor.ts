@@ -135,8 +135,8 @@ namespace tileworld {
             if (!this.aDown)
                 return;
             if (this.cursorType == CursorType.Map) {
-                let col = (this.paintCursor.x / paintSize) | 0x0;
-                let row = ((this.paintCursor.y - editorY) / paintSize) | 0x0;
+                let col = (this.paintCursor.x >> 3) + this.offsetX;
+                let row = ((this.paintCursor.y - (editorY +4)) >> 3) + this.offsetY;
                 this.world.setPixel(col, row, this.userSpriteIndex);
                 this.update();
                 return;
