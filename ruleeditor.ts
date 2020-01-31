@@ -6,8 +6,6 @@ namespace tileworld {
     const editorRow = 2;
     const menuHelpString = "30delete rule,80add rule,90next rule,70previous rule,";
     const attrHelpString = "00include,10exclude,20allow,30one of,90allow all,";
-    const nonCollidingHelpString = "";
-    const collidingHelpString = "";
 
     export class RuleEditor extends RuleVisualsBase {
         private otherCursor: Sprite;    // show correspondence between left and right
@@ -143,31 +141,26 @@ namespace tileworld {
         }
 
         protected cursorMove(dir: MoveDirection, pressed: boolean) {
+            if (this.menu == RuleEditorMenus.MainMenu) {
+                this.otherCursorMove();
+            }
             if (this.p.help) {
                 this.helpCursor.x = this.col() < 7 ? this.cursor.x + 16 : this.cursor.x - 16;
                 this.helpCursor.y = this.row() < 6 ? this.cursor.y + 32 : this.cursor.y;
-                if (this.row() == 0) {
-                    let helpString = ""
-                    switch(this.menu) {
-                        case RuleEditorMenus.MainMenu: helpString = menuHelpString; break;
-                        case RuleEditorMenus.AttrTypeMenu: helpString = attrHelpString; break;
+                this.helpCursor.say(null);
+                if (this.menu == RuleEditorMenus.MainMenu) {
+                    if (this.row() == 0) {
+                        this.helpCursor.say(getHelp(menuHelpString, this.col(), this.row()));
+                    } else if (this.manhattanDistance2() <= 2 && (this.col() != 2 || this.row() != 2 + editorRow)) {
+                        this.helpCursor.say("A: attributes");
+                    } 
+                } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
+                    if (this.row() == 0) {
+                        this.helpCursor.say(getHelp(attrHelpString, this.col(), this.row()));
+                    } else if (this.row() == 1 && this.col() < 8) {
+                        this.helpCursor.say("A: set attribute");
                     }
-                    let message = getHelp(helpString, this.col(), this.row());
-                    this.helpCursor.say(message);
-                } else if (this.row() == 1 && this.col() < 8 && this.menu == RuleEditorMenus.AttrTypeMenu) {
-                    this.helpCursor.say("A: set attribute");
-                } else if (this.manhattanDistance2() <= 2 && (this.col() !=2 || this.row() != 2 + editorRow)) {
-                    this.helpCursor.say("A: attributes");
-                } else {
-                    this.helpCursor.say(null);
-                }
-            }
-            if (this.menu == RuleEditorMenus.MainMenu) {
-                this.otherCursorMove();
-            } else {
-                if (this.menu == RuleEditorMenus.CommandMenu) {
-                    this.commandUpdate();
-                    this.update();
+                } else if (this.menu == RuleEditorMenus.CommandMenu) {
                 }
             }
         }
@@ -210,7 +203,7 @@ namespace tileworld {
             this.makeContext();
             this.showRuleType(this.p.getType(this.rule), this.p.getDir(this.rule), 2, 2+editorRow);
             this.showCommands();
-            if (this.p.help && this.col() > 5 && this.row() >= editorRow) {
+            if (this.p.help && this.menu == RuleEditorMenus.MainMenu && this.col() > 5 && this.row() >= editorRow) {
                 let len = this.commandLengths[this.row() - editorRow];
                 if (len != -1 && this.col()-6 < len) {
                     this.helpCursor.say(this.col() - 6 == len - 1 ? "A: add command" : "E: edit command");
