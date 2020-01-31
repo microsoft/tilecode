@@ -275,7 +275,7 @@ namespace tileworld {
             let whendo = this.getWhenDo(wcol, wrow);
             if (draw) {
                 let index = this.findWitnessColRow(wcol, wrow);
-                let img1 = this.collideCol == wcol && this.collideRow == wrow ? collisionRestingSprite : genericSprite;
+                let img1 = this.collideCol == wcol && this.collideRow - editorRow == wrow ? collisionRestingSprite : genericSprite;
                 let img2 = index == -1 || index == 100 ? img1 : this.p.getImage(index);
                 this.drawImage(5, crow + editorRow, img2);
                 if (img1 == collisionRestingSprite)
