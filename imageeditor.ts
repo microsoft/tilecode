@@ -50,15 +50,7 @@ namespace tileworld {
 
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => { this.Adown = true; this.paintPixel() });
             controller.A.onEvent(ControllerButtonEvent.Released, () => { this.Adown = false; });
-            controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.cursorType== CursorType.Paint) {
-                    this.setCursor(CursorType.Color);
-                } else if (this.cursorType == CursorType.Color) {
-                    this.setCursor(CursorType.Paint);
-                } else {
-                    this.saveAndPop();
-                }
-            });
+            controller.B.onEvent(ControllerButtonEvent.Pressed, () => { this.saveAndPop(); });
         }
 
         private paintPixel() {
