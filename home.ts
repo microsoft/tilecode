@@ -43,6 +43,10 @@ namespace tileworld {
                         g.start();
                         return;
                     }
+                } else if (command == settingsIcon) {
+                    game.pushScene();
+                    new ProjectSettings(this.p);
+                    return;
                 }
             });
 

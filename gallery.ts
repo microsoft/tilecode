@@ -171,7 +171,6 @@ namespace tileworld {
 
         protected update() {
             screen.fill(0);
-            screen.fillRect(0, 0, 32, 120, 0)
             screen.fillRect(0, yoff, 16, 16, 11);
             screen.drawTransparentImage(paint, 0, yoff);
             let col = 4;
