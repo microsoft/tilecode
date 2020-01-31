@@ -1,6 +1,6 @@
 namespace tileworld {
     
-    enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu };
+    enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu, CommandArgMenu };
     enum CommandTokens { Last=CommandType.Last, SpaceTile, Delete };
 
     const editorRow = 2;
@@ -264,7 +264,6 @@ namespace tileworld {
                 for (let j = 0; j <= 4; j++) {
                     let dist = Math.abs(2-j) + Math.abs(2-i);
                     if (dist <= 2 && this.active(i,j)) {
-                        // TODO: limit the context base on the rule type
                         this.drawImage(i, j+editorRow, emptyTile);
                         if (i != 2 || j != 2)
                             this.showAttributes(this.rule, i, j);
@@ -473,18 +472,25 @@ namespace tileworld {
             this.noMenu();
         }
 
+        // put help here???
         private commandUpdate(exit: boolean = false) {
             if (this.menu != RuleEditorMenus.CommandMenu)
                 return;
             let tok = this.ruleTypeMap.getPixel(this.col(), this.row());
             let arg = this.dirMap.getPixel(this.col(), this.row());
             if (tok == CommandTokens.Delete) {
-                if (exit)
+                if (exit) {
                     this.p.removeCommand(this.rule, this.whenDo, this.currentCommand);
+                } else if (this.p.help) {
+                    this.helpCursor.say("delete command");
+                }
             } else if (this.row() == 0 && tok != 0xf) {
                 let inst = this.p.getInst(this.rule, this.whenDo, this.currentCommand);
                 if (tok != inst) {
                     this.setCommand(tok, this.instToStartArg(tok));
+                }
+                if (this.p.help) {
+                    this.helpCursor.say(categoryText[tok]);
                 }
             } else if (this.row() == 1 && arg != 0xf) {
                 this.p.setArg(this.rule, this.whenDo, this.currentCommand, arg);
