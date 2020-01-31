@@ -10,6 +10,12 @@ namespace tileworld {
             super(p);
 
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
+                let index = this.dirMap.getPixel(this.col(), this.row())
+                if (index != 0xf) {
+                    game.pushScene();
+                    new Gallery(this.p, index)
+                    return;
+                }
                 if (this.row()>0)
                     return;
                 let command = commandImages[this.col()];
@@ -44,8 +50,19 @@ namespace tileworld {
 
         protected update() {
             screen.fill(0);
+            this.dirMap.fill(0xf);
             commandImages.forEach((img, i) => {
                 this.drawImage(i, 0, img);
+            });
+            screen.print("Tiles", 16, yoff + 32 + 6);
+            this.p.fixed().forEach((img,i) => {
+                this.drawImage(2+(i<<1), 3, img);
+                this.dirMap.setPixel(2+(i<<1), 3, i)
+            });
+            screen.print("Sprites", 16, yoff + 64 + 6);
+            this.p.movable().forEach((img, i) => {
+                this.drawImage(2 + (i << 1), 5, img);
+                this.dirMap.setPixel(2 + (i << 1), 5, this.p.fixed().length + i)
             });
         }
 
