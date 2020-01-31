@@ -1,10 +1,12 @@
 namespace tileworld {
 
     const yoff = 6;
-    const helpString = "31resting,";
+    const helpStringTop = "31resting,21moved left,41moved right,30moved up,32moved down,61dpad left,81dpad right,70dpad up,72dpad down,";
+    const helpStringBot = "25collide left,34collide up,36collide down,45collide right,65collide left,74collide up,76collide down,85collide right,";
 
     export class RuleRoom extends RuleVisualsBase {
         private kind: number;
+        private moreHelp: Sprite;
         constructor(p: Project) {
             super(p);
             this.kind = this.p.fixed().length();
@@ -13,6 +15,10 @@ namespace tileworld {
             this.setRow(this.kind - this.p.fixed().length + 1);
             this.setTileSaved();
             this.setRow(0);
+            this.moreHelp = sprites.create(cursorIn);
+            this.moreHelp.setFlag(SpriteFlag.Invisible, true);
+            this.moreHelp.x = 84;
+            this.moreHelp.y = yoff + 64 + 6;
 
             this.update();
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
@@ -41,14 +47,25 @@ namespace tileworld {
 
         protected cursorMove(dir: MoveDirection, pressed: boolean = true) {
             if (this.p.help) {
-                this.helpCursor.x = this.cursor.x + 8;
-                this.helpCursor.y = this.cursor.y + 32;
+                this.helpCursor.x = this.col() < 7 ? this.cursor.x + 8 : this.cursor.x - 16;
+                this.helpCursor.y = this.row() < 6 ? this.cursor.y + 32 : this.cursor.y;
                 let index = this.dirMap.getPixel(this.col(), this.row())
                 if (this.col() > 0) {
-                    let message = getHelp(helpString, this.col(), this.row());
+                    let message = getHelp(this.row() < 4 ? helpStringTop : helpStringBot, this.col(), this.row());
                     this.helpCursor.say(message);
+                    if (this.row() >= 4 && message) {
+                        // resting vs moving collision
+                        if (this.col() < 5) {
+                            this.moreHelp.say("into resting");
+                        } else {
+                            this.moreHelp.say("into moving");
+                        }
+                    } else {
+                        this.moreHelp.say(null);
+                    }
                 } else {
                     this.helpCursor.say(null);
+                    this.moreHelp.say(null);
                 }
             }
         }
