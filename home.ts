@@ -22,32 +22,33 @@ namespace tileworld {
                 if (this.row()>0)
                     return;
                 let command = commandImages[this.col()];
-                if (command == map) {
-                    game.pushScene();
-                    new MapEditor(this.p);
-                    return;
-                } else if (command == paint) {
-                    game.pushScene();
-                    new ImageEditor(this.p);
-                    return;
-                } else if (command == code) {
-                    game.pushScene();
-                    new RuleRoom(this.p);
-                    return;
-                } else if (command == play) {
+                if (command == play) {
                     let rules = this.p.getRuleIds();
                     if (rules.length > 0) {
                         game.pushScene();
                         let g = new RunGame(this.p, rules);
                         g.setWorld(this.p.getWorld());
                         g.start();
-                        return;
                     }
                 } else if (command == settingsIcon) {
                     game.pushScene();
                     new ProjectSettings(this.p);
-                    return;
-                }
+                } else if (command == music) {
+                    game.pushScene();
+                    new Music(this.p);
+                } else if (command == map) {
+                    game.pushScene();
+                    new MapEditor(this.p);
+                } else if (command == paint) {
+                    game.pushScene();
+                    new ImageEditor(this.p);
+                } else if (command == code) {
+                    game.pushScene();
+                    new RuleRoom(this.p);
+                } else if (command == debug) {
+                    game.pushScene();
+                    new Debugger(this.p);
+                } 
             });
 
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {

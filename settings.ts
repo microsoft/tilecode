@@ -1,14 +1,9 @@
 namespace tileworld {
 
-    // this file for game settings
-    // - help
-    // - world size
-    // - etc.
-
     export class ProjectSettings extends RuleVisualsBase {
         constructor(p: Project) {
             super(p);
-
+            this.setCol(0); this.setRow(0);
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.col() == 3 && this.row() == 1)
                     this.p.help = !this.p.help;

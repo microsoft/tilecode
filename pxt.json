@@ -26,7 +26,8 @@
         "manual.md",
         "gallery.ts",
         "home.ts",
-        "settings.ts"
+        "settings.ts",
+        "music.ts"
     ],
     "testFiles": [
         "test.ts"

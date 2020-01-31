@@ -43,7 +43,7 @@ namespace tileworld {
             this.paintCursor.x = 4
             this.paintCursor.y = editorY + 4;
 
-            this.offsetX = this.offsetY = 0;
+            this.offsetX = this.offsetY = -3;
 
             this.setCursor(CursorType.Menu);
             this.update();

@@ -4,12 +4,32 @@
 // - use neighborhood to generate a tile map
 
 namespace tileworld {
-    export class Debugger {
         // - attaches to VM
         // - shows state of sprites (old arrows; new arrows)
         // - the three phases: moving, resting, colliding
         // - allows user to select a sprite and see enabled rules (or debugger will choose)
         // - allows the user to choose which rule goes next (step)
+
+    export class Debugger extends RuleVisualsBase {
+        constructor(p: Project) {
+            super(p);
+            this.setCol(0); this.setRow(0);
+
+            controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
+
+            });
+
+            controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
+                game.popScene();
+            });
+        }
+
+        protected update() {
+            screen.fill(0);
+            screen.fillRect(0, yoff, 16, 16, 11);
+            screen.drawTransparentImage(debug, 0, yoff);
+            screen.print("debugger not available", 16, 32 + yoff + 6);
+        }
     }
 
     export class UnitTest {
