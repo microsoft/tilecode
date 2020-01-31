@@ -1,12 +1,20 @@
 namespace tileworld {
 
     const yoff = 4;
-    const paintSize = 6;
-    const editorY = 20;
-
-    // the root of the editing experience is creating a (shared) tile map
+    const paintSize = 8;
+    const editorY = 16+yoff;
 
     enum CursorType { Menu, Map };
+    const paintCursor = img`
+        5 5 5 5 5 5 5 5
+        5 . . . . . . 5
+        5 . . . . . . 5
+        5 . . . . . . 5
+        5 . . . . . . 5
+        5 . . . . . . 5
+        5 . . . . . . 5
+        5 5 5 5 5 5 5 5
+    `;
 
     export class MapEditor extends BackgroundBase {
         private world: Image;
@@ -32,8 +40,8 @@ namespace tileworld {
             this.cursor.y = 8 + yoff;
 
             this.paintCursor = sprites.create(paintCursor)
-            this.paintCursor.x = paintSize * 5 + 2
-            this.paintCursor.y = editorY + 2;
+            this.paintCursor.x = 4
+            this.paintCursor.y = editorY + 4;
 
             this.offsetX = this.offsetY = 0;
 
@@ -109,7 +117,7 @@ namespace tileworld {
             if (this.cursorType == CursorType.Menu) {
                 this.setCursor(CursorType.Map);
             } else {
-                if (this.paintCursor.y < editorY + 2 + paintSize * 15)
+                if (this.paintCursor.y < editorY + 2 + paintSize * 12)
                     this.paintCursor.y += paintSize
                 else
                     this.offsetY += 1;
@@ -127,8 +135,8 @@ namespace tileworld {
             if (!this.aDown)
                 return;
             if (this.cursorType == CursorType.Map) {
-                let col = ((this.paintCursor.x - 2) / paintSize) | 0x0;
-                let row = ((this.paintCursor.y - (editorY + 2)) / paintSize) | 0x0;
+                let col = ((this.paintCursor.x - 4) / paintSize) | 0x0;
+                let row = ((this.paintCursor.y - (editorY + 4)) / paintSize) | 0x0;
                 this.world.setPixel(col, row, this.userSpriteIndex);
                 this.update();
                 return;
@@ -175,7 +183,12 @@ namespace tileworld {
                     let row = y - this.offsetY;
                     let nx = col * paintSize;
                     let ny = editorY + row * paintSize;
-                    screen.fillRect(nx, ny, paintSize - 1, paintSize - 1, index == -1 ? 0 : index+1);
+                    let img = index == -1 ? emptyTile : this.p.getImage(index);
+                    for(let i=0;i<img.width;i+=2) {
+                        for (let j = 0; j < img.height; j += 2) {
+                            screen.setPixel(nx+(i>>1),ny+(j>>1),img.getPixel(i,j))
+                        }   
+                    }
                 }    
             }
             screen.drawLine(0, yoff + 16, 159, yoff+16, 11)
