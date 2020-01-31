@@ -2,6 +2,8 @@ namespace tileworld {
 
     // TODO
     // - world size
+    // - player sprite (how many)
+    // - default tile
     export class ProjectSettings extends RuleVisualsBase {
         constructor(p: Project) {
             super(p);

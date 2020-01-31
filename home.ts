@@ -65,7 +65,7 @@ namespace tileworld {
                     let message = getHelp(helpString, this.col(), this.row());
                     this.helpCursor.say(message);
                 } else if (index != 0xf) {
-                    this.helpCursor.say("A for gallery");
+                    this.helpCursor.say("A: gallery");
                 } else {
                     this.helpCursor.say(null);
                 }
@@ -83,13 +83,13 @@ namespace tileworld {
             });
             screen.print("Tiles", 16, yoff + 32 + 6);
             this.p.fixed().forEach((img,i) => {
-                this.drawImage(2+(i<<1), 3, img);
-                this.dirMap.setPixel(2+(i<<1), 3, i)
+                this.drawImage(1+(i<<1), 3, img);
+                this.dirMap.setPixel(1+(i<<1), 3, i)
             });
             screen.print("Sprites", 16, yoff + 64 + 6);
             this.p.movable().forEach((img, i) => {
-                this.drawImage(2 + (i << 1), 5, img);
-                this.dirMap.setPixel(2 + (i << 1), 5, this.p.fixed().length + i)
+                this.drawImage(1 + (i << 1), 5, img);
+                this.dirMap.setPixel(1 + (i << 1), 5, this.p.fixed().length + i)
             });
         }
 

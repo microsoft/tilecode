@@ -62,7 +62,7 @@ namespace tileworld {
                         this.rule = index < rules.length ? rules[index] : rules[index-1];
                     }
                     this.askDeleteRule = false;
-                } else if (this.manhattanDistance2() <=2 && 
+                } else if (this.manhattanDistance2() <= 2 && 
                           (this.col() != 2 || this.row() != (2+editorRow) && this.active(this.col(),this.row()-editorRow))) {
                      // otherwise if we are in the diamond, bring up attr menu
                     if (this.menu == RuleEditorMenus.AttrTypeMenu) {
@@ -214,7 +214,7 @@ namespace tileworld {
             } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                 this.dirMap.fill(0xf);
                 screen.fillRect(0, yoff, 160, 32, 0);
-                this.attrMenu()
+                this.attrMenu(this.col(false), this.row(false)-editorRow);
             } else if (this.menu == RuleEditorMenus.CommandMenu) {
                 screen.fillRect(0, yoff, 160, 32, 0);
                 this.modifyCommandMenu();
@@ -231,7 +231,7 @@ namespace tileworld {
         protected showCollision(col: number, row: number, dir: MoveDirection, arrowImg: Image, rt: RuleType) {
             super.showCollision(col, row, dir, arrowImg, rt);
             this.collideCol = col;
-            this.collideRow = row;
+            this.collideRow = row - editorRow;
         }
 
         centerImage() {
@@ -254,7 +254,7 @@ namespace tileworld {
 
         private active(col: number, row: number) {
             if (this.collideCol != -1) {
-                return col == 2 && row == 2 || col == this.collideCol && (row + editorRow) == this.collideRow;
+                return col == 2 && row == 2 || col == this.collideCol && row == this.collideRow;
             }
             return true;
         }
@@ -296,7 +296,7 @@ namespace tileworld {
             let whendo = this.getWhenDo(wcol, wrow);
             if (draw) {
                 let index = this.findWitnessColRow(wcol, wrow);
-                let img1 = this.collideCol == wcol && this.collideRow - editorRow == wrow ? collisionRestingSprite : genericSprite;
+                let img1 = this.collideCol == wcol && this.collideRow == wrow ? collisionRestingSprite : genericSprite;
                 let img2 = index == -1 || index == 100 ? img1 : this.p.getImage(index);
                 this.drawImage(5, crow + editorRow, img2);
                 if (img1 == collisionRestingSprite)
@@ -517,9 +517,9 @@ namespace tileworld {
             return this.collideCol == col && this.collideRow == row ? 100 : -1;
         }
 
-        private attrMenu() {
+        private attrMenu(col: number, row: number) {
             // which tile in the diamond are we attributing?
-            let whenDo = this.getWhenDo(this.col(false), this.row(false)-editorRow);
+            let whenDo = this.getWhenDo(col, row);
             // for all user-defined sprites
             attrImages.forEach((img, i) => {
                 // draw 8x8 sprites centered

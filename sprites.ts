@@ -730,12 +730,17 @@ export const equalZero = img`
 `;
 
 export const moveImages = [leftArrow, rightArrow, upArrow, downArrow, stopSign, uTurn];
+export const moveText = ["left", "right", "up", "down", "stop", "u-turn"];
 export const buttonImages = [leftButton, rightButton, upButton, downButton];
 export const attrImages = [include, exclude, ok, oneof];
 export const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, AttrType.OneOf];
 export const commandImages = [map, paint, code, play, debug, music, settingsIcon];
 export const gameImages = [ trophyUp, trophyDown ];
+export const gameText = [ "win", "lose"];
 export const categoryImages = [allFour, paint, genericSprite, equalZero, gameIcon ];
+export const categoryText = ["move sprite", "paint tile", "sprite", "test", "game"];
 export const spriteImages = [eat];
+export const spriteText = ["remove"];
+
 
 }
