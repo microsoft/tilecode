@@ -25,7 +25,8 @@
         "analysis.ts",
         "manual.md",
         "gallery.ts",
-        "home.ts"
+        "home.ts",
+        "settings.ts"
     ],
     "testFiles": [
         "test.ts"
