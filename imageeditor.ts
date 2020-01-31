@@ -8,7 +8,9 @@ namespace tileworld {
     
     enum CursorType { Color, Paint, Menu };
 
-    // TODO: sprite selection
+    // UI region order
+    // Menu -> sprite -> color choice -> canvas
+
     export class ImageEditor extends BackgroundBase {
         private cursorType: CursorType;         // are we selecting a color or painting?
         private colorCursor: Sprite;
@@ -50,7 +52,14 @@ namespace tileworld {
 
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => { this.Adown = true; this.paintPixel() });
             controller.A.onEvent(ControllerButtonEvent.Released, () => { this.Adown = false; });
-            controller.B.onEvent(ControllerButtonEvent.Pressed, () => { this.saveAndPop(); });
+            controller.B.onEvent(ControllerButtonEvent.Pressed, () => { 
+                if (this.cursorType == CursorType.Menu)
+                    this.saveAndPop(); 
+                else if (this.cursorType == CursorType.Paint)
+                    this.setCursor(CursorType.Color);
+                else 
+                    this.setCursor(CursorType.Menu);
+            });
         }
 
         private paintPixel() {
@@ -60,6 +69,7 @@ namespace tileworld {
                 let col = ((this.colorCursor.x - colorsX) / colorSize) | 0x0;
                 let row = ((this.colorCursor.y - (colorSize << 1) - colorsY) / colorSize) | 0x0;
                 this.selectedColor = row * 2 + col;
+                this.setCursor(CursorType.Paint);
             } else if (this.cursorType == CursorType.Paint) {
                 this.dirty = true;
                 let col = ((this.paintCursor.x - (paintSize * 5 + 2)) / paintSize) | 0x0;
@@ -74,13 +84,6 @@ namespace tileworld {
                     this.image = this.p.getImage(this.kind);
                     this.dirty = false;
                 }
-                /*
-                if (this.menuCursor.y > yoff + 8) {
-                    this.p.saveImage(this.kind);
-                    this.Adown = false;
-                    game.pushScene();
-                    new Gallery(this.p, this.kind);
-                }*/
             }
             this.update()
         }
