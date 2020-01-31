@@ -620,21 +620,21 @@ export const diskIcon = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
 `;
-export const help = img`
+export const settingsIcon = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
-    . . . . d d d d d d d d . . . .
-    . . . d d d a a a a d d d . . .
-    . . d d d a c c c c a d d d . .
-    . . d d a c d d d d a c d d . .
-    . . d d a c d d d d a c d d . .
-    . . d d d d d d d a c d d d . .
-    . . d d d d d d a c d d d d . .
-    . . d d d d d a a c d d d d . .
-    . . d d d d d a c d d d d d . .
-    . . d d d d d d d d d d d d . .
-    . . . d d d d a c d d d d . . .
-    . . . . d d d d d d d d . . . .
+    . . . . . . . 1 1 . . . . . . .
+    . . . . 1 9 . 1 1 . 9 1 . . . .
+    . . . 1 1 1 1 1 1 1 1 1 1 . . .
+    . . . 9 1 1 1 9 9 1 1 1 9 . . .
+    . . . . 1 1 9 . . 9 1 1 . . . .
+    . . 1 1 1 9 . . . . 9 1 1 1 . .
+    . . 1 1 1 9 . . . . 9 1 1 1 . .
+    . . . . 1 1 9 . . 9 1 1 . . . .
+    . . . 9 1 1 1 9 9 1 1 1 9 . . .
+    . . . 1 1 1 1 1 1 1 1 1 1 . . .
+    . . . . 1 9 . 1 1 . 9 1 . . . .
+    . . . . . . . 1 1 . . . . . . .
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
 `;
@@ -715,7 +715,7 @@ export const moveImages = [leftArrow, rightArrow, upArrow, downArrow, stopSign, 
 export const buttonImages = [leftButton, rightButton, upButton, downButton];
 export const attrImages = [include, exclude, ok, oneof];
 export const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, AttrType.OneOf];
-export const commandImages = [map, paint, code, play, debug, music, help];
+export const commandImages = [map, paint, code, play, debug, music, settingsIcon];
 export const gameImages = [ trophyUp, trophyDown ];
 export const categoryImages = [allFour, paint, genericSprite, equalZero, gameIcon ];
 export const spriteImages = [eat];

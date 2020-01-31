@@ -444,7 +444,7 @@ namespace tileworld {
                     return img;
                 }
             }
-            return help;
+            return emptyTile;
         }
 
         private exitCommandMenu() {
