@@ -9,6 +9,9 @@ namespace tileworld {
         constructor(p: Project) {
             super(p);
 
+            this.setCol(0);
+            this.setRow(0);
+
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 let index = this.dirMap.getPixel(this.col(), this.row())
                 if (index != 0xf) {

@@ -16,15 +16,12 @@ namespace tileworld {
         private menuCursor: Sprite;
         private selectedColor: number;
         private image: Image;    // 16x16
-        private Adown: boolean;
-        private kind: number;
-        private dirty: boolean;
+        private Adown: boolean = false;
+        private kind: number = 0;
+        private dirty: boolean = false;
         constructor(private p: Project) {
             super();
-            this.kind = 0;
-            this.Adown = false;
-            this.dirty = false;
-            this.cursorType= CursorType.Color;
+            this.image = p.getImage(this.kind);
 
             this.colorCursor = sprites.create(colorCursor)
             this.colorCursor.x = colorsX  + (colorSize>>1);
@@ -34,14 +31,12 @@ namespace tileworld {
             this.paintCursor = sprites.create(paintCursor)
             this.paintCursor.x = paintSize * 5 + 2 
             this.paintCursor.y = editorY + 2
-            this.paintCursor.setFlag(SpriteFlag.Invisible, true);
 
             this.menuCursor = sprites.create(cursorIn);
-            this.menuCursor.x = 32 + 8;
+            this.menuCursor.x = 8;
             this.menuCursor.y = yoff + 8
-            this.menuCursor.setFlag(SpriteFlag.Invisible, true);
 
-            this.image = p.getImage(this.kind);
+            this.setCursor(CursorType.Menu);
             this.update();
 
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => this.moveLeft());
