@@ -1,8 +1,7 @@
 namespace tileworld {
 
     const yoff = 6;
-
-    let ruleEditor: RuleEditor = null;
+    const helpString = "31resting,";
 
     export class RuleRoom extends RuleVisualsBase {
         private kind: number;
@@ -11,7 +10,7 @@ namespace tileworld {
             this.kind = this.p.fixed().length();
             // set cursor
             this.setCol(0);
-            this.setRow(this.kind - this.p.fixed().length + 1)
+            this.setRow(this.kind - this.p.fixed().length + 1);
             this.setTileSaved();
             this.setRow(0);
 
@@ -20,7 +19,7 @@ namespace tileworld {
                 if (this.col() == 0) {
                     if (this.row() == 0 && this.p.getRulesForKind(this.kind).length > 0) {
                         game.pushScene();
-                        ruleEditor = new RuleEditor(this.p, this.kind, -1, -1);
+                        new RuleEditor(this.p, this.kind, -1, -1);
                     } else if (this.row() >= 1 && this.row() <= this.p.movable().length) {
                         this.kind = this.p.fixed().length + this.row() - 1;
                         this.setTileSaved();
@@ -31,14 +30,27 @@ namespace tileworld {
                     let dir = this.dirMap.getPixel(this.col(), this.row());
                     if (rt != 0xf) {
                         game.pushScene();
-                        ruleEditor = new RuleEditor(this.p, this.kind, rt, dir);
+                        new RuleEditor(this.p, this.kind, rt, dir);
                     }
                 }
             });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 game.popScene();
-                ruleEditor = null;
             });
+        }
+
+        protected cursorMove(dir: MoveDirection, pressed: boolean = true) {
+            if (this.p.help) {
+                this.helpCursor.x = this.cursor.x + 8;
+                this.helpCursor.y = this.cursor.y + 32;
+                let index = this.dirMap.getPixel(this.col(), this.row())
+                if (this.col() > 0) {
+                    let message = getHelp(helpString, this.col(), this.row());
+                    this.helpCursor.say(message);
+                } else {
+                    this.helpCursor.say(null);
+                }
+            }
         }
 
         public update() {
