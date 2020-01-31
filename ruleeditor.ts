@@ -75,9 +75,8 @@ namespace tileworld {
                         let yes = this.tryEditCommand();
                         if (!yes) this.noMenu();
                     }
-                } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
-                    let yes = this.attrUpdate();
-                    if (!yes) this.noMenu();
+                } else if (this.menu == RuleEditorMenus.AttrTypeMenu && this.row() < 2) {
+                    this.attrUpdate();
                 } else if (this.menu == RuleEditorMenus.CommandMenu) {
                     this.exitCommandMenu();
                 } else if (this.menu == RuleEditorMenus.MainMenu) {
@@ -221,8 +220,8 @@ namespace tileworld {
             screen.fillRect(0, yoff, 160, 19, 0);
             this.fillTile(0, 0, 11);
             this.drawImage(0, 0, code);
-            this.drawImage(1, 0, play);
-            this.drawImage(2, 0, debug);
+            //this.drawImage(1, 0, play);
+            //this.drawImage(2, 0, debug);
             this.drawImage(3, 0, garbageCan);
             let rules = this.currentRules();
             let index = rules.indexOf(this.rule);
@@ -516,6 +515,7 @@ namespace tileworld {
             if (this.attrSelected == -1)
                 this.selectAttr(0);
             this.drawImage(this.attrSelected, 0, cursorOut);
+            this.drawImage(9, 0, reset);
         }
 
         private selectAttr(a: number) {
@@ -524,13 +524,20 @@ namespace tileworld {
 
         private attrUpdate() {
             let a = this.row() == 0 ? this.col() : -1
+            if (a == 9) {
+                // reset attributes
+                for(let i = 0; i< this.p.all().length; i++) {
+                    this.setAttr(i, AttrType.OK);
+                }
+                return;
+            }
             if (a != -1 && a < attrValues.length) { 
-                this.selectAttr(a); return true; 
+                this.selectAttr(a); return; 
             }
             let m = this.row() == 1 ? this.col() : -1; 
             if (m != -1 && m < this.p.all().length) { 
                 if (m < this.p.fixed().length && this.getType() >= RuleType.CollidingResting)
-                    return false;
+                    return;
                 let val = attrValues[this.attrSelected];
                 if (val == AttrType.Include) { 
                     if (m < this.p.fixed().length) {
@@ -558,9 +565,7 @@ namespace tileworld {
                     }
                 }
                 this.setAttr(m, val);
-                return true;
             }
-            return false;
         }
 
         // TODO: move this out to project.ts
