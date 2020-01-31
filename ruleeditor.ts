@@ -5,6 +5,7 @@ namespace tileworld {
 
     const editorRow = 2;
     const menuHelpString = "30delete rule,80add rule,90next rule,70previous rule,";
+    const attrHelpString = "00include,10exclude,20allow,30one of,90allow all,";
 
     export class RuleEditor extends RuleVisualsBase {
         private otherCursor: Sprite;    // show correspondence between left and right
@@ -141,11 +142,18 @@ namespace tileworld {
 
         protected cursorMove(dir: MoveDirection, pressed: boolean) {
             if (this.p.help) {
-                this.helpCursor.x = this.col() < 7 ? this.cursor.x + 8 : this.cursor.x - 16;
+                this.helpCursor.x = this.col() < 7 ? this.cursor.x + 16 : this.cursor.x - 16;
                 this.helpCursor.y = this.row() < 6 ? this.cursor.y + 32 : this.cursor.y;
-                if (this.menu == RuleEditorMenus.MainMenu && this.row() == 0) {
-                    let message = getHelp(menuHelpString, this.col(), this.row());
+                if (this.row() == 0) {
+                    let helpString = ""
+                    switch(this.menu) {
+                        case RuleEditorMenus.MainMenu: helpString = menuHelpString; break;
+                        case RuleEditorMenus.AttrTypeMenu: helpString = attrHelpString; break;
+                    }
+                    let message = getHelp(helpString, this.col(), this.row());
                     this.helpCursor.say(message);
+                } else if (this.row() == 1 && this.col() < 8 && this.menu == RuleEditorMenus.AttrTypeMenu) {
+                    this.helpCursor.say("A: set attribute");
                 } else {
                     this.helpCursor.say(null);
                 }
