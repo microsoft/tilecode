@@ -154,6 +154,8 @@ namespace tileworld {
                     this.helpCursor.say(message);
                 } else if (this.row() == 1 && this.col() < 8 && this.menu == RuleEditorMenus.AttrTypeMenu) {
                     this.helpCursor.say("A: set attribute");
+                } else if (this.manhattanDistance2() <= 2 && (this.col() !=2 || this.row() != 2 + editorRow)) {
+                    this.helpCursor.say("A: attributes");
                 } else {
                     this.helpCursor.say(null);
                 }
@@ -205,8 +207,13 @@ namespace tileworld {
             this.showRuleType(this.p.getType(this.rule), this.p.getDir(this.rule), 2, 2+editorRow);
             this.makeContext();
             this.showRuleType(this.p.getType(this.rule), this.p.getDir(this.rule), 2, 2+editorRow);
-            this.showCommands(); 
-
+            this.showCommands();
+            if (this.p.help && this.col() > 5 && this.row() >= editorRow) {
+                let len = this.commandLengths[this.row() - editorRow];
+                if (len != -1 && this.col()-6 < len) {
+                    this.helpCursor.say(this.col() - 6 == len - 1 ? "A: add command" : "E: edit command");
+                }
+            }
             if (this.menu == RuleEditorMenus.MainMenu) {
                 this.showMainMenu();
             } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
