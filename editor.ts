@@ -40,10 +40,7 @@ namespace tileworld {
             this.cursor.y = 8 + yoff;
 
             this.paintCursor = sprites.create(paintCursor)
-            this.paintCursor.x = 4
-            this.paintCursor.y = editorY + 4;
-
-            this.offsetX = this.offsetY = -3;
+            this.paintHome();
 
             this.setCursor(CursorType.Menu);
             this.update();
@@ -66,6 +63,12 @@ namespace tileworld {
                     this.setCursor(CursorType.Menu);
                 }
             });
+        }
+
+        private paintHome() {
+            this.paintCursor.x = 4
+            this.paintCursor.y = editorY + 4;
+            this.offsetX = this.offsetY = -3;
         }
 
         private setCursor(ct: CursorType) {
@@ -143,10 +146,15 @@ namespace tileworld {
             }
             if (repeated)
                 return;
-            if (this.row() == 0 && 2 <= this.col() && this.col() < 2+this.p.all().length ) {
-                // change user sprite
-                this.userSpriteIndex = this.col()-2;
-                this.updateSelection();
+            if (this.row() == 0) {
+                if (1 <= this.col() && this.col() < 1 + this.p.all().length) {
+                    // change user sprite
+                    this.userSpriteIndex = this.col()-1;
+                    this.updateSelection();
+                } else if (this.col() == 9) {
+                    this.paintHome();
+                    this.setCursor(CursorType.Map);
+                }
             }
             this.update();
         }
@@ -174,8 +182,9 @@ namespace tileworld {
             screen.fillRect(0, yoff, 16, 16, 11);
             this.drawImage(map, 0, 0);
             this.p.all().forEach((img, index) => { 
-                this.drawImage(img, 2+index, 0); 
+                this.drawImage(img, 1+index, 0); 
             });
+            this.drawImage(reset, 9, 0);
             for(let x = this.offsetX; x<this.offsetX+20; x++) {
                 for (let y = this.offsetY; y < this.offsetY + 15; y++) {
                     let index = 0 <= x && x < this.world.width && 0 <= y && y < this.world.height ? this.world.getPixel(x,y) : -1;
