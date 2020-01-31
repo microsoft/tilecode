@@ -1,10 +1,12 @@
 namespace tileworld {
 
     const yoff = 4;
+    const paintSize = 6;
+    const editorY = 20;
 
     // the root of the editing experience is creating a (shared) tile map
 
-    enum CursorType { Top, Map };
+    enum CursorType { Menu, Map };
 
     export class MapEditor extends BackgroundBase {
         private world: Image;
@@ -12,6 +14,8 @@ namespace tileworld {
         private offsetY: number; 
         private cursor: Sprite;
         private selected: Sprite;
+        private paintCursor: Sprite;
+        private cursorType: CursorType;
         private userSpriteIndex: number;
         private aDown: boolean;
         constructor(private p: Project) {
@@ -27,7 +31,13 @@ namespace tileworld {
             this.cursor.x = 8
             this.cursor.y = 8 + yoff;
 
+            this.paintCursor = sprites.create(paintCursor)
+            this.paintCursor.x = paintSize * 5 + 2
+            this.paintCursor.y = editorY + 2;
+
             this.offsetX = this.offsetY = 0;
+
+            this.setCursor(CursorType.Menu);
             this.update();
 
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => this.moveLeft());
@@ -41,46 +51,68 @@ namespace tileworld {
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => { this.aDown = true; this.cursorAction(); });
             controller.A.onEvent(ControllerButtonEvent.Released, () => { this.aDown = false; });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
-                this.p.saveWorld();
-                game.popScene();
+                if (this.cursorType == CursorType.Menu) {
+                    this.p.saveWorld();
+                    game.popScene();
+                } else {
+                    this.setCursor(CursorType.Map);
+                }
             });
         }
 
+        private setCursor(ct: CursorType) {
+            this.cursor.setFlag(SpriteFlag.Invisible, ct != CursorType.Menu);
+            this.paintCursor.setFlag(SpriteFlag.Invisible, ct != CursorType.Map);
+            this.cursorType = ct;
+        }
+
         private moveLeft() {
-            if (this.col() > 0)
-                this.cursor.x -= 16
-            else {
-                this.offsetX -= 1;
+            if (this.cursorType == CursorType.Menu) {
+                if (this.col() > 0)
+                    this.cursor.x -= 16
+            } else {
+                if (this.paintCursor.x > paintSize)
+                    this.paintCursor.x -= paintSize;
+                else
+                    this.offsetX -= 1;
                 this.update();
             }
             this.cursorAction(true);
         }
 
         private moveRight() {
-            if (this.col() < 9)
-                this.cursor.x += 16
-            else {
-                this.offsetX += 1;
+            if (this.cursorType == CursorType.Menu) {
+                if (this.col() < 9)
+                    this.cursor.x += 16
+            } else {
+                if (this.paintCursor.x < paintSize*20)
+                    this.paintCursor.x += paintSize;
+                else 
+                    this.offsetX += 1;
                 this.update();
             }
             this.cursorAction(true);
         }
 
         private moveUp() {
-            if(this.row() > 0)
-                this.cursor.y -= 16
-            else {
-                this.offsetY -= 1;
+            if (this.cursorType == CursorType.Map) {
+                if (this.paintCursor.y > (editorY + paintSize + 1))
+                    this.paintCursor.y -= paintSize
+                else
+                    this.offsetY -= 1;
                 this.update();
             }
             this.cursorAction(true);
         }
 
         private moveDown() {
-            if (this.row() < 6)
-                this.cursor.y += 16
-            else {
-                this.offsetY += 1;
+            if (this.cursorType == CursorType.Menu) {
+                this.setCursor(CursorType.Map);
+            } else {
+                if (this.paintCursor.y < editorY + 2 + paintSize * 15)
+                    this.paintCursor.y += paintSize
+                else
+                    this.offsetY += 1;
                 this.update();
             }
             this.cursorAction(true);
@@ -94,13 +126,11 @@ namespace tileworld {
         private cursorAction(repeated: boolean = false) {
             if (!this.aDown)
                 return;
-            if (this.row() > 0) {
-                if (this.userSpriteIndex >= 0) {
-                    let x = this.offsetX + this.col() - 2;
-                    let y = this.offsetY + this.row();
-                    this.world.setPixel(x, y, this.userSpriteIndex);
-                    this.update();
-                }
+            if (this.cursorType == CursorType.Map) {
+                let col = ((this.paintCursor.x - 2) / paintSize) | 0x0;
+                let row = ((this.paintCursor.y - (editorY + 2)) / paintSize) | 0x0;
+                this.world.setPixel(col, row, this.userSpriteIndex);
+                this.update();
                 return;
             }
             if (repeated)
@@ -138,12 +168,14 @@ namespace tileworld {
             this.p.all().forEach((img, index) => { 
                 this.drawImage(img, 2+index, 0); 
             });
-            for(let x = this.offsetX; x<this.offsetX+10; x++) {
-                for (let y = this.offsetY; y < this.offsetY + 6; y++) {
+            for(let x = this.offsetX; x<this.offsetX+20; x++) {
+                for (let y = this.offsetY; y < this.offsetY + 15; y++) {
                     let index = 0 <= x && x < this.world.width && 0 <= y && y < this.world.height ? this.world.getPixel(x,y) : -1;
                     let col = x - this.offsetX;
-                    let row = 1 + (y - this.offsetY);
-                    this.drawImage(index >= 0 ? this.p.getImage(index) : emptyTile, col, row);
+                    let row = y - this.offsetY;
+                    let nx = col * paintSize;
+                    let ny = editorY + row * paintSize;
+                    screen.fillRect(nx, ny, paintSize - 1, paintSize - 1, index == -1 ? 0 : index+1);
                 }    
             }
             screen.drawLine(0, yoff + 16, 159, yoff+16, 11)

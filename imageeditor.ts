@@ -133,7 +133,7 @@ namespace tileworld {
             if (this.cursorType == CursorType.Color) {
                 if (this.colorCursor.y > colorsY + (colorSize << 1) + (colorSize - 1))
                     this.colorCursor.y -= colorSize;
-            } else {
+            } else if (this.cursorType == CursorType.Paint) {
                 if (this.paintCursor.y > (editorY + paintSize + 1))
                     this.paintCursor.y -= paintSize
                 else {
