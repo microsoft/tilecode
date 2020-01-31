@@ -6,6 +6,8 @@ namespace tileworld {
     const editorRow = 2;
     const menuHelpString = "30delete rule,80add rule,90next rule,70previous rule,";
     const attrHelpString = "00include,10exclude,20allow,30one of,90allow all,";
+    const nonCollidingHelpString = "";
+    const collidingHelpString = "";
 
     export class RuleEditor extends RuleVisualsBase {
         private otherCursor: Sprite;    // show correspondence between left and right
