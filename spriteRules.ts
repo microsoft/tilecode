@@ -18,7 +18,7 @@ namespace tileworld {
             this.moreHelp = sprites.create(cursorIn);
             this.moreHelp.setFlag(SpriteFlag.Invisible, true);
             this.moreHelp.x = 84;
-            this.moreHelp.y = yoff + 64 + 6;
+            this.moreHelp.y = yoff + 64 + 7;
 
             this.update();
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {

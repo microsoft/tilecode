@@ -4,6 +4,7 @@ namespace tileworld {
     enum CommandTokens { Last=CommandType.Last, SpaceTile, Delete };
 
     const editorRow = 2;
+    const menuHelpString = "30delete rule,80add rule,90next rule,70previous rule,";
 
     export class RuleEditor extends RuleVisualsBase {
         private otherCursor: Sprite;    // show correspondence between left and right
@@ -23,6 +24,7 @@ namespace tileworld {
         constructor(p: Project, 
                     private kind: number, private rt: RuleType, private dir: MoveDirection) {
             super(p);
+            this.setCol(0); this.setRow(0);
 
             let rules = this.currentRules();
             if (rules.length == 0) {
@@ -138,6 +140,16 @@ namespace tileworld {
         }
 
         protected cursorMove(dir: MoveDirection, pressed: boolean) {
+            if (this.p.help) {
+                this.helpCursor.x = this.col() < 7 ? this.cursor.x + 8 : this.cursor.x - 16;
+                this.helpCursor.y = this.row() < 6 ? this.cursor.y + 32 : this.cursor.y;
+                if (this.menu == RuleEditorMenus.MainMenu && this.row() == 0) {
+                    let message = getHelp(menuHelpString, this.col(), this.row());
+                    this.helpCursor.say(message);
+                } else {
+                    this.helpCursor.say(null);
+                }
+            }
             if (this.menu == RuleEditorMenus.MainMenu) {
                 this.otherCursorMove();
             } else {
