@@ -25,10 +25,8 @@ namespace tileworld {
             screen.fillRect(0, yoff, 16, 16, 11);
             screen.drawTransparentImage(settingsIcon, 0, yoff);
             screen.print("Help", 16, 16 + yoff + 6);
-            this.drawImage(3, 1, emptyTile)
-            if (this.p.help) {
-                this.drawImage(3, 1, include);
-            }
+            this.drawImage(3, 1, emptyTile);
+            this.drawImage(3, 1, this.p.help ? collisionRestingSprite : genericSprite);
         }
     }
 } 
