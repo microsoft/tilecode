@@ -68,10 +68,13 @@ namespace tileworld {
                 } else {
                     this.helpCursor.say(null);
                 }
-            }
+            } 
         }
         
         protected update() {
+            if (!this.p.help) {
+                this.helpCursor.say(null);
+            }
             screen.fill(0);
             this.dirMap.fill(0xf);
             commandImages.forEach((img, i) => {
