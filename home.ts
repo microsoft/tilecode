@@ -3,7 +3,7 @@ namespace tileworld {
 
     // menu bar
 
-    const helpString = "00paint,10code,01play,11debug,02music,12help,"
+    const helpString = "00map,10paint,20code,30play,40debug,50music,60settings,"
     
     export class GameHome extends RuleVisualsBase {
         constructor(p: Project) {
@@ -48,6 +48,22 @@ namespace tileworld {
             });
         }
 
+        protected cursorMove(dir: MoveDirection, pressed: boolean = true) { 
+            if(this.p.help) {
+                this.helpCursor.x = this.cursor.x + 8;
+                this.helpCursor.y = this.cursor.y + 32;
+                let index = this.dirMap.getPixel(this.col(), this.row())
+                if (this.row() < 1) {
+                    let message = getHelp(helpString, this.col(), this.row());
+                    this.helpCursor.say(message);
+                } else if (index != 0xf) {
+                    this.helpCursor.say("A for gallery");
+                } else {
+                    this.helpCursor.say(null);
+                }
+            }
+        }
+        
         protected update() {
             screen.fill(0);
             this.dirMap.fill(0xf);

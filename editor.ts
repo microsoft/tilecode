@@ -2,9 +2,6 @@ namespace tileworld {
 
     const yoff = 4;
 
-
-    const tileSprite = "03tile#1,13tile#2,04tile#3,14tile#4,05sprite#1,15sprite#2,06sprite#3,16sprite#4,";
-
     // the root of the editing experience is creating a (shared) tile map
 
     enum CursorType { Top, Map };
@@ -17,7 +14,6 @@ namespace tileworld {
         private selected: Sprite;
         private userSpriteIndex: number;
         private aDown: boolean;
-        private helpCursor: Sprite;
         constructor(private p: Project) {
             super();
             this.aDown = false;
@@ -30,8 +26,6 @@ namespace tileworld {
             this.cursor = sprites.create(cursorIn);
             this.cursor.x = 8
             this.cursor.y = 8 + yoff;
-            this.helpCursor = sprites.create(cursorIn);
-            this.helpCursor.setFlag(SpriteFlag.Invisible, true);
 
             this.offsetX = this.offsetY = 0;
             this.update();
@@ -98,21 +92,6 @@ namespace tileworld {
         }
 
         private cursorAction(repeated: boolean = false) {
-            if (this.p.help) {
-                this.helpCursor.x = this.cursor.x + 40;
-                this.helpCursor.y = this.cursor.y + 16;
-                if (this.row() < 1) {
-                    let message = getHelp(tileSprite, this.col(), this.row());
-                    this.helpCursor.say(message);
-                } else {
-                    let x = this.offsetX + this.col() - 2;
-                    let y = this.offsetY + this.row();
-                    if (x >=0 && y >= 0 && x < this.p.getWorld().width && y < this.p.getWorld().height)
-                        this.helpCursor.say("map("+x.toString()+","+y.toString()+")");
-                    else
-                        this.helpCursor.say(null);
-                }
-            }
             if (!this.aDown)
                 return;
             if (this.row() > 0) {
@@ -153,10 +132,6 @@ namespace tileworld {
         }
 
         public update() {
-            if (!this.p.help) {
-                this.helpCursor.say(null);
-                this.cursor.say(null);
-            }
             screen.fill(0);
             screen.fillRect(0, yoff, 16, 16, 11);
             this.drawImage(map, 0, 0);

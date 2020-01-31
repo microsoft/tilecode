@@ -16,6 +16,7 @@ namespace tileworld {
     export class RuleVisualsBase extends BackgroundBase {
         protected cursor: Sprite;
         protected tileSaved: Sprite;      // remember the tile that we are editing
+        protected helpCursor: Sprite;
 
         // rule type state
         protected ruleTypeMap: Image;      // mapping of tile to rule type
@@ -31,7 +32,8 @@ namespace tileworld {
             this.cursor.setFlag(SpriteFlag.Invisible, false);
             this.cursor.x = 24;
             this.cursor.y = yoff + 40;
-
+            this.helpCursor = sprites.create(cursorIn);
+            this.helpCursor.setFlag(SpriteFlag.Invisible, true);
             this.tileSaved = sprites.create(cursorOut);
             this.tileSaved.setFlag(SpriteFlag.Invisible, true);
 

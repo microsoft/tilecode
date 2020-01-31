@@ -192,10 +192,10 @@ namespace tileworld {
                 this.showMainMenu();
             } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                 this.dirMap.fill(0xf);
-                screen.fillRect(0, yoff, 160, 36, 0);
+                screen.fillRect(0, yoff, 160, 32, 0);
                 this.attrMenu()
             } else if (this.menu == RuleEditorMenus.CommandMenu) {
-                screen.fillRect(0, yoff, 160, 36, 0);
+                screen.fillRect(0, yoff, 160, 32, 0);
                 this.modifyCommandMenu();
                 this.commandUpdate();
             }
