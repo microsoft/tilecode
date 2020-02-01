@@ -472,16 +472,17 @@ namespace tileworld {
                     if (this.p.help) this.helpCursor.say(categoryText[tok]);
                 } else {
                     let inst = this.p.getInst(this.rule, this.whenDo, this.currentCommand);
-                    if (tok != inst)
+                    if (tok != inst) {
                         this.setCommand(tok, this.instToStartArg(tok));
+                        // move cursor...
+                    }
                 }
             } else if (this.row() == 1 && arg != 0xf) {
                 if (hover) {
                 } else {
                     this.p.setArg(this.rule, this.whenDo, this.currentCommand, arg);
-                    this.noMenu();
                 }
-            } else {
+            } else if (!hover && this.row() > 1) {
                 this.noMenu();
             }
         }
