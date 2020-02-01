@@ -201,17 +201,6 @@ namespace tileworld {
         }
     }
 
-    export function projectToHexLiterals(prefix: string) {
-        let names = settings.list(prefix);
-        names.forEach((key) => {
-            let buf = settings.readBuffer(key);
-            for(let i=0; i<buf.length; i++) {
-                let uint = buf.getUint8(i);
-                // convert to hex
-            }
-        })
-    }
-
     export function loadProject(prefix: string) {
         let names = settings.list(prefix);
         if (names.length == 0)
