@@ -1,6 +1,6 @@
 namespace tileworld {
     
-    enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu, CommandArgMenu };
+    enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu };
     enum CommandTokens { Last=CommandType.Last, SpaceTile, Delete };
 
     const editorRow = 2;
@@ -108,6 +108,9 @@ namespace tileworld {
         }
 
         private noMenu() {
+            if (this.menu == RuleEditorMenus.CommandMenu) {
+                // check for an incomplete command
+            }
             this.whenDo = -1;
             this.currentCommand = -1;
             this.attrSelected = -1;
@@ -300,7 +303,8 @@ namespace tileworld {
             let cid = 0
             for(; cid < 4; cid++, col++) {
                 let inst = this.p.getInst(this.rule, whendo, cid);
-                if (inst != -1) {
+                let arg = this.p.getArg(this.rule, whendo, cid);
+                if (inst != -1 && arg != -1) {
                     this.showCommand(col, crow, whendo, cid, tokens, draw);
                 } else {
                     if (tokens.length > 0) {
@@ -386,8 +390,6 @@ namespace tileworld {
         }
 
         private modifyCommandMenu() {
-            if (this.menu != RuleEditorMenus.CommandMenu)
-                return;
             let inst = this.p.getInst(this.rule, this.whenDo, this.currentCommand);
             let arg = this.p.getArg(this.rule, this.whenDo, this.currentCommand);
             if (this.tokens.length > 0) {
@@ -473,7 +475,7 @@ namespace tileworld {
                 } else {
                     let inst = this.p.getInst(this.rule, this.whenDo, this.currentCommand);
                     if (tok != inst) {
-                        this.setCommand(tok, this.instToStartArg(tok));
+                        this.setCommand(tok, -1); // this.instToStartArg(tok));
                         // move cursor...
                     }
                 }
