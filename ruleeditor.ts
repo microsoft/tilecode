@@ -53,7 +53,13 @@ namespace tileworld {
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.askDeleteRule) {
                     let index = this.currentRules().indexOf(this.rule);
-                    this.p.removeRule(this.rule);
+                    let kinds = this.p.getKinds(this.rule);
+                    if (kinds.length == 1)
+                        this.p.removeRule(this.rule);
+                    else {
+                        kinds.removeElement(this.kind);
+                        this.p.setKinds(this.rule, kinds);
+                    }
                     let rules = this.currentRules();
                     if (rules.length == 0) {
                         game.popScene();
