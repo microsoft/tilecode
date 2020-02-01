@@ -109,7 +109,7 @@ namespace tileworld {
 
         private noMenu() {
             if (this.menu == RuleEditorMenus.CommandMenu) {
-                // check for an incomplete command
+                this.checkCommand();
             }
             this.whenDo = -1;
             this.currentCommand = -1;
@@ -431,6 +431,17 @@ namespace tileworld {
             return 0;            
         }
 
+        private instToArgText(inst: number): string[] {
+            switch (inst) {
+                case CommandType.Move: return moveText;
+                case CommandType.Paint: return [];
+                case CommandType.Sprite: return spriteText;
+                case CommandType.Game: return gameText;
+                case CommandType.SpritePred: return [];
+            }
+            return [];
+        }
+
         private instToNumArgs(inst: number) {
             switch (inst) {
                 case CommandType.Move: return this.getType() < RuleType.CollidingResting ? 4:  2;
@@ -459,9 +470,18 @@ namespace tileworld {
             return emptyTile;
         }
 
+        private checkCommand() {
+            // don't allow incomplete commands 
+            let arg = this.p.getArg(this.rule, this.whenDo, this.currentCommand);
+            if (arg == -1) {
+                this.setCommand(-1, -1);
+            }
+        }
+
         private commandUpdate(hover: boolean = false) {
             let tok = this.ruleTypeMap.getPixel(this.col(), this.row());
             let arg = this.dirMap.getPixel(this.col(), this.row());
+            let inst = this.p.getInst(this.rule, this.whenDo, this.currentCommand);
             if (tok == CommandTokens.Delete) {
                 if (hover) {
                     if (this.p.help) this.helpCursor.say("delete command");
@@ -473,14 +493,15 @@ namespace tileworld {
                 if (hover) {
                     if (this.p.help) this.helpCursor.say(categoryText[tok]);
                 } else {
-                    let inst = this.p.getInst(this.rule, this.whenDo, this.currentCommand);
                     if (tok != inst) {
                         this.setCommand(tok, -1); // this.instToStartArg(tok));
-                        // move cursor...
+                        this.cursor.y += 16;
+                        this.helpCursor.say(null);
                     }
                 }
             } else if (this.row() == 1 && arg != 0xf) {
                 if (hover) {
+                    this.helpCursor.say(this.instToArgText(inst)[arg]);
                 } else {
                     this.p.setArg(this.rule, this.whenDo, this.currentCommand, arg);
                 }
@@ -588,7 +609,6 @@ namespace tileworld {
             }
         }
 
-        // TODO: move this out to project.ts
         private getWhenDo(col: number, row: number) {
             let whendo = this.p.getWhenDo(this.rule, col, row);
             if (whendo == -1) {
