@@ -1,6 +1,6 @@
 namespace tileworld {
     
-    enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu };
+    enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu, MultipleMenu };
     enum CommandTokens { Last=CommandType.Last, SpaceTile, Delete };
 
     const editorRow = 2;
@@ -64,7 +64,7 @@ namespace tileworld {
                     this.askDeleteRule = false;
                 } else if (this.menu == RuleEditorMenus.AttrTypeMenu && this.row() < 2) {
                     this.attrUpdate();
-                } else if (this.menu >= RuleEditorMenus.CommandMenu) {
+                } else if (this.menu == RuleEditorMenus.CommandMenu) {
                     this.commandUpdate();
                 } else if (this.menu == RuleEditorMenus.MainMenu) {
                     if (this.row() == 0) {
@@ -84,11 +84,16 @@ namespace tileworld {
                         }
                     } else if (this.col() > 5 && this.row() >= editorRow) {
                         this.tryEditCommand();
-                    } else if (this.manhattanDistance2() <= 2 &&
-                        (this.col() != 2 || this.row() != (2 + editorRow) && 
-                        this.active(this.col(), this.row() - editorRow))) {
-                        this.menu = RuleEditorMenus.AttrTypeMenu;
-                        this.setTileSaved()
+                    } else if (this.manhattanDistance2() <= 2) {
+                        if (this.col() != 2 || this.row() - editorRow != 2) {
+                            if (this.active(this.col(), this.row() - editorRow)) {
+                                this.menu = RuleEditorMenus.AttrTypeMenu;
+                                this.setTileSaved();
+                            }
+                        } else {
+                            this.menu = RuleEditorMenus.MultipleMenu;
+                            this.setTileSaved();
+                        }
                     }
                 }
                 this.update();
@@ -117,7 +122,6 @@ namespace tileworld {
             this.menu = RuleEditorMenus.MainMenu;
             this.tileSaved.setFlag(SpriteFlag.Invisible, true);
         }
-
 
         protected okToMove() {
             return !this.askDeleteRule;
@@ -209,11 +213,17 @@ namespace tileworld {
                 this.showMainMenu();
             } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                 this.dirMap.fill(0xf);
-                screen.fillRect(0, yoff, 160, 32, 0);
                 this.attrMenu(this.col(false), this.row(false)-editorRow);
             } else if (this.menu == RuleEditorMenus.CommandMenu) {
-                screen.fillRect(0, yoff, 160, 32, 0);
                 this.modifyCommandMenu();
+            } else if (this.menu == RuleEditorMenus.MultipleMenu) {
+                let kinds = this.p.getKinds(this.rule);
+                let next = this.p.fixed().length;
+                this.p.movable().forEach((img,i) => {
+                    this.drawImage(i, 0, img);
+                    if (kinds.indexOf(next + i) != -1)
+                        this.drawImage(i,0,oneof);
+                })
             }
             if (this.askDeleteRule) {
                 this.cursor.setFlag(SpriteFlag.Invisible, true)
