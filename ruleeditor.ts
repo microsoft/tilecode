@@ -66,6 +66,18 @@ namespace tileworld {
                     this.attrUpdate();
                 } else if (this.menu == RuleEditorMenus.CommandMenu) {
                     this.commandUpdate();
+                } else if (this.menu == RuleEditorMenus.MultipleMenu) {
+                    if (this.row() == 0 && this.col() < 4) {
+                        let kind = this.col() + this.p.fixed().length; 
+                        let kinds = this.p.getKinds(this.rule);
+                        if (kind != kinds[0]) {
+                            if (kinds.indexOf(kind) == -1)
+                                kinds.push(kind);
+                            else
+                                kinds.removeElement(kind);
+                            this.p.setKinds(this.rule, kinds);
+                        }
+                    }
                 } else if (this.menu == RuleEditorMenus.MainMenu) {
                     if (this.row() == 0) {
                         if (7 <= this.col() && this.col() <= 9) {
