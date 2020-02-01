@@ -62,26 +62,10 @@ namespace tileworld {
                         this.rule = index < rules.length ? rules[index] : rules[index-1];
                     }
                     this.askDeleteRule = false;
-                } else if (this.manhattanDistance2() <= 2 && 
-                          (this.col() != 2 || this.row() != (2+editorRow) && this.active(this.col(),this.row()-editorRow))) {
-                     // otherwise if we are in the diamond, bring up attr menu
-                    if (this.menu == RuleEditorMenus.AttrTypeMenu) {
-                        this.noMenu();
-                    } else {
-                        this.menu = RuleEditorMenus.AttrTypeMenu;
-                        this.setTileSaved()
-                    }
-                } else if (this.col() > 5 && this.row() >= editorRow) {
-                    if (this.menu == RuleEditorMenus.CommandMenu) {
-                        this.noMenu();
-                    } else {
-                        let yes = this.tryEditCommand();
-                        if (!yes) this.noMenu();
-                    }
                 } else if (this.menu == RuleEditorMenus.AttrTypeMenu && this.row() < 2) {
                     this.attrUpdate();
-                } else if (this.menu == RuleEditorMenus.CommandMenu) {
-                    this.exitCommandMenu();
+                } else if (this.menu >= RuleEditorMenus.CommandMenu) {
+                    this.commandUpdate();
                 } else if (this.menu == RuleEditorMenus.MainMenu) {
                     if (this.row() == 0) {
                         if (7 <= this.col() && this.col() <= 9) {
@@ -98,7 +82,14 @@ namespace tileworld {
                         } else if (this.col() == 3) {
                             this.askDeleteRule = true;                     
                         }
-                    } 
+                    } else if (this.col() > 5 && this.row() >= editorRow) {
+                        this.tryEditCommand();
+                    } else if (this.manhattanDistance2() <= 2 &&
+                        (this.col() != 2 || this.row() != (2 + editorRow) && 
+                        this.active(this.col(), this.row() - editorRow))) {
+                        this.menu = RuleEditorMenus.AttrTypeMenu;
+                        this.setTileSaved()
+                    }
                 }
                 this.update();
             })
@@ -107,7 +98,7 @@ namespace tileworld {
                 if (this.askDeleteRule) {
                     this.askDeleteRule = false;
                 } else if (this.menu != RuleEditorMenus.MainMenu) {
-                    this.menu = RuleEditorMenus.MainMenu;
+                    this.noMenu();
                 } else {
                     this.saveAndPop();
                     return;
@@ -115,6 +106,15 @@ namespace tileworld {
                 this.update();
             });
         }
+
+        private noMenu() {
+            this.whenDo = -1;
+            this.currentCommand = -1;
+            this.attrSelected = -1;
+            this.menu = RuleEditorMenus.MainMenu;
+            this.tileSaved.setFlag(SpriteFlag.Invisible, true);
+        }
+
 
         protected okToMove() {
             return !this.askDeleteRule;
@@ -143,7 +143,7 @@ namespace tileworld {
         protected cursorMove(dir: MoveDirection, pressed: boolean) {
             if (this.menu == RuleEditorMenus.MainMenu) {
                 this.otherCursorMove();
-            }
+            } 
             if (this.p.help) {
                 this.helpCursor.x = this.col() < 7 ? this.cursor.x + 16 : this.cursor.x - 16;
                 this.helpCursor.y = this.row() < 6 ? this.cursor.y + 32 : this.cursor.y;
@@ -161,6 +161,7 @@ namespace tileworld {
                         this.helpCursor.say("A: set attribute");
                     }
                 } else if (this.menu == RuleEditorMenus.CommandMenu) {
+                    this.commandUpdate(true);
                 }
             }
         }
@@ -177,14 +178,6 @@ namespace tileworld {
             }
         }
 
-        private noMenu() {
-            this.whenDo = -1;
-            this.currentCommand = -1;
-            this.attrSelected = -1;
-            this.menu = RuleEditorMenus.MainMenu;
-            this.tileSaved.setFlag(SpriteFlag.Invisible, true);
-        }
-        
         private manhattanDistance2() {
             return (Math.abs(2 - this.col()) + Math.abs(2 - (this.row() - editorRow)));
         }
@@ -218,7 +211,6 @@ namespace tileworld {
             } else if (this.menu == RuleEditorMenus.CommandMenu) {
                 screen.fillRect(0, yoff, 160, 32, 0);
                 this.modifyCommandMenu();
-                this.commandUpdate();
             }
             if (this.askDeleteRule) {
                 this.cursor.setFlag(SpriteFlag.Invisible, true)
@@ -403,8 +395,6 @@ namespace tileworld {
             } else if (inst != -1) {
                 this.tokens = [inst, CommandTokens.Delete];
                 this.makeCommandMenu(inst, arg);
-            } else {
-                this.noMenu();
             }
         }
 
@@ -467,33 +457,32 @@ namespace tileworld {
             return emptyTile;
         }
 
-        private exitCommandMenu() {
-            this.commandUpdate(true);
-            this.noMenu();
-        }
-
-        // put help here???
-        private commandUpdate(exit: boolean = false) {
-            if (this.menu != RuleEditorMenus.CommandMenu)
-                return;
+        private commandUpdate(hover: boolean = false) {
             let tok = this.ruleTypeMap.getPixel(this.col(), this.row());
             let arg = this.dirMap.getPixel(this.col(), this.row());
             if (tok == CommandTokens.Delete) {
-                if (exit) {
+                if (hover) {
+                    if (this.p.help) this.helpCursor.say("delete command");
+                } else {
                     this.p.removeCommand(this.rule, this.whenDo, this.currentCommand);
-                } else if (this.p.help) {
-                    this.helpCursor.say("delete command");
+                    this.noMenu();
                 }
             } else if (this.row() == 0 && tok != 0xf) {
-                let inst = this.p.getInst(this.rule, this.whenDo, this.currentCommand);
-                if (tok != inst) {
-                    this.setCommand(tok, this.instToStartArg(tok));
-                }
-                if (this.p.help) {
-                    this.helpCursor.say(categoryText[tok]);
+                if (hover) {
+                    if (this.p.help) this.helpCursor.say(categoryText[tok]);
+                } else {
+                    let inst = this.p.getInst(this.rule, this.whenDo, this.currentCommand);
+                    if (tok != inst)
+                        this.setCommand(tok, this.instToStartArg(tok));
                 }
             } else if (this.row() == 1 && arg != 0xf) {
-                this.p.setArg(this.rule, this.whenDo, this.currentCommand, arg);
+                if (hover) {
+                } else {
+                    this.p.setArg(this.rule, this.whenDo, this.currentCommand, arg);
+                    this.noMenu();
+                }
+            } else {
+                this.noMenu();
             }
         }
 
