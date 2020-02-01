@@ -239,8 +239,9 @@ namespace tileworld {
                 let next = this.p.fixed().length;
                 this.p.movable().forEach((img,i) => {
                     this.drawImage(i, 0, img);
-                    if (kinds.indexOf(next + i) != -1)
-                        this.drawImage(i,0,oneof);
+                    let kind = next + i;
+                    if (kinds.indexOf(kind) != -1)
+                        this.drawImage(i,0,this.kind == kind ? include : oneof);
                 })
             }
             if (this.askDeleteRule) {
