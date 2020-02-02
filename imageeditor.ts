@@ -37,6 +37,7 @@ namespace tileworld {
             this.menuCursor = sprites.create(cursorIn);
             this.menuCursor.x = 8;
             this.menuCursor.y = yoff + 8
+            cursorAnimation(this.menuCursor);
 
             this.setCursor(CursorType.Menu);
             this.update();

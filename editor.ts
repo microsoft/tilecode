@@ -38,6 +38,7 @@ namespace tileworld {
             this.cursor = sprites.create(cursorIn);
             this.cursor.x = 8
             this.cursor.y = 8 + yoff;
+            cursorAnimation(this.cursor);
 
             this.paintCursor = sprites.create(paintCursor)
             this.paintHome();

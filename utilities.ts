@@ -18,6 +18,13 @@ namespace tileworld {
         return null;
     }
 
+    export function cursorAnimation(cursor: Sprite) {
+        let anim = animation.createAnimation(0, 300);
+        anim.addAnimationFrame(cursorIn);
+        anim.addAnimationFrame(cursorOut);
+        animation.attachAnimation(cursor, anim)
+        animation.setAction(cursor, 0)
+    }
 
     // cache these???
     export function greyImage(img: Image): Image {

@@ -24,14 +24,17 @@ namespace tileworld {
 
         constructor(protected p: Project) {
             super();
+            
             this.ruleTypeMap = image.create(10, 7);
             this.dirMap = image.create(10, 7);
             this.ruleTypeMap.fill(0xf);
             this.dirMap.fill(0xf);
+            
             this.cursor = sprites.create(cursorIn);
-            this.cursor.setFlag(SpriteFlag.Invisible, false);
             this.cursor.x = 24;
             this.cursor.y = yoff + 40;
+            cursorAnimation(this.cursor);
+
             this.helpCursor = sprites.create(cursorIn);
             this.helpCursor.setFlag(SpriteFlag.Invisible, true);
             this.tileSaved = sprites.create(cursorOut);
