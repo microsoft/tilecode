@@ -2,24 +2,6 @@ namespace tileworld {
 
 // all sprites go here
 
-export const colorCursor = img`
-    5 5 5 5 5 5 5 5
-    5 . . . . . . 5
-    5 . . . . . . 5
-    5 . . . . . . 5
-    5 . . . . . . 5
-    5 . . . . . . 5
-    5 . . . . . . 5
-    5 5 5 5 5 5 5 5
-`;
-export const paintCursor = img`
-    5 5 5 5 5 5
-    5 . . . . 5
-    5 . . . . 5
-    5 . . . . 5
-    5 . . . . 5
-    5 5 5 5 5 5
-`;
 export const map = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .

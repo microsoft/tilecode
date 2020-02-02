@@ -5,7 +5,7 @@ namespace tileworld {
     const editorY = 16+yoff;
 
     enum CursorType { Menu, Map };
-    const paintCursor = img`
+    const paintOut = img`
         5 5 5 5 5 5 5 5
         5 . . . . . . 5
         5 . . . . . . 5
@@ -14,6 +14,16 @@ namespace tileworld {
         5 . . . . . . 5
         5 . . . . . . 5
         5 5 5 5 5 5 5 5
+    `;
+    const paintIn = img`
+        . . . . . . . .
+        . 5 5 5 5 5 5 .
+        . 5 . . . . 5 .
+        . 5 . . . . 5 .
+        . 5 . . . . 5 .
+        . 5 . . . . 5 .
+        . 5 5 5 5 5 5 .
+        . . . . . . . .
     `;
 
     export class MapEditor extends BackgroundBase {
@@ -35,12 +45,14 @@ namespace tileworld {
             this.selected.x = 16 + 8;
             this.selected.y = 8 + yoff;
             this.userSpriteIndex = 0;
+            
             this.cursor = sprites.create(cursorIn);
             this.cursor.x = 8
             this.cursor.y = 8 + yoff;
-            cursorAnimation(this.cursor);
+            cursorAnimation(this.cursor, cursorOut);
 
-            this.paintCursor = sprites.create(paintCursor)
+            this.paintCursor = sprites.create(paintOut)
+            cursorAnimation(this.paintCursor, paintIn)
             this.paintHome();
 
             this.setCursor(CursorType.Menu);

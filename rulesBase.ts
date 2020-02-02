@@ -33,7 +33,7 @@ namespace tileworld {
             this.cursor = sprites.create(cursorIn);
             this.cursor.x = 24;
             this.cursor.y = yoff + 40;
-            cursorAnimation(this.cursor);
+            cursorAnimation(this.cursor, cursorOut);
 
             this.helpCursor = sprites.create(cursorIn);
             this.helpCursor.setFlag(SpriteFlag.Invisible, true);

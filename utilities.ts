@@ -18,10 +18,10 @@ namespace tileworld {
         return null;
     }
 
-    export function cursorAnimation(cursor: Sprite) {
+    export function cursorAnimation(cursor: Sprite, second: Image) {
         let anim = animation.createAnimation(0, 300);
-        anim.addAnimationFrame(cursorIn);
-        anim.addAnimationFrame(cursorOut);
+        anim.addAnimationFrame(cursor.image);
+        anim.addAnimationFrame(second);
         animation.attachAnimation(cursor, anim)
         animation.setAction(cursor, 0)
     }
