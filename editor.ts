@@ -32,7 +32,7 @@ namespace tileworld {
             this.world = p.getWorld();
             // cursors
             this.selected = sprites.create(cursorOut);
-            this.selected.x = 32 + 8;
+            this.selected.x = 16 + 8;
             this.selected.y = 8 + yoff;
             this.userSpriteIndex = 0;
             this.cursor = sprites.create(cursorIn);

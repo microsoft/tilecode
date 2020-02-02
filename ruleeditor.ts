@@ -176,8 +176,11 @@ namespace tileworld {
                 if (this.menu == RuleEditorMenus.MainMenu) {
                     if (this.row() == 0) {
                         this.helpCursor.say(getHelp(menuHelpString, this.col(), this.row()));
-                    } else if (this.manhattanDistance2() <= 2 && (this.col() != 2 || this.row() != 2 + editorRow)) {
-                        this.helpCursor.say("A: attributes");
+                    } else if (this.manhattanDistance2() <= 2) {
+                        if (this.col() != 2 || this.row() != 2 + editorRow)
+                            this.helpCursor.say("A: attributes");
+                        else
+                            this.helpCursor.say("A: sprites");
                     } 
                 } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                     if (this.row() == 0) {
