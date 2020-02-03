@@ -51,6 +51,7 @@ namespace tileworld {
             this.update();
 
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
+                this.helpCursor.say(null);
                 if (this.askDeleteRule) {
                     let index = this.currentRules().indexOf(this.rule);
                     let kinds = this.p.getKinds(this.rule);
@@ -192,7 +193,7 @@ namespace tileworld {
                         if (this.col() != 2 || this.row() != 2 + editorRow)
                             this.helpCursor.say("A: attributes");
                         else
-                            this.helpCursor.say("A: sprites");
+                            this.helpCursor.say("A: add sprite");
                     } 
                 } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                     if (this.row() == 0) {

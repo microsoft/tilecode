@@ -277,8 +277,11 @@ namespace tileworld {
         });
     }
 
+    let wall = tileworld.fillAttr(AttrType.OK, 8, 0, AttrType.Exclude);
+
     function makePushRule(dir: MoveDirection) {
-        return new Rule([4], RuleType.Pushing, dir, [new WhenDo(2, 2, [], [new Command(CommandType.Move, dir)])]);
+        return new Rule([4], RuleType.Pushing, dir, 
+        [new WhenDo(2+moveXdelta(dir), 2+moveYdelta(dir), wall,[]), new WhenDo(2, 2, [], [new Command(CommandType.Move, dir)])]);
     }
 
     const player = img`
@@ -313,9 +316,12 @@ namespace tileworld {
         let rules: Rule[] = [];
         for(let dir = 0; dir < 4; dir++) { rules.push(makePushRule(dir)); }
         let p = new Project(prefix, fixed, movable, makeIds(rules));
-        p.setWorld(image.create(30,30));
+        let world = image.create(32, 24);
+        helpers.imageFillRect(world, 1, 1, 30, 22, 1);
+        world.setPixel(5, 5, 4);
+        p.setWorld(world);
         p.setPlayer(4);
-        p.defaultTile = 0;
+        p.defaultTile = 1;
         return p;
     }
 } 
