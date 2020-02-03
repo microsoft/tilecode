@@ -269,6 +269,8 @@ namespace tileworld {
             screen.fillRect(0, yoff, 160, 19, 0);
             this.fillTile(0, 0, 11);
             this.drawImage(0, 0, code);
+            this.drawImage(1, 0, this.centerImage());
+
             //this.drawImage(1, 0, play);
             //this.drawImage(2, 0, debug);
             this.drawImage(3, 0, garbageCan);

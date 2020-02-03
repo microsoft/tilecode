@@ -267,22 +267,22 @@ namespace tileworld {
         f e e f e e e f e 4 4 4 4 4 4 e
     `;
     const space = img`
-         f f f f f f f f f f f c c c c f
-         f f c c f f f f f f f f f f f f
-         f c c c c c f f f f f f f f f f
-         f c c c c c c f f f f f f f f f
-         f c c c c c c f f f c c c c f f
-         f f c c c c c f f c c c c c c f
-         f f f c c c f f f c c c c c c f
-         f f f f f f f f f c c c c c c f
-         f f f f c c c f f f c c c c f f
-         f f f c c c c c f f f f c c f f
-         f f c c c c c c c f f f f f f f
-         f f c c c c c c c f f f f f f f
-         f f c c c c c c c f f f f f f f
-         f f f c c c c c f f f c c f f f
-         f f f f c c c f f f c c c c f f
-         f f f f f f f f f c c c c c c f
+        f f f f f f f f f f f c c c c f
+        f f c c f f f f f f f f f f f f
+        f c c c c c f f f f f f f f f f
+        f c c c c c c f f f f f f f f f
+        f c c c c c c f f f c c c c f f
+        f f c c c c c f f c c c c c c f
+        f f f c c c f f f c c c c c c f
+        f f f f f f f f f c c c c c c f
+        f f f f c c c f f f c c c c f f
+        f f f c c c c c f f f f c c f f
+        f f c c c c c c c f f f f f f f
+        f f c c c c c c c f f f f f f f
+        f f c c c c c c c f f f f f f f
+        f f f c c c c c f f f c c f f f
+        f f f f c c c f f f c c c c f f
+        f f f f f f f f f c c c c c c f
     `;
 
     // up to 15 max
