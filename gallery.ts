@@ -1,20 +1,22 @@
 namespace tileworld {
 
     const cat = img`
-        e e e . . . . e e e . . . .
-        c d d c . . c d d c . . . .
-        c b d d f f d d b c . . . .
-        c 3 b d d b d b 3 c . . . .
-        f b 3 d d d d 3 b f . . . .
-        e d d d d d d d d e . . . .
-        e d f d d d d f d e . b f b
-        f d d f d d f d d f . f d f
-        f b d d b b d d 2 f . f d f
-        . f 2 2 2 2 2 2 b b f f d f
-        . f b d d d d d d b b d b f
-        . f d d d d d b d d f f f .
-        . f d f f f d f f d f . . .
-        . f f . . f f . . f f . . .
+        . . . . . . . . . . . . . . . .
+        . e e e . . . . e e e . . . . .
+        . c d d c . . c d d c . . . . .
+        . c b d d f f d d b c . . . . .
+        . c 3 b d d b d b 3 c . . . . .
+        . f b 3 d d d d 3 b f . . . . .
+        . e d d d d d d d d e . . . . .
+        . e d f d d d d f d e . b f b .
+        . f d d f d d f d d f . f d f .
+        . f b d d b b d d 2 f . f d f .
+        . . f 2 2 2 2 2 2 b b f f d f .
+        . . f b d d d d d d b b d b f .
+        . . f d d d d d b d d f f f . .
+        . . f d f f f d f f d f . . . .
+        . . f f . . f f . . f f . . . .
+        . . . . . . . . . . . . . . . .
     `;
     const fish = img`
         . . . . . . . . . . . . . . . .
@@ -35,20 +37,22 @@ namespace tileworld {
         . . . . . . . . . . c c c . . .
     `;
     const dog = img`
+        . . . . . . . . . . . . . . . .
         . . 4 4 4 . . . . 4 4 4 . . . .
         . 4 5 5 5 e . . e 5 5 5 4 . . .
         4 5 5 5 5 5 e e 5 5 5 5 5 4 . .
         4 5 5 4 4 5 5 5 5 4 4 5 5 4 . .
         e 5 4 4 5 5 5 5 5 5 4 4 5 e . .
         . e e 5 5 5 5 5 5 5 5 e e . . .
-        . . e 5 f 5 5 5 5 f 5 e . . . .
+        . . e 5 f 5 5 5 5 f 5 e . . . f
         . . f 5 5 5 4 4 5 5 5 f . . f f
         . . f 4 5 5 f f 5 5 6 f . f 5 f
-        . . . f 6 6 6 6 6 6 4 4 f 5 5 f
+        . . . f 6 6 6 6 6 6 4 4 f 5 5 .
         . . . f 4 5 5 5 5 5 5 4 4 5 f .
         . . . f 5 5 5 5 5 4 5 5 f f . .
         . . . f 5 f f f 5 f f 5 f . . .
         . . . f f . . f f . . f f . . .
+        . . . . . . . . . . . . . . . .
     `;
     const chimp = img`
         . . . . f f f f f . . . . . . .
@@ -287,40 +291,46 @@ namespace tileworld {
 
     // up to 15 max
     export const galleryPlayers = [player, cat, dog, chimp];
-    export const gallerySprites = [cat, fish, dog, chimp, player, diamond, boulder, enemy, trophyUp, debug, eat ];
+    export const gallerySprites = [fish, cat, dog, chimp, player, diamond, boulder, enemy, trophyUp, debug, eat ];
     export const galleryTiles = [brick, grass, water, dirt, dirt2, space, wall];
 
     export class Gallery extends RuleVisualsBase {
         private current: Image;
+        private newImage: Image;
         constructor(p: Project, private kind: number, private gallery: Image[]) {
             super(p);
             this.current = this.p.getImage(kind).clone();
-            this.setCol(2); this.setRow(0);
+            this.newImage = this.current.clone();
+            this.setCol(2); this.setRow(1);
             this.setTileSaved();
             this.setCol(0); this.setRow(0);
 
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                let isCurrent = this.col() == 2 && this.row() == 0 ;
+                let isCurrent = this.col() == 2 && this.row() == 1 ;
                 let index = this.dirMap.getPixel(this.col(), this.row());
                 if (isCurrent || index != 0xf) {
                     this.setTileSaved();
-                    this.p.getImage(this.kind).copyFrom(isCurrent ? this.current : gallery[index]);
+                    let img = this.gallery[index];
+                    this.newImage.copyFrom(isCurrent ? this.current : img);
                 }
             });
 
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
+                this.p.getImage(this.kind).copyFrom(this.newImage);
                 this.p.saveImage(this.kind);
                 game.popScene();
             });
         }
 
         protected update() {
+            this.dirMap.fill(0xf);
             screen.fill(0);
             screen.fillRect(0, yoff, 16, 16, 11);
             screen.drawTransparentImage(paint, 0, yoff);
+            this.drawImage(0, 1, this.newImage);
+            this.drawImage(2, 1, this.current);
             let col = 4;
-            let row = 0;
-            this.drawImage(2, 0, this.current);
+            let row = 1;
             this.gallery.forEach((img,i) => {
                 this.drawImage(col, row, img);
                 this.dirMap.setPixel(col, row, i);
