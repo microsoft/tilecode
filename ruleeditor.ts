@@ -73,10 +73,10 @@ namespace tileworld {
                 } else if (this.menu == RuleEditorMenus.CommandMenu) {
                     this.commandUpdate();
                 } else if (this.menu == RuleEditorMenus.MultipleMenu) {
-                    if (this.row() == 0 && this.col() < 4) {
-                        let kind = this.col() + this.p.fixed().length; 
-                        let kinds = this.p.getKinds(this.rule);
-                        if (kind != kinds[0]) {
+                    if (this.row() == 1) {
+                        let kind = this.dirMap.getPixel(this.col(), this.row());
+                        if (kind != 0xf) {
+                            let kinds = this.p.getKinds(this.rule);
                             if (kinds.indexOf(kind) == -1)
                                 kinds.push(kind);
                             else
@@ -99,6 +99,8 @@ namespace tileworld {
                             }
                         } else if (this.col() == 3) {
                             this.askDeleteRule = true;                     
+                        } else if (this.col() == 1) {
+                            this.menu = RuleEditorMenus.MultipleMenu;
                         }
                     } else if (this.col() > 5 && this.row() >= editorRow) {
                         this.tryEditCommand();
@@ -238,14 +240,21 @@ namespace tileworld {
             } else if (this.menu == RuleEditorMenus.CommandMenu) {
                 this.modifyCommandMenu();
             } else if (this.menu == RuleEditorMenus.MultipleMenu) {
+                this.dirMap.fill(0xf);
+                this.drawImage(1, 0, this.centerImage());
                 let kinds = this.p.getKinds(this.rule);
                 let next = this.p.fixed().length;
+                let col = 0;
                 this.p.movable().forEach((img,i) => {
-                    this.drawImage(i, 0, img);
                     let kind = next + i;
-                    if (kinds.indexOf(kind) != -1)
-                        this.drawImage(i,0,this.kind == kind ? include : oneof);
-                })
+                    if (kind != this.kind) {
+                        this.drawImage(col, 1, img);
+                        this.dirMap.setPixel(col,1,kind);
+                        if (kinds.indexOf(kind) != -1)
+                            this.drawImage(col, 1, oneof);
+                        col++;
+                    }
+                });
             }
             if (this.askDeleteRule) {
                 this.cursor.setFlag(SpriteFlag.Invisible, true)
