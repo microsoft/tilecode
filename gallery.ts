@@ -1,5 +1,4 @@
 namespace tileworld {
-    // sprites from makecode
 
     const cat = img`
         e e e . . . . e e e . . . .
@@ -141,7 +140,6 @@ namespace tileworld {
         . f d f d f d f f f f f . . . .
         . . f . f . f . . . . . . . . .
     `;
-
     const brick = img`
         b d d d d d d c b d d d d d d c
         d b b b b b b c d b b b b b b c
@@ -268,7 +266,7 @@ namespace tileworld {
         e e f e 4 4 4 e f e 4 4 4 4 e e
         f e e f e e e f e 4 4 4 4 4 4 e
     `;
-     const space = img`
+    const space = img`
          f f f f f f f f f f f c c c c f
          f f c c f f f f f f f f f f f f
          f c c c c c f f f f f f f f f f
@@ -285,8 +283,7 @@ namespace tileworld {
          f f f c c c c c f f f c c f f f
          f f f f c c c f f f c c c c f f
          f f f f f f f f f c c c c c c f
-     `;
-
+    `;
 
     // up to 15 max
     export const gallerySprites = [cat, fish, dog, chimp, player, diamond, boulder, enemy, trophyUp, debug, eat ];
