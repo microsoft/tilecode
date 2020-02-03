@@ -143,11 +143,12 @@ namespace tileworld {
     `;
 
     // up to 15 max
-    export const gallery = [cat, fish, dog, chimp, brick, grass, water, dirt, trophyUp, debug, eat, garbageCan, stopSign ];
+    export const gallerySprites = [cat, fish, dog, chimp, trophyUp, debug, eat ];
+    export const galleryTiles = [brick, grass, water, dirt ];
 
     export class Gallery extends RuleVisualsBase {
         private current: Image;
-        constructor(p: Project, private kind: number) {
+        constructor(p: Project, private kind: number, private gallery: Image[]) {
             super(p);
             this.current = this.p.getImage(kind).clone();
             this.setCol(2); this.setRow(0);
@@ -176,7 +177,7 @@ namespace tileworld {
             let col = 4;
             let row = 0;
             this.drawImage(2, 0, this.current);
-            gallery.forEach((img,i) => {
+            this.gallery.forEach((img,i) => {
                 this.drawImage(col, row, img);
                 this.dirMap.setPixel(col, row, i);
                 col += 2;
