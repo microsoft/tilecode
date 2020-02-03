@@ -5,6 +5,8 @@ namespace tileworld {
     const zeroCode = "0".charCodeAt(0);
 
     export function getHelp(help: string, col: number, row: number) {
+        if (!help)
+            return null;
         let index = 0;
         while (index >= 0 && index < help.length) {
             let curr = index;

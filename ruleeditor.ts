@@ -4,7 +4,7 @@ namespace tileworld {
     enum CommandTokens { Last=CommandType.Last, SpaceTile, Delete };
 
     const editorRow = 2;
-    const menuHelpString = "30delete rule,80add rule,90next rule,70previous rule,";
+    const menuHelpString = "10add sprite,20 add direction,30delete rule,80add rule,90next rule,70previous rule,";
     const attrHelpString = "00include,10exclude,20allow,30one of,90allow all,";
 
     export class RuleEditor extends RuleVisualsBase {
@@ -101,6 +101,8 @@ namespace tileworld {
                             this.askDeleteRule = true;                     
                         } else if (this.col() == 1) {
                             this.menu = RuleEditorMenus.MultipleMenu;
+                        } else if (this.col() == 2 && this.getDirectionImage()) {
+                            // directions
                         }
                     } else if (this.col() > 5 && this.row() >= editorRow) {
                         this.tryEditCommand();
@@ -151,6 +153,13 @@ namespace tileworld {
             return this.p.getType(this.rule);
         }
 
+        private getDirectionImage() {
+            let dir = this.p.getDir(this.rule);
+            if (this.getType() == RuleType.Resting)
+                return null;
+            return this.getType() == RuleType.Pushing ? buttonImages[dir] : moveImages[dir];
+        }
+
         private changeRule(rid: number) {
             this.p.saveRule(this.rule);
             this.rule = rid;
@@ -177,7 +186,8 @@ namespace tileworld {
                 this.helpCursor.say(null);
                 if (this.menu == RuleEditorMenus.MainMenu) {
                     if (this.row() == 0) {
-                        this.helpCursor.say(getHelp(menuHelpString, this.col(), this.row()));
+                        let menuString = this.col() != 2 || this.getDirectionImage() ? menuHelpString : null;
+                        this.helpCursor.say(getHelp(menuString, this.col(), this.row()));
                     } else if (this.manhattanDistance2() <= 2) {
                         if (this.col() != 2 || this.row() != 2 + editorRow)
                             this.helpCursor.say("A: attributes");
@@ -279,6 +289,9 @@ namespace tileworld {
             this.fillTile(0, 0, 11);
             this.drawImage(0, 0, code);
             this.drawImage(1, 0, this.centerImage());
+            let image = this.getDirectionImage();
+            if (image)
+                this.drawImage(2, 0, image);
 
             //this.drawImage(1, 0, play);
             //this.drawImage(2, 0, debug);
