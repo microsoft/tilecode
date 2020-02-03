@@ -286,6 +286,7 @@ namespace tileworld {
     `;
 
     // up to 15 max
+    export const galleryPlayers = [player, cat, dog, chimp];
     export const gallerySprites = [cat, fish, dog, chimp, player, diamond, boulder, enemy, trophyUp, debug, eat ];
     export const galleryTiles = [brick, grass, water, dirt, dirt2, space, wall];
 

@@ -301,20 +301,14 @@ namespace tileworld {
     `;
 
     export function emptyProject(prefix: string) {
-        let fixedColors = [3, 4, 5, 12];
-        let moveColors = [7, 8, 9];
         let fixed: Image[] = []; 
         let movable: Image[] = [];
         for(let f=0;f<4;f++) {
-            let fi = image.create(16, 16);
-            fi.fillRect(1,1,14,14,fixedColors[f]);
-            fixed.push(fi);
+            fixed.push(galleryTiles[f]);
         }
         movable.push(player);
         for (let f = 0; f < 3; f++) {
-            let mi = image.create(16, 16);
-            mi.fillCircle(8,8,6,moveColors[f]);
-            movable.push(mi);
+            movable.push(gallerySprites[f]);
         }
         let rules: Rule[] = [];
         for(let dir = 0; dir < 4; dir++) { rules.push(makePushRule(dir)); }
