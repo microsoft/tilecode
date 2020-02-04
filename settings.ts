@@ -10,7 +10,13 @@ namespace tileworld {
             this.setCol(0); this.setRow(0);
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.askDeleteRule) {
-                    settings.clear();
+                    if (this.p) {
+                        let keys = settings.list(this.p.prefix);
+                        keys.forEach(k => { settings.remove(k)});
+                        game.popScene();
+                    } else {
+                        settings.clear();
+                    }
                     game.popScene();
                 } else if (this.p) {
                     if (this.col() == 3 && this.row() == 1)
