@@ -348,7 +348,7 @@ namespace tileworld {
             if (draw) {
                 let index = this.findWitnessColRow(wcol, wrow);
                 let img1 = this.collideCol == wcol && this.collideRow == wrow ? collisionRestingSprite : genericSprite;
-                let img2 = index == -1 || index == 100 ? img1 : this.p.getImage(index);
+                let img2 = index == -1 ? img1 : this.p.getImage(index);
                 this.drawImage(5, crow + editorRow, img2);
                 if (img1 == collisionRestingSprite)
                     this.drawImage(5, crow + editorRow, img1);
@@ -589,8 +589,7 @@ namespace tileworld {
             if (col == 2 && row == 2) return this.kind;
             let whendo = this.getWhenDo(col, row);
             let wit = this.findWitnessWhenDo(whendo);
-            if (wit != -1) return wit;
-            return this.collideCol == col && this.collideRow == row ? 100 : -1;
+            return wit;
         }
 
         private attrMenu(col: number, row: number) {
