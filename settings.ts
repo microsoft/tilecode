@@ -4,21 +4,33 @@ namespace tileworld {
     // - world size
     // - player sprite (how many)
     export class ProjectSettings extends RuleVisualsBase {
+        private askDeleteRule: boolean = false;
         constructor(p: Project) {
             super(p);
             this.setCol(0); this.setRow(0);
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.p) {
+                if (this.askDeleteRule) {
+                    this.askDeleteRule = false;
+                } else if (this.p) {
                     if (this.col() == 3 && this.row() == 1)
                         this.p.help = !this.p.help;
+                    if (this.col() == 4 && this.row() ==6) {
+                        this.askDeleteRule = true;
+                    }
                 } else {
-
+                    if (this.col() == 7 && this.row() == 1) {
+                        this.askDeleteRule = true;
+                    }
                 }
                 this.update();
             });
 
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
-                game.popScene();
+                if (this.askDeleteRule) {
+                    this.askDeleteRule = false;
+                } else {
+                    game.popScene();
+                }
             });
         }
 
@@ -36,8 +48,17 @@ namespace tileworld {
                 screen.print(this.p.getWorld().width.toString(), 64, worldY);
                 screen.print("by", 96, worldY);
                 screen.print(this.p.getWorld().height.toString(), 128, worldY);
+                screen.print("Delete", 16, 110);
+                this.drawImage(4, 6, garbageCan);
             } else {
-
+                screen.print("Delete ALL games", 16, 16 + yoff + 6);
+                this.drawImage(7, 1, garbageCan);
+            }
+            if (this.askDeleteRule) {
+                this.cursor.setFlag(SpriteFlag.Invisible, true)
+                game.showDialog(this.p ? "OK to delete game?" : "OK to delete ALL games?", "", "A = OK, B = CANCEL");
+            } else {
+                this.cursor.setFlag(SpriteFlag.Invisible, false);
             }
         }
     }
