@@ -710,62 +710,50 @@ namespace tileworld {
             return -1;
         }
 
+        private attrSingle(rid: number, whendo: number, attr: number) {
+            let index = this.attrIndex(rid, whendo, attr);
+            if (index != -1) {
+                let index2 = this.attrIndex(rid, whendo, attr, index + 1);
+                return index2 == -1 ? index : -1;
+            } 
+            return index;
+        }
+
         private showAttributes(rid: number, col: number, row: number) {
             let whendo = this.p.getWhenDo(rid, col, row);
             if (whendo >= 0) {
                 // if there is an include or single oneOf, show it.
-                let index = this.attrIndex(rid, whendo, AttrType.Include);
-                if (index == -1) {
-                    index = this.attrIndex(rid, whendo, AttrType.OneOf);
-                    if (index != -1) {
-                        let index2 = this.attrIndex(rid, whendo, AttrType.OneOf, index + 1);
-                        if (index2 != -1)
-                            index = -1;
-                    }
-                }
+                let indexInclude = this.attrIndex(rid, whendo, AttrType.Include);
+                let indexOneOf = indexInclude == -1 ? this.attrIndex(rid, whendo, AttrType.OneOf) : indexInclude;
+                let index = indexOneOf == -1 ? this.attrIndex(rid, whendo, AttrType.Exclude) : indexOneOf;
                 // and skip to the other (if it exists)
+                if (index != -1) { 
+                    
+                    this.drawImage(col, row + editorRow, this.p.getImage(index));
+                }
                 let begin = 0;
                 let end = this.p.all().length - 1;
-                if (index != -1) {
-                    this.drawImage(col, row + editorRow, this.p.getImage(index));
-                    if (index < this.p.fixed().length) {
-                        begin = this.p.fixed().length;
-                    } else {
-                        end = this.p.fixed().length - 1;
-                    }
-                }
                 let project = this.projectAttrs(rid, whendo, begin, end);
                 let done: AttrType[] = [];
                 project.forEach(index => {
                     let val = this.p.getAttr(rid, whendo, index);
-                    // eliminate duplicates
-                    if (done.indexOf(val) == -1) {
-                        done.push(val);
-                        // TODO: draw each one, without overlap, four quadrants
-                        this.drawImage(col, row + editorRow, attrImages[attrValues.indexOf(val)]);
-                    }
+                    this.drawImage(col, row + editorRow, attrImages[attrValues.indexOf(val)]);
+                    // TODO: draw each one, without overlap, four quadrants
                 });
             }
         }
 
         private projectAttrs(rid: number, whendo: number, begin: number, end: number): number[] {
-            let attrCnt = (a: AttrType) => {
-                let cnt = 0;
-                for (let i = begin; i <= end; i++) {
-                    if (this.p.getAttr(rid, whendo, i) == a) cnt++;
-                }
-                return cnt;
-            }
-            let res: number[] = [];
-            let excludeCnt = attrCnt(AttrType.Exclude);
-            let okCnt = attrCnt(AttrType.OK);
-            let cnt = end - begin + 1;
-            if (okCnt == this.p.all().length || excludeCnt == cnt || (begin == 0 && okCnt == cnt))
-                return res;
-            let remove = (okCnt != 0 && excludeCnt != 0) ?
-                ((excludeCnt < okCnt) ? AttrType.OK : AttrType.Exclude) : -1;
+            let cnt = 0;
             for (let i = begin; i <= end; i++) {
-                if (this.p.getAttr(rid, whendo, i) != remove) res.push(i);
+                if (this.p.getAttr(rid, whendo, i) == AttrType.OK) cnt++;
+            }
+            if (cnt == this.p.all().length)
+                return [];
+            let res: number[] = [];
+            for (let i = begin; i <= end; i++) {
+                let a = this.p.getAttr(rid, whendo, i);
+                if (a != AttrType.OK && res.indexOf(a) == -1) res.push(i);
             }
             return res;
         }

@@ -34,6 +34,9 @@ namespace tileworld {
             return this._world;
         }
 
+        // public setSprites(img: Image) { }
+        // public getSprites() { }
+
         // images
 
         public fixed() { return this.fixedImages; }
