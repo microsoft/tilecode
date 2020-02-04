@@ -236,6 +236,8 @@ namespace tileworld {
             this.showRuleType(this.p.getType(this.rule), this.p.getDir(this.rule), 2, 2+editorRow);
             this.makeContext();
             this.showRuleType(this.p.getType(this.rule), this.p.getDir(this.rule), 2, 2+editorRow);
+            if (this.p.getKinds(this.rule).length > 1)
+                this.drawImage(2, 2 + editorRow, oneof);
             this.showCommands();
             if (this.p.help && this.menu == RuleEditorMenus.MainMenu && this.col() > 5 && this.row() >= editorRow) {
                 let len = this.commandLengths[this.row() - editorRow];
@@ -290,6 +292,8 @@ namespace tileworld {
             this.fillTile(0, 0, 11);
             this.drawImage(0, 0, code);
             this.drawImage(1, 0, this.centerImage());
+            if (this.p.getKinds(this.rule).length > 1)
+                this.drawImage(1,0,oneof);
             let image = this.getDirectionImage();
             if (image)
                 this.drawImage(2, 0, image);
