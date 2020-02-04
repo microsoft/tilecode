@@ -37,8 +37,11 @@ namespace tileworld {
 
         // TODO: is it in settings or not?
         private makeIt(col: number, row: number, id: string) {
+            let prefix = "TW" + id + "-";
+            let projectAvailable = settings.list(prefix).length > 0;
             this.drawImage(col-1, row, diskIcon);
-            this.fillTile(col, row, (this.col() == col || this.col() == col -1) && this.row() == row ? 7 : 11);
+            this.fillTile(col, row, (this.col() == col || this.col() == col -1) && this.row() == row ? 7 : 
+                    (projectAvailable ? 11 : 12));
             screen.print(id, (col << 4) + 6, (row << 4) + 4 + yoff);
         }
 
