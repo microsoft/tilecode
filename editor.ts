@@ -157,8 +157,12 @@ namespace tileworld {
                 let row = ((this.paintCursor.y - (editorY +4)) >> 3) + this.offsetY;
                 if (this.userSpriteIndex < this.p.fixed().length)
                     this.world.setPixel(col, row, this.userSpriteIndex);
-                else
-                    this.sprites.setPixel(col, row, this.userSpriteIndex);
+                else {
+                    if (this.sprites.getPixel(col, row) == this.userSpriteIndex)
+                        this.sprites.setPixel(col, row, 0xf);
+                    else
+                        this.sprites.setPixel(col, row, this.userSpriteIndex);
+                }
                 this.update();
                 return;
             }
@@ -175,12 +179,6 @@ namespace tileworld {
                 }
             }
             this.update();
-        }
-
-        private pushIt() {
-            this.p.saveWorldSprites();
-            game.pushScene();
-            this.aDown = false;
         }
 
         private col(current: boolean = true) {

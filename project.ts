@@ -95,7 +95,7 @@ namespace tileworld {
             let worldBuf = imageToBuffer(this._world);
             settings.writeBuffer(this.prefix + "TM", worldBuf);
             let spritesBuf = imageToBuffer(this._sprites);
-            settings.writeBuffer(this.prefix + "TS", worldBuf);
+            settings.writeBuffer(this.prefix + "TS", spritesBuf);
         }
 
         // rules 
