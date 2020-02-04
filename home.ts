@@ -27,7 +27,7 @@ namespace tileworld {
                     if (rules.length > 0) {
                         game.pushScene();
                         let g = new RunGame(this.p, rules);
-                        g.setWorld(this.p.getWorld());
+                        g.setWorld(this.p.getWorld(), this.p.getSprites());
                         g.start();
                     }
                 } else if (command == settingsIcon) {

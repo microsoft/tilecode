@@ -221,9 +221,11 @@ namespace sample {
         playerPaint, playerMoveRule(0), playerMoveRule(1), playerMoveRule(2), playerMoveRule(3), 
         playerMoveBoulderRight, playerMoveBoulderLeft])
     );
-    let world = image.create(30, 30);
+    let world = image.create(32, 24);
     world.fill(2);
     project.setWorld(world);
+    let sprites = image.create(32, 24);
+    sprites.fill(0xf);
+    project.setSprites(sprites);
     project.setPlayer(playerId);
-    project.defaultTile = 0;
 }

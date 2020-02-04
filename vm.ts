@@ -423,7 +423,7 @@ namespace tileworld {
             this.vm = new TileWorldVM(p, rules)
         }
         
-        public setWorld(w: Image) {
+        public setWorld(w: Image, sprites: Image) {
             this.dirQueue = [];
             this.signal = null;
             this.state = new VMState();
@@ -436,20 +436,24 @@ namespace tileworld {
 
             // initialize fixed and movable sprites
             for (let kind = 0;kind < this.p.all().length; kind++) {
-                let art = this.p.getImage(kind);
                 if (kind < this.p.fixed().length) {
+                    let art = this.p.getImage(kind);
                     scene.setTile(kind, art);
                 } else {
                     this.state.sprites[kind] = [];
-                    let tiles = scene.getTilesByType(kind);
-                    let tm = game.currentScene().tileMap;
-                    for (let t of tiles) {
-                        let tileSprite = new TileSprite(art, kind);
-                        this.state.sprites[kind].push(tileSprite);
-                        t.place(tileSprite);
-                        scene.setTileAt(t, this.p.defaultTile);
-                    } 
                 }
+            }
+        
+            for(let x = 0; x<sprites.width; x++) {
+                for (let y = 0; y < sprites.height; y++) {
+                    let kind = sprites.getPixel(x,y);
+                    if (kind == 0xf) continue;
+                    let art = this.p.getImage(kind);
+                    let ts = new TileSprite(art, kind);
+                    this.state.sprites[kind].push(ts);
+                    ts.x = (x << 4) + 8;
+                    ts.y = (y << 4) + 8;
+                }   
             }
         }
 

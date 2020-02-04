@@ -2,10 +2,10 @@ namespace tileworld {
 
     export class Project {
         private lastRule: IdRule = null;
-        public defaultTile: number = 0;
         private allImages: Image[] = null;
         private _player: number = -1;
         private _world: Image = null;
+        private _sprites: Image = null;
         public debug: boolean = false;
         public help: boolean = true;
 
@@ -34,8 +34,13 @@ namespace tileworld {
             return this._world;
         }
 
-        // public setSprites(img: Image) { }
-        // public getSprites() { }
+        public setSprites(img: Image) { 
+            this._sprites = img;
+        }
+
+        public getSprites() { 
+            return this._sprites;
+        }
 
         // images
 
@@ -86,9 +91,11 @@ namespace tileworld {
             }
         }
 
-        public saveWorld() {
+        public saveWorldSprites() {
             let worldBuf = imageToBuffer(this._world);
             settings.writeBuffer(this.prefix + "TM", worldBuf);
+            let spritesBuf = imageToBuffer(this._sprites);
+            settings.writeBuffer(this.prefix + "TS", worldBuf);
         }
 
         // rules 
@@ -211,7 +218,10 @@ namespace tileworld {
         // get the tile map, handling errors
         let buf = settings.readBuffer(prefix + "TM");
         let world = buf && buf.length > 0 ? bufferToImage(buf) : null;
-        world = world ? world : image.create(30, 30);
+        world = world ? world : image.create(32, 24);
+        buf = settings.readBuffer(prefix + "TS");
+        let sprites = buf && buf.length > 0 ? bufferToImage(buf) : null;
+        sprites = sprites ? sprites : image.create(32, 24);
         // get sprites
         let fixedImages: Image[] = [];
         if (names.indexOf(prefix + "FL") != -1) {
@@ -243,8 +253,8 @@ namespace tileworld {
         });
         let p = new Project(prefix, fixedImages, movableImages, rules);
         p.setWorld(world);
+        p.setSprites(sprites);
         p.setPlayer(settings.readNumber(prefix + "PL"));
-        p.defaultTile = settings.readNumber(prefix + "DT");
         return p;
     }
 
@@ -262,7 +272,6 @@ namespace tileworld {
         settings.writeNumber(prefix + "FL", p.fixed().length);
         settings.writeNumber(prefix + "ML", p.movable().length);
         settings.writeNumber(prefix + "PL", p.getPlayer());
-        settings.writeNumber(prefix + "DT", p.defaultTile);
         p.fixed().forEach((img, i) => {
             let buf = saveImage(prefix, i, img, true);
             length += buf.length;
@@ -274,6 +283,9 @@ namespace tileworld {
         let worldBuf = imageToBuffer(p.getWorld());
         length += worldBuf.length;
         settings.writeBuffer(prefix + "TM", worldBuf);
+        let spritesBuf = imageToBuffer(p.getSprites());
+        length += spritesBuf.length;
+        settings.writeBuffer(prefix + "TS", spritesBuf);        
         p.getRules().forEach(r => { 
             let buf = storeRule(prefix, r.id, r.rule); 
             length += buf.length;
@@ -321,10 +333,12 @@ namespace tileworld {
         let p = new Project(prefix, fixed, movable, makeIds(rules));
         let world = image.create(32, 24);
         helpers.imageFillRect(world, 1, 1, 30, 22, 1);
-        world.setPixel(5, 5, 4);
+        let sprites = image.create(32, 24);
+        sprites.fill(0xf);
+        sprites.setPixel(5, 5, 4);
         p.setWorld(world);
+        p.setSprites(sprites);
         p.setPlayer(4);
-        p.defaultTile = 1;
         return p;
     }
 } 
