@@ -4,7 +4,7 @@ namespace tileworld {
     enum CommandTokens { Last=CommandType.Last, SpaceTile, Delete };
 
     const editorRow = 2;
-    const menuHelpString = "10add sprite,20 add direction,30delete rule,80add rule,90next rule,70previous rule,";
+    const menuHelpString = "10add sprite,30delete rule,80add rule,90next rule,70previous rule,";
     const attrHelpString = "00include,10exclude,20allow,30one of,90allow all,";
 
     export class RuleEditor extends RuleVisualsBase {
@@ -102,8 +102,6 @@ namespace tileworld {
                             this.askDeleteRule = true;                     
                         } else if (this.col() == 1) {
                             this.menu = RuleEditorMenus.MultipleMenu;
-                        } else if (this.col() == 2 && this.getDirectionImage()) {
-                            // directions
                         }
                     } else if (this.col() > 5 && this.row() >= editorRow) {
                         this.tryEditCommand();
@@ -187,8 +185,7 @@ namespace tileworld {
                 this.helpCursor.say(null);
                 if (this.menu == RuleEditorMenus.MainMenu) {
                     if (this.row() == 0) {
-                        let menuString = this.col() != 2 || this.getDirectionImage() ? menuHelpString : null;
-                        this.helpCursor.say(getHelp(menuString, this.col(), this.row()));
+                        this.helpCursor.say(getHelp(menuHelpString, this.col(), this.row()));
                     } else if (this.manhattanDistance2() <= 2) {
                         if (this.col() != 2 || this.row() != 2 + editorRow)
                             this.helpCursor.say("A: attributes");
@@ -294,9 +291,9 @@ namespace tileworld {
             this.drawImage(1, 0, this.centerImage());
             if (this.p.getKinds(this.rule).length > 1)
                 this.drawImage(1,0,oneof);
-            let image = this.getDirectionImage();
-            if (image)
-                this.drawImage(2, 0, image);
+            // let image = this.getDirectionImage();
+            // if (image)
+            //    this.drawImage(2, 0, image);
 
             //this.drawImage(1, 0, play);
             //this.drawImage(2, 0, debug);
