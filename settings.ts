@@ -10,7 +10,8 @@ namespace tileworld {
             this.setCol(0); this.setRow(0);
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.askDeleteRule) {
-                    this.askDeleteRule = false;
+                    settings.clear();
+                    game.popScene();
                 } else if (this.p) {
                     if (this.col() == 3 && this.row() == 1)
                         this.p.help = !this.p.help;
@@ -20,6 +21,7 @@ namespace tileworld {
                 } else {
                     if (this.col() == 7 && this.row() == 1) {
                         this.askDeleteRule = true;
+                        return;
                     }
                 }
                 this.update();

@@ -322,11 +322,11 @@ namespace tileworld {
         let fixed: Image[] = []; 
         let movable: Image[] = [];
         for(let f=0;f<4;f++) {
-            fixed.push(galleryTiles[f]);
+            fixed.push(galleryTiles[f].clone());
         }
-        movable.push(player);
+        movable.push(player.clone());
         for (let f = 0; f < 3; f++) {
-            movable.push(gallerySprites[f]);
+            movable.push(gallerySprites[f].clone());
         }
         let rules: Rule[] = [];
         for(let dir = 0; dir < 4; dir++) { rules.push(makePushRule(dir)); }
