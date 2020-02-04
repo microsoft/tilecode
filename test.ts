@@ -154,20 +154,12 @@ namespace sample {
     let boulderId = all.indexOf(boulder);
     let diamondId = all.indexOf(diamond);
 
-    function fillAttr(f: number, n: number, i: number, g: number) {
-        let res: AttrType[] = [];
-        for(let j=0;j<n;j++) {
-            res.push(j == i ? g : f);
-        }
-        return res;
-    }
-
     function TileAt(id: number, col: number, row: number): WhenDo {
-        return new WhenDo(col, row, fillAttr(AttrType.Exclude, 7, id, AttrType.Include), []);
+        return new WhenDo(col, row, tileworld.fillAttr(AttrType.Exclude, 7, id, AttrType.Include), []);
     }
 
     function SpriteAt(id: number, col: number, row: number): WhenDo {
-        let attrs = fillAttr(AttrType.Exclude, 7, id, AttrType.Include);
+        let attrs = tileworld.fillAttr(AttrType.Exclude, 7, id, AttrType.Include);
         attrs[0] = attrs[1] = attrs[2] = AttrType.OK;
         return new WhenDo(col, row, attrs, []);
     }
@@ -175,7 +167,7 @@ namespace sample {
     let tp = TileAt(spaceId, 2, 3)
     tp.attrs[playerId] = AttrType.OK;
     tp.attrs[enemyId] = AttrType.OK;
-    let playerMove = fillAttr(AttrType.OK, 7, boulderId, AttrType.Exclude);
+    let playerMove = tileworld.fillAttr(AttrType.OK, 7, boulderId, AttrType.Exclude);
     playerMove[wallId] = AttrType.Exclude;
 
     let moveRight = [new Command(CommandType.Move, MoveDirection.Right)]

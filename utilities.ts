@@ -2,9 +2,19 @@
 
 namespace tileworld {
 
+    export function fillAttr(f: number, n: number, i: number, g: number) {
+        let res: AttrType[] = [];
+        for (let j = 0; j < n; j++) {
+            res.push(j == i ? g : f);
+        }
+        return res;
+    }
+
     const zeroCode = "0".charCodeAt(0);
 
     export function getHelp(help: string, col: number, row: number) {
+        if (!help)
+            return null;
         let index = 0;
         while (index >= 0 && index < help.length) {
             let curr = index;

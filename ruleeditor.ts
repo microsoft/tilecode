@@ -4,7 +4,7 @@ namespace tileworld {
     enum CommandTokens { Last=CommandType.Last, SpaceTile, Delete };
 
     const editorRow = 2;
-    const menuHelpString = "30delete rule,80add rule,90next rule,70previous rule,";
+    const menuHelpString = "10add sprite,20 add direction,30delete rule,80add rule,90next rule,70previous rule,";
     const attrHelpString = "00include,10exclude,20allow,30one of,90allow all,";
 
     export class RuleEditor extends RuleVisualsBase {
@@ -51,6 +51,7 @@ namespace tileworld {
             this.update();
 
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
+                this.helpCursor.say(null);
                 if (this.askDeleteRule) {
                     let index = this.currentRules().indexOf(this.rule);
                     let kinds = this.p.getKinds(this.rule);
@@ -73,10 +74,10 @@ namespace tileworld {
                 } else if (this.menu == RuleEditorMenus.CommandMenu) {
                     this.commandUpdate();
                 } else if (this.menu == RuleEditorMenus.MultipleMenu) {
-                    if (this.row() == 0 && this.col() < 4) {
-                        let kind = this.col() + this.p.fixed().length; 
-                        let kinds = this.p.getKinds(this.rule);
-                        if (kind != kinds[0]) {
+                    if (this.row() == 1) {
+                        let kind = this.dirMap.getPixel(this.col(), this.row());
+                        if (kind != 0xf) {
+                            let kinds = this.p.getKinds(this.rule);
                             if (kinds.indexOf(kind) == -1)
                                 kinds.push(kind);
                             else
@@ -99,6 +100,10 @@ namespace tileworld {
                             }
                         } else if (this.col() == 3) {
                             this.askDeleteRule = true;                     
+                        } else if (this.col() == 1) {
+                            this.menu = RuleEditorMenus.MultipleMenu;
+                        } else if (this.col() == 2 && this.getDirectionImage()) {
+                            // directions
                         }
                     } else if (this.col() > 5 && this.row() >= editorRow) {
                         this.tryEditCommand();
@@ -149,6 +154,13 @@ namespace tileworld {
             return this.p.getType(this.rule);
         }
 
+        private getDirectionImage() {
+            let dir = this.p.getDir(this.rule);
+            if (this.getType() == RuleType.Resting)
+                return null;
+            return this.getType() == RuleType.Pushing ? buttonImages[dir] : moveImages[dir];
+        }
+
         private changeRule(rid: number) {
             this.p.saveRule(this.rule);
             this.rule = rid;
@@ -175,12 +187,13 @@ namespace tileworld {
                 this.helpCursor.say(null);
                 if (this.menu == RuleEditorMenus.MainMenu) {
                     if (this.row() == 0) {
-                        this.helpCursor.say(getHelp(menuHelpString, this.col(), this.row()));
+                        let menuString = this.col() != 2 || this.getDirectionImage() ? menuHelpString : null;
+                        this.helpCursor.say(getHelp(menuString, this.col(), this.row()));
                     } else if (this.manhattanDistance2() <= 2) {
                         if (this.col() != 2 || this.row() != 2 + editorRow)
                             this.helpCursor.say("A: attributes");
                         else
-                            this.helpCursor.say("A: sprites");
+                            this.helpCursor.say("A: add sprite");
                     } 
                 } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                     if (this.row() == 0) {
@@ -238,14 +251,21 @@ namespace tileworld {
             } else if (this.menu == RuleEditorMenus.CommandMenu) {
                 this.modifyCommandMenu();
             } else if (this.menu == RuleEditorMenus.MultipleMenu) {
+                this.dirMap.fill(0xf);
+                this.drawImage(1, 0, this.centerImage());
                 let kinds = this.p.getKinds(this.rule);
                 let next = this.p.fixed().length;
+                let col = 0;
                 this.p.movable().forEach((img,i) => {
-                    this.drawImage(i, 0, img);
                     let kind = next + i;
-                    if (kinds.indexOf(kind) != -1)
-                        this.drawImage(i,0,this.kind == kind ? include : oneof);
-                })
+                    if (kind != this.kind) {
+                        this.drawImage(col, 1, img);
+                        this.dirMap.setPixel(col,1,kind);
+                        if (kinds.indexOf(kind) != -1)
+                            this.drawImage(col, 1, oneof);
+                        col++;
+                    }
+                });
             }
             if (this.askDeleteRule) {
                 this.cursor.setFlag(SpriteFlag.Invisible, true)
@@ -269,6 +289,11 @@ namespace tileworld {
             screen.fillRect(0, yoff, 160, 19, 0);
             this.fillTile(0, 0, 11);
             this.drawImage(0, 0, code);
+            this.drawImage(1, 0, this.centerImage());
+            let image = this.getDirectionImage();
+            if (image)
+                this.drawImage(2, 0, image);
+
             //this.drawImage(1, 0, play);
             //this.drawImage(2, 0, debug);
             this.drawImage(3, 0, garbageCan);
@@ -685,62 +710,50 @@ namespace tileworld {
             return -1;
         }
 
+        private attrSingle(rid: number, whendo: number, attr: number) {
+            let index = this.attrIndex(rid, whendo, attr);
+            if (index != -1) {
+                let index2 = this.attrIndex(rid, whendo, attr, index + 1);
+                return index2 == -1 ? index : -1;
+            } 
+            return index;
+        }
+
         private showAttributes(rid: number, col: number, row: number) {
             let whendo = this.p.getWhenDo(rid, col, row);
             if (whendo >= 0) {
                 // if there is an include or single oneOf, show it.
-                let index = this.attrIndex(rid, whendo, AttrType.Include);
-                if (index == -1) {
-                    index = this.attrIndex(rid, whendo, AttrType.OneOf);
-                    if (index != -1) {
-                        let index2 = this.attrIndex(rid, whendo, AttrType.OneOf, index + 1);
-                        if (index2 != -1)
-                            index = -1;
-                    }
-                }
+                let indexInclude = this.attrIndex(rid, whendo, AttrType.Include);
+                let indexOneOf = indexInclude == -1 ? this.attrIndex(rid, whendo, AttrType.OneOf) : indexInclude;
+                let index = indexOneOf == -1 ? this.attrIndex(rid, whendo, AttrType.Exclude) : indexOneOf;
                 // and skip to the other (if it exists)
+                if (index != -1) { 
+                    
+                    this.drawImage(col, row + editorRow, this.p.getImage(index));
+                }
                 let begin = 0;
                 let end = this.p.all().length - 1;
-                if (index != -1) {
-                    this.drawImage(col, row + editorRow, this.p.getImage(index));
-                    if (index < this.p.fixed().length) {
-                        begin = this.p.fixed().length;
-                    } else {
-                        end = this.p.fixed().length - 1;
-                    }
-                }
                 let project = this.projectAttrs(rid, whendo, begin, end);
                 let done: AttrType[] = [];
                 project.forEach(index => {
                     let val = this.p.getAttr(rid, whendo, index);
-                    // eliminate duplicates
-                    if (done.indexOf(val) == -1) {
-                        done.push(val);
-                        // TODO: draw each one, without overlap, four quadrants
-                        this.drawImage(col, row + editorRow, attrImages[attrValues.indexOf(val)]);
-                    }
+                    this.drawImage(col, row + editorRow, attrImages[attrValues.indexOf(val)]);
+                    // TODO: draw each one, without overlap, four quadrants
                 });
             }
         }
 
         private projectAttrs(rid: number, whendo: number, begin: number, end: number): number[] {
-            let attrCnt = (a: AttrType) => {
-                let cnt = 0;
-                for (let i = begin; i <= end; i++) {
-                    if (this.p.getAttr(rid, whendo, i) == a) cnt++;
-                }
-                return cnt;
-            }
-            let res: number[] = [];
-            let excludeCnt = attrCnt(AttrType.Exclude);
-            let okCnt = attrCnt(AttrType.OK);
-            let cnt = end - begin + 1;
-            if (okCnt == this.p.all().length || excludeCnt == cnt || (begin == 0 && okCnt == cnt))
-                return res;
-            let remove = (okCnt != 0 && excludeCnt != 0) ?
-                ((excludeCnt < okCnt) ? AttrType.OK : AttrType.Exclude) : -1;
+            let cnt = 0;
             for (let i = begin; i <= end; i++) {
-                if (this.p.getAttr(rid, whendo, i) != remove) res.push(i);
+                if (this.p.getAttr(rid, whendo, i) == AttrType.OK) cnt++;
+            }
+            if (cnt == this.p.all().length)
+                return [];
+            let res: number[] = [];
+            for (let i = begin; i <= end; i++) {
+                let a = this.p.getAttr(rid, whendo, i);
+                if (a != AttrType.OK && res.indexOf(a) == -1) res.push(i);
             }
             return res;
         }

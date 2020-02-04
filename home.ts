@@ -16,7 +16,7 @@ namespace tileworld {
                 let index = this.dirMap.getPixel(this.col(), this.row())
                 if (index != 0xf) {
                     game.pushScene();
-                    new Gallery(this.p, index)
+                    new Gallery(this.p, index, index < this.p.fixed().length ? galleryTiles : gallerySprites )
                     return;
                 }
                 if (this.row()>0)
@@ -33,9 +33,6 @@ namespace tileworld {
                 } else if (command == settingsIcon) {
                     game.pushScene();
                     new ProjectSettings(this.p);
-                } else if (command == music) {
-                    game.pushScene();
-                    new Music(this.p);
                 } else if (command == map) {
                     game.pushScene();
                     new MapEditor(this.p);
@@ -45,10 +42,13 @@ namespace tileworld {
                 } else if (command == code) {
                     game.pushScene();
                     new RuleRoom(this.p);
-                } else if (command == debug) {
+                } /* else if (command == debug) {
                     game.pushScene();
                     new Debugger(this.p);
-                } 
+                } else if (command == music) {
+                    game.pushScene();
+                    new Music(this.p);
+                } */
             });
 
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
