@@ -19,6 +19,9 @@ namespace tileworld {
                     this.lastDir = -1;
                     game.pushScene();
                     new GameHome(this.p);
+                } else if (this.col() == 9 && this.row() == 0) {
+                    game.pushScene();
+                    new ProjectSettings(null);
                 }
             });
             this.update();
@@ -32,6 +35,7 @@ namespace tileworld {
             this.lastDir = pressed ? dir : -1;
         }
 
+        // TODO: is it in settings or not?
         private makeIt(col: number, row: number, id: string) {
             this.drawImage(col-1, row, diskIcon);
             this.fillTile(col, row, (this.col() == col || this.col() == col -1) && this.row() == row ? 7 : 11);
@@ -69,6 +73,8 @@ namespace tileworld {
             this.makeIt(7, 2, "2");
             this.makeIt(5, 4, "3");
             this.makeIt(7, 4, "4");
+
+            this.drawImage(9, 0, settingsIcon);
 
             //if (this.bootstrap) {
             //    screen.print("bootstrap", 100, 105);

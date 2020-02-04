@@ -3,7 +3,7 @@ namespace tileworld {
 
     // menu bar
 
-    const helpString = "00map,10paint,20code,30play,40settings,";  // 40debug,50music
+    const helpString = "00map,10paint,20code,30play,90settings,";  // 40debug,50music
     
     export class GameHome extends RuleVisualsBase {
         constructor(p: Project) {
@@ -30,9 +30,6 @@ namespace tileworld {
                         g.setWorld(this.p.getWorld(), this.p.getSprites());
                         g.start();
                     }
-                } else if (command == settingsIcon) {
-                    game.pushScene();
-                    new ProjectSettings(this.p);
                 } else if (command == map) {
                     game.pushScene();
                     new MapEditor(this.p);
@@ -42,6 +39,9 @@ namespace tileworld {
                 } else if (command == code) {
                     game.pushScene();
                     new RuleRoom(this.p);
+                } else if (this.col() == 9 && this.row() == 0) {
+                    game.pushScene();
+                    new ProjectSettings(this.p);
                 } /* else if (command == debug) {
                     game.pushScene();
                     new Debugger(this.p);
@@ -58,7 +58,7 @@ namespace tileworld {
 
         protected cursorMove(dir: MoveDirection, pressed: boolean = true) { 
             if(this.p.help) {
-                this.helpCursor.x = this.cursor.x + 8;
+                this.helpCursor.x = this.col() < 7 ? this.cursor.x + 8 : this.cursor.x-16;
                 this.helpCursor.y = this.cursor.y + 32;
                 let index = this.dirMap.getPixel(this.col(), this.row())
                 if (this.row() < 1) {
@@ -78,9 +78,11 @@ namespace tileworld {
             }
             screen.fill(0);
             this.dirMap.fill(0xf);
-            commandImages.forEach((img, i) => {
+            commandImages.forEach((img,i) => {
                 this.drawImage(i, 0, img);
             });
+            this.drawImage(9, 0, settingsIcon);
+
             screen.print("Tiles", 16, yoff + 32 + 6);
             this.p.fixed().forEach((img,i) => {
                 this.drawImage(1+(i<<1), 3, img);
