@@ -728,7 +728,6 @@ namespace tileworld {
                 let index = indexOneOf == -1 ? this.attrIndex(rid, whendo, AttrType.Exclude) : indexOneOf;
                 // and skip to the other (if it exists)
                 if (index != -1) { 
-                    
                     this.drawImage(col, row + editorRow, this.p.getImage(index));
                 }
                 let begin = 0;
@@ -737,8 +736,8 @@ namespace tileworld {
                 let done: AttrType[] = [];
                 project.forEach(index => {
                     let val = this.p.getAttr(rid, whendo, index);
-                    this.drawImage(col, row + editorRow, attrImages[attrValues.indexOf(val)]);
-                    // TODO: draw each one, without overlap, four quadrants
+                    let i = attrValues.indexOf(val);
+                    screen.drawTransparentImage(attrImages[i], (col<<4)+8+attrXoffsets[i], ((row + editorRow)<<4) + 8 + yoff + attrYoffsets[i]);
                 });
             }
         }
