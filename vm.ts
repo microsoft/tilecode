@@ -168,6 +168,9 @@ namespace tileworld {
             let camera = game.currentScene().camera
             this.gs.sprites.forEach(ls => { 
                 if (ls) ls.forEach(ts => {
+                    // TODO: this isn't quite right - we really need to do an analysis of changing tiles
+                    // TODO: and use the finite neighborhood of a sprite 
+                    // TODO: need to pull out rules whose precondition is "true".
                     if (!ts.isOutOfScreen(game.currentScene().camera) || ts.dir != -1) {
                         handler(ts);
                     }
