@@ -1,8 +1,8 @@
 namespace tileworld {
 
+    let projectVersion = "1.0.0";
+
     export class Project {
-        // TODO: plumb versioning through
-        private version: string;
         private lastRule: IdRule = null;
         private allImages: Image[] = null;
         private _player: number = -1;
@@ -10,6 +10,7 @@ namespace tileworld {
         private _sprites: Image = null;
         public debug: boolean = false;
         public help: boolean = true;
+        public version: string;
 
         constructor(
             public prefix: string,
@@ -221,6 +222,7 @@ namespace tileworld {
         let names = settings.list(prefix);
         if (names.length == 0)
             return null;
+        let version = settings.readString(prefix + "VS");
         // get the tile map, handling errors
         let buf = settings.readBuffer(prefix + "TM");
         let world = buf && buf.length > 0 ? bufferToImage(buf) : null;
@@ -265,6 +267,7 @@ namespace tileworld {
         p.setSprites(sprites);
         p.setPlayer(settings.readNumber(prefix + "PL"));
         p.help = help;
+        p.version = version;
         return p;
     }
 
@@ -279,6 +282,7 @@ namespace tileworld {
             return;
         let prefix = p.prefix;
         let length = 8;
+        settings.writeString(prefix + "VS", p.version);
         settings.writeNumber(prefix + "HM", p.help ? 1 : 0);
         settings.writeNumber(prefix + "FL", p.fixed().length);
         settings.writeNumber(prefix + "ML", p.movable().length);
@@ -350,6 +354,7 @@ namespace tileworld {
         p.setWorld(world);
         p.setSprites(sprites);
         p.setPlayer(4);
+        p.version = projectVersion;
         return p;
     }
 } 
