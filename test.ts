@@ -223,9 +223,11 @@ namespace sample {
     );
     let world = image.create(32, 24);
     world.fill(2);
+    world.drawRect(0, 0, 32, 24, 1);
     project.setWorld(world);
     let sprites = image.create(32, 24);
     sprites.fill(0xf);
+    sprites.setPixel(4,4,4);
     project.setSprites(sprites);
     project.setPlayer(playerId);
 }
