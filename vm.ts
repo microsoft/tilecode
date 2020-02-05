@@ -165,7 +165,14 @@ namespace tileworld {
         }
 
         public allSprites(handler: (ts:TileSprite) => void) {
-            this.gs.sprites.forEach(ls => { if (ls) ls.forEach(ts => handler(ts)); });
+            let camera = game.currentScene().camera
+            this.gs.sprites.forEach(ls => { 
+                if (ls) ls.forEach(ts => {
+                    if (!ts.isOutOfScreen(game.currentScene().camera) || ts.dir != -1) {
+                        handler(ts);
+                    }
+                }); 
+            });
         }
 
         private applyRules(phase: Phase) {
