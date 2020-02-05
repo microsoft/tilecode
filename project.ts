@@ -218,13 +218,31 @@ namespace tileworld {
         }
     }
 
+    const toHex = "0123456789abcdef";
 
     function outputKeyBuffer(key: string, val: Buffer) {
-
+        // create hex literal from buffer
+        console.log("settings.writeBuffer("+key+"hex`");
+        let chunk = 40;
+        let str = "";
+        for(let i=0;i<val.length;i++) {
+            let byte = val.getUint8(i);
+            let low = byte & 0xf;
+            let high = (byte & 0xf0) >> 4;
+            str += toHex[low];
+            str += toHex[high];
+            chunk--;
+            if (chunk == 0) { console.log(str); chunk = 40; str = ""; }
+        }
+        console.log("`;")
     }
 
     function outputKeyNumber(key: string, val: number) {
+        console.log("settings.writeNumber("+key+","+val.toString()+");");
+    }
 
+    function outputKeyString(key: string, val: string) {
+        console.log("settings.writeString(" + key + ",\"" + val + "\");");
     }
 
     export function loadProject(prefix: string, output: boolean = false) {
@@ -232,6 +250,7 @@ namespace tileworld {
         if (names.length == 0)
             return null;
         let version = settings.readString(prefix + "VS");
+        if (output) outputKeyString(prefix + "VS", version);
         // get the tile map, handling errors
         let buf = settings.readBuffer(prefix + "TM");
         if (output) outputKeyBuffer(prefix+"TM", buf);
