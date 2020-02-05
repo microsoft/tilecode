@@ -98,6 +98,10 @@ namespace tileworld {
             settings.writeBuffer(this.prefix + "TS", spritesBuf);
         }
 
+        public saveHelp() {
+            settings.writeNumber(this.prefix+"HM", this.help ? 1 : 0);
+        }
+
         // rules 
 
         public getRules() { return this.rules; }
@@ -243,6 +247,9 @@ namespace tileworld {
                 movableImages.push(img);
             }
         }
+        let help = false;
+        if (names.indexOf(prefix + "HM") != -1)
+            help = settings.readNumber(prefix + "HM") ? true: false;
         // get the rules, at least
         let ruleName = prefix + "RL";
         let ruleids = names.filter(s => s.indexOf(ruleName) == 0).map(s => parseInt(s.substr(ruleName.length())));
@@ -255,6 +262,7 @@ namespace tileworld {
         p.setWorld(world);
         p.setSprites(sprites);
         p.setPlayer(settings.readNumber(prefix + "PL"));
+        p.help = help;
         return p;
     }
 
@@ -269,6 +277,7 @@ namespace tileworld {
             return;
         let prefix = p.prefix;
         let length = 8;
+        settings.writeNumber(prefix + "HM", p.help ? 1 : 0);
         settings.writeNumber(prefix + "FL", p.fixed().length);
         settings.writeNumber(prefix + "ML", p.movable().length);
         settings.writeNumber(prefix + "PL", p.getPlayer());

@@ -2,7 +2,6 @@ namespace tileworld {
 
     // TODO
     // - world size
-    // - player sprite (how many)
     export class ProjectSettings extends RuleVisualsBase {
         private askDeleteRule: boolean = false;
         constructor(p: Project) {
@@ -21,6 +20,7 @@ namespace tileworld {
                 } else if (this.p) {
                     if (this.col() == 3 && this.row() == 1)
                         this.p.help = !this.p.help;
+                        this.p.saveHelp();
                     if (this.col() == 4 && this.row() ==6) {
                         this.askDeleteRule = true;
                     }
