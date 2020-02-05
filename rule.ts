@@ -175,12 +175,12 @@ namespace tileworld {
         return tgtRule;
     }
 
-    let buf: Buffer = null
+    let ruleBuf: Buffer = null
     let bitIndex = 0;
 
     function readWriteBuf(v: number, bits: number, write: boolean) {
         let byteIndex = bitIndex >> 3;
-        if (byteIndex >= buf.length) {
+        if (byteIndex >= ruleBuf.length) {
             // shouldn't get here
             control.assert(false, 43);
         }
@@ -191,7 +191,7 @@ namespace tileworld {
             console.logValue("bits", bits);
             control.assert(false, 44);
         }
-        let byte = buf.getUint8(byteIndex);
+        let byte = ruleBuf.getUint8(byteIndex);
         let mask = 0;
         for(let i=0; i<bits; i++) { mask = 0x1 | (mask << 1); }
         mask = mask << shift;
@@ -199,12 +199,12 @@ namespace tileworld {
 
         if (write) {
             let newVal = (byte & writeMask) | (v << shift);
-            buf.setUint8(byteIndex, newVal);
+            ruleBuf.setUint8(byteIndex, newVal);
         }
         
         bitIndex += bits;
 
-        byte = buf.getUint8(byteIndex);
+        byte = ruleBuf.getUint8(byteIndex);
         let ret = (byte & mask) >> shift
         if (write) {
             control.assert(ret == v, 42);
@@ -251,7 +251,7 @@ namespace tileworld {
     }
 
     // pack things so that they'll be easy to read off
-    function packRule(r: Rule) {
+    export function packRule(r: Rule) {
         bitIndex = 0;
         // compute length (at most 13 whenDo, at most 5 whenDo have commands)
         // so max = 3 + 39 + 20 = 62
@@ -259,7 +259,7 @@ namespace tileworld {
         for (let i = 0; i<r.whenDo.length; i++) {
             len += (r.whenDo[i].commands.length > 0 ? 4 : 0);
         }
-        buf = control.createBuffer(len);
+        ruleBuf = control.createBuffer(len);
 
         r.kind.forEach(v => { writeBuf(v, 4); });   // 2 bytes
         // pad out the rest with 0xf
@@ -291,20 +291,12 @@ namespace tileworld {
                 }
             }
         });
-    }
-
-    export function storeRule(prefix: string, rid: number, rule: Rule) {
-        packRule(rule);
-        settings.writeBuffer(prefix + "RL" + rid.toString(), buf);
-        return buf;
-    }
-
-    export function removeRule(prefix: string, rid: number) {
-        settings.remove(prefix + "RL" + rid.toString());
+        return ruleBuf;
     }
 
     // first, let's fully unpack
-    function unPackRule() {
+    export function unPackRule(buf: Buffer) {
+        ruleBuf = buf;
         bitIndex = 0;
         let kinds = [];
         for(let i = 0; i<4; i++) {
@@ -352,11 +344,6 @@ namespace tileworld {
                 }
             }
         })
-        return rule
-    }
-
-    export function retrieveRule(prefix: string, rid: number) {
-        buf = settings.readBuffer(prefix + rid.toString());
-        return unPackRule();
+        return rule;
     }
 }

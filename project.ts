@@ -90,7 +90,7 @@ namespace tileworld {
             let r = this.rules.find(r => r.id == rid);
             if (r) {
                 this.rules.removeElement(r);
-                removeRule(this.prefix, rid);
+                settings.remove(this.prefix + "RL" + rid.toString());
             }
         }
 
@@ -218,24 +218,38 @@ namespace tileworld {
         }
     }
 
-    export function loadProject(prefix: string) {
+
+    function outputKeyBuffer(key: string, val: Buffer) {
+
+    }
+
+    function outputKeyNumber(key: string, val: number) {
+
+    }
+
+    export function loadProject(prefix: string, output: boolean = false) {
         let names = settings.list(prefix);
         if (names.length == 0)
             return null;
         let version = settings.readString(prefix + "VS");
         // get the tile map, handling errors
         let buf = settings.readBuffer(prefix + "TM");
+        if (output) outputKeyBuffer(prefix+"TM", buf);
         let world = buf && buf.length > 0 ? bufferToImage(buf) : null;
         world = world ? world : image.create(32, 24);
+        // sprite map
         buf = settings.readBuffer(prefix + "TS");
+        if (output) outputKeyBuffer(prefix + "TS", buf);
         let sprites = buf && buf.length > 0 ? bufferToImage(buf) : null;
+        // sprite images
         sprites = sprites ? sprites : image.create(32, 24);
-        // get sprites
         let fixedImages: Image[] = [];
         if (names.indexOf(prefix + "FL") != -1) {
             let fixed = settings.readNumber(prefix + "FL");
+            if (output) outputKeyNumber(prefix+"FL", fixed);
             for (let i = 0; i < fixed; i++) {
                 let buf = settings.readBuffer(prefix + "FS" + i.toString());
+                if (output) outputKeyBuffer(prefix + "FS", buf);
                 let img = buf && buf.length > 0 ? bufferToImage(buf) : null;
                 if (!img) { img = image.create(16, 16); img.fill(1 + i); }
                 fixedImages.push(img);
@@ -244,22 +258,30 @@ namespace tileworld {
         let movableImages: Image[] = [];
         if (names.indexOf(prefix + "ML") != -1) {
             let movable = settings.readNumber(prefix + "ML");
+            if (output) outputKeyBuffer(prefix + "FS", buf);
             for (let i = 0; i < movable; i++) {
                 let buf = settings.readBuffer(prefix + "MS" + i.toString());
+                if (output) outputKeyBuffer(prefix + "MS", buf);
                 let img = buf && buf.length > 0 ? bufferToImage(buf) : null;
                 if (!img) { img = image.create(16, 16); img.fill(1 + i); }
                 movableImages.push(img);
             }
         }
         let help = false;
-        if (names.indexOf(prefix + "HM") != -1)
-            help = settings.readNumber(prefix + "HM") ? true: false;
+        if (names.indexOf(prefix + "HM") != -1) {
+            let helpNum = settings.readNumber(prefix + "HM");
+            help = helpNum ? true: false;
+            if (output) outputKeyNumber(prefix + "HM", helpNum);
+        }
         // get the rules, at least
         let ruleName = prefix + "RL";
         let ruleids = names.filter(s => s.indexOf(ruleName) == 0).map(s => parseInt(s.substr(ruleName.length())));
         let rules: IdRule[] = [];
         ruleids.forEach(rid => {
-            let rule = retrieveRule(ruleName, rid);
+            let key = ruleName+rid.toString();
+            let buf = settings.readBuffer(key);
+            let rule = unPackRule(buf);
+            if (output) outputKeyBuffer(key, buf);
             rules.push(new IdRule(rid, rule));
         });
         let p = new Project(prefix, fixedImages, movableImages, rules);
@@ -274,6 +296,12 @@ namespace tileworld {
     function saveImage(prefix: string, kind: number, img: Image, fixed: boolean) {
         let buf = imageToBuffer(img);
         settings.writeBuffer(prefix + (fixed ? "FS" : "MS") + kind.toString(), buf);
+        return buf;
+    }
+
+    export function storeRule(prefix: string, rid: number, rule: Rule) {
+        let buf = packRule(rule);
+        settings.writeBuffer(prefix + "RL" + rid.toString(), buf);
         return buf;
     }
 
