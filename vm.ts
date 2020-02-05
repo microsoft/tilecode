@@ -424,7 +424,6 @@ namespace tileworld {
         }
         
         public setWorld(w: Image, sprites: Image) {
-            this.dirQueue = [];
             this.signal = null;
             this.state = new VMState();
             this.state.game = GameState.InPlay;
@@ -457,7 +456,9 @@ namespace tileworld {
             }
         }
 
+        private currentDirection: MoveDirection;
         public start() {
+            this.currentDirection = -1;
             let signal = new TileSprite(cursorIn, 0);
             signal.setFlag(SpriteFlag.Invisible, true);
             signal.x = signal.y = 8;
@@ -481,13 +482,9 @@ namespace tileworld {
                 // then do a worldUpdate and reset the signal sprite
                 if (this.signal.x >= 23) {
                     this.signal.x = 8;
-                    let currentDirection = this.dirQueue.length > 0 ? this.dirQueue[0] : -1;
-                    this.vm.round(currentDirection);
-                    if (currentDirection != -1) {
-                        if (!this.keyDowns[currentDirection])
-                            this.dirQueue.removeElement(currentDirection);
-                    }
+                    this.vm.round(this.currentDirection);
                     halfway = false;
+                    this.currentDirection = -1;
                 } else if (!halfway && this.signal.x >= 16) {
                     if (this.state.game != GameState.InPlay) {
                         gameover(this.state.game == GameState.Won);
@@ -502,53 +499,44 @@ namespace tileworld {
                 }
             });
 
-            this.keyDowns = [false, false, false, false, false];
             this.registerController();
             signal.vx = 100;
         }
 
         private registerController() {
+            controller.setRepeatDefault(200, 80);
             controller.left.onEvent(ControllerButtonEvent.Pressed, () => {
                 this.requestMove(MoveDirection.Left)
             })
-            controller.left.onEvent(ControllerButtonEvent.Released, () => {
-                this.requestStop(MoveDirection.Left)
+            controller.left.onEvent(ControllerButtonEvent.Repeated, () => {
+                this.requestMove(MoveDirection.Left)
             })
             controller.right.onEvent(ControllerButtonEvent.Pressed, () => {
                 this.requestMove(MoveDirection.Right)
             })
-            controller.right.onEvent(ControllerButtonEvent.Released, () => {
-                this.requestStop(MoveDirection.Right)
+            controller.right.onEvent(ControllerButtonEvent.Repeated, () => {
+                this.requestMove(MoveDirection.Right)
             })
             controller.up.onEvent(ControllerButtonEvent.Pressed, () => {
                 this.requestMove(MoveDirection.Up)
             })
-            controller.up.onEvent(ControllerButtonEvent.Released, () => {
-                this.requestStop(MoveDirection.Up)
+            controller.up.onEvent(ControllerButtonEvent.Repeated, () => {
+                this.requestMove(MoveDirection.Up)
             })
             controller.down.onEvent(ControllerButtonEvent.Pressed, () => {
                 this.requestMove(MoveDirection.Down)
             })
-            controller.down.onEvent(ControllerButtonEvent.Released, () => {
-                this.requestStop(MoveDirection.Down)
+            controller.down.onEvent(ControllerButtonEvent.Repeated, () => {
+                this.requestMove(MoveDirection.Down)
             })
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
+                controller.setRepeatDefault(500, 80);
                 game.popScene();
             })
         }
-        private dirQueue: MoveDirection[];
-        private keyDowns: boolean[];
-        private requestMove(dir: MoveDirection) {
-            this.keyDowns[dir] = true;
-            if (this.dirQueue.length == 0 || this.dirQueue.length == 1 && dir != this.dirQueue[0])
-                this.dirQueue.insertAt(0,dir);
-        }
 
-        private requestStop(dir: MoveDirection) {
-            this.keyDowns[dir] = false;
-            let index = this.keyDowns.indexOf(true);
-            if (index != -1 && this.dirQueue.length == 0)
-                this.dirQueue.push(index);
+        private requestMove(dir: MoveDirection) {
+            this.currentDirection = dir;
         }
     }
 
