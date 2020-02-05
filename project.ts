@@ -228,8 +228,7 @@ namespace tileworld {
         let str = "";
         for(let i=0;i<val.length;i++) {
             let byte = val.getUint8(i);
-            str += toHex[byte & 0xf];
-            str += toHex[(byte & 0xf0) >> 4];
+            str += toHex[(byte & 0xf0) >> 4] + toHex[byte & 0x0f];
             chunk--;
             if (chunk == 0) { console.log(str); chunk = 40; str = ""; }
         }
