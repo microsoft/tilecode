@@ -1,6 +1,8 @@
 namespace tileworld {
 
     export class Project {
+        // TODO: plumb versioning through
+        private version: string;
         private lastRule: IdRule = null;
         private allImages: Image[] = null;
         private _player: number = -1;
