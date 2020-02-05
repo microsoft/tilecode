@@ -222,6 +222,7 @@ namespace tileworld {
 
     function outputKeyBuffer(key: string, val: Buffer) {
         // create hex literal from buffer
+        console.log("// buffer length = "+val.length.toString());
         console.log("settings.writeBuffer(\""+key+"\", hex`");
         let chunk = 40;
         let str = "";
@@ -232,7 +233,7 @@ namespace tileworld {
             chunk--;
             if (chunk == 0) { console.log(str); chunk = 40; str = ""; }
         }
-        console.log("`);")
+        console.log(str+"`);")
     }
 
     function outputKeyNumber(key: string, val: number) {
@@ -247,7 +248,7 @@ namespace tileworld {
         let names = settings.list(prefix);
         if (names.length == 0)
             return null;
-        if (output) console.log("function create"+prefix+"() {");
+        if (output) console.log("function create"+prefix.slice(0,-1)+"() {");
         let version = settings.readString(prefix + "VS");
         if (output) outputKeyString(prefix + "VS", version);
         // get the tile map, handling errors
