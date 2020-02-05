@@ -222,33 +222,32 @@ namespace tileworld {
 
     function outputKeyBuffer(key: string, val: Buffer) {
         // create hex literal from buffer
-        console.log("settings.writeBuffer("+key+"hex`");
+        console.log("settings.writeBuffer(\""+key+"\", hex`");
         let chunk = 40;
         let str = "";
         for(let i=0;i<val.length;i++) {
             let byte = val.getUint8(i);
-            let low = byte & 0xf;
-            let high = (byte & 0xf0) >> 4;
-            str += toHex[low];
-            str += toHex[high];
+            str += toHex[byte & 0xf];
+            str += toHex[(byte & 0xf0) >> 4];
             chunk--;
             if (chunk == 0) { console.log(str); chunk = 40; str = ""; }
         }
-        console.log("`;")
+        console.log("`);")
     }
 
     function outputKeyNumber(key: string, val: number) {
-        console.log("settings.writeNumber("+key+","+val.toString()+");");
+        console.log("settings.writeNumber(\""+key+"\","+val.toString()+");");
     }
 
     function outputKeyString(key: string, val: string) {
-        console.log("settings.writeString(" + key + ",\"" + val + "\");");
+        console.log("settings.writeString(\"" + key + "\",\"" + val + "\");");
     }
 
     export function loadProject(prefix: string, output: boolean = false) {
         let names = settings.list(prefix);
         if (names.length == 0)
             return null;
+        if (output) console.log("function create"+prefix+"() {");
         let version = settings.readString(prefix + "VS");
         if (output) outputKeyString(prefix + "VS", version);
         // get the tile map, handling errors
@@ -267,8 +266,9 @@ namespace tileworld {
             let fixed = settings.readNumber(prefix + "FL");
             if (output) outputKeyNumber(prefix+"FL", fixed);
             for (let i = 0; i < fixed; i++) {
-                let buf = settings.readBuffer(prefix + "FS" + i.toString());
-                if (output) outputKeyBuffer(prefix + "FS", buf);
+                let key = prefix + "FS" + i.toString();
+                let buf = settings.readBuffer(key);
+                if (output) outputKeyBuffer(key, buf);
                 let img = buf && buf.length > 0 ? bufferToImage(buf) : null;
                 if (!img) { img = image.create(16, 16); img.fill(1 + i); }
                 fixedImages.push(img);
@@ -277,10 +277,11 @@ namespace tileworld {
         let movableImages: Image[] = [];
         if (names.indexOf(prefix + "ML") != -1) {
             let movable = settings.readNumber(prefix + "ML");
-            if (output) outputKeyBuffer(prefix + "FS", buf);
+            if (output) outputKeyNumber(prefix + "ML", movable);
             for (let i = 0; i < movable; i++) {
-                let buf = settings.readBuffer(prefix + "MS" + i.toString());
-                if (output) outputKeyBuffer(prefix + "MS", buf);
+                let key = prefix + "MS" + i.toString();
+                let buf = settings.readBuffer(key);
+                if (output) outputKeyBuffer(key, buf);
                 let img = buf && buf.length > 0 ? bufferToImage(buf) : null;
                 if (!img) { img = image.create(16, 16); img.fill(1 + i); }
                 movableImages.push(img);
@@ -299,10 +300,11 @@ namespace tileworld {
         ruleids.forEach(rid => {
             let key = ruleName+rid.toString();
             let buf = settings.readBuffer(key);
-            let rule = unPackRule(buf);
             if (output) outputKeyBuffer(key, buf);
+            let rule = unPackRule(buf);
             rules.push(new IdRule(rid, rule));
         });
+        if (output) console.log("}");
         let p = new Project(prefix, fixedImages, movableImages, rules);
         p.setWorld(world);
         p.setSprites(sprites);

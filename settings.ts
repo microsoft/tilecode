@@ -18,12 +18,14 @@ namespace tileworld {
                     }
                     game.popScene();
                 } else if (this.p) {
-                    if (this.col() == 3 && this.row() == 1)
+                    if (this.col() == 3 && this.row() == 1) {
                         this.p.help = !this.p.help;
                         this.p.saveHelp();
-                    if (this.col() == 4 && this.row() ==6) {
+                    } else if (this.col() == 4 && this.row() ==5) {
+                        loadProject(this.p.prefix, true);
+                    } if (this.col() == 4 && this.row() ==6) {
                         this.askDeleteRule = true;
-                    }
+                    } 
                 } else {
                     if (this.col() == 7 && this.row() == 1) {
                         this.askDeleteRule = true;
@@ -56,7 +58,9 @@ namespace tileworld {
                 screen.print(this.p.getWorld().width.toString(), 64, worldY);
                 screen.print("by", 96, worldY);
                 screen.print(this.p.getWorld().height.toString(), 128, worldY);
-                screen.print("Delete", 16, 110);
+                screen.print("Export", 16, 92);
+                this.drawImage(4, 5, diskIcon);
+                screen.print("Delete", 16, 108);
                 this.drawImage(4, 6, garbageCan);
             } else {
                 screen.print("Delete ALL games", 16, 16 + yoff + 6);
