@@ -34,13 +34,13 @@ You have four kinds of tiles and four kinds of sprites to work with. Let's take 
 
 ## Gallery
 
-We've moved the cursor to the puppy dog and selected it (A button) 
+We move the cursor to the puppy dog and select it (A button) 
 
 ![gallery](pics/galleryPuppy.JPG)
 
 Now, when we return to the game home screen, we can see the skull has been replaced by the puppy:
 
-![updated with puppy](pics/homePage1.JPG)
+![updated with puppy](pics/homePage2.JPG)
 
 ## Menu bar
 
@@ -48,19 +48,29 @@ Their are four main commands available on the menu bar of the game's home page: 
 
 ![menu bar](pics/menuOptions.png)
 
-## Map
+### Map
 
 The map editor lets you paint the game world's tiles and place sprites on tiles. Select one of the four tiles and move your cursor down to the map. Press A to color a tile. Press B to return to the menu bar and select another tile. Aftering selecting a sprite, the A button will place the sprite on a tile, replacing the  sprite that is there (or removing it if it is the same as the selected sprite). 
 
-## Paint
+![world map editor](pics/map.JPG)
 
-The paint editor lets you change the art associated with a tile or sprite. As with the map editor, select the tile/sprite whose art you want to change. Move your cursor down to edit the bitmap (using the A button to apply the currently selected color).  Press B to move from the bitmap pane to the color selector. After selecting a color, move your cursor back to the bitmap pane to resume coloring.
+To return to the game screen, press the B button (B always takes you back).
 
-## Code
+### Paint
+
+The paint editor lets you change the art associated with a tile or sprite. As with the map editor, select the tile/sprite whose art you want to change. Here we have selected the puppy dog:
+
+![world map editor](pics/puppyPaint1.JPG)
+
+Move your cursor down to edit the bitmap (using the A button to apply the currently selected color).  Press B to move from the bitmap pane to the color selector. After selecting a color, move your cursor back to the bitmap pane to resume coloring. We have color the puppy's eyes red:
+
+![world map editor](pics/puppyPaint2.JPG)
+
+### Code
 
 The coding page shows the four kinds of sprites on the left and the different types of rules available. We will go into more detail about how to program the rules below.
 
-## Play Game
+### Play
 
 The play button runs your game in full screen mode. Press B to exit the game. 
 
