@@ -97,12 +97,17 @@ Each sprite's behavior is governed by a set of rules that you can program. Let's
 
 ![player sprite rules](pics/playerRules.JPG)
 
-No surprises here: the rules for the direction pad (upper right quadrant) are lit up. Let's select the rule for a press of the left dpad button:
+No surprises here: the rules for the direction pad (upper right quadrant) are lit up. Move the cursor over to the left dpad button:
 
 ![left button press](pics/dpadLeft.JPG)
 
+Now press A to bring up the rule editor. The editor is divided into two main sections: *When* and *Do*. The *When* section shows a pattern around the player. To the left of the player is a wall tile with a 
+
 ![left button rule](pics/dpadLeftRule.JPG)
 
+![left button rule](pics/dpatLeftAttrs.JPG)
+
+![attributes](pics/attributes.png)
 
 # Sharing Your TileWorld Games {#sharing}
 
