@@ -29,7 +29,7 @@ The easiest way to share a TileWorld game you have created on an Arcade device i
 
 When you load a game, you will see the game's home page, as shown below:
 
-![load screen](pics/homePage1.JPG)
+![homage page](pics/homePage1.JPG)
 
 You have four kinds of tiles and four kinds of sprites to work with. 
 
@@ -37,13 +37,15 @@ You have four kinds of tiles and four kinds of sprites to work with.
 
 Move the cursor around the screen to get help about all the features available:
 
-![load screen](pics/homePage1.JPG)
+![help cursor](pics/homePage1.JPG)
 
 You can visit the art gallery to change the art associated with each kind of tile or sprite.  Once you get used to the features available in TileWorld, you can turn off the help suggestions via the gear wheel on your game's home page. 
 
 ## Menu bar
 
-Their are four main commands available on the menu bar of the game's home page: map editor, art editor, code editor, and play game.
+Their are four main commands available on the menu bar of the game's home page: map editor, art editor, code editor, and play game:
+
+![menu bar](pics/homePage1.JPG)
 
 
 
