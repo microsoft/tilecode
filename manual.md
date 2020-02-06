@@ -44,7 +44,16 @@ Their are four main commands available on the menu bar of the game's home page: 
 
 ![menu bar](pics/menuOptions.png)
 
-# World Editor
+# Map Editor
+
+The map editor lets you paint the map tiles and place sprites on tiles.  Select one of the four tiles and move your cursor down to the map. Press A to color a tile.  Press B to return to the menu bar and select another tile. 
+
+# Paint Art
+
+# Code Editor
+
+# Play Game
+
 
 
 
