@@ -24,15 +24,23 @@ The load screen of TileWorld lets you select one of four games to program and pl
 
 # Game Home Screen {#gamehome}
 
-When you load a game, you will see the game's home screens, as shown below. You have four kinds of tiles and four kinds of sprites to work with. Here we give  a broad overview of the different screens available in TileWorld.
+When you load a game, you will see the game's home screen, as shown below.
 
 ![home page](pics/homePage1.JPG)
 
-## Help and Art Gallery
-
-Move the cursor around the screen to get help about all the features available. You can visit the art gallery to change the art associated with each kind of tile or sprite. Once you get used to the features available in TileWorld, you can turn off the help suggestions via the gear wheel on your game's home page. 
+You have four kinds of tiles and four kinds of sprites to work with. Let's take a quick tour through the various screens you can get to from the home screen. Move the cursor around the screen to get help about all the features available. Let's visit the art gallery to change the art associated with the fourth sprite (the skull).
 
 ![help cursor](pics/helpGallery.JPG)
+
+## Gallery
+
+We've moved the cursor to the puppy dog and selected it (A button) 
+
+![gallery](pics/galleryPuppy.JPG)
+
+Now, when we return to the game home screen, we can see the skull has been replaced by the puppy:
+
+![updated with puppy](pics/homePage1.JPG)
 
 ## Menu bar
 
@@ -55,6 +63,11 @@ The coding page shows the four kinds of sprites on the left and the different ty
 ## Play Game
 
 The play button runs your game in full screen mode. Press B to exit the game. 
+
+## Settings
+
+Once you get used to the features available in TileWorld, you can turn off the help suggestions via the gear wheel on your game's home page. 
+
 
 # Coding in TileWorld {#coding}
 
