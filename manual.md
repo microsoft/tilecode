@@ -88,7 +88,7 @@ The play button runs the game in full screen mode. Press B to exit the game.  Tr
 
 Once you get used to the features available in TileWorld, you can turn off the help suggestions via the gear wheel on your game's home page:
 
-![game settings](pics/playGame.JPG)
+![game settings](pics/gameSettings.JPG)
 
 # Coding in TileWorld {#coding}
 
