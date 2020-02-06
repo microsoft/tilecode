@@ -11,8 +11,7 @@ Simply copy the appropriate [UF2 file](https://github.com/microsoft/pxt-tileworl
 # Load Screen and Navigation
 
 The load screen of TileWorld lets you select one of four games to design/program.  
-All game assets (game board, images and rules) are stored in the flash memory of your Arcade device, 
-so your changes will remain even if you power the device off. All editing takes place via the tile paradigm: 
+All game assets (game board, images and rules) are stored in the flash memory of your Arcade device, so your changes will remain even if you power the device off. All editing takes place via the tile paradigm: 
 move the square-shaped cursor between adjacent tiles using the direction pad (dpad); select a tile using the 
 A button to perform an action; the B button takes you back (to the menu of the current screen or to previous screen). 
 Assets are saved to flash whenever you transition between screens.
@@ -33,13 +32,12 @@ When you load a game, you will see the game's home page, as shown below:
 
 You have four kinds of tiles and four kinds of sprites to work with. 
 
-## Help
+## Help and Art Gallery
 
-Move the cursor around the screen to get help about all the features available:
+Move the cursor around the screen to get help about all the features available.
+You can visit the art gallery to change the art associated with each kind of tile or sprite.  Once you get used to the features available in TileWorld, you can turn off the help suggestions via the gear wheel on your game's home page. 
 
 ![help cursor](pics/helpGallery.JPG)
-
-You can visit the art gallery to change the art associated with each kind of tile or sprite.  Once you get used to the features available in TileWorld, you can turn off the help suggestions via the gear wheel on your game's home page. 
 
 ## Menu bar
 
