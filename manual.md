@@ -24,11 +24,11 @@ The load screen of TileWorld lets you select one of four games to program and pl
 
 # Game Home Screen {#gamehome}
 
-When you load a game, you will see the game's home screen, as shown below.
+Let's load the game in slot 1, which takes us to the game's home screen, as shown below:
 
 ![home page](pics/homePage1.JPG)
 
-You have four kinds of tiles and four kinds of sprites to work with. Let's take a quick tour through the various screens you can get to from the home screen. Move the cursor around the screen to get help about all the features available. Let's visit the art gallery to change the art associated with the fourth sprite (the skull).
+Each TileWorld game has four kinds of map tiles and four kinds of sprites to work with. Let's take a quick tour through the various screens you can get to from the home screen. Move the cursor around the screen to get help about all the features available. Let's visit the art gallery to change the art associated with the fourth sprite (the skull).
 
 ![help cursor](pics/helpGallery.JPG)
 
@@ -80,12 +80,15 @@ This rule applies to a boulder ``at rest'' and starts the boulder moving down wh
 
 ### Play
 
-The play button runs your game in full screen mode. Press B to exit the game. 
+The play button runs the game in full screen mode. Press B to exit the game.  Try to collect all the diamonds without having a boulder fall on you or getting caught by the skull/puppy
 
-## Settings
+![play game](pics/playGame.JPG)
 
-Once you get used to the features available in TileWorld, you can turn off the help suggestions via the gear wheel on your game's home page. 
+### Settings
 
+Once you get used to the features available in TileWorld, you can turn off the help suggestions via the gear wheel on your game's home page:
+
+![game settings](pics/playGame.JPG)
 
 # Coding in TileWorld {#coding}
 
