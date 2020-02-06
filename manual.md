@@ -26,8 +26,10 @@ The easiest way to share a TileWorld game you have created on an Arcade device i
 
 # Game Home Page
 
-When you load a game, you will see the game's home page, as shown below.
-You have four kinds of tiles and four kinds of sprites to work with.
+When you load a game, you will see the game's home screens, as shown below.
+You have four kinds of tiles and four kinds of sprites to work with. Here we give 
+a broad overview of the different screens available in TileWorld. We'll dig into
+the details of coding with TileWorld later.
 
 ![home page](pics/homePage1.JPG)
 
@@ -44,15 +46,22 @@ Their are four main commands available on the menu bar of the game's home page: 
 
 ![menu bar](pics/menuOptions.png)
 
-# Map Editor
+## Map Editor
 
-The map editor lets you paint the map tiles and place sprites on tiles.  Select one of the four tiles and move your cursor down to the map. Press A to color a tile.  Press B to return to the menu bar and select another tile. 
+The map editor lets you paint the map tiles and place sprites on tiles.  Select one of the four tiles and move your cursor down to the map. Press A to color a tile.  Press B to return to the menu bar and select another tile.  Aftering selecting a sprite, the A button will place the sprite on a tile, replacing the sprite that is there (or removing it if it is the same as the selected sprite). 
 
-# Paint Art
+## Paint Art
 
-# Code Editor
+## Code Editor
 
-# Play Game
+## Play Game
+
+
+# TileWorld Gaming
+
+
+
+
 
 
 
