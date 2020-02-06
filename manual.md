@@ -7,7 +7,6 @@
 You can run TileWorld in your [web browser](https://microsoft.github.io/pxt-tileworld/), or on any [MakeCode Arcade device](https://arcade.makecode.com/hardware).
 Simply copy the appropriate [UF2 file](https://github.com/microsoft/pxt-tileworld/releases/) to your MakeCode Arcade device to get started. 
 
-
 # Load Screen and Navigation
 
 The load screen of TileWorld lets you select one of four games to design/program.  
@@ -60,16 +59,6 @@ The map editor lets you paint the map tiles and place sprites on tiles.  Select 
 # TileWorld Gaming
 
 
+# Having Problems?
 
-
-
-
-
-
-
-
-
-
-
-
-
+Please file a [GitHub issue](https://github.com/microsoft/pxt-tileworld/issues).
