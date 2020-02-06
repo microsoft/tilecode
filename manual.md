@@ -50,25 +50,33 @@ Their are four main commands available on the menu bar of the game's home page: 
 
 ### Map
 
-The map editor lets you paint the game world's tiles and place sprites on tiles. Select one of the four tiles and move your cursor down to the map. Press A to color a tile. Press B to return to the menu bar and select another tile. Aftering selecting a sprite, the A button will place the sprite on a tile, replacing the  sprite that is there (or removing it if it is the same as the selected sprite). 
+The map editor lets you paint the game world's tiles and place sprites on tiles. Select one of the four tiles and move your cursor down to the map. Press A to color a tile. Press B to return to the menu bar and select another tile. After selecting a sprite, the A button will place the sprite on a tile, replacing the  sprite that is there (or removing it if it is the same as the selected sprite). 
 
 ![world map editor](pics/map.JPG)
 
-To return to the game screen, press the B button (B always takes you back).
+You can color tiles quickly by holding down the A button while moving the cursor. The reset button (upper right) resets the camera to the upper left of the map. To return to the game screen, press the B button (B always takes you back).
 
 ### Paint
 
 The paint editor lets you change the art associated with a tile or sprite. As with the map editor, select the tile/sprite whose art you want to change. Here we have selected the puppy dog:
 
-![world map editor](pics/puppyPaint1.JPG)
+![paint art](pics/paintPuppy1.JPG)
 
-Move your cursor down to edit the bitmap (using the A button to apply the currently selected color).  Press B to move from the bitmap pane to the color selector. After selecting a color, move your cursor back to the bitmap pane to resume coloring. We have color the puppy's eyes red:
+Move your cursor down to edit the bitmap (using the A button to apply the currently selected color).  Press B to move from the bitmap pane to the color selector. After selecting a color, move your cursor back to the bitmap pane to resume coloring. We have colored the puppy's eyes red:
 
-![world map editor](pics/puppyPaint2.JPG)
+![paint art](pics/paintPuppy2.JPG)
 
 ### Code
 
-The coding page shows the four kinds of sprites on the left and the different types of rules available. We will go into more detail about how to program the rules below.
+The coding page shows the four kinds of sprites on the left and the different types of rules available. We have selected the boulder sprite - the highlighted squares represent the rules we have coded to give the boulder its behavior (note that there are no rules highlighted for the direction pad in the upper right).
+
+![paint art](pics/boulderRules.JPG)
+
+Selecting the boulder in the middle of the upper left quadrant brings up the rule editor:
+
+![paint art](pics/boulderRestingRule.JPG)
+
+This rule applies to a boulder ``at rest'' and starts the boulder moving down when there is a space below the boulder. More details about programming rules are given below.
 
 ### Play
 
