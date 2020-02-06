@@ -103,15 +103,19 @@ namespace tileworld {
             this.vm.nextWorld.fill(0xf);
             this.allSprites(ts => { ts.inst = -1; });
             // compute the "pre-effect" of the rules
+            let rcCount = 0;
             this.ruleClosures = [];
             this.applyRules(Phase.Moving);
             this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
+            rcCount += this.ruleClosures.length;
             this.ruleClosures = [];
             this.applyRules(Phase.Pushing);
             this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
+            rcCount += this.ruleClosures.length;
             this.ruleClosures = [];
             this.applyRules(Phase.Resting);
             this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
+            rcCount += this.ruleClosures.length;
             // now, look for collisions
             this.ruleClosures = [];
             // TODO: need a fix point around this, as new collisions may occur
@@ -123,8 +127,10 @@ namespace tileworld {
             this.allSprites(ts => { against.push(ts) }); 
             this.collisionDetection( against );
             this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
+            rcCount += this.ruleClosures.length;
             // finally, update the rules
             this.updateWorld();
+            // console.logValue("count", rcCount);
         }
 
         private updateWorld() {
