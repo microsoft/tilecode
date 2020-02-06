@@ -57,7 +57,7 @@ namespace tileworld {
         }
     }
 
-    enum Phase { Moving, Resting, Colliding };
+    enum Phase { Moving, Pushing, Resting, Colliding };
 
     class TileWorldVM {
         private ruleClosures: RuleClosure[];
@@ -92,6 +92,9 @@ namespace tileworld {
             // compute the "pre-effect" of the rules
             this.ruleClosures = [];
             this.applyRules(Phase.Moving);
+            this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
+            this.ruleClosures = [];
+            this.applyRules(Phase.Pushing);
             this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
             this.ruleClosures = [];
             this.applyRules(Phase.Resting);
@@ -166,7 +169,7 @@ namespace tileworld {
                 if (   this.p.getKinds(rid).indexOf(ts.kind()) != -1 && 
                     (  phase == Phase.Moving && this.p.getDir(rid) == ts.dir && this.p.getType(rid) == RuleType.Moving
                     || phase == Phase.Resting && this.p.getType(rid) == RuleType.Resting
-                    || this.p.getDir(rid) == this.dpad && this.p.getType(rid) == RuleType.Pushing) ) 
+                    || phase == Phase.Pushing && this.p.getDir(rid) == this.dpad && this.p.getType(rid) == RuleType.Pushing) ) 
                 {
                     handler(rid);
                 }
@@ -205,6 +208,7 @@ namespace tileworld {
         private applyRules(phase: Phase) {
             this.allSprites(ts => {
                 if ( phase == Phase.Moving && ts.dir != -1 || 
+                     phase == Phase.Pushing ||
                      phase == Phase.Resting && this.restingWithChange(ts)) {
                     this.matchingRules(phase, ts, (rid) => {
                         let closure = this.evaluateRule(ts, rid);
