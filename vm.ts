@@ -176,14 +176,7 @@ namespace tileworld {
         public allSprites(handler: (ts:TileSprite) => void) {
             let camera = game.currentScene().camera
             this.gs.sprites.forEach(ls => { 
-                if (ls) ls.forEach(ts => {
-                    // TODO: this isn't quite right - we really need to do an analysis of changing tiles
-                    // TODO: and use the finite neighborhood of a sprite 
-                    // TODO: need to pull out rules whose precondition is "true".
-                    if (!ts.isOutOfScreen(game.currentScene().camera)) {
-                        handler(ts);
-                    }
-                }); 
+                if (ls) ls.forEach(ts => handler(ts));
             });
         }
 
@@ -194,7 +187,7 @@ namespace tileworld {
                 let col = ts.col();
                 let row = ts.row();
                 // check neighborhood
-                for(let i = -2; i<=2; i++) {
+                for(let i = -2; i <= 2; i++) {
                     for (let j = -2; j <= 2; j++) {
                         if (Math.abs(i) + Math.abs(j) <= 2) {
                             let x = col + i;
@@ -208,6 +201,7 @@ namespace tileworld {
             return false;
         }
 
+        // TODO: need to pull out resting rules whose precondition is "true".
         private applyRules(phase: Phase) {
             this.allSprites(ts => {
                 if ( phase == Phase.Moving && ts.dir != -1 || 

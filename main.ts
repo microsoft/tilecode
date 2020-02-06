@@ -91,10 +91,10 @@ f4ff22420000920c0c002001ffff`);
 f4ff32420000c20c0c003001ffff`);
     // buffer length = 33
     settings.writeBuffer("TW1-RL8", hex`
-f4ff12470000d1c03751fd3f900000800000c000007003000010ffffff10ffffff`);
+f4ff12470000d1c03751fd3f900000800000c0000070a8280010ffffff10ffffff`);
     // buffer length = 33
     settings.writeBuffer("TW1-RL9", hex`
-f4ff0247000081c03701fd3f900000d00000c000003003000000ffffff00ffffff`);
+f4ff0247000081c03701fd3f900000d00000c0000030a8280000ffffff00ffffff`);
     // buffer length = 14
     settings.writeBuffer("TW1-RL10", hex`
 65ff33420000c000fd0114ffffff`);
