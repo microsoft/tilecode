@@ -8,21 +8,21 @@ You can run TileWorld in your [web browser](https://microsoft.github.io/pxt-tile
 
 # Overview
 
-* [Load Screen and Navigation][loadscreen]
-* [Game Home Screen][gamehome]
-* [Coding in TileWorld][coding]
-* [Sharing TileWorld Games][sharing]
-* [Having Problems?][issues]
+* [Load Screen and Navigation](#loadscreen)
+* [Game Home Screen](#gamehome)
+* [Coding in TileWorld](#coding)
+* [Sharing TileWorld Games](#sharing)
+* [Having Problems?](#issues)
 
-[loadscreen]:
-# Load Screen and Navigation
+
+# Load Screen and Navigation {#loadscreen}
 
 The load screen of TileWorld lets you select one of four games to program and play. All game assets (game board, images and code) are stored in the flash memory of your Arcade device, so your changes will remain even if you power the device off. All editing takes place via the tile paradigm: move the square-shaped cursor between adjacent tiles using the direction pad (dpad); select a tile using the A button to perform an action; the B button takes you back (to the menu of the current screen or to the previous screen). Assets are saved to flash whenever you transition between screens.
 
 ![load screen](pics/loadScreen.JPG)
 
-[gamehome]:
-# Game Home Screen
+
+# Game Home Screen {#gamehome}
 
 When you load a game, you will see the game's home screens, as shown below. You have four kinds of tiles and four kinds of sprites to work with. Here we give  a broad overview of the different screens available in TileWorld.
 
@@ -56,16 +56,12 @@ The coding page shows the four kinds of sprites on the left and the different ty
 
 The play button runs your game in full screen mode. Press B to exit the game. 
 
-[coding]:
-# Coding in TileWorld
+# Coding in TileWorld {#coding}
 
-
-[sharing]:
-# Sharing Your TileWorld Games
+# Sharing Your TileWorld Games {#sharing}
 
 The easiest way to share a TileWorld game you have created on an Arcade device is to copy the UF2 file from your device and share it with your friend. The UF2 file includes the flash settings in which your games are stored. When your friend copies this UF2 file to their Arcade device, they will get the games you created. Keep in mind that if your friend's Arcade device is not the same as yours, this may not work.
 
-[issues]:
-# Having Problems?
+# Having Problems? {#issues}
 
 Please file a [GitHub issue](https://github.com/microsoft/tileworld/issues) if you encounter a problem with TileWorld
