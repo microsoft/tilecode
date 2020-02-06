@@ -325,8 +325,7 @@ namespace tileworld {
         protected update() {
             this.dirMap.fill(0xf);
             screen.fill(0);
-            screen.fillRect(0, yoff, 16, 16, 11);
-            screen.drawTransparentImage(paint, 0, yoff);
+            screen.print("Gallery", 0, yoff);
             this.drawImage(0, 1, this.newImage);
             this.drawImage(2, 1, this.current);
             let col = 4;
