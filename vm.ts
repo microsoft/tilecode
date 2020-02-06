@@ -43,6 +43,7 @@ namespace tileworld {
         public fixed: number;
         public all: number;
         public nextWorld: Image;
+        public changed: Image;
         public sprites: TileSprite[][];
         public deadSprites: TileSprite[];
         constructor() {}
@@ -111,7 +112,14 @@ namespace tileworld {
         }
 
         private updateWorld() {
-            this.allSprites(ts => ts.update());
+            this.gs.changed.fill(0);
+            this.allSprites(ts => { 
+                ts.update();
+                if (ts.dir != -1) {
+                    this.gs.changed.setPixel(ts.col(), ts.row(), 1);
+                    this.gs.changed.setPixel(ts.col() + moveXdelta(ts.dir), ts.row() + moveYdelta(ts.dir), 1);
+                }
+            });
             // change tiles (can be done with less memory and time assuming few
             // tiles are changed).
             for (let x = 0; x < this.gs.nextWorld.width; x++) {
@@ -121,6 +129,7 @@ namespace tileworld {
                         //this.gs.world.setPixel(x, y, pixel);
                         const tm = game.currentScene().tileMap;
                         tm.setTileAt(x, y, pixel);
+                        this.gs.changed.setPixel(x,y,1);
                     }
                 }
             }
@@ -171,19 +180,38 @@ namespace tileworld {
                     // TODO: this isn't quite right - we really need to do an analysis of changing tiles
                     // TODO: and use the finite neighborhood of a sprite 
                     // TODO: need to pull out rules whose precondition is "true".
-                    if (!ts.isOutOfScreen(game.currentScene().camera) || ts.dir != -1) {
+                    if (!ts.isOutOfScreen(game.currentScene().camera)) {
                         handler(ts);
                     }
                 }); 
             });
         }
 
+        private restingWithChange(ts: TileSprite) {
+            // resting rules will apply to sprites that were previously moving 
+            // but have not issued a moving command (in the Moving phase)
+            if (ts.dir == -1 || !this.moving(ts)) {
+                let col = ts.col();
+                let row = ts.row();
+                // check neighborhood
+                for(let i = -2; i<=2; i++) {
+                    for (let j = -2; j <= 2; j++) {
+                        if (Math.abs(i) + Math.abs(j) <= 2) {
+                            let x = col + i;
+                            let y = row + j;
+                            if (this.inBounds(x,y) && this.gs.changed.getPixel(x,y))
+                                return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
         private applyRules(phase: Phase) {
-            this.allSprites(ts => { 
-                if ( (phase == Phase.Moving && ts.dir != -1) ||
-                    // resting rules will apply to sprites that were previously moving 
-                    // but have not issued a moving command (in the Moving phase)
-                     (phase == Phase.Resting && (ts.dir == -1 || !this.moving(ts)))) {
+            this.allSprites(ts => {
+                if ( phase == Phase.Moving && ts.dir != -1 || 
+                     phase == Phase.Resting && this.restingWithChange(ts)) {
                     this.matchingRules(phase, ts, (rid) => {
                         let closure = this.evaluateRule(ts, rid);
                         if (closure)
@@ -442,6 +470,7 @@ namespace tileworld {
             this.state.sprites = [];
             scene.setTileMap(w.clone());
             this.state.nextWorld = w.clone();
+            this.state.changed = w.clone();
 
             // initialize fixed and movable sprites
             for (let kind = 0;kind < this.p.all().length; kind++) {
