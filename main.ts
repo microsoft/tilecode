@@ -70,7 +70,7 @@ df55ffffffffffffff1f17ffffbf16ffef168f652f165f36ff7f16ff1f15ff1f155f35ff5f151f15
 65ff00450000c1fd3f900000800000d000000030ffffff`);
     // buffer length = 26
     settings.writeBuffer("TW1-RL1", hex`
-65ff00460000c1c03780fd3f30fd3f900000d000000000ffffff`);
+65ff00460000c1c03780fd3f30fd3f90003cd000000000ffffff`);
     // buffer length = 23
     settings.writeBuffer("TW1-RL2", hex`
 65ff31450000c1fd3c900000800000d000000030ffffff`);
@@ -121,7 +121,7 @@ f4ff038200df43000000022304ff`);
 65ff14420000d100000040ffffff`);
     // buffer length = 26
     settings.writeBuffer("TW1-RL18", hex`
-65ff00960000800000400000d1fdffc000f770fdff0010ffffff`);
+65ff0096003c800000400000d1fdffc000f770fdff0010ffffff`);
     // buffer length = 14
     settings.writeBuffer("TW1-RL19", hex`
 65ff34420000c0007f0102ffffff`);
