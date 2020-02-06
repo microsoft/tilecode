@@ -44,9 +44,10 @@ Now, when we return to the game home screen, we can see the skull has been repla
 
 ## Menu bar
 
-Their are four main commands available on the menu bar of the game's home page: world map editor, paint tile/sprite art, code editor, and play game:
+The menu bar of the game screen has four main commands in addition to the setting (gear wheel): world map editor, paint tile/sprite art, code editor, and play game.
 
 ![menu bar](pics/menuOptions.png)
+
 
 ### Map
 
@@ -86,11 +87,22 @@ The play button runs the game in full screen mode. Press B to exit the game.  Tr
 
 ### Settings
 
-Once you get used to the features available in TileWorld, you can turn off the help suggestions via the gear wheel on your game's home page:
+Once you get used to the features available in TileWorld, you can turn off the help suggestions via the gear wheel, which takes you to the settings screen. 
 
 ![game settings](pics/gameSettings.JPG)
 
 # Coding in TileWorld {#coding}
+
+Each sprite's behavior is governed by a set of rules that you can program. Let's start with a fresh game. Go to the load screen and select game slot #2.  If you play the game, you'll see that you can move the player sprite around with the direction pad.  Let's look at the rules for the player sprite:
+
+![player sprite rules](pics/playerRules.JPG)
+
+No surprises here: the rules for the direction pad (upper right quadrant) are lit up. Let's select the rule for a press of the left dpad button:
+
+![left button press](pics/dpadLeft.JPG)
+
+![left button rule](pics/dpadLeftRule.JPG)
+
 
 # Sharing Your TileWorld Games {#sharing}
 
