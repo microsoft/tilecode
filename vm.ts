@@ -40,7 +40,6 @@ namespace tileworld {
 
     class PaintTile {
         constructor(public col: number, public row: number, public tile: number) {
-
         }
     }
 
@@ -82,7 +81,8 @@ namespace tileworld {
         public setState(v: VMState) {
             this.vm = v;
             this.rules.forEach(rid => {
-                if (this.p.getType(rid) == RuleType.Resting && this.allTrue(rid)) this.allTrueResting.push(rid);
+                if (this.p.getType(rid) == RuleType.Resting && this.allTrue(rid)) 
+                    this.allTrueResting.push(rid);
             });
             this.allTrueResting.forEach(rid => this.rules.removeElement(rid));
         }
@@ -136,9 +136,8 @@ namespace tileworld {
                     this.vm.changed.setPixel(ts.col() + moveXdelta(ts.dir), ts.row() + moveYdelta(ts.dir), 1);
                 }
             });
-            // change tiles (can be done with less memory and time assuming few
-            // tiles are changed).
             if (this.vm.paintTile == null) {
+                // general backup
                 for (let x = 0; x < this.vm.nextWorld.width; x++) {
                     for (let y = 0; y < this.vm.nextWorld.height; y++) {
                         let pixel = this.vm.nextWorld.getPixel(x, y);
@@ -151,6 +150,7 @@ namespace tileworld {
                     }
                 }
             } else {
+                // fast path
                 this.vm.paintTile.forEach(pt => {
                     const tm = game.currentScene().tileMap;
                     tm.setTileAt(pt.col, pt.row, pt.tile);
@@ -212,10 +212,8 @@ namespace tileworld {
             return false;
         }
 
-        // TODO: need to pull out resting rules whose precondition is "true".
-
-        private matchingRules(phase: Phase, ts: TileSprite, handler: (rid: number) => void) {
-            this.rules.forEach(rid => {
+        private matchingRules(rules: number[], phase: Phase, ts: TileSprite, handler: (rid: number) => void) {
+            rules.forEach(rid => {
                 if (this.p.getKinds(rid).indexOf(ts.kind()) != -1 &&
                     (phase == Phase.Moving && this.p.getDir(rid) == ts.dir && this.p.getType(rid) == RuleType.Moving
                         || phase == Phase.Resting && this.p.getType(rid) == RuleType.Resting
@@ -230,7 +228,20 @@ namespace tileworld {
                 if ( phase == Phase.Moving && ts.dir != -1 || 
                      phase == Phase.Pushing ||
                      phase == Phase.Resting && this.restingWithChange(ts)) {
-                    this.matchingRules(phase, ts, (rid) => {
+                    this.matchingRules(this.rules, phase, ts, (rid) => {
+                        let closure = this.evaluateRule(ts, rid);
+                        if (closure)
+                            this.ruleClosures.push(closure);
+                    });
+                }
+            });
+            if (phase != Phase.Resting)
+                return;
+            // now deal with pesky resting rules that have precondition == true
+            // this is need because of change optimization
+            this.allSprites(ts => {
+                if ((ts.dir == -1 || !this.moving(ts))) {
+                    this.matchingRules(this.allTrueResting, phase, ts, (rid) => {
                         let closure = this.evaluateRule(ts, rid);
                         if (closure)
                             this.ruleClosures.push(closure);
