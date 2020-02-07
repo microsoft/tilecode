@@ -102,20 +102,23 @@ namespace tileworld {
             })
             this.vm.nextWorld.fill(0xf);
             this.allSprites(ts => { ts.inst = -1; });
-            // compute the "pre-effect" of the rules
+
             let rcCount = 0;
             this.ruleClosures = [];
             this.applyRules(Phase.Moving);
             this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
             rcCount += this.ruleClosures.length;
-            this.ruleClosures = [];
-            this.applyRules(Phase.Pushing);
-            this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
-            rcCount += this.ruleClosures.length;
+
             this.ruleClosures = [];
             this.applyRules(Phase.Resting);
             this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
             rcCount += this.ruleClosures.length;
+            
+            this.ruleClosures = [];
+            this.applyRules(Phase.Pushing);
+            this.ruleClosures.forEach(rc => this.evaluateRuleClosure(rc));
+            rcCount += this.ruleClosures.length;
+
             // now, look for collisions
             this.ruleClosures = [];
             // TODO: need a fix point around this, as new collisions may occur
@@ -232,8 +235,7 @@ namespace tileworld {
         private applyRules(phase: Phase) {
             this.allSprites(ts => {
                 if ( phase == Phase.Moving && ts.dir != -1 || 
-                     phase == Phase.Pushing ||
-                     phase == Phase.Resting && this.restingWithChange(ts)) {
+                    (phase == Phase.Resting || phase == Phase.Pushing) && this.restingWithChange(ts)) {
                     this.matchingRules(this.rules, phase, ts, (rid) => {
                         let closure = this.evaluateRule(ts, rid);
                         if (closure)

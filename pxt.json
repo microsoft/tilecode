@@ -1,6 +1,6 @@
 {
-    "name": "pxt-tileworld",
-    "version": "3.5.0",
+    "name": "tileworld",
+    "version": "3.5.1",
     "description": "",
     "dependencies": {
         "device": "*",
@@ -9,25 +9,22 @@
     },
     "files": [
         "README.md",
+        "manual.md",
         "utilities.ts",
         "rule.ts",
         "project.ts",
         "sprites.ts",
         "vm.ts",
-        "debugger.ts",
         "imageeditor.ts",
         "rulesBase.ts",
         "spriteRules.ts",
         "ruleeditor.ts",
         "editor.ts",
-        "loadScreen.ts",
-        "main.ts",
-        "analysis.ts",
-        "manual.md",
         "gallery.ts",
-        "home.ts",
         "settings.ts",
-        "music.ts"
+        "home.ts",
+        "loadScreen.ts",
+        "main.ts"
     ],
     "testFiles": [
         "test.ts"
