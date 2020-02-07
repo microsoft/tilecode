@@ -315,13 +315,6 @@ namespace tileworld {
         private collide(rid: number, ts: TileSprite, os: TileSprite, rcs: RuleClosure[]) {
             let wcol = ts.col() + moveXdelta(ts.arg);
             let wrow = ts.row() + moveYdelta(ts.arg);
-            if (this.p.debug) {
-                console.logValue("rid", rid);
-                console.logValue("ts.cnt", ts.cnt);
-                console.logValue("os.cnt", os.cnt);
-                console.logValue("col", wcol);
-                console.logValue("row", wrow);
-            }
             // we already have the witness
             let witnesses: TileSprite[] = [ os ];
             if (this.evaluateWhenDo(ts, rid, 2+moveXdelta(ts.arg), 2+moveYdelta(ts.arg), witnesses)) {

@@ -291,9 +291,11 @@ namespace tileworld {
             this.drawImage(1, 0, this.centerImage());
             if (this.p.getKinds(this.rule).length > 1)
                 this.drawImage(1,0,oneof);
-            // let image = this.getDirectionImage();
-            // if (image)
-            //    this.drawImage(2, 0, image);
+            if (this.getType() == RuleType.Pushing) {
+                let image = this.getDirectionImage();
+                if (image)
+                    this.drawImage(2, 0, image);
+            }
 
             //this.drawImage(1, 0, play);
             //this.drawImage(2, 0, debug);

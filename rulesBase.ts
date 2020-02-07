@@ -141,14 +141,10 @@ namespace tileworld {
             if (center) this.drawImage(x, y, this.centerImage());
             if (rt == RuleType.Moving) {
                 this.drawImage(x, y, moveImages[rd])
-            } else if (rt == RuleType.Pushing || rt >= RuleType.CollidingResting) {
+            } else if (rt >= RuleType.CollidingResting) {
                 let ax = rd == MoveDirection.Left ? 1 : (rd == MoveDirection.Right ? -1 : 0)
                 let ay = rd == MoveDirection.Down ? -1 : (rd == MoveDirection.Up ? 1 : 0)
-                if (rt == RuleType.Pushing) {
-                    this.drawImage(x + ax, y + ay, buttonImages[rd])
-                } else {
-                    this.showCollision(x - ax, y - ay, rd, moveImages[rd], rt);
-                }
+                this.showCollision(x - ax, y - ay, rd, moveImages[rd], rt);
             }
         }
 

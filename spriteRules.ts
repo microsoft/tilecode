@@ -111,11 +111,13 @@ namespace tileworld {
                 let trow = row - moveYdelta(rd);
                 this.setRuleType(rt, rd, tcol, trow);
                 if (rules.length > 0) { this.fillTile(tcol, trow, scol); this.drawOutline(tcol, trow, 1); }
+                this.drawImage(tcol, trow, buttonImages[rd]);
             } else {
                 this.setRuleType(rt, rd, col, row);
                 if (rules.length > 0) { this.fillTile(col, row, scol); this.drawOutline(col, row, 1); }
             }
-            this.showRuleType(rt, rd, col, row, center);
+            if (rt != RuleType.Pushing)
+                this.showRuleType(rt, rd, col, row, center);
         }
 
         private showRuleMenu(x: number, y: number) {
