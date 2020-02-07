@@ -194,6 +194,8 @@ namespace tileworld {
         let byte = ruleBuf.getUint8(byteIndex);
         let mask = 0;
         for(let i=0; i<bits; i++) { mask = 0x1 | (mask << 1); }
+        // make sure we only keep the proper number of bits from v
+        v = v & mask;
         mask = mask << shift;
         let writeMask = mask ^ 0xffffffff;
 
