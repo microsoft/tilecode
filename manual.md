@@ -2,11 +2,9 @@
 # this is an empty front matter
 ---
 
-# Getting Started
-
-You can run TileWorld in your [web browser](https://microsoft.github.io/pxt-tileworld/), or on any [MakeCode Arcade device](https://arcade.makecode.com/hardware). Simply copy the appropriate [UF2 file](https://github.com/microsoft/pxt-tileworld/releases/) to your MakeCode Arcade device to get started. 
-
 # Overview
+
+TileWorld is a game creation app that allows you to design and play games directly on MakeCode Arcade devices. TileWorld games are based on the familiar paradigm of a board with pieces that can move from one tile of the board to an adjacent tile. You can run TileWorld in your [web browser](https://microsoft.github.io/pxt-tileworld/), or on any [MakeCode Arcade device](https://arcade.makecode.com/hardware). Simply copy the appropriate [UF2 file](https://github.com/microsoft/pxt-tileworld/releases/) to your MakeCode Arcade device to get started. 
 
 * [Load Screen and Navigation](#loadscreen)
 * [Overview of TileWorld Screens](#gamehome)
@@ -14,13 +12,13 @@ You can run TileWorld in your [web browser](https://microsoft.github.io/pxt-tile
 * [Sharing TileWorld Games](#sharing)
 * [Having Problems?](#issues)
 
+TileWorld can be used to introduce computational concepts and its games are simple enough to design and simulate using basic classroom materials before programming them on an Arcade device.
 
 # Load Screen and Navigation {#loadscreen}
 
 The load screen of TileWorld lets you select one of four games to program and play. All game assets (game board, images and code) are stored in the flash memory of your Arcade device, so your changes will remain even if you power the device off. All editing takes place via the tile paradigm: move the square-shaped cursor between adjacent tiles using the direction pad (dpad); select a tile using the A button to perform an action; the B button takes you back (to the menu of the current screen or to the previous screen). Assets are saved to flash whenever you transition between screens.
 
 ![load screen](pics/loadScreen.JPG)
-
 
 # Overview of TileWorld Screens {#gamehome}
 
