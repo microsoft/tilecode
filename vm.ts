@@ -84,7 +84,7 @@ namespace tileworld {
                 if (this.p.getType(rid) == RuleType.Resting && this.allTrue(rid)) 
                     this.allTrueResting.push(rid);
             });
-            this.allTrueResting.forEach(rid => this.rules.removeElement(rid));
+            // this.allTrueResting.forEach(rid => this.rules.removeElement(rid));
         }
 
         public round(currDir: MoveDirection) {
