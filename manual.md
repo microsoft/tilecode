@@ -24,11 +24,11 @@ The load screen of TileWorld lets you select one of four games to program and pl
 
 # Overview of TileWorld Screens {#gamehome}
 
-Let's load the game in slot 1, which takes us to the game's home screen, as shown below:
+Let's take a quick tour through the various screens you can get to from the load screen. We load the game from slot 1, which takes us to the game's home screen, as shown below:
 
 ![home page](pics/homePage1.JPG)
 
-Each TileWorld game has four kinds of map tiles and four kinds of sprites to work with. Let's take a quick tour through the various screens you can get to from the home screen. Move the cursor around the screen to get help about all the features available. Let's visit the art gallery to change the art associated with the fourth sprite (the skull).
+Move the cursor around the screen to get help about all the features available. Each TileWorld game has four kinds of map tiles and four kinds of sprites to work with. Let's visit the art gallery to change the art associated with the fourth sprite (the skull).
 
 ![help cursor](pics/helpGallery.JPG)
 
@@ -44,7 +44,7 @@ Now, when we return to the game home screen, we can see the skull has been repla
 
 ## Menu bar
 
-The menu bar of the game screen has four main commands in addition to the setting (gear wheel): world map editor, paint tile/sprite art, code editor, and play game.
+The menu bar of the game screen has four main commands in addition to the gear wheel (for game settings): world map editor, paint tile/sprite art, code editor, and play game.
 
 ![menu bar](pics/menuOptions.png)
 
@@ -63,7 +63,7 @@ The paint editor lets you change the art associated with a tile or sprite. As wi
 
 ![paint art](pics/paintPuppy1.JPG)
 
-Move your cursor down to edit the bitmap (using the A button to apply the currently selected color).  Press B to move from the bitmap pane to the color selector. After selecting a color, move your cursor back to the bitmap pane to resume coloring. We have colored the puppy's eyes red:
+Move your cursor down to edit the bitmap (using the A button to apply the currently selected color).  Press B to move from the bitmap pane to the color selector.  Selecting a color will send the cursor back to the bitmap pane so you can quickly resume coloring where you left off. We have colored the puppy's eyes red:
 
 ![paint art](pics/paintPuppy2.JPG)
 
@@ -101,11 +101,11 @@ No surprises here: the rules for the direction pad (upper right quadrant) are li
 
 ![left button press](pics/dpadLeft.JPG)
 
-Now press A to bring up the rule editor. The editor is divided into two main sections: *When* and *Do*. The *When* section shows a pattern around the player. To the left of the player is a wall tile with a 
+Now press A to bring up the rule editor. The editor is divided into two main sections: *When* and *Do*. The *When* section shows a pattern around the player.
 
 ![left button rule](pics/dpadLeftRule.JPG)
 
-![left button rule](pics/dpatLeftAttrs.JPG)
+![tile attributes](pics/dpadLeftAttrs.JPG)
 
 ![attributes](pics/attributes.png)
 
