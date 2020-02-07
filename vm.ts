@@ -83,8 +83,7 @@ namespace tileworld {
                 if (this.p.getType(rid) == RuleType.Resting && this.allTrue(rid)) 
                     this.allTrueResting.push(rid);
             });
-            // TODO: removed for now for Michal debugging of hexlit bug
-            // this.allTrueResting.forEach(rid => this.rules.removeElement(rid));
+            this.allTrueResting.forEach(rid => this.rules.removeElement(rid));
         }
 
         public round(currDir: MoveDirection) {
@@ -226,7 +225,8 @@ namespace tileworld {
             let ruleClosures: RuleClosure[] = [];
             this.allSprites(ts => {
                 if ( phase == Phase.Moving && ts.dir != -1 || 
-                    (phase == Phase.Resting || phase == Phase.Pushing) && this.restingWithChange(ts)) {
+                     phase == Phase.Resting && this.restingWithChange(ts) ||
+                     phase == Phase.Pushing && (ts.dir == -1 || !this.moving(ts))) {
                     this.matchingRules(this.rules, phase, ts, (rid) => {
                         let closure = this.evaluateRule(ts, rid);
                         if (closure)
@@ -327,8 +327,7 @@ namespace tileworld {
             let witnesses: TileSprite[] = [];
             for(let col = 0; col < 5; col++) {
                 for (let row = 0; row < 5; row++) {
-                    if (Math.abs(2-col) + Math.abs(2-row) > 2 ||
-                        col == 2 && row == 2)
+                    if (Math.abs(2-col) + Math.abs(2-row) > 2)
                         continue;
                     if (!this.evaluateWhenDo(ts, rid, col, row, witnesses))
                         return null;
@@ -351,8 +350,7 @@ namespace tileworld {
         private allTrue(rid: number) {
             for (let col = 0; col < 5; col++) {
                 for (let row = 0; row < 5; row++) {
-                    if (Math.abs(2 - col) + Math.abs(2 - row) > 2 ||
-                        col == 2 && row == 2) {
+                    if (Math.abs(2 - col) + Math.abs(2 - row) > 2) {
                         let whendo = this.p.getWhenDo(rid, col, row);
                         if (whendo != -1 && !this.whendoTrue(rid, whendo))
                             return false;

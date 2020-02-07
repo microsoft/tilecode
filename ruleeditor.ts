@@ -106,13 +106,8 @@ namespace tileworld {
                     } else if (this.col() > 5 && this.row() >= editorRow) {
                         this.tryEditCommand();
                     } else if (this.manhattanDistance2() <= 2) {
-                        if (this.col() != 2 || this.row() - editorRow != 2) {
-                            if (this.active(this.col(), this.row() - editorRow)) {
-                                this.menu = RuleEditorMenus.AttrTypeMenu;
-                                this.setTileSaved();
-                            }
-                        } else {
-                            this.menu = RuleEditorMenus.MultipleMenu;
+                        if (this.active(this.col(), this.row() - editorRow)) {
+                            this.menu = RuleEditorMenus.AttrTypeMenu;
                             this.setTileSaved();
                         }
                     }
@@ -187,10 +182,7 @@ namespace tileworld {
                     if (this.row() == 0) {
                         this.helpCursor.say(getHelp(menuHelpString, this.col(), this.row()));
                     } else if (this.manhattanDistance2() <= 2) {
-                        if (this.col() != 2 || this.row() != 2 + editorRow)
-                            this.helpCursor.say("A: attributes");
-                        else
-                            this.helpCursor.say("A: add sprite");
+                        this.helpCursor.say("A: attributes");
                     } 
                 } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                     if (this.row() == 0) {
@@ -320,8 +312,7 @@ namespace tileworld {
                     let dist = Math.abs(2-j) + Math.abs(2-i);
                     if (dist <= 2 && this.active(i,j)) {
                         this.drawImage(i, j+editorRow, emptyTile);
-                        if (i != 2 || j != 2)
-                            this.showAttributes(this.rule, i, j);
+                        this.showAttributes(this.rule, i, j);
                     }
                 }
             }

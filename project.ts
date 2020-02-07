@@ -358,11 +358,17 @@ namespace tileworld {
         });
     }
 
-    let wall = tileworld.fillAttr(AttrType.OK, 8, 0, AttrType.Exclude);
+    function wall () {
+        return tileworld.fillAttr(AttrType.OK, 8, 0, AttrType.Exclude);
+    }
+
+    function ok() {
+        return tileworld.fillAttr(AttrType.OK, 8, 0, AttrType.OK);
+    }
 
     function makePushRule(dir: MoveDirection) {
         return new Rule([4], RuleType.Pushing, dir, 
-        [new WhenDo(2+moveXdelta(dir), 2+moveYdelta(dir), wall,[]), new WhenDo(2, 2, [], [new Command(CommandType.Move, dir)])]);
+        [new WhenDo(2+moveXdelta(dir), 2+moveYdelta(dir), wall(), []), new WhenDo(2, 2, ok(), [new Command(CommandType.Move, dir)])]);
     }
 
     const player = img`
