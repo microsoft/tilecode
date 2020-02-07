@@ -338,8 +338,8 @@ namespace tileworld {
             return new RuleClosure(rid, ts, witnesses);
         }
 
-        private getWitness(kind: number, col: number, row: number) {
-            return this.vm.sprites[kind] && this.vm.sprites[kind].find(ts => ts.col() == col && ts.row() == row);
+        private getWitness(kind: number, col: number, row: number, self: TileSprite) {
+            return this.vm.sprites[kind] && this.vm.sprites[kind].find(ts => ts != self && ts.col() == col && ts.row() == row);
         }
 
         private inBounds(col: number, row: number) {
@@ -373,6 +373,7 @@ namespace tileworld {
             let whendo = this.p.getWhenDo(rid, col, row);
             if (whendo == -1 || this.whendoTrue(rid, whendo))
                 return true;
+            let self = col == 2 && row == 2; 
             let wcol = ts.col() + (col - 2);
             let wrow = ts.row() + (row - 2);
             if (!this.inBounds(wcol, wrow))
@@ -395,7 +396,7 @@ namespace tileworld {
             let adjacent = Math.abs(2 - col) + Math.abs(2 - row) <= 1;
             for(let kind = this.vm.fixed; kind<this.vm.all; kind++) {
                 let attr = this.p.getAttr(rid, whendo, kind);
-                let witness = this.getWitness(kind, wcol, wrow);
+                let witness = this.getWitness(kind, wcol, wrow, self ? ts : null);
                 // special case for collisions
                 if (this.p.getType(rid) >= RuleType.CollidingResting) {
                     witness = witnesses[0].kind() == kind ? witnesses[0] : null;
