@@ -9,7 +9,7 @@ You can run TileWorld in your [web browser](https://microsoft.github.io/pxt-tile
 # Overview
 
 * [Load Screen and Navigation](#loadscreen)
-* [Game Home Screen](#gamehome)
+* [Overview of TileWorld Screens](#gamehome)
 * [Coding in TileWorld](#coding)
 * [Sharing TileWorld Games](#sharing)
 * [Having Problems?](#issues)
@@ -22,7 +22,7 @@ The load screen of TileWorld lets you select one of four games to program and pl
 ![load screen](pics/loadScreen.JPG)
 
 
-# Game Home Screen {#gamehome}
+# Overview of TileWorld Screens {#gamehome}
 
 Let's load the game in slot 1, which takes us to the game's home screen, as shown below:
 
