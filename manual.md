@@ -99,7 +99,9 @@ No surprises here: the rules for the direction pad (upper right quadrant) are li
 
 ![left button press](pics/dpadLeft.JPG)
 
-Now press A to bring up the rule editor. The editor is divided into two main sections: *When* and *Do*. The *When* section shows a pattern around the player.
+Now press A to bring up the rule editor. 
+The menu bar shows that this rule is for the player sprite on the press of the
+left dpad button. Below the menu bar, the editor is divided into two sections: the *When* section shows a pattern around the player; the *Do* sections shows commands that will execute when the pattern matches. In this case, when there is no wall tile immediately to the left of the player sprite, the sprite is sent a move left command.
 
 ![left button rule](pics/dpadLeftRule.JPG)
 
