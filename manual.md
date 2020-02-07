@@ -99,15 +99,23 @@ No surprises here: the rules for the direction pad (upper right quadrant) are li
 
 ![left button press](pics/dpadLeft.JPG)
 
-Now press A to bring up the rule editor. 
-The menu bar shows that this rule is for the player sprite on the press of the
-left dpad button. Below the menu bar, the editor is divided into two sections: the *When* section shows a pattern around the player; the *Do* sections shows commands that will execute when the pattern matches. In this case, when there is no wall tile immediately to the left of the player sprite, the sprite is sent a move left command.
+Now press A to bring up the rule editor, shown below. The menu bar shows that this rule is for the player sprite on the press of the left dpad button. Below the menu bar, the editor is divided into two sections: the *When* section shows a pattern around the player; the *Do* sections shows commands that will execute when the pattern matches. In this case, when there is no wall in the space to the left of the player sprite, the sprite is sent a move left command.
 
 ![left button rule](pics/dpadLeftRule.JPG)
 
+Moving the cursor to the space to the left of the player sprite and pressing A brings up the *Attribute* menu, which shows the current attribution for each of the four tiles and sprites that could occupy the space. The green circle denotes that any of these tiles/sprites may occupy the space; the red circle with a slash denotes the wall tile is excluded. In other words, the pattern matches as long as the space to the left of the player is not painted with the wall tile. 
+
 ![tile attributes](pics/dpadLeftAttrs.JPG)
 
+If you move the cursor over the four attributes you will see their meaning:
+* *green check mark*: the space must include this tile/sprite;
+* *red-slash circle*: the space must not include this tile/sprite;
+* *green circle*: it is OK for the tile/sprite to be in space, but not required (on other words, we don't care whether or not the tile/sprite is in the space);
+* *yellow dot*: one of the tile/sprites marked with a yellow dot must be in the space.
+
 ![attributes](pics/attributes.png)
+
+TODO: Try playing around with the attribution...
 
 # Sharing Your TileWorld Games {#sharing}
 
