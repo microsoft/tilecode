@@ -6,19 +6,14 @@ namespace tileworld {
 
     enum SpriteState { Alive, Dead, }
 
-    let spriteCount = 0;
+    // a TileSprite is centered on a 16x16 pixel tile
     class TileSprite extends Sprite {
         public state: SpriteState;
-        // the direction the sprite is currently moving
-        public dir: MoveDirection;
-        // the one instruction history to apply to the sprite to 
-        // create the next sprite state
-        public inst: number;
-        public arg: number;
-        public cnt: number;
+        public dir: MoveDirection;  // the direction the sprite moved in the last round
+        public inst: number;        // the one instruction history to apply to the sprite to 
+        public arg: number;         // create the next sprite state
         constructor(img: Image, kind: number) {
             super(img);
-            this.cnt = spriteCount++;
             const scene = game.currentScene();
             scene.physicsEngine.addSprite(this);
             this.setKind(kind);
@@ -26,35 +21,39 @@ namespace tileworld {
             this.inst = -1;
             this.state = SpriteState.Alive;
         }
-        public col() { return this.x >> 4; }
-        public row() { return this.y >> 4; }
+        public col() { return this.x >> 4; }    // the position of sprite in tile world
+        public row() { return this.y >> 4; }    // coordinates
         public update() {
-            // TODO: implement U-turn
+            // update the state of the sprite base on instruction
             this.dir = this.inst == CommandType.Move && this.arg < MoveArg.Stop  ? this.arg : -1;
             this.vx = this.dir == MoveDirection.Left ? -100 : this.dir == MoveDirection.Right ? 100 : 0;
             this.vy = this.dir == MoveDirection.Up ? -100 : this.dir == MoveDirection.Down ? 100 : 0;
         }
     }
 
-    enum GameState { InPlay, Won, Lost, };
-
+    // used to record effect of paint tile commands in a small log
     class PaintTile {
         constructor(public col: number, public row: number, public tile: number) {
         }
     }
 
+    enum GameState { InPlay, Won, Lost, };
+
+    // the interpreter state
     class VMState {
-        public game: GameState;
-        public fixed: number;
-        public all: number;
-        public paintTile: PaintTile[];
-        public nextWorld: Image;
-        public changed: Image;
-        public sprites: TileSprite[][];
+        public game: GameState;             //
+        public fixed: number;               // the number of kinds of tiles
+        public all: number;                 
+        public paintTile: PaintTile[];      // log of paint commands
+        public nextWorld: Image;            // record all paint commands (if log exceeded)
+        public changed: Image;              // what changed in last round
+        public sprites: TileSprite[][];     // the sprites, sorted by kind
         public deadSprites: TileSprite[];
         constructor() {}
     }
 
+    // rule (rid) plus binding of self and other sprite, in preparation
+    // for the evalation of rule's commands 
     class RuleClosure {
         constructor(
             public rid: number,
@@ -63,6 +62,7 @@ namespace tileworld {
         }
     }
 
+    // the four phases of a round
     enum Phase { Moving, Resting, Pushing, Colliding };
 
     class TileWorldVM {
@@ -90,15 +90,14 @@ namespace tileworld {
             if (!this.vm)
                 return;
             this.dpad = currDir;
-            this.globalInsts = [];
-            this.globalArgs = [];
+            this.globalInsts = this.globalArgs = [];
             this.vm.deadSprites = [];
             this.vm.paintTile = [];
             // make sure everyone is centered
             this.allSprites(ts => {
                 ts.x = ((ts.x >> 4) << 4) + 8;
                 ts.y = ((ts.y >> 4) << 4) + 8;
-            })
+            });
             this.vm.nextWorld.fill(0xf);
             this.allSprites(ts => { ts.inst = -1; });
 
@@ -120,9 +119,10 @@ namespace tileworld {
             let rcs = this.collisionDetection( against );
             rcs.forEach(rc => this.evaluateRuleClosure(rc));
             rcCount += rcs.length;
+            
             // finally, update the rules
             this.updateWorld();
-            // console.logValue("count", rcCount);
+            if (this.p.debug) console.logValue("count", rcCount);
         }
 
         private updateWorld() {
@@ -130,11 +130,22 @@ namespace tileworld {
             this.allSprites(ts => { 
                 ts.update();
                 if (ts.dir != -1) {
+                    // if sprite is moving then dirty its current
+                    // location and next location
                     this.vm.changed.setPixel(ts.col(), ts.row(), 1);
-                    this.vm.changed.setPixel(ts.col() + moveXdelta(ts.dir), ts.row() + moveYdelta(ts.dir), 1);
+                    this.vm.changed.setPixel(ts.col() + moveXdelta(ts.dir), 
+                                             ts.row() + moveYdelta(ts.dir), 1);
                 }
             });
-            if (this.vm.paintTile == null) {
+            // update the tile map and set dirty bits in changed map
+            if (this.vm.paintTile != null) {
+                // fast path
+                this.vm.paintTile.forEach(pt => {
+                    const tm = game.currentScene().tileMap;
+                    tm.setTileAt(pt.col, pt.row, pt.tile);
+                    this.vm.changed.setPixel(pt.col, pt.row, 1);
+                });
+            } else {
                 // general backup
                 for (let x = 0; x < this.vm.nextWorld.width; x++) {
                     for (let y = 0; y < this.vm.nextWorld.height; y++) {
@@ -147,14 +158,8 @@ namespace tileworld {
                         }
                     }
                 }
-            } else {
-                // fast path
-                this.vm.paintTile.forEach(pt => {
-                    const tm = game.currentScene().tileMap;
-                    tm.setTileAt(pt.col, pt.row, pt.tile);
-                    this.vm.changed.setPixel(pt.col, pt.row, 1);
-                })
             }
+            // now, execute the global instructions
             for (let i = 0; i < this.globalInsts.length; i++) {
                 let inst = this.globalInsts[i];
                 let arg = this.globalArgs[i];
@@ -514,8 +519,8 @@ namespace tileworld {
             this.state.changed = w.clone();
 
             // initialize fixed and movable sprites
-            for (let kind = 0;kind < this.p.all().length; kind++) {
-                if (kind < this.p.fixed().length) {
+            for (let kind = 0;kind < this.state.all; kind++) {
+                if (kind < this.state.fixed) {
                     let art = this.p.getImage(kind);
                     scene.setTile(kind, art);
                 } else {
