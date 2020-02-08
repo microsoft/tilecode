@@ -90,7 +90,8 @@ namespace tileworld {
             if (!this.vm)
                 return;
             this.dpad = currDir;
-            this.globalInsts = this.globalArgs = [];
+            this.globalInsts = [];
+            this.globalArgs = [];
             this.vm.deadSprites = [];
             this.vm.paintTile = [];
             // make sure everyone is centered
@@ -260,8 +261,9 @@ namespace tileworld {
                 if ((ts.dir == -1 || !this.moving(ts))) {
                     this.matchingRules(this.allTrueResting, phase, ts, (rid) => {
                         let closure = this.evaluateRule(ts, rid);
-                        if (closure)
+                        if (closure) {
                             ruleClosures.push(closure);
+                        }
                     });
                 }
             });
