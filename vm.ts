@@ -184,6 +184,8 @@ namespace tileworld {
             }
         }
 
+        // a tile sprite is (going to be) moving if it has been
+        // issed an appropriate move command
         private moving(ts: TileSprite) {
             return ts.inst == CommandType.Move && ts.arg < MoveArg.Stop;
         }
@@ -194,9 +196,14 @@ namespace tileworld {
             });
         }
 
+        // optimization:
+        // use the changed map to determine if a resting sprite
+        // needs to have its resting rules applied. If no space
+        // in the neighborhood around the tile changed in the last
+        // round, then there is no need to apply the resting rules.
         private restingWithChange(ts: TileSprite) {
-            // resting rules will apply to sprites that were previously moving 
-            // but have not issued a moving command (in the Moving phase)
+            // resting rules will apply to sprites that were previously resting 
+            // or were moving but have not issued a moving command (in the Moving phase)
             if (ts.dir == -1 || !this.moving(ts)) {
                 let col = ts.col();
                 let row = ts.row();
@@ -215,12 +222,18 @@ namespace tileworld {
             return false;
         }
 
+        private ruleMatchesSprite(rid: number, ts: TileSprite) {
+            return this.p.getKinds(rid).indexOf(ts.kind()) != -1;
+        }
+
+        // apply matching rules to tileSprite, based on the phase we are in
+        // (this could be optimizing by storing rules indexed by kind and type)
         private matchingRules(rules: number[], phase: Phase, ts: TileSprite, handler: (rid: number) => void) {
             rules.forEach(rid => {
-                if (this.p.getKinds(rid).indexOf(ts.kind()) != -1 &&
-                    (phase == Phase.Moving && this.p.getDir(rid) == ts.dir && this.p.getType(rid) == RuleType.Moving
-                        || phase == Phase.Resting && this.p.getType(rid) == RuleType.Resting
-                        || phase == Phase.Pushing && this.p.getDir(rid) == this.dpad && this.p.getType(rid) == RuleType.Pushing)) {
+                if (this.ruleMatchesSprite(rid, ts) &&
+                    (phase == Phase.Moving  && this.p.getType(rid) == RuleType.Moving && this.p.getDir(rid) == ts.dir
+                  || phase == Phase.Resting && this.p.getType(rid) == RuleType.Resting
+                  || phase == Phase.Pushing && this.p.getType(rid) == RuleType.Pushing && this.p.getDir(rid) == this.dpad)) {
                     handler(rid);
                 }
             });
@@ -258,7 +271,7 @@ namespace tileworld {
         // precondition: moving(ts)
         private collidingRules(ts: TileSprite, handler: (rid: number) => void) {
             this.rules.forEach(rid => {
-                if (this.p.getKinds(rid).indexOf(ts.kind()) != -1 && 
+                if (this.ruleMatchesSprite(rid, ts) && 
                     this.p.getType(rid) >= RuleType.CollidingResting &&
                     this.p.getDir(rid) == ts.arg) {
                         handler(rid);
