@@ -24,7 +24,8 @@
         "settings.ts",
         "home.ts",
         "loadScreen.ts",
-        "main.ts"
+        "main.ts",
+        "games.ts"
     ],
     "testFiles": [
         "test.ts"
