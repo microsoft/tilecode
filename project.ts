@@ -177,11 +177,11 @@ namespace tileworld {
         }
 
         public getAttr(rid: number, wdid: number, aid: number): AttrType {
-            return this.getRule(rid).whenDo[wdid].attrs[aid];
+            return this.getRule(rid).whenDo[wdid].predicate[aid];
         }
 
         public setAttr(rid: number, wdid: number, aid: number, attr: AttrType) {
-            this.getRule(rid).whenDo[wdid].attrs[aid] = attr;
+            this.getRule(rid).whenDo[wdid].predicate[aid] = attr;
         }
 
         public getInst(rid: number, wdid: number, cid: number) {

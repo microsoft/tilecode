@@ -1,70 +1,76 @@
-// bytecode representation
+// in memory program representation
 
 enum RuleType {
-    Resting = 0,     // a sprite at rest 
-    Moving,      // a sprite moving in a given direction
-    Pushing,     // a sprite being pushed in a given direction
-    CollidingResting,    // a moving sprite about to collide with another sprite
-    CollidingMoving,
+    Resting = 0,        // a sprite at rest 
+    Moving,             // a sprite that just moved in a given direction
+    Pushing,            // a sprite being pushed in a given direction (by dpad button press)
+    CollidingResting,   // a moving sprite about to collide with a resting sprite
+    CollidingMoving,    // a moving sprite about to collide with another moving sprite
 }
 
+// there are four directions in TileWorld
 enum MoveDirection {
     Left = 0, Right, Up, Down
 }
 
 enum CommandType {
-    Move,           // arg (MoveDirection) + Stop, UTurn, ... tie to sprite
-    Paint,          // 4 tiles
+    Move,           // sprite move in (MoveDirection) + Stop, UTurn
+    Paint,          // paint a space with one of 4 tiles
     Sprite,         // various commands
     SpritePred,     // 4 sprites, operator
     Game,           // various commands
-    TilePred,       // 4 tiles, operator
-    CreateInMotion,   // 4 sprites, 4 directions
-    CreateAtRest,     // 4 sprites
+    // the commands below have not been implemented
+    // CreateInMotion,   // 4 sprites, 4 directions
+    // CreateAtRest,     // 4 sprites
     Last,
 }
 
+// arguments to Move command (the last two are only used in Colliding rules)
 enum MoveArg {
     Left, Right, Up, Down, Stop, UTurn,
 }
 
+// arguments to affect the state of the sprite (other than movement)
 enum SpriteArg {
     Remove,         // self sprite eats the other sprite
 }
 
+// only Win, Lose implemented so far
 enum GameArg {
-    Win, Lose, Reset, ScoreUp, ScoreDown, NextLevel
+    Win, Lose, // Reset, ScoreUp, ScoreDown, NextLevel
 }
 
 enum AttrType {
-    OK = 0,    // tile cannot contain this kind
+    OK = 0,    // don't care
     Include,   // tile must contain this kind
     OneOf,     // tile must contain at least one labelled thusly
-    Exclude    // tile may contain this kind
+    Exclude    // tile cannot contain this kind
 }
 
 class Command {
     constructor(
         public inst: CommandType,
-        public arg: number
+        public arg: MoveArg | SpriteArg | GameArg | number
     ) { }
 }
 
+// this represents a predicate in the neighborhood centered at (2,2), at most two steps from center
+// in Manhattan distance. 
 class WhenDo {
     constructor(
         public col: number,            // the guards and commands associated with a tile in the neighborhood
-        public row: number,            // (2,2) is the center of neighborhood, graphics coordinate system.
-        public attrs: AttrType[],      // the guard, one attribute per fixed/movable sprite
-        public commands: Command[]     // the commands
+        public row: number,            // (2,2) is the center of neighborhood, graphics coordinate system
+        public predicate: AttrType[],  // the guard preicate (one attribute per fixed/movable sprite)
+        public commands: Command[]     // the commands that execute if the guard succeeds
     ) { }
 }
 
 class Rule {
     constructor( 
-        public kind: number[],                 // the indices of movable sprite kinds this rule is defined over
-        public rt: RuleType,
-        public dir: MoveDirection,             // the direction associated with rule type (Moving, Colliding, Pushing)
-        public whenDo: WhenDo[]               // guarded commands (limit on number of these? 6 for now)
+        public kind: number[],      // the (movable) sprite kinds this rule is defined over
+        public rt: RuleType,        // the type of rule
+        public dir: MoveDirection,  // the direction associated with rule type (Moving, Colliding, Pushing)
+        public whenDo: WhenDo[]     // guarded commands
     ) { }
 }
 
@@ -166,7 +172,7 @@ namespace tileworld {
                 let tgtWhenDo: WhenDo = {
                     col: transformCol(col, row, fr),
                     row: transformRow(row, col, fr),
-                    attrs: whendo.attrs,
+                    predicate: whendo.predicate,
                     commands: flipCommands(whendo.commands, fr)
                 };
                 tgtRule.whenDo.push(tgtWhenDo);
@@ -275,8 +281,8 @@ namespace tileworld {
         // TODO: optimization - remove whendo that are true have no command (waste of space and time)
         r.whenDo.forEach(wd => {
             colRowToLRUD(wd.col, wd.row);                       // + .5 byte
-            wd.attrs.forEach(a => { writeBuf(a, 2);  });        // +2 bytes
-            for(let cnt = wd.attrs.length; cnt < 8; cnt++) { writeBuf(0, 2); }
+            wd.predicate.forEach(a => { writeBuf(a, 2);  });        // +2 bytes
+            for (let cnt = wd.predicate.length; cnt < 8; cnt++) { writeBuf(0, 2); }
             writeBuf(wd.commands.length, 4);                    // +.5 byte
         });
         // align to byte
@@ -330,7 +336,7 @@ namespace tileworld {
             let whenDo = new WhenDo(col, row, [], []);
             for(let a = 0; a < 8; a++) {
                 let attr = readBuf(2);
-                whenDo.attrs.push(attr);
+                whenDo.predicate.push(attr);
             }
             let cmdLen = readBuf(4);
             if (cmdLen > 0) hasCommands.push(whenDo);

@@ -165,8 +165,8 @@ namespace sample {
     }
 
     let tp = TileAt(spaceId, 2, 3)
-    tp.attrs[playerId] = AttrType.OK;
-    tp.attrs[enemyId] = AttrType.OK;
+    tp.predicate[playerId] = AttrType.OK;
+    tp.predicate[enemyId] = AttrType.OK;
     let playerMove = tileworld.fillAttr(AttrType.OK, 7, boulderId, AttrType.Exclude);
     playerMove[wallId] = AttrType.Exclude;
 
