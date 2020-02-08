@@ -283,3 +283,4 @@ f4ff029600008000f7410000d10000c0000030fdff0030ffffff00ffffff`);
 }
 
 if (!settings.exists("TW1-VS")) createTW1();
+if (!settings.exists("TW2-VS")) createTW2();
