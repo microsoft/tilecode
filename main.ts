@@ -61,10 +61,10 @@ df55ffffffffffffff1f17ffffbf16ffef168f652f165f36ff7f16ff1f15ff1f155f35ff5f151f15
     settings.writeNumber("TW1-HM", 1);
     // buffer length = 23
     settings.writeBuffer("TW1-RL0", hex`
-65ff00450000c1fd3f900000800000d000000030ffffff`);
+65ff00450000c1fdff900000800000d000000030ffffff`);
     // buffer length = 26
     settings.writeBuffer("TW1-RL1", hex`
-65ff00460000c1c03780fd3f30fd3f90003cd000000000ffffff`);
+65ff00460000c100eb80fdff30fdff90003cd000000000ffffff`);
     // buffer length = 23
     settings.writeBuffer("TW1-RL2", hex`
 65ff31450000c1fd3c900000800000d000000030ffffff`);
@@ -73,22 +73,22 @@ df55ffffffffffffff1f17ffffbf16ffef168f652f165f36ff7f16ff1f15ff1f155f35ff5f151f15
 f4ff00450000910000800000d00000c000000001ffffff`);
     // buffer length = 23
     settings.writeBuffer("TW1-RL4", hex`
-f4ff02450000820c0c900000d00000c000000000ffffff`);
+f4ff0245000081cc0c900000d00000c000000000ffffff`);
     // buffer length = 23
     settings.writeBuffer("TW1-RL5", hex`
-f4ff12450000d20c0c900000800000c000000010ffffff`);
-    // buffer length = 14
+f4ff12450000d1cc0c900000800000c000000010ffffff`);
+    // buffer length = 23
     settings.writeBuffer("TW1-RL6", hex`
-f4ff22420000920c0c002001ffff`);
-    // buffer length = 14
+f4ff2245000092cc0c800000d00000c00000002001ffff`);
+    // buffer length = 23
     settings.writeBuffer("TW1-RL7", hex`
-f4ff32420000c20c0c003001ffff`);
+f4ff32450000c2cc0c900000800000d00000003001ffff`);
     // buffer length = 33
     settings.writeBuffer("TW1-RL8", hex`
-f4ff12470000d1c03751fd3f900000800000c0000070a8280010ffffff10ffffff`);
+f4ff12470000d100f751fdff900000800000c0000070a8280010ffffff10ffffff`);
     // buffer length = 33
     settings.writeBuffer("TW1-RL9", hex`
-f4ff0247000081c03701fd3f900000d00000c0000030a8280000ffffff00ffffff`);
+f4ff024700008100f701fdff900000d00000c0000030a8280000ffffff00ffffff`);
     // buffer length = 14
     settings.writeBuffer("TW1-RL10", hex`
 65ff33420000c000fd0114ffffff`);
@@ -115,7 +115,7 @@ f4ff038200df43000000022304ff`);
 65ff14420000d100000040ffffff`);
     // buffer length = 26
     settings.writeBuffer("TW1-RL18", hex`
-65ff0096003c800000400000d1fdffc000f770fdff0010ffffff`);
+65ff0096003c800000400000d1fdffc000eb70fdff0010ffffff`);
     // buffer length = 14
     settings.writeBuffer("TW1-RL19", hex`
 65ff34420000c0007f0102ffffff`);
@@ -182,9 +182,11 @@ f4ff12960000800000400000d100f7c1000070fdff0010ffffff30ffffff`);
     // buffer length = 30
     settings.writeBuffer("TW1-RL40", hex`
 f4ff029600008000f7410000d10000c0000030fdff0030ffffff00ffffff`);
+    // buffer length = 14
+    settings.writeBuffer("TW1-RL41", hex`
+65ff048200004000000140ffffff`);
     settings.writeNumber("TW1-PL", 4);
 }
-
 
 if (!settings.exists("TW1-VS")) createTW1();
 
