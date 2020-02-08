@@ -620,12 +620,7 @@ namespace tileworld {
         }
     }
 
-    function gameover(win: boolean = false, effect?: effects.BackgroundEffect) {
-        /*
-            if (!effect) {
-                effect = win ? winEffect : loseEffect;
-            }
-*/
+    function gameover(win: boolean = false) {
             // collect the scores before poping the scenes
             const scoreInfo = info.player1.getState();
             const highScore = info.highScore();
@@ -634,16 +629,6 @@ namespace tileworld {
 
             game.pushScene();
             scene.setBackgroundImage(screen.clone());
-
-            /*
-            if (win)
-                winSound.play();
-            else
-                loseSound.play();
-
-            effect.startScreenEffect();
-            */
-
             pause(400);
 
             const overDialog = new game.GameOverDialog(win, scoreInfo.score, highScore);
