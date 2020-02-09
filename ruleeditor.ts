@@ -69,6 +69,15 @@ namespace tileworld {
                         this.rule = index < rules.length ? rules[index] : rules[index-1];
                     }
                     this.askDeleteRule = false;
+                } else if (this.manhattanDistance2() <= 2) {
+                    if (this.active(this.col(), this.row() - editorRow)) {
+                        if (this.menu == RuleEditorMenus.MainMenu) {
+                            this.menu = RuleEditorMenus.AttrTypeMenu;
+                            this.setTileSaved();
+                        } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
+                            this.noMenu();
+                        }
+                    }
                 } else if (this.menu == RuleEditorMenus.AttrTypeMenu && this.row() < 2) {
                     this.attrUpdate();
                 } else if (this.menu == RuleEditorMenus.CommandMenu) {
@@ -105,11 +114,6 @@ namespace tileworld {
                         }
                     } else if (this.col() > 5 && this.row() >= editorRow) {
                         this.tryEditCommand();
-                    } else if (this.manhattanDistance2() <= 2) {
-                        if (this.active(this.col(), this.row() - editorRow)) {
-                            this.menu = RuleEditorMenus.AttrTypeMenu;
-                            this.setTileSaved();
-                        }
                     }
                 }
                 this.update();
@@ -175,20 +179,20 @@ namespace tileworld {
                 this.otherCursorMove();
             } 
             if (this.p.help) {
-                this.helpCursor.x = this.col() < 7 ? this.cursor.x + 16 : this.cursor.x - 16;
+                this.helpCursor.x = this.col() < 6 ? this.cursor.x + 16 : this.cursor.x - 16;
                 this.helpCursor.y = this.row() < 6 ? this.cursor.y + 32 : this.cursor.y;
                 this.helpCursor.say(null);
                 if (this.menu == RuleEditorMenus.MainMenu) {
                     if (this.row() == 0) {
                         this.helpCursor.say(getHelp(menuHelpString, this.col(), this.row()));
                     } else if (this.manhattanDistance2() <= 2) {
-                        this.helpCursor.say("A: attributes");
+                        this.helpCursor.say("A: predicate");
                     } 
                 } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                     if (this.row() == 0) {
                         this.helpCursor.say(getHelp(attrHelpString, this.col(), this.row()));
                     } else if (this.row() == 1 && this.col() < 8) {
-                        this.helpCursor.say("A: set attribute");
+                        this.helpCursor.say("A: set flag");
                     }
                 } else if (this.menu == RuleEditorMenus.CommandMenu) {
                     this.commandUpdate(true);
