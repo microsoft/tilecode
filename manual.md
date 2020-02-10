@@ -136,7 +136,25 @@ Each row can contain up to four commands. We'll detail more about the available 
 
 From the rule editor, you can add a rule (of the same type) by moving the cursor to the plus sign in the upper right and press A. To delete the current rule, navigate to the garbage can and press A. To make a rule of a different type, press the B button to return to the code screen and select a different rule type.  If you want to see all the rules for a sprite, select the sprite from the left column of the code screen and then move the cursor to the code icon in the upper left and press A. 
 
-# Making Your First Game {#firstgame}
+# Your First Game {#firstgame}
+
+Now that you've seen the basics of the code screen and the rule editor, let's create a game. We'll create game
+where the goal is for the player to help fish move from a small pond to a bigger pond.  Make two ponds, as shown
+below and put a few fish in the smaller pond:
+
+![two ponds](pics/fishPonds.JPG)
+
+The player can't swim, so we'll encode a rule that ends the game if the player enters the water. From the code screen, select the player sprite and move to the resting rule type, as shown below:
+
+![player resting](pics/restingPlayer.JPG)
+
+
+
+
+
+
+
+
 
 
 # Rule Evaluation
