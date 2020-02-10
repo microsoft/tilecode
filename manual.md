@@ -133,6 +133,8 @@ Each row can contain up to four commands. If you select the left arrow by the pl
 
 ![commands](pics/fourDirections.JPG)
 
+As always, press B to exit the current menu.
+
 
 ## Adding, Deleting and Navigating Rules
 
@@ -144,7 +146,7 @@ To delete the current rule, navigate to the garbage can and press A.
 
 ![delete rule](pics/deleteRule.JPG)
 
-To make a rule of a different type, press the B button to return to the code screen and select a different rule type.  If you want to see all the rules for a sprite, select the sprite from the left column of the code screen and then move the cursor to the code icon in the upper left and press A. 
+To make a rule of a different type, press the B button to return to the code screen and select a different rule type.  If you want to see all the rules for a sprite, select the sprite from the left column of the code screen and then select the code icon in the upper left.
 
 ![player sprite rules](pics/playerRules.JPG)
 
@@ -154,7 +156,7 @@ Now that you've seen the basics of the code screen and the rule editor, let's cr
 
 ![two ponds](pics/fishPonds.JPG)
 
-The player can't swim, so we'll encode a rule that ends the game if the player enters the water. From the code screen, select the player sprite and move to the resting rule type, as shown below:
+The player can't swim, so we'll encode a rule that ends the game if the player enters the water then the game is over. From the code screen, select the player sprite and move to the resting rule type, as shown below:
 
 ![player resting](pics/restingPlayer.JPG)
 
@@ -162,12 +164,28 @@ Select the space that the player is on and then select the water tile, which wil
 
 ![water under player](pics/waterUnderPlayer.JPG)
 
-Now move to the *Do* section and press the space to the right of the player sprite to bring up the *Command* menu, as shown below:
+Now move to spact to the right of the player spriter in the *Do* section:
+
+![command menu](pics/addCommandPlayer.JPG)
+
+Press the A button to bring up the *Command* menu, as shown below:
 
 ![command menu](pics/commandMenu.JPG)
+
+Now move the cursor the green G in the upper right of the menu:
+
 ![command game](pics/commandGameMenu.JPG)
+
+Press the A button to list the set of game commands and move the cursor to the lose command (upside down trophy):
+
 ![game menu](pics/gameMenu.JPG)
+
+Press the A button to select this command and then press B to exit the command menu:
+
 ![lose game](pics/loseGameCommand.JPG)
+
+Now, go back to the game screen and play the game. See what happens if you move the player onto a water tile.
+
 
 ![fish bounce left](pics/fishBounceLeft.JPG)
 ![fish bounce right](pics/fishBounceRight.JPG)
