@@ -164,7 +164,7 @@ Select the space that the player is on and then select the water tile, which wil
 
 ![water under player](pics/waterUnderPlayer.JPG)
 
-Now move to spact to the right of the player spriter in the *Do* section:
+Now press the B button and move to space to the right of the player spriter in the *Do* section:
 
 ![command menu](pics/addCommandPlayer.JPG)
 
@@ -174,7 +174,7 @@ Press the A button to bring up the *Command* menu, as shown below:
 
 Now move the cursor the green G in the upper right of the menu:
 
-![command game](pics/commandGameMenu.JPG)
+![command game](pics/commandGame.JPG)
 
 Press the A button to list the set of game commands and move the cursor to the lose command (upside down trophy):
 
