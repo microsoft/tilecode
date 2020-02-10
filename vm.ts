@@ -65,7 +65,7 @@ namespace tileworld {
 
     class TileWorldVM {
         private vm: VMState;
-        private dpad: MoveDirection
+        private dpad: number[];
         // (temporary) state for global commands
         private globalInsts: number[];
         private globalArgs: number[];
@@ -84,7 +84,7 @@ namespace tileworld {
             this.vm = v;
         }
 
-        public round(currDir: MoveDirection) {
+        public round(currDir: number[]) {
             if (!this.vm)
                 return;
             this.dpad = currDir;
@@ -230,9 +230,11 @@ namespace tileworld {
         private matchingRules(rules: number[], phase: Phase, ts: TileSprite, handler: (rid: number) => void) {
             rules.forEach(rid => {
                 if (this.ruleMatchesSprite(rid, ts) &&
-                    (phase == Phase.Moving  && this.p.getType(rid) == RuleType.Moving && this.p.getDir(rid) == ts.dir
+                    (phase == Phase.Moving  && this.p.getType(rid) == RuleType.Moving 
+                                            && this.p.getDir(rid) == ts.dir
                   || phase == Phase.Resting && this.p.getType(rid) == RuleType.Resting
-                  || phase == Phase.Pushing && this.p.getType(rid) == RuleType.Pushing && this.p.getDir(rid) == this.dpad)) {
+                    || phase == Phase.Pushing && this.p.getType(rid) == RuleType.Pushing 
+                                            && this.dpad.indexOf(this.p.getDir(rid)) != -1)) {
                     handler(rid);
                 }
             });
@@ -527,9 +529,10 @@ namespace tileworld {
             }
         }
 
-        private currentDirection: MoveDirection;
+        // TODO: make into a set of currently pressed 
+        private currentDirection: MoveDirection[];
         public start() {
-            this.currentDirection = -1;
+            this.currentDirection = [];
             let signal = new TileSprite(cursorIn, 0);
             signal.setFlag(SpriteFlag.Invisible, true);
             signal.x = signal.y = 8;
@@ -546,7 +549,7 @@ namespace tileworld {
             }
 
             this.vm.setState(this.state);
-            this.vm.round(-1);
+            this.vm.round([]);
 
             game.onUpdate(() => {
                 // has signal sprite moved to new tile
@@ -555,7 +558,7 @@ namespace tileworld {
                     this.signal.x = 8;
                     this.vm.round(this.currentDirection);
                     halfway = false;
-                    this.currentDirection = -1;
+                    this.currentDirection = [];
                 } else if (!halfway && this.signal.x >= 16) {
                     if (this.state.game != GameState.InPlay) {
                         gameover(this.state.game == GameState.Won);
@@ -600,14 +603,24 @@ namespace tileworld {
             controller.down.onEvent(ControllerButtonEvent.Repeated, () => {
                 this.requestMove(MoveDirection.Down)
             })
+            controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
+                this.requestMove(MoveDirection.Down);
+            });
+            controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
+                this.requestMove(PushingArg.AButton);
+            });
+            controller.A.onEvent(ControllerButtonEvent.Repeated, () => {
+                this.requestMove(PushingArg.AButton);
+            });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 controller.setRepeatDefault(500, 80);
                 game.popScene();
             })
         }
 
-        private requestMove(dir: MoveDirection) {
-            this.currentDirection = dir;
+        private requestMove(dir: number) {
+            if (this.currentDirection.indexOf(dir) == -1)
+                this.currentDirection.push(dir);
         }
     }
 
