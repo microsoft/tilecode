@@ -156,7 +156,9 @@ Now that you've seen the basics of the code screen and the rule editor, let's cr
 
 ![two ponds](pics/fishPonds.JPG)
 
-The player can't swim, so we'll encode a rule that ends the game if the player enters the water then the game is over. From the code screen, select the player sprite and move to the resting rule type, as shown below:
+## The Player Can't Swim
+
+In this game the player can't swim, so we'll create a rule that ends the game if the player enters the water From the code screen, select the player sprite and move to the resting rule type, as shown below:
 
 ![player resting](pics/restingPlayer.JPG)
 
@@ -186,6 +188,7 @@ Press the A button to select this command and then press B to exit the command m
 
 Now, go back to the game screen and play the game. See what happens if you move the player onto a water tile.
 
+## Fish Swim Left to Right (and back again)
 
 ![fish bounce left](pics/fishBounceLeft.JPG)
 ![fish bounce right](pics/fishBounceRight.JPG)
