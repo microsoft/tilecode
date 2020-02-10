@@ -41,14 +41,12 @@ namespace tileworld {
 
     // the interpreter state
     class VMState {
-        public game: GameState;             //
-        public fixed: number;               // the number of kinds of tiles
-        public all: number;                 
+        public game: GameState;             // see type   
         public paintTile: PaintTile[];      // log of paint commands
         public nextWorld: Image;            // record all paint commands (if log exceeded)
         public changed: Image;              // what changed in last round
         public sprites: TileSprite[][];     // the sprites, sorted by kind
-        public deadSprites: TileSprite[];
+        public deadSprites: TileSprite[];   // the sprites removed by this round
         constructor() {}
     }
 
@@ -75,15 +73,15 @@ namespace tileworld {
         
         constructor(private p: Project, private rules: number[]) {
             this.vm = null;
+            this.rules.forEach(rid => {
+                if (this.p.getType(rid) == RuleType.Resting && this.p.allTrue(rid))
+                    this.allTrueResting.push(rid);
+            });
+            this.allTrueResting.forEach(rid => this.rules.removeElement(rid));
         }
 
         public setState(v: VMState) {
             this.vm = v;
-            this.rules.forEach(rid => {
-                if (this.p.getType(rid) == RuleType.Resting && this.allTrue(rid)) 
-                    this.allTrueResting.push(rid);
-            });
-            this.allTrueResting.forEach(rid => this.rules.removeElement(rid));
         }
 
         public round(currDir: MoveDirection) {
@@ -172,7 +170,7 @@ namespace tileworld {
                         break;
                     }
                     case CommandType.SpritePred: {
-                        let cc: TileSprite[] = this.vm.sprites[this.vm.fixed + arg];
+                        let cc: TileSprite[] = this.vm.sprites[this.p.fixed().length + arg];
                         if (cc && cc.length > 0) {
                             let liveCount = cc.filter(ts => ts.state == SpriteState.Alive);
                             // skip next instruction if predicate = 0 doesn't hold
@@ -367,32 +365,11 @@ namespace tileworld {
                 0 <= row && row < this.vm.nextWorld.height;
         }
 
-        private allTrue(rid: number) {
-            for (let col = 0; col < 5; col++) {
-                for (let row = 0; row < 5; row++) {
-                    if (Math.abs(2 - col) + Math.abs(2 - row) > 2) {
-                        let whendo = this.p.getWhenDo(rid, col, row);
-                        if (whendo != -1 && !this.whendoTrue(rid, whendo))
-                            return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        private whendoTrue(rid: number, whendo: number) {
-            for(let kind = 0; kind < this.vm.all; kind++) {
-                if (this.p.getAttr(rid, whendo, kind) != AttrType.OK)
-                    return false;
-            }
-            return true;
-        }
-
         // Include and OneOf are equivalent now
         private evaluateWhenDo(ts: TileSprite, rid: number, 
                 col: number, row: number, witnesses: TileSprite[]) {
             let whendo = this.p.getWhenDo(rid, col, row);
-            if (whendo == -1 || this.whendoTrue(rid, whendo))
+            if (whendo == -1 || this.p.whendoTrue(rid, whendo))
                 return true;
             let self = col == 2 && row == 2; 
             let wcol = ts.col() + (col - 2);
@@ -402,7 +379,7 @@ namespace tileworld {
             let oneOf: boolean = false;
             let oneOfPassed: boolean = false;
             let captureWitness: TileSprite = null;
-            for(let kind = 0; kind < this.vm.fixed; kind++) {
+            for(let kind = 0; kind < this.p.fixed().length; kind++) {
                 const tm = game.currentScene().tileMap;
                 let hasKind = tm.getTile(wcol, wrow).tileSet == kind;
                 let attr = this.p.getAttr(rid, whendo, kind);
@@ -414,7 +391,7 @@ namespace tileworld {
                 }
             }
             let adjacent = Math.abs(2 - col) + Math.abs(2 - row) <= 1;
-            for(let kind = this.vm.fixed; kind<this.vm.all; kind++) {
+            for(let kind = this.p.fixed().length; kind<this.p.all().length; kind++) {
                 let attr = this.p.getAttr(rid, whendo, kind);
                 let witness = this.getWitness(kind, wcol, wrow, self ? ts : null);
                 // special case for collisions
@@ -522,16 +499,14 @@ namespace tileworld {
             this.signal = null;
             this.state = new VMState();
             this.state.game = GameState.InPlay;
-            this.state.fixed = this.p.fixed().length;
-            this.state.all = this.p.all().length;
             this.state.sprites = [];
             scene.setTileMap(w.clone());
             this.state.nextWorld = w.clone();
             this.state.changed = w.clone();
 
             // initialize fixed and movable sprites
-            for (let kind = 0;kind < this.state.all; kind++) {
-                if (kind < this.state.fixed) {
+            for (let kind = 0;kind < this.p.all().length; kind++) {
+                if (kind < this.p.fixed().length) {
                     let art = this.p.getImage(kind);
                     scene.setTile(kind, art);
                 } else {

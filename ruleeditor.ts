@@ -5,7 +5,7 @@ namespace tileworld {
 
     const editorRow = 2;
     const menuHelpString = "10add sprite,30delete rule,80add rule,90next rule,70previous rule,";
-    const attrHelpString = "00include,10exclude,20don't care,90reset,";
+    const attrHelpString = "00oneof,10exclude,20clear,90reset,";
 
     export class RuleEditor extends RuleVisualsBase {
         private otherCursor: Sprite;    // show correspondence between left and right
@@ -22,8 +22,7 @@ namespace tileworld {
         private currentCommand: number; // the current command (potentially null)
         private askDeleteRule: boolean;
         
-        constructor(p: Project, 
-                    private kind: number, private rt: RuleType, private dir: MoveDirection) {
+        constructor(p: Project, private kind: number, private rt: RuleType, private dir: MoveDirection) {
             super(p);
             this.setCol(0); this.setRow(0);
 
