@@ -229,14 +229,14 @@ export const exclude = img`
     . f 2 2 2 2 f .
 `;
 export const include = img`
-    . . . . . . f 5
-    . . . . . f 5 5
-    f . . . . f 5 f
-    5 f . . f 5 5 f
-    5 5 f . f 5 f .
-    f 5 5 f 5 5 f .
-    . f 5 5 5 f . .
-    . . f 5 f . . .
+    . . . . . . f 7
+    . . . . . f 7 7
+    f . . . . f 7 f
+    7 f . . f 7 7 f
+    7 7 f . f 7 f .
+    f 7 7 f 7 7 f .
+    . f 7 7 7 f . .
+    . . f 7 f . . .
 `;
 export const oneof = img`
     . f f f f f f .
@@ -249,14 +249,14 @@ export const oneof = img`
     . f f f f f f .
 `;
 export const ok = img`
-    . f 7 7 7 7 f .
-    f 7 7 f f 7 7 f
-    7 7 f f f f 7 7
-    7 f f f f f f 7
-    7 f f f f f f 7
-    7 7 f f f f 7 7
-    f 7 7 f f 7 7 f
-    . f 7 7 7 7 f .
+    . . . . . . . .
+    . . . . . . . .
+    . . . . . . . .
+    . . . . . . . .
+    . . . . . . . .
+    . . . . . . . .
+    . . . . . . . .
+    . . . . . . . .
 `;
 export const allFour = img`
     . . . . . . . . . . . . . . . .
@@ -714,9 +714,9 @@ export const equalZero = img`
 export const moveImages = [leftArrow, rightArrow, upArrow, downArrow, stopSign, uTurn];
 export const moveText = ["left", "right", "up", "down", "stop", "u-turn"];
 export const buttonImages = [leftButton, rightButton, upButton, downButton];
-export const attrImages = [include, exclude, ok, oneof];
+export const attrImages = [include, exclude, ok, include];
 export const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, AttrType.OneOf];
-export const attrXoffsets = [-8, 0, 0, -8];
+export const attrXoffsets = [-8, 0, 0, 0];
 export const attrYoffsets = [0, 0, -8, 0];
 export const commandImages = [map, paint, code, play];
 export const gameImages = [ trophyUp, trophyDown ];

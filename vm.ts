@@ -388,6 +388,7 @@ namespace tileworld {
             return true;
         }
 
+        // Include and OneOf are equivalent now
         private evaluateWhenDo(ts: TileSprite, rid: number, 
                 col: number, row: number, witnesses: TileSprite[]) {
             let whendo = this.p.getWhenDo(rid, col, row);
@@ -405,10 +406,9 @@ namespace tileworld {
                 const tm = game.currentScene().tileMap;
                 let hasKind = tm.getTile(wcol, wrow).tileSet == kind;
                 let attr = this.p.getAttr(rid, whendo, kind);
-                if (attr == AttrType.Exclude && hasKind ||
-                    attr == AttrType.Include && !hasKind) {
+                if (attr == AttrType.Exclude && hasKind) {
                     return false;
-                } else if (attr == AttrType.OneOf) {
+                } else if (attr == AttrType.OneOf || attr == AttrType.Include) {
                     oneOf = true;
                     if (hasKind) oneOfPassed = true;
                 }
@@ -423,11 +423,7 @@ namespace tileworld {
                 }
                 if (attr == AttrType.Exclude && witness) {
                     return false;
-                } else if (attr == AttrType.Include) {
-                    if (!witness) return false;
-                    if (adjacent && !captureWitness)
-                        captureWitness = witness;
-                } else if (attr == AttrType.OneOf) {
+                } else if (attr == AttrType.Include || attr == AttrType.OneOf) {
                     oneOf = true;
                     if (witness) oneOfPassed = true;
                     if (adjacent && !captureWitness)

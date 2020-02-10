@@ -5,7 +5,7 @@ namespace tileworld {
 
     const editorRow = 2;
     const menuHelpString = "10add sprite,30delete rule,80add rule,90next rule,70previous rule,";
-    const attrHelpString = "00include,10exclude,20allow,30one of,90allow all,";
+    const attrHelpString = "00include,10exclude,20don't care,90reset,";
 
     export class RuleEditor extends RuleVisualsBase {
         private otherCursor: Sprite;    // show correspondence between left and right
@@ -595,6 +595,7 @@ namespace tileworld {
             let whenDo = this.getWhenDo(col, row);
             // for all user-defined sprites
             attrImages.forEach((img, i) => {
+                if (i == 3) return;  // no oneof
                 // draw 8x8 sprites centered
                 screen.drawTransparentImage(img, (i << 4) + 4, yoff + 4);
                 this.drawOutline(i, 0);
@@ -626,7 +627,7 @@ namespace tileworld {
                 }
                 return;
             }
-            if (a != -1 && a < attrValues.length) { 
+            if (a != -1 && a < attrValues.length-1) { 
                 this.selectAttr(a); return; 
             }
             let m = this.row() == 1 ? this.col() : -1; 
@@ -634,26 +635,6 @@ namespace tileworld {
                 if (m < this.p.fixed().length && this.getType() >= RuleType.CollidingResting)
                     return;
                 let val = attrValues[this.attrSelected];
-                if (val == AttrType.Include) { 
-                    this.setFixedOther(m, -1, AttrType.OK);
-                    this.setMovableOther(m, -1, AttrType.OK);                    
-                } else if (val == AttrType.OneOf) {
-                    this.setFixedOther(m, AttrType.Include, AttrType.OneOf);
-                    this.setMovableOther(m, AttrType.Include, AttrType.OneOf);
-                } else if (m < this.p.fixed().length) {
-                    // not allowed to set all to exclude
-                    let cnt = 0;
-                    let i = 0;
-                    for(;i<this.p.fixed().length;i++) {
-                        if (this.dirMap.getPixel(6,i) == AttrType.Exclude) {
-                            cnt++; if (cnt == 2) break;
-                        }
-                    }
-                    if (cnt == 2) {
-                        let whenDo = this.getWhenDo(this.col(false), this.row(false)-editorRow);
-                        this.setAttr(i, this.p.getAttr(this.rule, whenDo, m));
-                    }
-                }
                 this.setAttr(m, val);
             }
         }
