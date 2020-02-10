@@ -246,8 +246,8 @@ namespace tileworld {
             }
             screen.drawRect(28, 10 + paintSize*2, paintSize * 16 + (paintSize - 2), paintSize * 16 + (paintSize - 2), 1)
             // draw the sprite
-            screen.drawImage(this.image, 134, 12 + paintSize* 2)
-            screen.drawRect(133, 11 + paintSize* 2, 18, 18, 1)
+            //screen.drawImage(this.image, 134, 12 + paintSize* 2)
+            //screen.drawRect(133, 11 + paintSize* 2, 18, 18, 1)
         }
     }
 }
