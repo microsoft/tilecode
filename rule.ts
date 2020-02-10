@@ -25,6 +25,10 @@ enum CommandType {
     Last,
 }
 
+enum PushingArg {
+    Left, Right, Up, Down, AButton
+}
+
 // arguments to Move command (the last two are only used in Colliding rules)
 enum MoveArg {
     Left, Right, Up, Down, Stop, UTurn,

@@ -1,7 +1,7 @@
 namespace tileworld {
 
     const yoff = 6;
-    const helpStringTop = "31resting,21moved left,41moved right,30moved up,32moved down,61dpad left,81dpad right,70dpad up,72dpad down,";
+    const helpStringTop = "31resting,21moved left,41moved right,30moved up,32moved down,61dpad left,81dpad right,70dpad up,72dpad down,71A button,";
     const helpStringBot = "25collide left,34collide up,36collide down,45collide right,65collide left,74collide up,76collide down,85collide right,";
 
     export class RuleRoom extends RuleVisualsBase {
@@ -98,7 +98,7 @@ namespace tileworld {
         }
 
         private rules: number[];
-        private doBoth(rt: RuleType, rd: MoveDirection, col: number, row: number, center: boolean = true) {
+        private doBoth(rt: RuleType, rd: number, col: number, row: number, center: boolean = true) {
             let scol = 13;
             let rules = this.getRulesForTypeDir(this.rules, rt, rd);
             if (rt >= RuleType.CollidingResting) {
@@ -107,8 +107,8 @@ namespace tileworld {
                 this.setRuleType(rt, rd, tcol, trow);
                 if (rules.length > 0) { this.fillTile(tcol, trow, scol); this.drawOutline(tcol,trow, 1); }
             } else if (rt == RuleType.Pushing) {
-                let tcol = col - moveXdelta(rd);
-                let trow = row - moveYdelta(rd);
+                let tcol = rd < PushingArg.AButton ? col - moveXdelta(rd) : col;
+                let trow = rd < PushingArg.AButton ? row - moveYdelta(rd) : row;
                 this.setRuleType(rt, rd, tcol, trow);
                 if (rules.length > 0) { this.fillTile(tcol, trow, scol); this.drawOutline(tcol, trow, 1); }
                 this.drawImage(tcol, trow, buttonImages[rd]);
@@ -139,6 +139,7 @@ namespace tileworld {
             this.doBoth(RuleType.Pushing, MoveDirection.Left, x + 4, y + 1, false);
             this.doBoth(RuleType.Pushing, MoveDirection.Down, x + 6, y + 3, false);
             this.doBoth(RuleType.Pushing, MoveDirection.Up, x + 6, y - 1, false);
+            this.doBoth(RuleType.Pushing, PushingArg.AButton, x + 6, y + 1, false); 
 
             this.makeContext(x + 2, y + 5);
             this.doBoth(RuleType.CollidingResting, MoveDirection.Right, x + 2, y + 5, false);

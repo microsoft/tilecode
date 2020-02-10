@@ -420,7 +420,7 @@ export const leftButton = img`
     . . . . . 8 8 8 8 8 8 . . . . .
     . . . . . . . . . . . . . . . .
 `
-export const Abutton = img`
+export const AButton = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
     . . . . . 6 6 6 6 6 6 . . . . .
@@ -713,7 +713,7 @@ export const equalZero = img`
 
 export const moveImages = [leftArrow, rightArrow, upArrow, downArrow, stopSign, uTurn];
 export const moveText = ["left", "right", "up", "down", "stop", "u-turn"];
-export const buttonImages = [leftButton, rightButton, upButton, downButton];
+export const buttonImages = [leftButton, rightButton, upButton, downButton, AButton];
 export const attrImages = [include, exclude, ok, include];
 export const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, AttrType.OneOf];
 export const attrXoffsets = [-8, 0, 0, 0];
