@@ -110,17 +110,14 @@ Moving the cursor to the space to the left of the player sprite and pressing A b
 
 ![predicate flags](pics/dpadLeftAttrs.JPG)
 
-The green circle denotes that any of these tiles/sprites may occupy the space; the red circle with a slash denotes the wall tile is excluded. In other words, the predicate for the space to the left of the player matches if that space is not painted with the wall tile.
-
-If you move the cursor over the four flags you will see their meaning:
-* *green check mark*: the space must include this tile/sprite;
+ The red circle with a slash denotes the wall tile is excluded. In other words, the predicate for the space to the left of the player matches if that space is not painted with the wall tile. If you move the cursor over the flags you will see their meaning:
+* *green check mark*: one of the tile/sprites marked with a green check mark must be in the space;
 * *red-slash circle*: the space must not include this tile/sprite (it is excluded from the space);
-* *green circle*: it is OK for the tile/sprite to be in space, but not required (on other words, we don't care whether or not the tile/sprite is in the space);
-* *yellow dot*: one of the tile/sprites marked with a yellow dot must be in the space.
+* *clear*: it doesn't matter (don't care) if the tile/sprite is in the space or not.
 
 ![attributes](pics/attributes.png)
 
-Try changing the flags on the tiles/sprites and see how it affects game play (remember that this rule only applies for the left dpad button). The reset button on the upper right of the attribute men resets all the flags to OK. Note that any space in the *When* section that is empty has all its predicate flags set to OK, as shown for the space to the right of the player sprite:
+Try changing the flags on the tiles/sprites and see how it affects game play (remember that this rule only applies for the left dpad button). The reset button on the upper right of the attribute menu clears all the flags. Note that any space in the *When* section that is empty has no flag set, as shown for the space to the right of the player sprite:
 
 ![attributes](pics/allOK.JPG)
 
