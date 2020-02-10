@@ -148,13 +148,9 @@ The player can't swim, so we'll encode a rule that ends the game if the player e
 
 ![player resting](pics/restingPlayer.JPG)
 
+Select the space that the player is on and then select the water tile, which will apply the include flag (green check) to the that tile, as shown below.
 
-
-
-
-
-
-
+![water under player](pics/waterUnderPlayer.JPG)
 
 
 # Rule Evaluation
