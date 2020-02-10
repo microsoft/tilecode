@@ -9,6 +9,7 @@ TileWorld is a game creation app that allows you to design and play games direct
 * [Load Screen and Navigation](#loadscreen)
 * [Overview of TileWorld Screens](#gamehome)
 * [Coding in TileWorld](#coding)
+* [Making Your First Game](#firstgame)
 * [Sharing TileWorld Games](#sharing)
 * [Having Problems?](#issues)
 
@@ -125,7 +126,20 @@ Try changing the flags on the tiles/sprites and see how it affects game play (re
 
 ## Do Commands
 
-If all the predicates in the *When* pattern match then the commands in the *Do* section will be executed. Otherwise, the *Do* section is ignored.  The commands of the *Do$ section are organized into five rows, which correspond to the center tile and the four tiles adjacent to the center sprite. Move the cursor to the *Do* section and move the cursor up and down to see the correspondence between the rows of the *Do* section and the five tiles in the *When* section:
+If all the predicates in the *When* pattern match then the commands in the *Do* section will be executed. Otherwise, the *Do* section is ignored.  The commands of the *Do* section are organized into five rows, which correspond to the center tile and the four tiles adjacent to the center sprite. Move the cursor to the *Do* section and move the cursor up and down to see the correspondence between the rows of the *Do* section and the five tiles in the *When* section:
+
+![commands](pics/addCommand.PNG)
+
+Each row can contain up to four commands. We'll detail more about the available commands later.
+
+## Adding, Deleting and Navigating Rules
+
+From the rule editor, you can add a rule (of the same type) by moving the cursor to the plus sign in the upper right and press A. To delete the current rule, navigate to the garbage can and press A. To make a rule of a different type, press the B button to return to the code screen and select a different rule type.  If you want to see all the rules for a sprite, select the sprite from the left column of the code screen and then move the cursor to the code icon in the upper left and press A. 
+
+# Making Your First Game {#firstgame}
+
+
+# Rule Evaluation
 
 
 # Sharing Your TileWorld Games {#sharing}
