@@ -262,7 +262,7 @@ namespace tileworld {
                 });
             }
             if (this.askDeleteRule) {
-                this.cursor.setFlag(SpriteFlag.Invisible, true)
+                this.cursor.setFlag(SpriteFlag.Invisible, true);
                 game.showDialog("OK to delete rule?", "", "A = OK, B = CANCEL");
             } else {
                 this.cursor.setFlag(SpriteFlag.Invisible, false);
@@ -280,7 +280,7 @@ namespace tileworld {
         }
 
         private showMainMenu() {
-            screen.fillRect(0, yoff, 160, 19, 0);
+            //screen.fillRect(0, yoff, 160, 19, 0);
             this.fillTile(0, 0, 11);
             this.drawImage(0, 0, code);
             this.drawImage(1, 0, this.centerImage());
@@ -692,25 +692,38 @@ namespace tileworld {
         }
 
         private showAttributes(rid: number, col: number, row: number) {
-            let whendo = this.p.getWhenDo(rid, col, row);
-            if (whendo >= 0) {
+            let whenDo = this.p.getWhenDo(rid, col, row);
+            if (whenDo >= 0) {
                 // if there is an include or single oneOf, show it.
-                let indexInclude = this.attrIndex(rid, whendo, AttrType.Include);
-                let indexOneOf = indexInclude == -1 ? this.attrIndex(rid, whendo, AttrType.OneOf) : indexInclude;
-                let index = indexOneOf == -1 ? this.attrIndex(rid, whendo, AttrType.Exclude) : indexOneOf;
+                let indexInclude = this.attrIndex(rid, whenDo, AttrType.Include);
+                let indexOneOf = indexInclude == -1 ? this.attrIndex(rid, whenDo, AttrType.OneOf) : indexInclude;
+                let index = indexOneOf == -1 ? this.attrIndex(rid, whenDo, AttrType.Exclude) : indexOneOf;
                 // and skip to the other (if it exists)
                 if (index != -1) { 
                     this.drawImage(col, row + editorRow, this.p.getImage(index));
                 }
                 let begin = 0;
                 let end = this.p.all().length - 1;
-                let project = this.projectAttrs(rid, whendo, begin, end);
+                let project = this.projectAttrs(rid, whenDo, begin, end);
                 let done: AttrType[] = [];
                 project.forEach(index => {
-                    let val = this.p.getAttr(rid, whendo, index);
+                    let val = this.p.getAttr(rid, whenDo, index);
                     let i = attrValues.indexOf(val);
                     screen.drawTransparentImage(attrImages[i], (col<<4)+8+attrXoffsets[i], ((row + editorRow)<<4) + 8 + yoff + attrYoffsets[i]);
                 });
+
+                if (this.menu == RuleEditorMenus.MainMenu && this.col() == col && this.row() - editorRow == row) {
+                    let x = 0;
+                    screen.fillRect(0, 16 + yoff, 160, 16, 0);
+                    this.p.all().forEach((image, i) => {
+                        let a = this.p.getAttr(this.rule, whenDo, i);
+                        if (a != AttrType.OK) {
+                            this.drawImage(x, 1, image);
+                            this.drawImage(x, 1, attrImages[attrValues.indexOf(a)]);
+                            x++;
+                        }
+                    });
+                }
             }
         }
 
