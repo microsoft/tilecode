@@ -635,13 +635,8 @@ namespace tileworld {
                     return;
                 let val = attrValues[this.attrSelected];
                 if (val == AttrType.Include) { 
-                    if (m < this.p.fixed().length) {
-                        this.setFixedOther(m, -1, AttrType.Exclude);
-                        this.setMovableOther(m, -1, AttrType.Exclude);
-                    } else {
-                        this.setMovableOther(m, -1, AttrType.Exclude);
-                        this.setFixedOther(m, -1, AttrType.OK);
-                    }
+                    this.setFixedOther(m, -1, AttrType.OK);
+                    this.setMovableOther(m, -1, AttrType.OK);                    
                 } else if (val == AttrType.OneOf) {
                     this.setFixedOther(m, AttrType.Include, AttrType.OneOf);
                     this.setMovableOther(m, AttrType.Include, AttrType.OneOf);

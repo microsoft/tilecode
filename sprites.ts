@@ -229,14 +229,14 @@ export const exclude = img`
     . f 2 2 2 2 f .
 `;
 export const include = img`
-    . . . . . . f 7
-    . . . . . f 7 7
-    f . . . . f 7 f
-    7 f . . f 7 7 f
-    7 7 f . f 7 f .
-    f 7 7 f 7 7 f .
-    . f 7 7 7 f . .
-    . . f 7 f . . .
+    . . . . . . f 5
+    . . . . . f 5 5
+    f . . . . f 5 f
+    5 f . . f 5 5 f
+    5 5 f . f 5 f .
+    f 5 5 f 5 5 f .
+    . f 5 5 5 f . .
+    . . f 5 f . . .
 `;
 export const oneof = img`
     . f f f f f f .
