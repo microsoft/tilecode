@@ -131,7 +131,15 @@ Each row can contain up to four commands. We'll detail more about the available 
 
 ## Adding, Deleting and Navigating Rules
 
-From the rule editor, you can add a rule (of the same type) by moving the cursor to the plus sign in the upper right and press A. To delete the current rule, navigate to the garbage can and press A. To make a rule of a different type, press the B button to return to the code screen and select a different rule type.  If you want to see all the rules for a sprite, select the sprite from the left column of the code screen and then move the cursor to the code icon in the upper left and press A. 
+From the rule editor, you can add a rule (of the same type) by moving the cursor to the plus sign in the upper right and press A. 
+
+![add rule](pics/addRule.JPG)
+
+To delete the current rule, navigate to the garbage can and press A. 
+
+![delete rule](pics/deleteRule.JPG)
+
+To make a rule of a different type, press the B button to return to the code screen and select a different rule type.  If you want to see all the rules for a sprite, select the sprite from the left column of the code screen and then move the cursor to the code icon in the upper left and press A. 
 
 # Your First Game {#firstgame}
 
