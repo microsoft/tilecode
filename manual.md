@@ -4,7 +4,7 @@
 
 # Overview
 
-TileWorld is a game creation app that allows you to design and play games directly on MakeCode Arcade devices. TileWorld games are based on the familiar paradigm of a board with pieces that can move from one tile of the board to an adjacent tile. You can run TileWorld in your [web browser](https://microsoft.github.io/pxt-tileworld/), or on any [MakeCode Arcade device](https://arcade.makecode.com/hardware). Simply copy the appropriate [UF2 file](https://github.com/microsoft/pxt-tileworld/releases/) to your MakeCode Arcade device to get started. 
+TileWorld is a game creation app that allows you to design and play games directly on MakeCode Arcade devices. TileWorld games are based on the familiar paradigm of a gameboard with pieces that can move from one tile of the board to an adjacent tile. You can run TileWorld in your [web browser](https://microsoft.github.io/pxt-tileworld/), or on any [MakeCode Arcade device](https://arcade.makecode.com/hardware). Simply copy the appropriate [UF2 file](https://github.com/microsoft/pxt-tileworld/releases/) to your MakeCode Arcade device to get started. 
 
 * [Load Screen and Navigation](#loadscreen)
 * [Overview of TileWorld Screens](#gamehome)
@@ -17,13 +17,13 @@ TileWorld can be used to introduce computational concepts and its games are simp
 
 # Load Screen and Navigation {#loadscreen}
 
-The load screen of TileWorld lets you select one of four games to program and play. All game assets (game board, images and code) are stored in the flash memory of your Arcade device, so your changes will remain even if you power the device off. All editing takes place via the tile paradigm: move the square-shaped cursor between adjacent tiles using the direction pad (dpad); select a tile using the A button to perform an action; the B button takes you back (to the menu of the current screen or to the previous screen). Assets are saved to flash whenever you transition between screens.
+The load screen of TileWorld lets you select one of four games to program and play. All game assets (gameboard, images and code) are stored in the flash memory of your Arcade device, so your changes will remain even if you power the device off. All editing takes place via the tile paradigm: move the square-shaped cursor between adjacent tiles using the direction pad (dpad); select a tile using the **A** button to perform an action; the **B** button takes you back (to the menu of the current screen or to the previous screen). Assets are saved to flash whenever you transition between screens.
 
 ![load screen](pics/loadScreen.JPG)
 
 # Overview of TileWorld Screens {#gamehome}
 
-Let's take a quick tour through the various screens you can get to from the load screen. We load the game from slot 1, which takes us to the game's home screen, as shown below:
+Let's take a quick tour through the various screens you can get to from the load screen. We load the game from slot #1, which takes us to the game's home screen, as shown below:
 
 ![home page](pics/homePage1.JPG)
 
@@ -33,7 +33,7 @@ Move the cursor around the screen to get help about all the features available. 
 
 ## Gallery
 
-We move the cursor to the puppy dog and select it (A button) 
+We move the cursor to the puppy dog and select it (**A** button) 
 
 ![gallery](pics/galleryPuppy.JPG)
 
@@ -50,11 +50,11 @@ The menu bar of the game screen has four main commands in addition to the gear w
 
 ### Map
 
-The map editor lets you paint the game world's tiles and place sprites on tiles. Select one of the four tiles and move your cursor down to the map. Press A to color a tile. Press B to return to the menu bar and select another tile. After selecting a sprite, the A button will place the sprite on a tile, replacing the  sprite that is there (or removing it if it is the same as the selected sprite). 
+The map editor lets you paint the game world's tiles and place sprites on tiles. Select one of the four tiles and move your cursor down to the map. Press **A** to color a tile. Press **B** to return to the menu bar and select another tile. After selecting a sprite, the **A** button will place the sprite on a tile, replacing the sprite that is there (or removing it if it is the same as the selected sprite). 
 
 ![world map editor](pics/map.JPG)
 
-You can color tiles quickly by holding down the A button while moving the cursor. The reset button (upper right) resets the camera to the upper left of the map. To return to the game screen, press the B button (B always takes you back).
+You can color tiles quickly by holding down the **A** button while moving the cursor. The reset button (upper right) resets the camera to the upper left of the map. To return to the game screen, press the **B** button (**B** always takes you back).
 
 ### Paint
 
@@ -62,7 +62,7 @@ The paint editor lets you change the art associated with a tile or sprite. As wi
 
 ![paint art](pics/paintPuppy1.JPG)
 
-Move your cursor down to edit the bitmap (using the A button to apply the currently selected color).  Press B to move from the bitmap pane to the color selector.  Selecting a color will send the cursor back to the bitmap pane so you can quickly resume coloring where you left off. We have colored the puppy's eyes red:
+Move your cursor down to edit the bitmap (using the **A** button to apply the currently selected color).  Press **B** to move from the bitmap pane to the color selector. Selecting a color will send the cursor back to the bitmap pane so you can quickly resume coloring where you left off. We have colored the puppy's eyes red:
 
 ![paint art](pics/paintPuppy2.JPG)
 
@@ -76,11 +76,11 @@ Selecting the boulder in the middle of the upper left quadrant brings up the rul
 
 ![paint art](pics/boulderRestingRule.JPG)
 
-This rule applies to a boulder ``at rest'' and starts the boulder moving down when there is a space below the boulder. More details about programming rules are given below.
+This rule applies to a boulder "at rest" and starts the boulder moving down when there is a space below the boulder. More details about programming rules are given below.
 
 ### Play
 
-The play button runs the game in full screen mode. Press B to exit the game.  Try to collect all the diamonds without having a boulder fall on you or getting caught by the skull/puppy
+The play button runs the game in full screen mode. Press **B** to exit the game. Try to collect all the diamonds without having a boulder fall on you or getting caught by the skull/puppy
 
 ![play game](pics/playGame.JPG)
 
@@ -92,7 +92,7 @@ Once you get used to the features available in TileWorld, you can turn off the h
 
 # Coding in TileWorld {#coding}
 
-Each sprite's behavior is governed by a set of rules that you can program. Let's start with a fresh game. Go to the load screen and select game slot #2.  If you play the game, you'll see that you can move the player sprite around with the direction pad.  Let's look at the rules for the player sprite:
+Each sprite's behavior is governed by a set of rules that you can program. Let's start with a fresh game. Go to the load screen and select game slot #2. If you play the game, you'll see that you can move the player sprite around with the direction pad. Let's look at the rules for the player sprite:
 
 ![player sprite rules](pics/playerRules.JPG)
 
@@ -102,18 +102,24 @@ No surprises here: the rules for the direction pad (upper right quadrant) are li
 
 ## When Patterns
 
-Now press A to bring up the rule editor, shown below. The menu bar shows that this rule is for the player sprite on the press of the left dpad button. Below the menu bar, the editor is divided into two sections: the *When* section shows a pattern around the player; the *Do* sections shows commands that will execute when the pattern matches. In this case, when there is no wall in the space to the left of the player sprite, the sprite is sent a move left command.
+Now press **A** to bring up the rule editor, shown below. The menu bar shows that this rule is for the player sprite on the press of the left dpad button. Below the menu bar, the editor is divided into two sections:
+
+* *When* section: shows a pattern around the player
+* *Do* section: shows commands that will execute when the pattern matches
+
+In this case, when there is no wall in the space to the left of the player sprite, the sprite is sent a move left command.
 
 ![left button rule](pics/dpadLeftRule.JPG)
 
-Moving the cursor to the space to the left of the player sprite and pressing A brings up the *Predicate* menu, which shows the predicate flags for each of the four tiles and sprites that could occupy the space:
+Moving the cursor to the space to the left of the player sprite and pressing **A** brings up the *Predicate* menu, which shows the predicate flags for each of the four tiles and sprites that could occupy the space:
 
 ![predicate flags](pics/dpadLeftAttrs.JPG)
 
- The red circle with a slash denotes the wall tile is excluded. In other words, the predicate for the space to the left of the player matches if that space is not painted with the wall tile. If you move the cursor over the flags you will see their meaning:
-* *green check mark*: one of the tile/sprites marked with a green check mark must be in the space;
-* *red-slash circle*: the space must not include this tile/sprite (it is excluded from the space);
-* *clear*: it doesn't matter (don't care) if the tile/sprite is in the space or not.
+The red circle with a slash denotes the wall tile is excluded. In other words, the predicate for the space to the left of the player matches if that space is not painted with the wall tile. If you move the cursor over the flags you will see their meaning:
+ 
+* *green check mark*: one of the tile/sprites marked with a green check mark must be in the space
+* *red-slash circle*: the space must not include this tile/sprite (it is excluded from the space)
+* *clear*: it doesn't matter (don't care) if the tile/sprite is in the space or not
 
 ![attributes](pics/attributes.png)
 
@@ -133,26 +139,25 @@ Each row can contain up to four commands. If you select the left arrow by the pl
 
 ![commands](pics/fourDirections.JPG)
 
-As always, press B to exit the current menu.
-
+As always, press **B** to exit the current menu.
 
 ## Adding, Deleting and Navigating Rules
 
-From the rule editor, you can add a rule (of the same type) by moving the cursor to the plus sign in the upper right and press A. 
+From the rule editor, you can add a rule (of the same type) by moving the cursor to the plus sign, **+**, in the upper right and press **A**. 
 
 ![add rule](pics/addRule.JPG)
 
-To delete the current rule, navigate to the garbage can and press A. 
+To delete the current rule, navigate to the garbage can and press **A**. 
 
 ![delete rule](pics/deleteRule.JPG)
 
-To make a rule of a different type, press the B button to return to the code screen and select a different rule type.  If you want to see all the rules for a sprite, select the sprite from the left column of the code screen and then select the code icon in the upper left.
+To make a rule of a different type, press the **B** button to return to the code screen and select a different rule type. If you want to see all the rules for a sprite, select the sprite from the left column of the code screen and then select the code icon in the upper left.
 
 ![player sprite rules](pics/playerRules.JPG)
 
 # Your First Game {#firstgame}
 
-Now that you've seen the basics of the code screen and the rule editor, let's create a game. We'll create game where the goal is for the player to help fish move from a small pond on the right side of the map to a bigger pond on the left side of the map.
+Now that you've seen the basics of the code screen and the rule editor, let's create a game. We'll create game where the goal is for the player to help fish move from a small pond to a bigger pond.  Make two ponds, as shown below and put a few fish in the smaller pond:
 
 ![two ponds](pics/fishPonds.JPG)
 
@@ -162,11 +167,11 @@ In this game the player can't swim, so we'll create a rule that ends the game if
 
 ![player resting](pics/restingPlayer.JPG)
 
-Select the space that the player is on and then select the water tile, which will apply green check mark to that tile, as shown below.
+Select the space that the player is on and then select the water tile, which will apply a green check mark to that tile, as shown below.
 
 ![water under player](pics/waterUnderPlayer.JPG)
 
-Now press the B button and move to space to the right of the player spriter in the *Do* section:
+Now press the **B** button and move to space to the right of the player spriter in the *Do* section:
 
 ![command menu](pics/addCommandPlayer.JPG)
 
@@ -174,15 +179,15 @@ Press the A button to bring up the *Command* menu, as shown below:
 
 ![command menu](pics/commandMenu.JPG)
 
-Now move the cursor the green G in the upper right of the menu:
+Now move the cursor the green **G** in the upper right of the menu:
 
 ![command game](pics/commandGame.JPG)
 
-Press the A button to list the set of game commands and move the cursor to the lose command (upside down trophy):
+Press the **A** button to list the set of game commands and move the cursor to the lose command (upside down trophy):
 
 ![game menu](pics/gameMenu.JPG)
 
-Press the A button to select this command and then press B to exit the command menu:
+Press the **A** button to select this command and then press **B** to exit the command menu:
 
 ![lose game](pics/loseGameCommand.JPG)
 
@@ -194,7 +199,7 @@ Now, let's make the fish swim in their pond. Initially, the fish are at rest (as
 
 ![fish moves left](pics/fishMoveLeft.JPG)
 
-Now, if the fish moved left in the previous round and is now next to the grass, let's have it move right. Exit the rule editor (button B) and select the ``moved left'' rule:
+Now, if the fish moved left in the previous round and is now next to the grass, let's have it move right. Exit the rule editor (button **B**) and select the "moved left" rule:
 
 ![moved left rule](pics/movedLeft.JPG)
 
@@ -214,7 +219,7 @@ With these four rules, your fish should be swimming back and forth in their pond
 
 ## Picking Up and Transporting Fish
 
-To transport a fish from right to left, the player will need to press the A button when the fish is immediately to its right. We'll use a A button rule for the player:
+To transport a fish from right to left, the player will need to press the **A** button when the fish is immediately to its right. We'll use an **A** button rule for the player:
 
 ![A button rule](pics/aButton.JPG)
 
@@ -222,16 +227,11 @@ Note that this rule for the player sends a command to the fish sprite:
 
 ![capture fish](pics/captureFish.JPG)
 
-Now lets create a rule for the fish on dpad left button. When the center space also contains the player sprite, we will move the fish to the left.
+Whenever the fish and the player occupy the same space then a left dpad button press will move the fish to the left
 
 ![fish and player move together](pics/fishAndPlayerLeft.JPG)
 
-With these rules in place, you should be able to transport the fish in the pond on the right to the pond on the left.
-
-## Adding some cats
-
-To make the game a little more challenging, let's add some cats that roam around and try to eat the fish that the player is transporting. 
-
+## Resolving a conflict
 
 # Rule Evaluation
 
@@ -242,4 +242,4 @@ The easiest way to share a TileWorld game you have created on an Arcade device i
 
 # Having Problems? {#issues}
 
-Please file a [GitHub issue](https://github.com/microsoft/tileworld/issues) if you encounter a problem with TileWorld
+Please file a [GitHub issue](https://github.com/microsoft/tileworld/issues) if you encounter a problem with TileWorld.
