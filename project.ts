@@ -107,6 +107,7 @@ namespace tileworld {
 
         // rules 
 
+
         public getRules() { return this.rules; }
 
         public getRule(rid: number) {
@@ -215,6 +216,29 @@ namespace tileworld {
             if (cid < commands.length) {
                 commands.removeAt(cid);
             }
+        }
+
+        // predicates
+
+        public whendoTrue(rid: number, whendo: number) {
+            for (let kind = 0; kind < this.all().length; kind++) {
+                if (this.getAttr(rid, whendo, kind) != AttrType.OK)
+                    return false;
+            }
+            return true;
+        }
+
+        public allTrue(rid: number) {
+            for (let col = 0; col < 5; col++) {
+                for (let row = 0; row < 5; row++) {
+                    if (Math.abs(2 - col) + Math.abs(2 - row) > 2) {
+                        let whendo = this.getWhenDo(rid, col, row);
+                        if (whendo != -1 && !this.whendoTrue(rid, whendo))
+                            return false;
+                    }
+                }
+            }
+            return true;
         }
     }
 
