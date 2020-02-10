@@ -152,6 +152,22 @@ Select the space that the player is on and then select the water tile, which wil
 
 ![water under player](pics/waterUnderPlayer.JPG)
 
+Now move to the *Do* section and press the space to the right of the player sprite to bring up the *Command* menu, as shown below:
+
+![command menu](pics/commandMenu.JPG)
+![command game](pics/commandGameMenu.JPG)
+![game menu](pics/gameMenu.JPG)
+![lose game](pics/loseGameCommand.JPG)
+
+![fish bounce left](pics/fishBounceLeft.JPG)
+![fish bounce right](pics/fishBounceRight.JPG)
+![fish move left](pics/fishMoveLeft.JPG)
+![keep moving right](pics/keepMovingRight.JPG)
+
+![move left](pics/moveLeft.JPG)
+![move sprite](pics/moveSprite.JPG)
+
+
 
 # Rule Evaluation
 
