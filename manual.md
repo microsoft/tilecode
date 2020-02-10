@@ -125,9 +125,14 @@ Try changing the flags on the tiles/sprites and see how it affects game play (re
 
 If all the predicates in the *When* pattern match then the commands in the *Do* section will be executed. Otherwise, the *Do* section is ignored.  The commands of the *Do* section are organized into five rows, which correspond to the center tile and the four tiles adjacent to the center sprite. Move the cursor to the *Do* section and move the cursor up and down to see the correspondence between the rows of the *Do* section and the five tiles in the *When* section:
 
-![commands](pics/addCommand.PNG)
+![add command](pics/addCommand.PNG)
 
-Each row can contain up to four commands. We'll detail more about the available commands later.
+![edit command](pics/editCommand.JPG)
+
+Each row can contain up to four commands. If you select the left arrow by the player sprite, you will see the other available move commands:
+
+![commands](pics/fourDirections.JPG)
+
 
 ## Adding, Deleting and Navigating Rules
 
@@ -141,11 +146,11 @@ To delete the current rule, navigate to the garbage can and press A.
 
 To make a rule of a different type, press the B button to return to the code screen and select a different rule type.  If you want to see all the rules for a sprite, select the sprite from the left column of the code screen and then move the cursor to the code icon in the upper left and press A. 
 
+![player sprite rules](pics/playerRules.JPG)
+
 # Your First Game {#firstgame}
 
-Now that you've seen the basics of the code screen and the rule editor, let's create a game. We'll create game
-where the goal is for the player to help fish move from a small pond to a bigger pond.  Make two ponds, as shown
-below and put a few fish in the smaller pond:
+Now that you've seen the basics of the code screen and the rule editor, let's create a game. We'll create game where the goal is for the player to help fish move from a small pond to a bigger pond.  Make two ponds, as shown below and put a few fish in the smaller pond:
 
 ![two ponds](pics/fishPonds.JPG)
 
@@ -153,7 +158,7 @@ The player can't swim, so we'll encode a rule that ends the game if the player e
 
 ![player resting](pics/restingPlayer.JPG)
 
-Select the space that the player is on and then select the water tile, which will apply the include flag (green check) to the that tile, as shown below.
+Select the space that the player is on and then select the water tile, which will apply green check mark to that tile, as shown below.
 
 ![water under player](pics/waterUnderPlayer.JPG)
 
