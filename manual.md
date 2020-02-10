@@ -158,7 +158,7 @@ Now that you've seen the basics of the code screen and the rule editor, let's cr
 
 ## The Player Can't Swim
 
-In this game the player can't swim, so we'll create a rule that ends the game if the player enters the water From the code screen, select the player sprite and move to the resting rule type, as shown below:
+In this game the player can't swim, so we'll create a rule that ends the game if the player enters the water. From the code screen, select the player sprite and move to the resting rule type, as shown below:
 
 ![player resting](pics/restingPlayer.JPG)
 
@@ -210,6 +210,9 @@ Finally, we need a rule for the fish to turn if there is grass to its right:
 
 ![fish bounce right](pics/fishBounceRight.JPG)
 
+With these four rules, your fish should be swimming back and forth in their pond!
+
+## 
 
 
 # Rule Evaluation
