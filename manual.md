@@ -152,7 +152,7 @@ To make a rule of a different type, press the B button to return to the code scr
 
 # Your First Game {#firstgame}
 
-Now that you've seen the basics of the code screen and the rule editor, let's create a game. We'll create game where the goal is for the player to help fish move from a small pond to a bigger pond.  Make two ponds, as shown below and put a few fish in the smaller pond:
+Now that you've seen the basics of the code screen and the rule editor, let's create a game. We'll create game where the goal is for the player to help fish move from a small pond on the right side of the map to a bigger pond on the left side of the map.
 
 ![two ponds](pics/fishPonds.JPG)
 
@@ -216,17 +216,22 @@ With these four rules, your fish should be swimming back and forth in their pond
 
 To transport a fish from right to left, the player will need to press the A button when the fish is immediately to its right. We'll use a A button rule for the player:
 
-![A button rule](pics/aButtonRule.JPG)
+![A button rule](pics/aButton.JPG)
 
 Note that this rule for the player sends a command to the fish sprite:
 
 ![capture fish](pics/captureFish.JPG)
 
-Whenever the fish and the player occupy the same space then a left dpad button press will move the fish to the left
+Now lets create a rule for the fish on dpad left button. When the center space also contains the player sprite, we will move the fish to the left.
 
 ![fish and player move together](pics/fishAndPlayerLeft.JPG)
 
-## Resolving a conflict
+With these rules in place, you should be able to transport the fish in the pond on the right to the pond on the left.
+
+## Adding some cats
+
+To make the game a little more challenging, let's add some cats that roam around and try to eat the fish that the player is transporting. 
+
 
 # Rule Evaluation
 
