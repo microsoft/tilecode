@@ -715,11 +715,7 @@ namespace tileworld {
         }
 
         private projectAttrs(rid: number, whendo: number, begin: number, end: number): number[] {
-            let cnt = 0;
-            for (let i = begin; i <= end; i++) {
-                if (this.p.getAttr(rid, whendo, i) == AttrType.OK) cnt++;
-            }
-            if (cnt == this.p.all().length)
+            if (this.p.whendoTrue(rid, whendo))
                 return [];
             let res: number[] = [];
             for (let i = begin; i <= end; i++) {
