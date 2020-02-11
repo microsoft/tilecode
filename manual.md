@@ -82,13 +82,16 @@ This rule applies to a boulder "at rest" and starts the boulder moving down when
 
 The play button runs the game in full screen mode. Press **B** to exit the game. Try to collect all the diamonds without having a boulder fall on you or getting caught by the skull/puppy
 
-![play game](pics/playGame.JPG)
+![play game](pics/playGame.gif)
 
 ### Settings
 
 Once you get used to the features available in TileWorld, you can turn off the help suggestions via the gear wheel, which takes you to the settings screen. 
 
-![game settings](pics/gameSettings.JPG)
+![game settings](pics/gameSettings.gif)
+
+
+
 
 # Coding in TileWorld {#coding}
 
