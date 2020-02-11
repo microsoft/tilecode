@@ -645,16 +645,21 @@ namespace tileworld {
     }
 
     function gameover(win: boolean = false) {
+
+
             // collect the scores before poping the scenes
+            /*
             const scoreInfo = info.player1.getState();
             const highScore = info.highScore();
             if (scoreInfo.score > highScore)
                 info.saveHighScore();
-
-            game.pushScene();
-            scene.setBackgroundImage(screen.clone());
+*/
+           //game.pushScene();
+           //scene.setBackgroundImage(screen.clone());
             pause(400);
 
+           game.showDialog("Game Over", " you " + (win ? "won" : "lost"));
+            /*
             const overDialog = new game.GameOverDialog(win, scoreInfo.score, highScore);
             scene.createRenderable(scene.HUD_Z, target => {
                 overDialog.update();
@@ -664,10 +669,12 @@ namespace tileworld {
                     (screen.height - overDialog.image.height()) >> 1
                 );
             });
+            */
 
             pause(500); // wait for users to stop pressing keys
-            overDialog.displayCursor();
+            // overDialog.displayCursor();
             game.waitAnyButton();
-            game.popScene();
+            game.popScene();  
         }
+
 }

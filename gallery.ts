@@ -294,6 +294,11 @@ namespace tileworld {
     export const gallerySprites = [fish, cat, dog, chimp, player, diamond, boulder, enemy, trophyUp, debug, eat ];
     export const galleryTiles = [brick, grass, water, dirt, dirt2, space, wall];
 
+/*
+    export const galleryPlayers: Image[] = [];
+    export const gallerySprites: Image[] = [];
+    export const galleryTiles: Image[] = [];
+*/
     export class Gallery extends RuleVisualsBase {
         private current: Image;
         private newImage: Image;
