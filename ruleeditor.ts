@@ -5,7 +5,7 @@ namespace tileworld {
 
     const editorRow = 2;
     const menuHelpString = "10add sprite,30delete rule,80add rule,90next rule,70previous rule,";
-    const attrHelpString = "00oneof,10exclude,20clear,90reset,";
+    const attrHelpString = "00include,10exclude,90reset,";
 
     export class RuleEditor extends RuleVisualsBase {
         private otherCursor: Sprite;    // show correspondence between left and right
@@ -594,7 +594,7 @@ namespace tileworld {
             let whenDo = this.getWhenDo(col, row);
             // for all user-defined sprites
             attrImages.forEach((img, i) => {
-                if (i == 3) return;  // no oneof
+                if (i >= 2) return;  // no oneof
                 // draw 8x8 sprites centered
                 screen.drawTransparentImage(img, (i << 4) + 4, yoff + 4);
                 this.drawOutline(i, 0);
@@ -626,7 +626,7 @@ namespace tileworld {
                 }
                 return;
             }
-            if (a != -1 && a < attrValues.length-1) { 
+            if (a != -1 && a < 2) { 
                 this.selectAttr(a); return; 
             }
             let m = this.row() == 1 ? this.col() : -1; 
@@ -634,7 +634,7 @@ namespace tileworld {
                 if (m < this.p.fixed().length && this.getType() >= RuleType.CollidingResting)
                     return;
                 let val = attrValues[this.attrSelected];
-                this.setAttr(m, val);
+                this.setAttr(m, val, true);
             }
         }
 
@@ -669,8 +669,10 @@ namespace tileworld {
             }
         }
 
-        private setAttr(m: number, val: AttrType) {
+        private setAttr(m: number, val: AttrType, toggle: boolean = false) {
             let whenDo = this.getWhenDo(this.col(false), this.row(false)-editorRow);
+            if (toggle && this.p.getAttr(this.rule,whenDo,m) == val)
+                val = AttrType.OK;
             this.p.setAttr(this.rule, whenDo, m, val)
         }
 
