@@ -238,17 +238,6 @@ Whenever the fish and the player occupy the same space then a left dpad button p
 
 With these rules in place, you should be able to transport fish from the pond on the right to the pond on the left.
 
-# Rule Evaluation
-
-## Sprites That Just Moved
-
-## Sprites at Rest
-
-## Reacting to Button Presses
-
-## Colliding Sprites
-
-
 # Sharing Your TileWorld Games {#sharing}
 
 The easiest way to share a TileWorld game you have created on an Arcade device is to copy the UF2 file from your device and share it with your friend. The UF2 file includes the flash settings in which your games are stored. When your friend copies this UF2 file to their Arcade device, they will get the games you created. Keep in mind that if your friend's Arcade device is not the same as yours, this may not work.
