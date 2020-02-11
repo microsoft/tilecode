@@ -1,6 +1,6 @@
 namespace tileworld {
 
-    let projectVersion = "1.0.0";
+    export let TileWorldVersion = "1.0.0";
 
     export class Project {
         private lastRule: IdRule = null;
@@ -435,7 +435,7 @@ namespace tileworld {
         p.setWorld(world);
         p.setSprites(sprites);
         p.setPlayer(4);
-        p.version = projectVersion;
+        p.version = TileWorldVersion;
         return p;
     }
 } 
