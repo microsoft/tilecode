@@ -205,19 +205,19 @@ Now, go back to the game screen and play the game. See what happens if you move 
 
 Now, let's make the fish swim in their pond. Initially, the fish are at rest (as are all sprites). So let's make a resting rule for the fish sprite that moves it left when there is water to its left:
 
-![fish moves left](pics/fishMoveLeft.JPG)
+![fish moves left](pics/fishMoveLeft.gif)
 
 Now, if the fish moved left in the previous round and is now next to the grass, let's have it move right. Exit the rule editor (button **B**) and select the "moved left" rule:
 
-![moved left rule](pics/movedLeft.JPG)
+![moved left rule](pics/movedLeft.gif)
 
 Now, make the following rule:
 
-![fish bounce left](pics/fishBounceLeft.JPG)
+![fish bounce left](pics/fishBounceLeft.gif)
 
 As long as there is water to the right of the (right moving fish), let's keep it moving to the right:
 
-![keep moving right](pics/keepMovingRight.JPG)
+![keep moving right](pics/keepMovingRight.gif)
 
 Finally, we need a rule for the fish to turn when there is grass to its right:
 
