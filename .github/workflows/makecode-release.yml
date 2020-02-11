@@ -1,9 +1,7 @@
 name: MakeCode Arcade Binary Release
 
 on: 
-  release:
-    types:
-      - created
+  push:
 jobs:
   build:
 
