@@ -163,41 +163,41 @@ To make a rule of a different type, press the **B** button to return to the code
 
 Now that you've seen the basics of the code screen and the rule editor, let's create a game. We'll create game where the goal is for the player to help fish move from a small pond to a bigger pond.  Make two ponds, as shown below and put a few fish in the smaller pond:
 
-![two ponds](pics/fishPonds.JPG)
+![two ponds](pics/fishPonds.gif)
 
 ## The Player Can't Swim
 
 In this game the player can't swim, so we'll create a rule that ends the game if the player enters the water. From the code screen, select the player sprite and move to the resting rule type, as shown below:
 
-![player resting](pics/restingPlayer.JPG)
+![player resting](pics/restingPlayer.gif)
 
 Select the space that the player is on and then select the water tile, which will apply a green check mark to that tile, as shown below.
 
-![water under player](pics/waterUnderPlayer.JPG)
+![water under player](pics/waterUnderPlayer.gif)
 
 Now press the **B** button to exit the predicate menu. If you move the cursor over the player sprite, you will see the predicate for that space under the menu bar:
 
-![water under player visible](pics/hoverAttr.JPG)
+![water under player visible](pics/hoverAttr.gif)
 
 Now move to space to the right of the player spriter in the *Do* section:
 
-![command menu](pics/addCommandPlayer.JPG)
+![command menu](pics/addCommandPlayer.gif)
 
 Press the A button to bring up the *Command* menu, as shown below:
 
-![command menu](pics/commandMenu.JPG)
+![command menu](pics/commandMenu.gif)
 
 Now move the cursor the green **G** in the upper right of the menu:
 
-![command game](pics/commandGame.JPG)
+![command game](pics/commandGame.gif)
 
 Press the **A** button to list the set of game commands and move the cursor to the lose command (upside down trophy):
 
-![game menu](pics/gameMenu.JPG)
+![game menu](pics/gameMenu.gif)
 
 Press the **A** button to select this command and then press **B** to exit the command menu:
 
-![lose game](pics/loseGameCommand.JPG)
+![lose game](pics/loseGameCommand.gif)
 
 Now, go back to the game screen and play the game. See what happens if you move the player onto a water tile.
 
