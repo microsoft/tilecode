@@ -4,7 +4,6 @@ on:
   release:
     types:
       - created
-
 jobs:
   build:
 
@@ -83,10 +82,10 @@ jobs:
           asset_path: ./built/binary.uf2
           asset_name: arcade-p0.uf2
           asset_content_type: application/octet-stream
-      - name: munge all together
+      - name: bundle all
         run: |
           cat binary-*.uf2 > built/arcade-all.uf2
-      - name: upload munged
+      - name: upload bundled
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

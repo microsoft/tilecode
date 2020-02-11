@@ -70,10 +70,15 @@ namespace tileworld {
         private globalInsts: number[];
         private globalArgs: number[];
         private allTrueResting: number[] = [];
+        private ruleIndex: number[][] = [];
         
         constructor(private p: Project, private rules: number[]) {
             this.vm = null;
+            for (let i = RuleType.Resting; i<= RuleType.CollidingMoving; i++) {
+                this.ruleIndex[i] = [];
+            }
             this.rules.forEach(rid => {
+                this.ruleIndex[this.p.getType(rid)].push(rid);
                 if (this.p.getType(rid) == RuleType.Resting && this.p.allTrue(rid))
                     this.allTrueResting.push(rid);
             });
@@ -94,20 +99,35 @@ namespace tileworld {
             this.globalArgs = [];
             this.vm.deadSprites = [];
             this.vm.paintTile = [];
+            let moving: TileSprite[] = [];
+            let resting: TileSprite[] = [];
             // make sure everyone is centered
             this.allSprites(ts => {
                 ts.x = ((ts.x >> 4) << 4) + 8;
                 ts.y = ((ts.y >> 4) << 4) + 8;
+                ts.inst = -1;
+                if (ts.dir != -1) moving.push(ts);
+                else if (this.restingWithChange(ts)) resting.push(ts);
             });
             this.vm.nextWorld.fill(0xf);
-            this.allSprites(ts => { ts.inst = -1; });
-
             let rcCount = 0;
-            for(let phase = Phase.Moving; phase != Phase.Colliding; phase++) {
-                let rcs = this.applyRules(phase);
-                rcs.forEach(rc => this.evaluateRuleClosure(rc));
-                rcCount += rcs.length;
-            }
+            
+            let rcs = this.applyRules(Phase.Moving, this.ruleIndex[RuleType.Moving], moving);
+            rcs.forEach(rc => this.evaluateRuleClosure(rc));
+            rcCount += rcs.length;
+
+            // moving to resting
+            moving.forEach(ts => { if (!this.moving(ts)) resting.push(ts)});
+            
+            rcs = this.applyRules(Phase.Resting, this.ruleIndex[RuleType.Resting], resting);
+            rcs.forEach(rc => this.evaluateRuleClosure(rc));
+            rcCount += rcs.length;
+
+            let remainingResting: TileSprite[] = [];
+            resting.forEach(ts => { if (!this.moving(ts)) remainingResting.push(ts) });
+            rcs = this.applyRules(Phase.Pushing, this.ruleIndex[RuleType.Pushing], remainingResting);
+            rcs.forEach(rc => this.evaluateRuleClosure(rc));
+            rcCount += rcs.length;
 
             // now, look for collisions
             // TODO: need a fix point around this, as new collisions may occur
@@ -117,7 +137,7 @@ namespace tileworld {
             // all sprites and will dimish over time 
             let against: TileSprite[] = []
             this.allSprites(ts => { against.push(ts) }); 
-            let rcs = this.collisionDetection( against );
+            rcs = this.collisionDetection( against );
             rcs.forEach(rc => this.evaluateRuleClosure(rc));
             rcCount += rcs.length;
             
@@ -203,20 +223,16 @@ namespace tileworld {
         // in the neighborhood around the tile changed in the last
         // round, then there is no need to apply the resting rules.
         private restingWithChange(ts: TileSprite) {
-            // resting rules will apply to sprites that were previously resting 
-            // or were moving but have not issued a moving command (in the Moving phase)
-            if (ts.dir == -1 || !this.moving(ts)) {
-                let col = ts.col();
-                let row = ts.row();
-                // check neighborhood
-                for(let i = -2; i <= 2; i++) {
-                    for (let j = -2; j <= 2; j++) {
-                        if (Math.abs(i) + Math.abs(j) <= 2) {
-                            let x = col + i;
-                            let y = row + j;
-                            if (this.inBounds(x,y) && this.vm.changed.getPixel(x,y))
-                                return true;
-                        }
+            let col = ts.col();
+            let row = ts.row();
+            // check neighborhood
+            for(let i = -2; i <= 2; i++) {
+                for (let j = -2; j <= 2; j++) {
+                    if (Math.abs(i) + Math.abs(j) <= 2) {
+                        let x = col + i;
+                        let y = row + j;
+                        if (this.inBounds(x,y) && this.vm.changed.getPixel(x,y))
+                            return true;
                     }
                 }
             }
@@ -228,46 +244,39 @@ namespace tileworld {
         }
 
         // apply matching rules to tileSprite, based on the phase we are in
-        // (this could be optimizing by storing rules indexed by kind and type)
+        // TODO: can do further indexing, if necessary
         private matchingRules(rules: number[], phase: Phase, ts: TileSprite, handler: (rid: number) => void) {
             rules.forEach(rid => {
                 if (this.ruleMatchesSprite(rid, ts) &&
-                    (phase == Phase.Moving  && this.p.getType(rid) == RuleType.Moving 
-                                            && this.p.getDir(rid) == ts.dir
-                  || phase == Phase.Resting && this.p.getType(rid) == RuleType.Resting
-                    || phase == Phase.Pushing && this.p.getType(rid) == RuleType.Pushing 
-                                            && this.dpad.indexOf(this.p.getDir(rid)) != -1)) {
+                    (phase == Phase.Resting ||
+                     phase == Phase.Moving  && this.p.getDir(rid) == ts.dir
+                  || phase == Phase.Pushing && this.dpad.indexOf(this.p.getDir(rid)) != -1)) {
                     handler(rid);
                 }
             });
         }
 
-        private applyRules(phase: Phase) {
+        private applyRules(phase: Phase, rules: number[], sprites: TileSprite[]) {
+            control.enablePerfCounter("applyRules");
             let ruleClosures: RuleClosure[] = [];
-            this.allSprites(ts => {
-                if ( phase == Phase.Moving && ts.dir != -1 || 
-                     phase == Phase.Resting && this.restingWithChange(ts) ||
-                     phase == Phase.Pushing && (ts.dir == -1 || !this.moving(ts))) {
-                    this.matchingRules(this.rules, phase, ts, (rid) => {
-                        let closure = this.evaluateRule(ts, rid);
-                        if (closure)
-                            ruleClosures.push(closure);
-                    });
-                }
+            sprites.forEach(ts => {
+                this.matchingRules(rules, phase, ts, (rid) => {
+                    let closure = this.evaluateRule(ts, rid);
+                    if (closure)
+                        ruleClosures.push(closure);
+                });
             });
             if (phase != Phase.Resting)
                 return ruleClosures;
             // now deal with pesky resting rules that have precondition == true
             // this is need because of change optimization
-            this.allSprites(ts => {
-                if ((ts.dir == -1 || !this.moving(ts))) {
-                    this.matchingRules(this.allTrueResting, phase, ts, (rid) => {
-                        let closure = this.evaluateRule(ts, rid);
-                        if (closure) {
-                            ruleClosures.push(closure);
-                        }
-                    });
-                }
+            sprites.forEach(ts => {
+                this.matchingRules(this.allTrueResting, phase, ts, (rid) => {
+                    let closure = this.evaluateRule(ts, rid);
+                    if (closure) {
+                        ruleClosures.push(closure);
+                    }
+                });
             });
             return ruleClosures;
         }
@@ -289,6 +298,7 @@ namespace tileworld {
         //   (b) os moving into T
         // TODO: this can be optimized, a lot
         private collisionDetection(against: TileSprite[]) {
+            control.enablePerfCounter("collision detection");
             let rcs: RuleClosure[] = [];
             this.allSprites(ts => {
                 if (!this.moving(ts)) return;
@@ -531,7 +541,6 @@ namespace tileworld {
             }
         }
 
-        // TODO: make into a set of currently pressed 
         private currentDirection: MoveDirection[];
         public start() {
             this.currentDirection = [];
@@ -553,19 +562,28 @@ namespace tileworld {
             this.vm.setState(this.state);
             this.vm.round([]);
 
+/*
+            game.onUpdateInterval(5000, function () {
+                control.heapSnapshot();
+                control.heapDump();
+            })
+*/
+
             game.onUpdate(() => {
                 // has signal sprite moved to new tile
                 // then do a worldUpdate and reset the signal sprite
                 if (this.signal.x >= 23) {
+                    if (this.state.game != GameState.InPlay) {
+                        gameover(this.state.game == GameState.Won);
+                        game.popScene();
+                        return;
+                    } 
                     this.signal.x = 8;
                     this.vm.round(this.currentDirection);
                     halfway = false;
                     this.currentDirection = [];
                 } else if (!halfway && this.signal.x >= 16) {
-                    if (this.state.game != GameState.InPlay) {
-                        gameover(this.state.game == GameState.Won);
-                        game.popScene();
-                    } else {
+                    if (this.state.game == GameState.InPlay) {
                         this.state.deadSprites.forEach(ts => {
                             this.state.sprites[ts.kind()].removeElement(ts);
                             ts.destroy();
@@ -627,16 +645,21 @@ namespace tileworld {
     }
 
     function gameover(win: boolean = false) {
+
+
             // collect the scores before poping the scenes
+            /*
             const scoreInfo = info.player1.getState();
             const highScore = info.highScore();
             if (scoreInfo.score > highScore)
                 info.saveHighScore();
-
-            game.pushScene();
-            scene.setBackgroundImage(screen.clone());
+*/
+           //game.pushScene();
+           //scene.setBackgroundImage(screen.clone());
             pause(400);
 
+           game.showDialog("Game Over", " you " + (win ? "won" : "lost"));
+            /*
             const overDialog = new game.GameOverDialog(win, scoreInfo.score, highScore);
             scene.createRenderable(scene.HUD_Z, target => {
                 overDialog.update();
@@ -646,10 +669,12 @@ namespace tileworld {
                     (screen.height - overDialog.image.height()) >> 1
                 );
             });
+            */
 
             pause(500); // wait for users to stop pressing keys
-            overDialog.displayCursor();
+            // overDialog.displayCursor();
             game.waitAnyButton();
-            game.popScene();
+            game.popScene();  
         }
+
 }

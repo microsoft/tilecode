@@ -27,7 +27,7 @@ namespace tileworld {
                         this.askDeleteRule = true;
                     } 
                 } else {
-                    if (this.col() == 7 && this.row() == 1) {
+                    if (this.col() == 7 && this.row() == 2) {
                         this.askDeleteRule = true;
                         return;
                     }
@@ -58,13 +58,15 @@ namespace tileworld {
                 screen.print(this.p.getWorld().width.toString(), 64, worldY);
                 screen.print("by", 96, worldY);
                 screen.print(this.p.getWorld().height.toString(), 128, worldY);
+                screen.print(this.p.version, 120, yoff);
                 screen.print("Export", 16, 92);
                 this.drawImage(4, 5, diskIcon);
                 screen.print("Delete", 16, 108);
                 this.drawImage(4, 6, garbageCan);
             } else {
-                screen.print("Delete ALL games", 16, 16 + yoff + 6);
-                this.drawImage(7, 1, garbageCan);
+                screen.print("App Version " + TileWorldVersion, 16, 16 + yoff + 6)
+                screen.print("Delete ALL games", 16, 32 + yoff + 6);
+                this.drawImage(7, 2, garbageCan);
             }
             if (this.askDeleteRule) {
                 this.cursor.setFlag(SpriteFlag.Invisible, true)
