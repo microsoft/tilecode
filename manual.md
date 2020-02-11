@@ -35,11 +35,11 @@ Move the cursor around the screen to get help about all the features available. 
 
 We move the cursor to the puppy dog and select it (**A** button) 
 
-![gallery](pics/galleryPuppy.JPG)
+![gallery](pics/galleryPuppy.gif)
 
 Now, when we return to the game home screen, we can see the skull has been replaced by the puppy:
 
-![updated with puppy](pics/homePage2.JPG)
+![updated with puppy](pics/homePage2.gif)
 
 ## Menu bar
 
@@ -52,7 +52,7 @@ The menu bar of the game screen has four main commands in addition to the gear w
 
 The map editor lets you paint the game world's tiles and place sprites on tiles. Select one of the four tiles and move your cursor down to the map. Press **A** to color a tile. Press **B** to return to the menu bar and select another tile. After selecting a sprite, the **A** button will place the sprite on a tile, replacing the sprite that is there (or removing it if it is the same as the selected sprite). 
 
-![world map editor](pics/map.JPG)
+![world map editor](pics/map.gif)
 
 You can color tiles quickly by holding down the **A** button while moving the cursor. The reset button (upper right) resets the camera to the upper left of the map. To return to the game screen, press the **B** button (**B** always takes you back).
 
@@ -60,21 +60,21 @@ You can color tiles quickly by holding down the **A** button while moving the cu
 
 The paint editor lets you change the art associated with a tile or sprite. As with the map editor, select the tile/sprite whose art you want to change. Here we have selected the puppy dog:
 
-![paint art](pics/paintPuppy1.JPG)
+![paint art](pics/paintPuppy1.gif)
 
 Move your cursor down to edit the bitmap (using the **A** button to apply the currently selected color).  Press **B** to move from the bitmap pane to the color selector. Selecting a color will send the cursor back to the bitmap pane so you can quickly resume coloring where you left off. We have colored the puppy's eyes red:
 
-![paint art](pics/paintPuppy2.JPG)
+![paint art](pics/paintPuppy2.gif)
 
 ### Code
 
 The coding page shows the four kinds of sprites on the left and the different types of rules available. We have selected the boulder sprite - the highlighted squares represent the rules we have coded to give the boulder its behavior (note that there are no rules highlighted for the direction pad in the upper right).
 
-![paint art](pics/boulderRules.JPG)
+![paint art](pics/boulderRules.gif)
 
 Selecting the boulder in the middle of the upper left quadrant brings up the rule editor:
 
-![paint art](pics/boulderRestingRule.JPG)
+![paint art](pics/boulderRestingRule.gif)
 
 This rule applies to a boulder "at rest" and starts the boulder moving down when there is a space below the boulder. More details about programming rules are given below.
 
