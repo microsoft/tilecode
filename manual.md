@@ -119,7 +119,8 @@ The red circle with a slash denotes the wall tile is excluded. In other words, t
  
 * *green check mark*: one of the tile/sprites marked with a green check mark must be in the space
 * *red-slash circle*: the space must not include this tile/sprite (it is excluded from the space)
-* *clear*: it doesn't matter (don't care) if the tile/sprite is in the space or not
+
+If a tile/sprite does not have a flag then it does not matter whether the space includes/excludes the tile/sprite.
 
 ![attributes](pics/attributes.png)
 
