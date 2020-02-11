@@ -211,7 +211,7 @@ Now, if the fish moved left in the previous round and is now next to the grass, 
 
 ![moved left rule](pics/movedLeft.gif)
 
-Now, make the following rule:
+Now, make the following rule (make sure to require that there is water under the fish):
 
 ![fish bounce left](pics/fishBounceLeft.gif)
 
@@ -221,25 +221,22 @@ As long as there is water to the right of the (right moving fish), let's keep it
 
 Finally, we need a rule for the fish to turn when there is grass to its right:
 
-![fish bounce right](pics/fishBounceRight.JPG)
+![fish bounce right](pics/fishBounceRight.gif)
 
 With these four rules, your fish should be swimming back and forth in their pond!
 
 ## Picking Up and Transporting Fish
 
-To transport a fish from right to left, the player will need to press the **A** button when the fish is immediately to its right. We'll use an **A** button rule for the player:
+To transport a fish from right to left, 
+the fish will move onto the player when the player is next to it:
 
-![A button rule](pics/aButton.JPG)
-
-Note that this rule for the player sends a command to the fish sprite:
-
-![capture fish](pics/captureFish.JPG)
+![capture fish](pics/jumpToPlayer.gif) 
 
 Whenever the fish and the player occupy the same space then a left dpad button press will move the fish to the left
 
-![fish and player move together](pics/fishAndPlayerLeft.JPG)
+![fish and player move together](pics/fishAndPlayerLeft.gif)
 
-## Resolving a conflict
+With these rules in place, you should be able to transport fish from the pond on the right to the pond on the left.
 
 # Rule Evaluation
 
