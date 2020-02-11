@@ -129,19 +129,19 @@ If a tile/sprite does not have a flag then it does not matter whether the space 
 
 Try changing the flags on the tiles/sprites and see how it affects game play (remember that this rule only applies for the left dpad button). The reset button on the upper right of the attribute menu clears all the flags. Note that any space in the *When* section that is empty has no flag set, as shown for the space to the right of the player sprite:
 
-![attributes](pics/allOK.JPG)
+![attributes](pics/allOK.gif)
 
 ## Do Commands
 
 If all the predicates in the *When* pattern match then the commands in the *Do* section will be executed. Otherwise, the *Do* section is ignored.  The commands of the *Do* section are organized into five rows, which correspond to the center tile and the four tiles adjacent to the center sprite. Move the cursor to the *Do* section and move the cursor up and down to see the correspondence between the rows of the *Do* section and the five tiles in the *When* section:
 
-![add command](pics/addCommand.PNG)
+![add command](pics/addCommand.gif)
 
-![edit command](pics/editCommand.JPG)
+![edit command](pics/editCommand.gif)
 
 Each row can contain up to four commands. If you select the left arrow by the player sprite, you will see the other available move commands:
 
-![commands](pics/fourDirections.JPG)
+![commands](pics/fourDirections.gif)
 
 As always, press **B** to exit the current menu.
 
@@ -149,15 +149,15 @@ As always, press **B** to exit the current menu.
 
 From the rule editor, you can add a rule (of the same type) by moving the cursor to the plus sign, **+**, in the upper right and press **A**. 
 
-![add rule](pics/addRule.JPG)
+![add rule](pics/addRule.gif)
 
 To delete the current rule, navigate to the garbage can and press **A**. 
 
-![delete rule](pics/deleteRule.JPG)
+![delete rule](pics/deleteRule.gif)
 
 To make a rule of a different type, press the **B** button to return to the code screen and select a different rule type. If you want to see all the rules for a sprite, select the sprite from the left column of the code screen and then select the code icon in the upper left.
 
-![player sprite rules](pics/playerRules.JPG)
+![player sprite rules](pics/playerRules.gif)
 
 # Your First Game {#firstgame}
 
