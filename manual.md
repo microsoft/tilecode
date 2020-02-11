@@ -171,7 +171,11 @@ Select the space that the player is on and then select the water tile, which wil
 
 ![water under player](pics/waterUnderPlayer.JPG)
 
-Now press the **B** button and move to space to the right of the player spriter in the *Do* section:
+Now press the **B** button to exit the predicate menu. If you move the cursor over the player sprite, you will see the predicate for that space under the menu bar:
+
+![water under player visible](pics/hoverAttr.JPG)
+
+Now move to space to the right of the player spriter in the *Do* section:
 
 ![command menu](pics/addCommandPlayer.JPG)
 
@@ -234,6 +238,14 @@ Whenever the fish and the player occupy the same space then a left dpad button p
 ## Resolving a conflict
 
 # Rule Evaluation
+
+## Sprites That Just Moved
+
+## Sprites at Rest
+
+## Reacting to Button Presses
+
+## Colliding Sprites
 
 
 # Sharing Your TileWorld Games {#sharing}
