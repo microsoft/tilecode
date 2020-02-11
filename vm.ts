@@ -77,7 +77,9 @@ namespace tileworld {
                 if (this.p.getType(rid) == RuleType.Resting && this.p.allTrue(rid))
                     this.allTrueResting.push(rid);
             });
-            this.allTrueResting.forEach(rid => this.rules.removeElement(rid));
+            this.allTrueResting.forEach(rid => { 
+                let b: boolean = this.rules.removeElement(rid);
+            });
         }
 
         public setState(v: VMState) {
