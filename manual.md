@@ -97,11 +97,11 @@ Once you get used to the features available in TileWorld, you can turn off the h
 
 Each sprite's behavior is governed by a set of rules that you can program. Let's start with a fresh game. Go to the load screen and select game slot #2. If you play the game, you'll see that you can move the player sprite around with the direction pad. Let's look at the rules for the player sprite:
 
-![player sprite rules](pics/playerRules.JPG)
+![player sprite rules](pics/playerRules.gif)
 
 No surprises here: the rules for the direction pad (upper right quadrant) are lit up. Move the cursor over to the left dpad button:
 
-![left button press](pics/dpadLeft.JPG)
+![left button press](pics/dpadLeft.gif)
 
 ## When Patterns
 
@@ -112,11 +112,11 @@ Now press **A** to bring up the rule editor, shown below. The menu bar shows tha
 
 In this case, when there is no wall in the space to the left of the player sprite, the sprite is sent a move left command.
 
-![left button rule](pics/dpadLeftRule.JPG)
+![left button rule](pics/dpadLeftRule.gif)
 
 Moving the cursor to the space to the left of the player sprite and pressing **A** brings up the *Predicate* menu, which shows the predicate flags for each of the four tiles and sprites that could occupy the space:
 
-![predicate flags](pics/dpadLeftAttrs.JPG)
+![predicate flags](pics/dpadLeftAttrs.gif)
 
 The red circle with a slash denotes the wall tile is excluded. In other words, the predicate for the space to the left of the player matches if that space is not painted with the wall tile. If you move the cursor over the flags you will see their meaning:
  
