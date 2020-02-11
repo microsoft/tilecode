@@ -25,11 +25,11 @@ The load screen of TileWorld lets you select one of four games to program and pl
 
 Let's take a quick tour through the various screens you can get to from the load screen. We load the game from slot #1, which takes us to the game's home screen, as shown below:
 
-![home page](pics/homePage1.JPG)
+![home page](pics/homePage1.gif)
 
 Move the cursor around the screen to get help about all the features available. Each TileWorld game has four kinds of map tiles and four kinds of sprites to work with. Let's visit the art gallery to change the art associated with the fourth sprite (the skull).
 
-![help cursor](pics/helpGallery.JPG)
+![help cursor](pics/helpGallery.gif)
 
 ## Gallery
 
