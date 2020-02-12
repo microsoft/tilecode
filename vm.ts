@@ -285,11 +285,14 @@ namespace tileworld {
 
         // precondition: moving(ts)
         private collidingRules(ts: TileSprite, handler: (rid: number) => void) {
-            this.rules.forEach(rid => {
-                if (this.ruleMatchesSprite(rid, ts) && 
-                    this.p.getType(rid) >= RuleType.CollidingResting &&
-                    this.p.getDir(rid) == ts.arg) {
-                        handler(rid);
+            this.ruleIndex[RuleType.CollidingMoving].forEach(rid => {
+                if (this.ruleMatchesSprite(rid, ts) && this.p.getDir(rid) == ts.arg) {
+                    handler(rid);
+                }
+            });
+            this.ruleIndex[RuleType.CollidingResting].forEach(rid => {
+                if (this.ruleMatchesSprite(rid, ts) && this.p.getDir(rid) == ts.arg) {
+                    handler(rid);
                 }
             });
         }
