@@ -2,7 +2,8 @@
 # this is an empty front matter
 ---
 
-[pics/loadScreen.gif](https://microsoft.github.io/tileworld/)
+
+[![tile world](pics/loadScreen.gif)](https://microsoft.github.io/tileworld/)
 
 # Overview
 
