@@ -1,7 +1,3 @@
-// - debugging API
-//    - which rules are ready to run? showing match in world?
-//    - which ones get to run?
-
 namespace tileworld {
 
     enum SpriteState { Alive, Dead, }
@@ -70,21 +66,19 @@ namespace tileworld {
         private globalInsts: number[];
         private globalArgs: number[];
         private allTrueResting: number[] = [];
-        private ruleIndex: number[][] = [];
+        private ruleIndex: number[][] = [];     // lookup of rules by phase
         
         constructor(private p: Project, private rules: number[]) {
             this.vm = null;
             for (let i = RuleType.Resting; i<= RuleType.CollidingMoving; i++) {
                 this.ruleIndex[i] = [];
             }
+            // populate indices for more efficient lookup
             this.rules.forEach(rid => {
                 if (this.p.getType(rid) == RuleType.Resting && this.p.allTrue(rid))
                     this.allTrueResting.push(rid);
                 else
                     this.ruleIndex[this.p.getType(rid)].push(rid);
-            });
-            this.allTrueResting.forEach(rid => { 
-                let b: boolean = this.rules.removeElement(rid);
             });
         }
 
@@ -102,24 +96,26 @@ namespace tileworld {
             this.vm.paintTile = [];
             let moving: TileSprite[] = [];
             let resting: TileSprite[] = [];
-            // make sure everyone is centered
-            this.allSprites(ts => {
-                ts.x = ((ts.x >> 4) << 4) + 8;
-                ts.y = ((ts.y >> 4) << 4) + 8;
-                ts.inst = -1;
-                if (ts.dir != -1) moving.push(ts);
-                else resting.push(ts);
-            });
             this.vm.nextWorld.fill(0xf);
+
+            this.allSprites(ts => {
+                ts.x = ((ts.x >> 4) << 4) + 8;      // make sure sprite is centered
+                ts.y = ((ts.y >> 4) << 4) + 8;      // on its tile
+                ts.inst = -1;                       // reset instruction
+                if (ts.dir != -1) moving.push(ts);  // separate sprites into moving
+                else resting.push(ts);              // and resting
+            });
+
             let rcCount = 0;
-            
             let rcs = this.applyRules(Phase.Moving, this.ruleIndex[RuleType.Moving], moving);
             rcs.forEach(rc => this.evaluateRuleClosure(rc));
             rcCount += rcs.length;
 
-            // moving to resting
+            // if a previously moving sprite did not get a move command, it transitions to resting
             moving.forEach(ts => { if (!this.moving(ts)) resting.push(ts)});
             
+            // optimization for resting sprites - if neighborhood around sprite did not change, then 
+            // no need to run resting rule on sprite
             let filterResting = resting.filter(ts => this.restingWithChange(ts));
             rcs = this.applyRules(Phase.Resting, this.ruleIndex[RuleType.Resting], filterResting);
             rcs.forEach(rc => this.evaluateRuleClosure(rc));
@@ -150,6 +146,7 @@ namespace tileworld {
 
         private updateWorld() {
             this.vm.changed.fill(0);
+            // update the state of each sprite, based on instructions
             this.allSprites(ts => { 
                 ts.update();
                 if (ts.dir != -1) {
@@ -246,7 +243,6 @@ namespace tileworld {
         }
 
         // apply matching rules to tileSprite, based on the phase we are in
-        // TODO: can do further indexing, if necessary
         private matchingRules(rules: number[], phase: Phase, ts: TileSprite, handler: (rid: number) => void) {
             rules.forEach(rid => {
                 if (this.ruleMatchesSprite(rid, ts) &&
@@ -259,7 +255,6 @@ namespace tileworld {
         }
 
         private applyRules(phase: Phase, rules: number[], sprites: TileSprite[]) {
-            control.enablePerfCounter("applyRules");
             let ruleClosures: RuleClosure[] = [];
             sprites.forEach(ts => {
                 this.matchingRules(rules, phase, ts, (rid) => {
@@ -301,9 +296,7 @@ namespace tileworld {
         // - look for colliding sprite os != ts, as defined
         //   (a) os in square T, resting or moving towards ts, or
         //   (b) os moving into T
-        // TODO: this can be optimized, a lot
         private collisionDetection(against: TileSprite[]) {
-            control.enablePerfCounter("collision detection");
             let rcs: RuleClosure[] = [];
             this.allSprites(ts => {
                 if (!this.moving(ts)) return;
@@ -381,7 +374,7 @@ namespace tileworld {
 
         private inBounds(col: number, row: number) {
             return 0 <= col && col < this.vm.nextWorld.width &&
-                0 <= row && row < this.vm.nextWorld.height;
+                   0 <= row && row < this.vm.nextWorld.height;
         }
 
         // Include and OneOf are equivalent now
