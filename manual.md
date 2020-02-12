@@ -11,28 +11,27 @@ TileWorld is a game creation app that allows you to design and play games direct
 * in a [web browser](https://microsoft.github.io/tileworld/), or 
 * on any [MakeCode Arcade device](https://arcade.makecode.com/hardware).
 
-Copy this [UF2 file](https://github.com/microsoft/tileworld/releases/download/v3.5.5/arcade-all.uf2) (works for all MakeCode Arcade Devices) to your device to get started. 
+Copy this [UF2 file](https://github.com/microsoft/tileworld/releases/download/v3.5.5/arcade-all.uf2) to your device to get started (works for all MakeCode Arcade devices).
 
 # Overview 
 
-* [Load Screen and Navigation](#loadscreen)
-* [Tour of TileWorld Screens](#gamehome)
+* [Tour of TileWorld](#tour)
 * [Coding in TileWorld](#coding)
 * [Making Your First Game](#firstgame)
 * [Sharing TileWorld Games](#sharing)
 * [Having Problems?](#issues)
 
-# Load Screen and Navigation {#loadscreen}
+## Tour of TileWorld {#tour}
 
-The load screen of TileWorld lets you select one of four games to program and play:
+Let's take a quick tour through the various screens of TileWorld. The load screen of TileWorld lets you select one of four games to program and play.  All editing takes place via the tile paradigm: move the square-shaped cursor between adjacent tiles using the direction pad (dpad); select a tile using the **A** button to perform an action; the **B** button takes you back (to the menu of the current screen or to the previous screen).
 
 ![load screen](pics/loadScreen.gif)
 
- All game assets (gameboard, images and code) are stored in the flash memory of your Arcade device, so your changes will remain even if you power the device off. All editing takes place via the tile paradigm: move the square-shaped cursor between adjacent tiles using the direction pad (dpad); select a tile using the **A** button to perform an action; the **B** button takes you back (to the menu of the current screen or to the previous screen). Assets are saved to flash whenever you transition between screens.
+ All game assets (gameboard, images and code) are stored in the flash memory of your Arcade device, so your changes will remain even if you power the device off. Assets are saved to flash whenever you transition between screens.
 
-# Tour of TileWorld Screens {#gamehome}
+## Game Home Screen
 
-Let's take a quick tour through the various screens you can get to from the load screen. We load the game from slot #1, which takes us to the game's home screen, as shown below:
+We load the game from slot #1, which takes us to the game's home screen, as shown below:
 
 ![home page](pics/homePage1.gif)
 
@@ -57,7 +56,7 @@ The menu bar of the game screen has four main commands in addition to the gear w
 ![menu bar](pics/menuOptions.png)
 
 
-### Map
+## Map
 
 The map editor lets you paint the game world's tiles and place sprites on tiles. Select one of the four tiles and move your cursor down to the map. Press **A** to color a tile. Press **B** to return to the menu bar and select another tile. After selecting a sprite, the **A** button will place the sprite on a tile, replacing the sprite that is there (or removing it if it is the same as the selected sprite). 
 
@@ -65,7 +64,7 @@ The map editor lets you paint the game world's tiles and place sprites on tiles.
 
 You can color tiles quickly by holding down the **A** button while moving the cursor. The reset button (upper right) resets the camera to the upper left of the map. To return to the game screen, press the **B** button (**B** always takes you back).
 
-### Paint
+## Paint
 
 The paint editor lets you change the art associated with a tile or sprite. As with the map editor, select the tile/sprite whose art you want to change. Here we have selected the puppy dog:
 
@@ -75,7 +74,7 @@ Move your cursor down to edit the bitmap (using the **A** button to apply the cu
 
 ![paint art](pics/paintPuppy2.gif)
 
-### Code
+## Code
 
 The coding page shows the four kinds of sprites on the left and the different types of rules available. We have selected the boulder sprite - the highlighted squares represent the rules we have coded to give the boulder its behavior (note that there are no rules highlighted for the direction pad in the upper right).
 
@@ -87,18 +86,17 @@ Selecting the boulder in the middle of the upper left quadrant brings up the rul
 
 This rule applies to a boulder "at rest" and starts the boulder moving down when there is a space below the boulder. More details about programming rules are given below.
 
-### Play
+## Play
 
 The play button runs the game in full screen mode. Press **B** to exit the game. Try to collect all the diamonds without having a boulder fall on you or getting caught by the skull/puppy
 
 ![play game](pics/playGame.gif)
 
-### Settings
+## Settings
 
 Once you get used to the features available in TileWorld, you can turn off the help suggestions via the gear wheel, which takes you to the settings screen. 
 
 ![game settings](pics/gameSettings.gif)
-
 
 
 
