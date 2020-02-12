@@ -5,13 +5,15 @@
 
 [![tile world](pics/loadScreen.gif)](https://microsoft.github.io/tileworld/)
 
-# Overview
+# Introduction
 
-TileWorld is a game creation app that allows you to design and play games directly on MakeCode Arcade devices. TileWorld games are based on the familiar paradigm of a gameboard with pieces that can move from one tile of the board to an adjacent tile. You can run TileWorld in 
+TileWorld is a game creation app that allows you to design and play games directly on MakeCode Arcade devices. TileWorld games are based on the familiar paradigm of a gameboard with pieces that can move from one tile of the board to an adjacent tile. TileWorld can be used to introduce computational concepts and its games are simple enough to design and simulate using basic classroom materials before programming them on an Arcade device. You can run TileWorld in 
 * a [web browser](https://microsoft.github.io/tileworld/), or 
 * on any [MakeCode Arcade device](https://arcade.makecode.com/hardware).
 
-Copy this [UF2 file (works for all MakeCode Arcade Devices)](https://github.com/microsoft/tileworld/releases/download/v3.5.4/arcade-all.uf2) to your device to get started. 
+Copy this [UF2 file (works for all MakeCode Arcade Devices)](https://github.com/microsoft/tileworld/releases/download/v3.5.5/arcade-all.uf2) to your device to get started. 
+
+# Overview 
 
 * [Load Screen and Navigation](#loadscreen)
 * [Overview of TileWorld Screens](#gamehome)
@@ -19,8 +21,6 @@ Copy this [UF2 file (works for all MakeCode Arcade Devices)](https://github.com/
 * [Making Your First Game](#firstgame)
 * [Sharing TileWorld Games](#sharing)
 * [Having Problems?](#issues)
-
-TileWorld can be used to introduce computational concepts and its games are simple enough to design and simulate using basic classroom materials before programming them on an Arcade device.
 
 # Load Screen and Navigation {#loadscreen}
 
