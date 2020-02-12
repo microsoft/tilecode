@@ -17,7 +17,7 @@ Copy this [UF2 file](https://github.com/microsoft/tileworld/releases/download/v3
 
 * [Tour of TileWorld](#tour)
 * [Coding in TileWorld](#coding)
-* [Making Your First Game](#firstgame)
+* [Your First Game](#firstgame)
 * [Sharing TileWorld Games](#sharing)
 * [Having Problems?](#issues)
 
