@@ -7,16 +7,16 @@
 
 # Introduction
 
-TileWorld is a game creation app that allows you to design and play games directly on MakeCode Arcade devices. TileWorld games are based on the familiar paradigm of a gameboard with pieces that can move from one tile of the board to an adjacent tile. TileWorld can be used to introduce computational concepts and its games are simple enough to design and simulate using basic classroom materials before programming them on an Arcade device. You can run TileWorld in 
-* a [web browser](https://microsoft.github.io/tileworld/), or 
+TileWorld is a game creation app that allows you to design and play games directly on MakeCode Arcade devices. TileWorld games are based on the familiar paradigm of a gameboard with pieces that can move from one tile of the board to an adjacent tile. You can run TileWorld: 
+* in a [web browser](https://microsoft.github.io/tileworld/), or 
 * on any [MakeCode Arcade device](https://arcade.makecode.com/hardware).
 
-Copy this [UF2 file (works for all MakeCode Arcade Devices)](https://github.com/microsoft/tileworld/releases/download/v3.5.5/arcade-all.uf2) to your device to get started. 
+Copy this [UF2 file](https://github.com/microsoft/tileworld/releases/download/v3.5.5/arcade-all.uf2) (works for all MakeCode Arcade Devices) to your device to get started. 
 
 # Overview 
 
 * [Load Screen and Navigation](#loadscreen)
-* [Overview of TileWorld Screens](#gamehome)
+* [Tour of TileWorld Screens](#gamehome)
 * [Coding in TileWorld](#coding)
 * [Making Your First Game](#firstgame)
 * [Sharing TileWorld Games](#sharing)
@@ -24,11 +24,13 @@ Copy this [UF2 file (works for all MakeCode Arcade Devices)](https://github.com/
 
 # Load Screen and Navigation {#loadscreen}
 
-The load screen of TileWorld lets you select one of four games to program and play. All game assets (gameboard, images and code) are stored in the flash memory of your Arcade device, so your changes will remain even if you power the device off. All editing takes place via the tile paradigm: move the square-shaped cursor between adjacent tiles using the direction pad (dpad); select a tile using the **A** button to perform an action; the **B** button takes you back (to the menu of the current screen or to the previous screen). Assets are saved to flash whenever you transition between screens.
+The load screen of TileWorld lets you select one of four games to program and play:
 
 ![load screen](pics/loadScreen.gif)
 
-# Overview of TileWorld Screens {#gamehome}
+ All game assets (gameboard, images and code) are stored in the flash memory of your Arcade device, so your changes will remain even if you power the device off. All editing takes place via the tile paradigm: move the square-shaped cursor between adjacent tiles using the direction pad (dpad); select a tile using the **A** button to perform an action; the **B** button takes you back (to the menu of the current screen or to the previous screen). Assets are saved to flash whenever you transition between screens.
+
+# Tour of TileWorld Screens {#gamehome}
 
 Let's take a quick tour through the various screens you can get to from the load screen. We load the game from slot #1, which takes us to the game's home screen, as shown below:
 
@@ -112,14 +114,16 @@ No surprises here: the rules for the direction pad (upper right quadrant) are li
 
 ## When Patterns
 
-Now press **A** to bring up the rule editor, shown below. The menu bar shows that this rule is for the player sprite on the press of the left dpad button. Below the menu bar, the editor is divided into two sections:
+Now press **A** to bring up the rule editor:
+
+![left button rule](pics/dpadLeftRule.gif)
+
+The menu bar shows that this rule is for the player sprite on the press of the left dpad button. Below the menu bar, the editor is divided into two sections:
 
 * *When* section: shows a pattern around the player
 * *Do* section: shows commands that will execute when the pattern matches
 
 In this case, when there is no wall in the space to the left of the player sprite, the sprite is sent a move left command.
-
-![left button rule](pics/dpadLeftRule.gif)
 
 Moving the cursor to the space to the left of the player sprite and pressing **A** brings up the *Predicate* menu, which shows the predicate flags for each of the four tiles and sprites that could occupy the space:
 
@@ -134,7 +138,7 @@ If a tile/sprite does not have a flag then it does not matter whether the space 
 
 ![attributes](pics/attributes.png)
 
-Try changing the flags on the tiles/sprites and see how it affects game play (remember that this rule only applies for the left dpad button). The reset button on the upper right of the attribute menu clears all the flags. Note that any space in the *When* section that is empty has no flag set, as shown for the space to the right of the player sprite:
+The reset button on the upper right of the attribute menu clears all the flags. Note that any space in the *When* section that is empty has no flag set, as shown for the space to the right of the player sprite:
 
 ![attributes](pics/allOK.gif)
 
