@@ -78,9 +78,10 @@ namespace tileworld {
                 this.ruleIndex[i] = [];
             }
             this.rules.forEach(rid => {
-                this.ruleIndex[this.p.getType(rid)].push(rid);
                 if (this.p.getType(rid) == RuleType.Resting && this.p.allTrue(rid))
                     this.allTrueResting.push(rid);
+                else
+                    this.ruleIndex[this.p.getType(rid)].push(rid);
             });
             this.allTrueResting.forEach(rid => { 
                 let b: boolean = this.rules.removeElement(rid);
@@ -107,7 +108,7 @@ namespace tileworld {
                 ts.y = ((ts.y >> 4) << 4) + 8;
                 ts.inst = -1;
                 if (ts.dir != -1) moving.push(ts);
-                else if (this.restingWithChange(ts)) resting.push(ts);
+                else resting.push(ts);
             });
             this.vm.nextWorld.fill(0xf);
             let rcCount = 0;
@@ -119,7 +120,8 @@ namespace tileworld {
             // moving to resting
             moving.forEach(ts => { if (!this.moving(ts)) resting.push(ts)});
             
-            rcs = this.applyRules(Phase.Resting, this.ruleIndex[RuleType.Resting], resting);
+            let filterResting = resting.filter(ts => this.restingWithChange(ts));
+            rcs = this.applyRules(Phase.Resting, this.ruleIndex[RuleType.Resting], filterResting);
             rcs.forEach(rc => this.evaluateRuleClosure(rc));
             rcCount += rcs.length;
 
@@ -248,8 +250,8 @@ namespace tileworld {
         private matchingRules(rules: number[], phase: Phase, ts: TileSprite, handler: (rid: number) => void) {
             rules.forEach(rid => {
                 if (this.ruleMatchesSprite(rid, ts) &&
-                    (phase == Phase.Resting ||
-                     phase == Phase.Moving  && this.p.getDir(rid) == ts.dir
+                    (phase == Phase.Resting
+                  || phase == Phase.Moving  && this.p.getDir(rid) == ts.dir
                   || phase == Phase.Pushing && this.dpad.indexOf(this.p.getDir(rid)) != -1)) {
                     handler(rid);
                 }
