@@ -660,25 +660,6 @@ namespace tileworld {
             }
             return whendo;
         }
-        
-        private setFixedOther(m: number, src: number, val: number) {
-            let whenDo = this.getWhenDo(this.col(false), this.row(false)-editorRow);
-            for(let o =0; o<this.p.fixed().length; o++) {
-                if (o != m) {
-                    if (src == -1 || this.p.getAttr(this.rule, whenDo, o) == src)
-                        this.setAttr(o, val);
-                }
-            }
-        }
-        private setMovableOther(m: number, src: number, val: number) {
-            let whenDo = this.getWhenDo(this.col(false), this.row(false)-editorRow);
-            for (let o = this.p.fixed().length; o< this.p.all().length; o++) {
-                if (o != m) {
-                    if (src == -1 || this.p.getAttr(this.rule, whenDo, o) == src)
-                        this.setAttr(o, val);
-                }
-            }
-        }
 
         private setAttr(m: number, val: AttrType, toggle: boolean = false) {
             let whenDo = this.getWhenDo(this.col(false), this.row(false)-editorRow);
