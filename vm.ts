@@ -499,6 +499,7 @@ namespace tileworld {
     }
 
     export class RunGame extends BackgroundBase {
+        private running: boolean;
         private vm: TileWorldVM;
         private signal: TileSprite;
         private state: VMState;
@@ -559,21 +560,21 @@ namespace tileworld {
 
             this.vm.setState(this.state);
             this.vm.round([]);
+            this.running = true;
 
-/*
-            game.onUpdateInterval(5000, function () {
-                control.heapSnapshot();
-                control.heapDump();
-            })
-*/
 
             game.onUpdate(() => {
+                if (!this.running)
+                    return;
                 // has signal sprite moved to new tile
                 // then do a worldUpdate and reset the signal sprite
                 if (this.signal.x >= 23) {
                     if (this.state.game != GameState.InPlay) {
-                        gameover(this.state.game == GameState.Won);
-                        game.popScene();
+                        this.running = false;
+                        let win = this.state.game == GameState.Won;
+                        pause(400);
+                        game.showDialog("Game Over", " you " + (win ? "won" : "lost"));
+                        game.waitAnyButton();
                         return;
                     } 
                     this.signal.x = 8;
@@ -637,42 +638,11 @@ namespace tileworld {
         }
 
         private requestMove(dir: number) {
-            if (this.currentDirection.indexOf(dir) == -1)
+            if (!this.running) {
+                controller.setRepeatDefault(500, 80);
+                game.popScene();
+            } else if (this.currentDirection.indexOf(dir) == -1)
                 this.currentDirection.push(dir);
         }
     }
-
-    function gameover(win: boolean = false) {
-
-
-            // collect the scores before poping the scenes
-            /*
-            const scoreInfo = info.player1.getState();
-            const highScore = info.highScore();
-            if (scoreInfo.score > highScore)
-                info.saveHighScore();
-*/
-           //game.pushScene();
-           //scene.setBackgroundImage(screen.clone());
-            pause(400);
-
-           game.showDialog("Game Over", " you " + (win ? "won" : "lost"));
-            /*
-            const overDialog = new game.GameOverDialog(win, scoreInfo.score, highScore);
-            scene.createRenderable(scene.HUD_Z, target => {
-                overDialog.update();
-                target.drawTransparentImage(
-                    overDialog.image,
-                    0,
-                    (screen.height - overDialog.image.height()) >> 1
-                );
-            });
-            */
-
-            pause(500); // wait for users to stop pressing keys
-            // overDialog.displayCursor();
-            game.waitAnyButton();
-            game.popScene();  
-        }
-
 }
