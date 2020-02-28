@@ -140,7 +140,7 @@ namespace tileworld {
             let selCol = 11;
             if (center) this.drawImage(x, y, this.centerImage());
             if (rt == RuleType.Moving) {
-                this.drawImage(x, y, moveImages[rd])
+                this.drawImage(x, y, movedImages[rd])
             } else if (rt >= RuleType.CollidingResting) {
                 let ax = rd == MoveDirection.Left ? 1 : (rd == MoveDirection.Right ? -1 : 0)
                 let ay = rd == MoveDirection.Down ? -1 : (rd == MoveDirection.Up ? 1 : 0)
