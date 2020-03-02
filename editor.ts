@@ -155,7 +155,9 @@ namespace tileworld {
             if (this.cursorType == CursorType.Map) {
                 let col = (this.paintCursor.x >> 3) + this.offsetX;
                 let row = ((this.paintCursor.y - (editorY +4)) >> 3) + this.offsetY;
-                if (this.userSpriteIndex < this.p.fixed().length)
+                if (this.userSpriteIndex == 0xf) {
+                    this.world.setPixel(col, row, 0xf);
+                } else if (this.userSpriteIndex < this.p.fixed().length)
                     this.world.setPixel(col, row, this.userSpriteIndex);
                 else {
                     if (this.sprites.getPixel(col, row) == this.userSpriteIndex)
@@ -174,8 +176,9 @@ namespace tileworld {
                     this.userSpriteIndex = this.col()-1;
                     this.updateSelection();
                 } else if (this.col() == 9) {
-                    this.paintHome();
-                    this.setCursor(CursorType.Map);
+                    this.userSpriteIndex = 0xf;
+                    // this.paintHome();
+                    // this.setCursor(CursorType.Map);
                 }
             }
             this.update();
@@ -200,7 +203,7 @@ namespace tileworld {
             this.p.all().forEach((img, index) => { 
                 this.drawImage(img, 1+index, 0); 
             });
-            this.drawImage(reset, 9, 0);
+            this.drawImage(emptyDiagTile, 9, 0);
             for(let x = this.offsetX; x<this.offsetX+20; x++) {
                 for (let y = this.offsetY; y < this.offsetY + 15; y++) {
                     let inRange = 0 <= x && x < this.world.width && 0 <= y && y < this.world.height;
@@ -210,7 +213,7 @@ namespace tileworld {
                     let ny = editorY + row * paintSize;
                     // tile
                     let index = inRange ? this.world.getPixel(x, y) : -1;
-                    let img = index == -1 ? emptyTile : this.p.getImage(index);
+                    let img = index == -1 ? emptyTile : index == 0xf ? emptyDiagTile : this.p.getImage(index);
                     for(let i=0;i<img.width;i+=2) {
                         for (let j = 0; j < img.height; j += 2) {
                             screen.setPixel(nx+(i>>1),ny+(j>>1),img.getPixel(i,j))

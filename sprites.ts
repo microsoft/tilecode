@@ -128,6 +128,24 @@ export const emptyTile = img`
     b f f f f f f f f f f f f f f c
     c c c c c c c c c c c c c c c c
 `;
+export const emptyDiagTile = img`
+    b b b b b b b b b b b b b b b c
+    b f f f f f f f f f f f f c c c
+    b f f f f f f f f f f f c c f c
+    b f f f f f f f f f f c c f f c
+    b f f f f f f f f f c c f f f c
+    b f f f f f f f f c c f f f f c
+    b f f f f f f f c c f f f f f c
+    b f f f f f f c c f f f f f f c
+    b f f f f f c c f f f f f f f c
+    b f f f f c c f f f f f f f f c
+    b f f f c c f f f f f f f f f c
+    b f f c c f f f f f f f f f f c
+    b f c c f f f f f f f f f f f c
+    b c c f f f f f f f f f f f f c
+    b c f f f f f f f f f f f f f c
+    c c c c c c c c c c c c c c c c
+`;
 export const cursorIn = img`
     . . . . . . . . . . . . . . . .
     . . 1 1 1 1 1 1 1 1 1 1 1 1 . .
