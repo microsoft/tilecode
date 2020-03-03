@@ -121,9 +121,11 @@ namespace tileworld {
             rcs.forEach(rc => this.evaluateRuleClosure(rc));
             rcCount += rcs.length;
 
-            let remainingResting: TileSprite[] = [];
-            resting.forEach(ts => { if (!this.moving(ts)) remainingResting.push(ts) });
-            rcs = this.applyRules(Phase.Pushing, this.ruleIndex[RuleType.Pushing], remainingResting);
+            //let remainingResting: TileSprite[] = [];
+            //resting.forEach(ts => { if (!this.moving(ts)) remainingResting.push(ts) });
+            let all: TileSprite[] = []
+            this.allSprites(ts => { all.push(ts) }); 
+            rcs = this.applyRules(Phase.Pushing, this.ruleIndex[RuleType.Pushing], all);
             rcs.forEach(rc => this.evaluateRuleClosure(rc));
             rcCount += rcs.length;
 
@@ -462,10 +464,11 @@ namespace tileworld {
                     }
                     case CommandType.Move: {
                         let colliding = this.p.getType(rc.rid) >= RuleType.CollidingResting;
+                        let pushing = this.p.getType(rc.rid) >= RuleType.Pushing;
                         let witness = self ? rc.self : 
                                 (colliding ? rc.witnesses[0]
                                     : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow));
-                        if (witness && (witness.inst == -1 || Math.randomRange(0,1) < 0.5 || colliding)) {
+                        if (witness && (witness.inst == -1 || Math.randomRange(0,1) < 0.5 || colliding || pushing)) {
                             witness.inst = inst;
                             witness.arg = arg;
                         }
