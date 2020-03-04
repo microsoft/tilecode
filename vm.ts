@@ -46,6 +46,16 @@ namespace tileworld {
         constructor() {}
     }
 
+    class Debugger {
+        constructor(private tm: TileWorldVM) {
+            tm.setDebugger(this);
+        }
+
+        public newRuleClosures(rc: RuleClosure[]) {
+
+        }
+    }
+
     // rule (rid) plus binding of self and other sprite, in preparation
     // for the evalation of rule's commands 
     class RuleClosure {
@@ -60,6 +70,7 @@ namespace tileworld {
     enum Phase { Moving, Resting, Pushing, Colliding };
 
     class TileWorldVM {
+        private debugger: Debugger;
         private vm: VMState;
         private dpad: number[];
         // (temporary) state for global commands
@@ -69,6 +80,7 @@ namespace tileworld {
         private ruleIndex: number[][] = [];     // lookup of rules by phase
         
         constructor(private p: Project, private rules: number[]) {
+            this.debugger = null;
             this.vm = null;
             for (let i = RuleType.Resting; i<= RuleType.CollidingMoving; i++) {
                 this.ruleIndex[i] = [];
@@ -82,8 +94,19 @@ namespace tileworld {
             });
         }
 
+        public setDebugger(d: Debugger) {
+            this.debugger = d;
+        }
+
         public setState(v: VMState) {
             this.vm = v;
+        }
+
+        private toDebugger(rcs: RuleClosure[]) {
+            if (this.debugger) {
+                this.debugger.newRuleClosures(rcs);
+            } else
+                rcs.forEach(rc => this.evaluateRuleClosure(rc));
         }
 
         public round(currDir: number[]) {
@@ -108,7 +131,7 @@ namespace tileworld {
 
             let rcCount = 0;
             let rcs = this.applyRules(Phase.Moving, this.ruleIndex[RuleType.Moving], moving);
-            rcs.forEach(rc => this.evaluateRuleClosure(rc));
+            this.toDebugger(rcs);
             rcCount += rcs.length;
 
             // if a previously moving sprite did not get a move command, it transitions to resting
@@ -118,7 +141,7 @@ namespace tileworld {
             // no need to run resting rule on sprite
             let filterResting = resting.filter(ts => this.restingWithChange(ts));
             rcs = this.applyRules(Phase.Resting, this.ruleIndex[RuleType.Resting], filterResting);
-            rcs.forEach(rc => this.evaluateRuleClosure(rc));
+            this.toDebugger(rcs);
             rcCount += rcs.length;
 
             //let remainingResting: TileSprite[] = [];
@@ -126,7 +149,7 @@ namespace tileworld {
             let all: TileSprite[] = []
             this.allSprites(ts => { all.push(ts) }); 
             rcs = this.applyRules(Phase.Pushing, this.ruleIndex[RuleType.Pushing], all);
-            rcs.forEach(rc => this.evaluateRuleClosure(rc));
+            this.toDebugger(rcs);
             rcCount += rcs.length;
 
             // now, look for collisions
@@ -138,7 +161,7 @@ namespace tileworld {
             let against: TileSprite[] = []
             this.allSprites(ts => { against.push(ts) }); 
             rcs = this.collisionDetection( against );
-            rcs.forEach(rc => this.evaluateRuleClosure(rc));
+            this.toDebugger(rcs);
             rcCount += rcs.length;
             
             // finally, update the rules
