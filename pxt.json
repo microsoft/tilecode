@@ -18,6 +18,7 @@
         "imageeditor.ts",
         "rulesBase.ts",
         "spriteRules.ts",
+        "debugger.ts",
         "ruleeditor.ts",
         "editor.ts",
         "gallery.ts",
