@@ -172,7 +172,7 @@ namespace tileworld {
         }
 
         public makeWhenDo(rid: number, col: number, row: number) {
-            let whenDo = new WhenDo(col, row, [], []);
+            let whenDo = new WhenDo(col, row, [], 0, []);
             this.getRule(rid).whenDo.push(whenDo);
             return this.getRule(rid).whenDo.length - 1;
         }
@@ -392,7 +392,7 @@ namespace tileworld {
 
     function makePushRule(dir: MoveDirection) {
         return new Rule([4], RuleType.Pushing, dir, 
-        [new WhenDo(2+moveXdelta(dir), 2+moveYdelta(dir), wall(), []), new WhenDo(2, 2, ok(), [new Command(CommandType.Move, dir)])]);
+        [new WhenDo(2+moveXdelta(dir), 2+moveYdelta(dir), wall(), 0, []), new WhenDo(2, 2, ok(), 0, [new Command(CommandType.Move, dir)])]);
     }
 
     const player = img`

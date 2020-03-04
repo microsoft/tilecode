@@ -64,7 +64,8 @@ class WhenDo {
     constructor(
         public col: number,            // the guards and commands associated with a tile in the neighborhood
         public row: number,            // (2,2) is the center of neighborhood, graphics coordinate system
-        public predicate: AttrType[],  // the guard preicate (one attribute per fixed/movable sprite)
+        public predicate: AttrType[],  // the guard predicate (one attribute per fixed/movable sprite)
+        public dir: number,            // the direction associated with witness
         public commands: Command[]     // the commands that execute if the guard succeeds
     ) { }
 }
@@ -177,6 +178,7 @@ namespace tileworld {
                     col: transformCol(col, row, fr),
                     row: transformRow(row, col, fr),
                     predicate: whendo.predicate,
+                    dir: 0, // TODO: fix this up
                     commands: flipCommands(whendo.commands, fr)
                 };
                 tgtRule.whenDo.push(tgtWhenDo);
@@ -337,7 +339,7 @@ namespace tileworld {
                 col += moveXdelta(firstMove) + moveXdelta(secondMove);
                 row += moveYdelta(firstMove) + moveYdelta(secondMove);
             }
-            let whenDo = new WhenDo(col, row, [], []);
+            let whenDo = new WhenDo(col, row, [], 0, []);
             for(let a = 0; a < 8; a++) {
                 let attr = readBuf(2);
                 whenDo.predicate.push(attr);
