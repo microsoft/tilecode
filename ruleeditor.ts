@@ -700,9 +700,8 @@ namespace tileworld {
                 let end = this.p.all().length - 1;
                 let project = this.projectAttrs(rid, whenDo, begin, end);
                 let done: AttrType[] = [];
-                project.forEach(index => {
-                    let val = this.p.getAttr(rid, whenDo, index);
-                    let i = attrValues.indexOf(val);
+                project.forEach(a => {
+                    let i = attrValues.indexOf(a);
                     screen.drawTransparentImage(attrImages[i], (col<<4)+8+attrXoffsets[i], ((row + editorRow)<<4) + 8 + yoff + attrYoffsets[i]);
                 });
 
@@ -727,7 +726,13 @@ namespace tileworld {
             let res: number[] = [];
             for (let i = begin; i <= end; i++) {
                 let a = this.p.getAttr(rid, whendo, i);
-                if (a != AttrType.OK && res.indexOf(a) == -1) res.push(i);
+                if (a != AttrType.OK && res.indexOf(a) == -1) res.push(a);
+            }
+            if (res.length > 0) {
+                if (res.length == 1 && res.indexOf(AttrType.Exclude) != -1)
+                    return [ AttrType.Exclude ];
+                else    
+                    return [];
             }
             return res;
         }
