@@ -176,7 +176,8 @@ namespace tileworld {
                     this.userSpriteIndex = this.col()-1;
                     this.updateSelection();
                 } else if (this.col() == 9) {
-                    this.userSpriteIndex = 0xf;
+                    // disabled feature
+                    // this.userSpriteIndex = 0xf;
                     // this.paintHome();
                     // this.setCursor(CursorType.Map);
                 }
@@ -203,7 +204,7 @@ namespace tileworld {
             this.p.all().forEach((img, index) => { 
                 this.drawImage(img, 1+index, 0); 
             });
-            this.drawImage(emptyDiagTile, 9, 0);
+            // this.drawImage(emptyDiagTile, 9, 0);
             for(let x = this.offsetX; x<this.offsetX+20; x++) {
                 for (let y = this.offsetY; y < this.offsetY + 15; y++) {
                     let inRange = 0 <= x && x < this.world.width && 0 <= y && y < this.world.height;
