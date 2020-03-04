@@ -46,9 +46,9 @@ namespace tileworld {
         constructor() {}
     }
 
-    class Debugger {
+    class DebuggerHooks {
         constructor(private tm: TileWorldVM) {
-            tm.setDebugger(this);
+            tm.setHooks(this);
         }
 
         public newRuleClosures(rc: RuleClosure[]) {
@@ -70,7 +70,7 @@ namespace tileworld {
     enum Phase { Moving, Resting, Pushing, Colliding };
 
     class TileWorldVM {
-        private debugger: Debugger;
+        private hooks: DebuggerHooks;
         private vm: VMState;
         private dpad: number[];
         // (temporary) state for global commands
@@ -80,7 +80,7 @@ namespace tileworld {
         private ruleIndex: number[][] = [];     // lookup of rules by phase
         
         constructor(private p: Project, private rules: number[]) {
-            this.debugger = null;
+            this.hooks = null;
             this.vm = null;
             for (let i = RuleType.Resting; i<= RuleType.CollidingMoving; i++) {
                 this.ruleIndex[i] = [];
@@ -94,8 +94,8 @@ namespace tileworld {
             });
         }
 
-        public setDebugger(d: Debugger) {
-            this.debugger = d;
+        public setHooks(d: DebuggerHooks) {
+            this.hooks = d;
         }
 
         public setState(v: VMState) {
@@ -103,8 +103,8 @@ namespace tileworld {
         }
 
         private toDebugger(rcs: RuleClosure[]) {
-            if (this.debugger) {
-                this.debugger.newRuleClosures(rcs);
+            if (this.hooks) {
+                this.hooks.newRuleClosures(rcs);
             } else
                 rcs.forEach(rc => this.evaluateRuleClosure(rc));
         }
