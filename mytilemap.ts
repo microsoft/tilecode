@@ -3,26 +3,17 @@ namespace scene {
 
     export function setTileMap(map: Image, scale = TileScale.Sixteen) {
         const scene = game.currentScene();
-        if (!scene.tileMap || !(scene.tileMap as tiles.legacy.LegacyTilemap).isLegacy) {
-            scene.tileMap = new tiles.legacy.LegacyTilemap();
-        }
         (scene.tileMap as tiles.legacy.LegacyTilemap).setMap(map);
         scene.tileMap.scale = scale;
     }
 
     export function setTile(index: number, img: Image, wall?: boolean) {
         const scene = game.currentScene();
-        if (!scene.tileMap || !(scene.tileMap as tiles.legacy.LegacyTilemap).isLegacy) {
-            scene.tileMap = new tiles.legacy.LegacyTilemap();
-        }
         (scene.tileMap as tiles.legacy.LegacyTilemap).setTile(index, img, !!wall);
     }
 
     function getTilesByType(index: number): tiles.Tile[] {
         const scene = game.currentScene();
-        if (!scene.tileMap || !(scene.tileMap as tiles.legacy.LegacyTilemap).isLegacy) {
-            scene.tileMap = new tiles.legacy.LegacyTilemap();
-        }
         return (scene.tileMap as tiles.legacy.LegacyTilemap).getTilesByTypeLegacy(index);
     }
 
@@ -64,11 +55,13 @@ namespace tiles.legacy {
     export class LegacyTilemap extends tiles.TileMap {
         private _mapImage: Image;
         private _tileSets: TileSet[];
+        private _screenX: number;
 
         public isLegacy: boolean;
 
-        constructor(scale: TileScale = TileScale.Sixteen) {
+        constructor(scale: TileScale = TileScale.Sixteen, left: number = 0) {
             super(scale);
+            this._screenX = left;
             this._tileSets = [];
             this.isLegacy = true;
         }
@@ -81,8 +74,18 @@ namespace tiles.legacy {
             return this._mapImage;
         }
 
+        myLeft() {
+            return this._screenX << this.scale;
+        }
+
+        myWidth() {
+            return screen.width - this.myLeft();
+        }
+
         offsetX(value: number) {
-            return Math.clamp(0, Math.max(this.areaWidth() - screen.width, 0), value);
+            return Math.clamp(0, 
+                              Math.max(this.areaWidth() - this.myWidth(), 0), 
+                              value);
         }
 
         offsetY(value: number) {
@@ -180,6 +183,7 @@ namespace tiles.legacy {
             return index < 0 || index > 0xf;
         }
 
+        // TODO: proper clipping on the left side
         protected draw(target: Image, camera: scene.Camera) {
             if (!this.enabled) return;
 
@@ -189,7 +193,7 @@ namespace tiles.legacy {
             const offsetY = camera.drawOffsetY & bitmask;
 
             const x0 = Math.max(0, camera.drawOffsetX >> this.scale);
-            const xn = Math.min(this._mapImage.width, ((camera.drawOffsetX + target.width) >> this.scale) + 1);
+            const xn = Math.min(this._mapImage.width, ((camera.drawOffsetX + this.myWidth()) >> this.scale) + 1);
             const y0 = Math.max(0, camera.drawOffsetY >> this.scale);
             const yn = Math.min(this._mapImage.height, ((camera.drawOffsetY + target.height) >> this.scale) + 1);
 
@@ -200,7 +204,7 @@ namespace tiles.legacy {
                     if (tile) {
                         target.drawTransparentImage(
                             tile.image,
-                            ((x - x0) << this.scale) - offsetX,
+                            this.myLeft() + ((x - x0) << this.scale) - offsetX,
                             ((y - y0) << this.scale) - offsetY
                         );
                     }

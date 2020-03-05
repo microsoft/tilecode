@@ -1,5 +1,6 @@
 namespace tileworld {
 
+
     enum SpriteState { Alive, Dead, }
 
     // a TileSprite is centered on a 16x16 pixel tile
@@ -9,12 +10,12 @@ namespace tileworld {
         public dir: MoveDirection;  // the direction the sprite moved in the last round
         public inst: number;        // the one instruction history to apply to the sprite to 
         public arg: number;         // create the next sprite state
-        constructor(img: Image, kind: number) {
+        constructor(img: Image, kind: number, d: boolean = false) {
             super(img);
             const scene = game.currentScene();
             scene.physicsEngine.addSprite(this);
             this.setKind(kind);
-            this.debug = false;
+            this.debug = d;
             this.dir = -1;
             this.inst = -1;
             this.state = SpriteState.Alive;
@@ -26,6 +27,24 @@ namespace tileworld {
             this.dir = this.inst == CommandType.Move && this.arg < MoveArg.Stop  ? this.arg : -1;
             this.vx = this.dir == MoveDirection.Left ? -100 : this.dir == MoveDirection.Right ? 100 : 0;
             this.vy = this.dir == MoveDirection.Up ? -100 : this.dir == MoveDirection.Down ? 100 : 0;
+        }
+        isOutOfScreen(camera: scene.Camera): boolean {
+            const ox = (this.flags & sprites.Flag.RelativeToCamera) ? 0 : camera.drawOffsetX;
+            const oy = (this.flags & sprites.Flag.RelativeToCamera) ? 0 : camera.drawOffsetY;
+            return this.right - ox < (this.debug ? 32 : 0) || this.bottom - oy < 0 || 
+                   this.left - ox > screen.width - (this.debug ? 32 : 0) || this.top - oy > screen.height;
+        }
+        // still need to translate properly
+        __drawCore(camera: scene.Camera) {
+            if (this.isOutOfScreen(camera)) return;
+
+            const ox = (this.flags & sprites.Flag.RelativeToCamera) ? 0 : camera.drawOffsetX;
+            const oy = (this.flags & sprites.Flag.RelativeToCamera) ? 0 : camera.drawOffsetY;
+
+            const l = this.left - ox + (this.debug ? 32 : 0);
+            const t = this.top - oy;
+
+            screen.drawTransparentImage(this.image(), l, t)
         }
     }
 
@@ -546,6 +565,8 @@ namespace tileworld {
             this.state = new VMState();
             this.state.game = GameState.InPlay;
             this.state.sprites = [];
+            const currScene = game.currentScene();
+            currScene.tileMap = new tiles.legacy.LegacyTilemap(TileScale.Sixteen, this.hooks ? 2 : 0);
             scene.setTileMap(w.clone());
             this.state.nextWorld = w.clone();
             this.state.changed = w.clone();
@@ -565,7 +586,7 @@ namespace tileworld {
                     let kind = sprites.getPixel(x,y);
                     if (kind == 0xf) continue;
                     let art = this.p.getImage(kind);
-                    let ts = new TileSprite(art, kind);
+                    let ts = new TileSprite(art, kind, this.hooks != null);
                     this.state.sprites[kind].push(ts);
                     ts.x = (x << 4) + 8;
                     ts.y = (y << 4) + 8;
