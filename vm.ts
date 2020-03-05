@@ -1,8 +1,5 @@
 namespace tileworld {
 
-    // TODO: this is the only place that we use the legacy tilemap
-    // TODO: let's import code and change for our needs, removing dependence
-
     enum SpriteState { Alive, Dead, }
 
     // a TileSprite is centered on a 16x16 pixel tile
