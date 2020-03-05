@@ -1,9 +1,13 @@
 namespace tileworld {
 
+    // TODO: this is the only place that we use the legacy tilemap
+    // TODO: let's import code and change for our needs, removing dependence
+
     enum SpriteState { Alive, Dead, }
 
     // a TileSprite is centered on a 16x16 pixel tile
     class TileSprite extends Sprite {
+        public debug: boolean;
         public state: SpriteState;
         public dir: MoveDirection;  // the direction the sprite moved in the last round
         public inst: number;        // the one instruction history to apply to the sprite to 
@@ -13,6 +17,7 @@ namespace tileworld {
             const scene = game.currentScene();
             scene.physicsEngine.addSprite(this);
             this.setKind(kind);
+            this.debug = false;
             this.dir = -1;
             this.inst = -1;
             this.state = SpriteState.Alive;
@@ -525,13 +530,18 @@ namespace tileworld {
     }
 
     export class RunGame extends BackgroundBase {
+        private hooks: DebuggerHooks;
         private running: boolean;
         private vm: TileWorldVM;
         private signal: TileSprite;
         private state: VMState;
-        constructor(private p: Project, rules: number[]) {
+        constructor(private p: Project, rules: number[], debug: boolean = false) {
             super();
-            this.vm = new TileWorldVM(p, rules)
+            this.vm = new TileWorldVM(p, rules);
+            if (debug)
+                this.hooks = new DebuggerHooks(this.vm);
+            else
+                this.hooks = null;
         }
         
         public setWorld(w: Image, sprites: Image) {
@@ -562,6 +572,7 @@ namespace tileworld {
                     this.state.sprites[kind].push(ts);
                     ts.x = (x << 4) + 8;
                     ts.y = (y << 4) + 8;
+                    ts.debug = this.hooks != null;
                 }   
             }
         }
@@ -587,7 +598,6 @@ namespace tileworld {
             this.vm.setState(this.state);
             this.vm.round([]);
             this.running = true;
-
 
             game.onUpdate(() => {
                 if (!this.running)
@@ -618,8 +628,20 @@ namespace tileworld {
                 }
             });
 
+            game.onPaint(() => {
+                if (this.hooks == null)
+                    return;
+                // debugger here
+                
+            });
+
             this.registerController();
             signal.vx = 100;
+        }
+
+        private debuggerUI() {
+            // play
+            // step
         }
 
         private registerController() {
@@ -658,12 +680,14 @@ namespace tileworld {
                 this.requestMove(PushingArg.AButton);
             });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
+                // TODO: debugger
                 controller.setRepeatDefault(500, 80);
                 game.popScene();
             })
         }
 
         private requestMove(dir: number) {
+            // TODO: debuggger
             if (!this.running) {
                 controller.setRepeatDefault(500, 80);
                 game.popScene();

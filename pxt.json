@@ -4,8 +4,7 @@
     "description": "",
     "dependencies": {
         "device": "*",
-        "animation": "*",
-        "color-coded-tilemap": "*"
+        "animation": "*"
     },
     "files": [
         "README.md",
@@ -26,7 +25,8 @@
         "home.ts",
         "loadScreen.ts",
         "main.ts",
-        "games.ts"
+        "games.ts",
+        "mytilemap.ts"
     ],
     "testFiles": [
         "test.ts"
