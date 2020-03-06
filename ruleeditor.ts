@@ -110,10 +110,10 @@ namespace tileworld {
                             game.pushScene();
                             new MapEditor(this.p);
                             return; 
-                        } else if (this.col() == 4) {
+                        } else if (this.col() == 4 || this.col() == 5) {
                             let rules = this.p.getRuleIds();
                             game.pushScene();
-                            let g = new RunGame(this.p, rules);
+                            let g = new RunGame(this.p, rules, this.col() == 5);
                             g.setWorld(this.p.getWorld(), this.p.getSprites());
                             g.start();
                             return;

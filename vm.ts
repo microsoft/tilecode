@@ -72,16 +72,6 @@ namespace tileworld {
         constructor() {}
     }
 
-    class DebuggerHooks {
-        constructor(private tm: TileWorldVM) {
-            tm.setHooks(this);
-        }
-
-        public newRuleClosures(rc: RuleClosure[]) {
-
-        }
-    }
-
     // rule (rid) plus binding of self and other sprite, in preparation
     // for the evalation of rule's commands 
     class RuleClosure {
@@ -96,7 +86,6 @@ namespace tileworld {
     enum Phase { Moving, Resting, Pushing, Colliding, Completed };
 
     class TileWorldVM {
-        private hooks: DebuggerHooks;
         private vm: VMState;
         private dpad: number[];
         // (temporary) state for global commands
@@ -106,7 +95,6 @@ namespace tileworld {
         private ruleIndex: number[][] = [];     // lookup of rules by phase
         
         constructor(private p: Project, private rules: number[]) {
-            this.hooks = null;
             this.vm = null;
             for (let i = RuleType.Resting; i<= RuleType.CollidingMoving; i++) {
                 this.ruleIndex[i] = [];
@@ -120,19 +108,8 @@ namespace tileworld {
             });
         }
 
-        public setHooks(d: DebuggerHooks) {
-            this.hooks = d;
-        }
-
         public setState(v: VMState) {
             this.vm = v;
-        }
-
-        private toDebugger(rcs: RuleClosure[]) {
-            if (this.hooks) {
-                this.hooks.newRuleClosures(rcs);
-            } else
-                rcs.forEach(rc => this.evaluateRuleClosure(rc));
         }
 
         public startRound(currDir: number[]) {
@@ -573,18 +550,13 @@ namespace tileworld {
     }
 
     export class RunGame extends BackgroundBase {
-        private hooks: DebuggerHooks;
         private running: boolean;
         private vm: TileWorldVM;
         private signal: TileSprite;
         private state: VMState;
-        constructor(private p: Project, rules: number[], debug: boolean = false) {
+        constructor(private p: Project, rules: number[], private debug: boolean = false) {
             super();
             this.vm = new TileWorldVM(p, rules);
-            if (debug)
-                this.hooks = new DebuggerHooks(this.vm);
-            else
-                this.hooks = null;
         }
         
         public setWorld(w: Image, sprites: Image) {
@@ -593,7 +565,7 @@ namespace tileworld {
             this.state.game = GameState.InPlay;
             this.state.sprites = [];
             const currScene = game.currentScene();
-            currScene.tileMap = new tiles.legacy.LegacyTilemap(TileScale.Sixteen, this.hooks ? 2 : 0);
+            currScene.tileMap = new tiles.legacy.LegacyTilemap(TileScale.Sixteen, this.debug ? 2 : 0);
             scene.setTileMap(w.clone());
             this.state.nextWorld = w.clone();
             this.state.changed = w.clone();
@@ -613,11 +585,10 @@ namespace tileworld {
                     let kind = sprites.getPixel(x,y);
                     if (kind == 0xf) continue;
                     let art = this.p.getImage(kind);
-                    let ts = new TileSprite(art, kind, this.hooks != null);
+                    let ts = new TileSprite(art, kind, this.debug);
                     this.state.sprites[kind].push(ts);
                     ts.x = (x << 4) + 8;
                     ts.y = (y << 4) + 8;
-                    ts.debug = this.hooks != null;
                 }   
             }
         }
@@ -686,10 +657,10 @@ namespace tileworld {
             });
 
             game.onPaint(() => {
-                if (this.hooks == null)
-                    return;
                 // debugger here
-                
+                if (this.debug) {
+                    screen.drawImage(debug, 0, 0)
+                }
             });
 
             this.registerController();
