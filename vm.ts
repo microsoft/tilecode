@@ -138,6 +138,7 @@ namespace tileworld {
         processClosure(rc: RuleClosure) {
             this.evaluateRuleClosure(rc);
             if (this.vm.phase == Phase.Moving) {
+                // TODO: this isn't quite right, needs to be done after phase is over
                 // if a previously moving sprite did not get a move command, it transitions to resting
                 if (!this.moving(rc.self)) this.vm.resting.push(rc.self);
             }
