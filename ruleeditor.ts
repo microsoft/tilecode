@@ -4,7 +4,7 @@ namespace tileworld {
     enum CommandTokens { Last=CommandType.Last, SpaceTile, Delete };
 
     const editorRow = 2;
-    const menuHelpString = "10add sprite,30map,40play,50debug,60delete rule,80add rule,90next rule,70previous rule,";
+    const menuHelpString = "06add sprite,10map,20play,30debug,40delete rule,80add rule,90next rule,70previous rule,";
     const attrHelpString = "00include,10exclude,90reset,";
 
     export class RuleEditor extends RuleVisualsBase {
@@ -106,24 +106,26 @@ namespace tileworld {
                             } else if (this.col() == 8 && this.rt != -1) {
                                 this.changeRule(p.makeRule(this.kind, this.rt, this.dir));
                             }
-                        } else if (this.col() == 3) {
+                        } else if (this.col() == 1) {
                             game.pushScene();
                             new MapEditor(this.p);
                             return; 
-                        } else if (this.col() == 4 || this.col() == 5) {
+                        } else if (this.col() == 2 || this.col() == 3) {
                             let rules = this.p.getRuleIds();
                             game.pushScene();
-                            let g = new RunGame(this.p, rules, this.col() == 5);
+                            let g = new RunGame(this.p, rules, this.col() == 3);
                             g.setWorld(this.p.getWorld(), this.p.getSprites());
                             g.start();
                             return;
-                        } else if (this.col() == 6) {
+                        } else if (this.col() == 4) {
                             this.askDeleteRule = true;                     
-                        } else if (this.col() == 1) {
-                            this.menu = RuleEditorMenus.MultipleMenu;
-                        }
+                        } 
                     } else if (this.col() > 5 && this.row() >= editorRow) {
                         this.tryEditCommand();
+                    } else if (this.row() == 6) {
+                        if (this.col() == 0) {
+                            this.menu = RuleEditorMenus.MultipleMenu;
+                        }
                     }
                 }
                 this.update();
@@ -193,7 +195,7 @@ namespace tileworld {
                 this.helpCursor.y = this.row() < 6 ? this.cursor.y + 32 : this.cursor.y;
                 this.helpCursor.say(null);
                 if (this.menu == RuleEditorMenus.MainMenu) {
-                    if (this.row() == 0) {
+                    if (this.row() == 0 || this.row() == 6) {
                         this.helpCursor.say(getHelp(menuHelpString, this.col(), this.row()));
                     } else if (this.manhattanDistance2() <= 2) {
                         this.helpCursor.say("A: predicate");
@@ -294,19 +296,19 @@ namespace tileworld {
             //screen.fillRect(0, yoff, 160, 19, 0);
             this.fillTile(0, 0, 11);
             this.drawImage(0, 0, code);
-            this.drawImage(1, 0, this.centerImage());
+            this.drawImage(0, 6, this.centerImage());
             if (this.p.getKinds(this.rule).length > 1)
-                this.drawImage(1,0,oneof);
+                this.drawImage(0,6,oneof);
             if (this.getType() == RuleType.Pushing) {
                 let image = this.getDirectionImage();
                 if (image)
-                    this.drawImage(2, 0, image);
+                    this.drawImage(1, 6, image);
             }
 
-            this.drawImage(3, 0, map);
-            this.drawImage(4, 0, play);
-            this.drawImage(5, 0, debug);
-            this.drawImage(6, 0, garbageCan);
+            this.drawImage(1, 0, map);
+            this.drawImage(2, 0, play);
+            this.drawImage(3, 0, debug);
+            this.drawImage(4, 0, garbageCan);
             let rules = this.currentRules();
             let index = rules.indexOf(this.rule);
             this.drawImage(9, 0, index < rules.length -1 ? rightArrow : greyImage(rightArrow));
