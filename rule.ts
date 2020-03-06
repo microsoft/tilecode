@@ -163,7 +163,6 @@ namespace tileworld {
         }
     }
 
-    // TODO: make this an online transformation (view of) over a rule to save space
     export function flipRule(srcRule: Rule, fr: FlipRotate) {
         // TODO: convert this to using C-level API
         let tgtRule = makeNewRule(srcRule.kind, srcRule.rt, flipRotateDir(srcRule.dir, fr));
