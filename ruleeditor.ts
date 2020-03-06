@@ -4,7 +4,7 @@ namespace tileworld {
     enum CommandTokens { Last=CommandType.Last, SpaceTile, Delete };
 
     const editorRow = 2;
-    const menuHelpString = "10add sprite,30map,40play,50delete rule,80add rule,90next rule,70previous rule,";
+    const menuHelpString = "10add sprite,30map,40play,50debug,60delete rule,80add rule,90next rule,70previous rule,";
     const attrHelpString = "00include,10exclude,90reset,";
 
     export class RuleEditor extends RuleVisualsBase {
@@ -117,7 +117,7 @@ namespace tileworld {
                             g.setWorld(this.p.getWorld(), this.p.getSprites());
                             g.start();
                             return;
-                        } else if (this.col() == 5) {
+                        } else if (this.col() == 6) {
                             this.askDeleteRule = true;                     
                         } else if (this.col() == 1) {
                             this.menu = RuleEditorMenus.MultipleMenu;
@@ -305,7 +305,8 @@ namespace tileworld {
 
             this.drawImage(3, 0, map);
             this.drawImage(4, 0, play);
-            this.drawImage(5, 0, garbageCan);
+            this.drawImage(5, 0, debug);
+            this.drawImage(6, 0, garbageCan);
             let rules = this.currentRules();
             let index = rules.indexOf(this.rule);
             this.drawImage(9, 0, index < rules.length -1 ? rightArrow : greyImage(rightArrow));
