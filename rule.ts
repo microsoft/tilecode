@@ -138,13 +138,7 @@ namespace tileworld {
         return d;
     }
 
-    // rule transformations: flip and rotate
-
-    function flipCommands(commands: Command[], fr: FlipRotate) {
-        return commands.map(c => { return new Command(c.inst, c.inst == CommandType.Move ? flipRotateDir(c.arg, fr) : c.arg); })
-    }
-
-    function transformCol(col: number, row: number, fr: FlipRotate) {
+    export function transformCol(col: number, row: number, fr: FlipRotate) {
         if (fr == FlipRotate.Horizontal || fr == FlipRotate.Vertical)
             return fr == FlipRotate.Horizontal ? 4 - col : col;
         else {
@@ -154,36 +148,13 @@ namespace tileworld {
         }
     }
 
-    function transformRow(row: number, col: number, fr: FlipRotate) {
+    export function transformRow(row: number, col: number, fr: FlipRotate) {
         if (fr == FlipRotate.Horizontal || fr == FlipRotate.Vertical)
             return fr == FlipRotate.Horizontal ? row : 4 - row;
         else {
             col = col - 2;
             return fr == FlipRotate.Left ? (-col) + 2 : col + 2;
         }
-    }
-
-    export function flipRule(srcRule: Rule, fr: FlipRotate) {
-        // TODO: convert this to using C-level API
-        let tgtRule = makeNewRule(srcRule.kind, srcRule.rt, flipRotateDir(srcRule.dir, fr));
-        for (let row = 0; row < 5; row++) {
-            for (let col = 0; col < 5; col++) {
-                if (Math.abs(2 - col) + Math.abs(2 - row) > 2)
-                    continue;
-                let whendo = srcRule.whenDo.find(w => w.col == col && w.row == row);
-                if (!whendo)
-                    continue;
-                let tgtWhenDo: WhenDo = {
-                    col: transformCol(col, row, fr),
-                    row: transformRow(row, col, fr),
-                    predicate: whendo.predicate,
-                    dir: 0, // TODO: fix this up
-                    commands: flipCommands(whendo.commands, fr)
-                };
-                tgtRule.whenDo.push(tgtWhenDo);
-            }
-        }
-        return tgtRule;
     }
 
     let ruleBuf: Buffer = null

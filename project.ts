@@ -240,6 +240,38 @@ namespace tileworld {
             }
             return true;
         }
+
+        // transformations
+
+        public flipRule(rid: number, fr: FlipRotate) {
+            let tgtRule = this.makeRule(this.getKinds(rid)[0], this.getType(rid), 
+                                        flipRotateDir(this.getDir(rid), fr));
+            for (let row = 0; row < 5; row++) {
+                for (let col = 0; col < 5; col++) {
+                    if (Math.abs(2 - col) + Math.abs(2 - row) > 2)
+                        continue;
+                    let whendo = this.getWhenDo(rid,col,row);
+                    if (whendo == -1)
+                        continue;
+                    let tgtWhenDo = this.makeWhenDo(tgtRule, transformCol(col, row, fr), 
+                                                             transformRow(row, col, fr));
+                    // copy the predicate
+                    for (let kind = 0; kind < this.all().length; kind++) {
+                        this.setAttr(tgtRule, tgtWhenDo, kind, this.getAttr(rid, whendo, kind));
+                    }
+                    // flip the commands using flipCommands
+                    for (let c = 0; c < 4; c++) {
+                        let inst = this.getInst(rid,whendo,c);
+                        if (inst == -1)
+                            break;
+                        let arg = this.getArg(rid,whendo,c);
+                        this.setInst(tgtRule, tgtWhenDo, c, inst);
+                        this.setArg(tgtRule, tgtWhenDo, c, inst == CommandType.Move ? flipRotateDir(arg,fr): arg);
+                    }
+                }
+            }
+            return tgtRule;
+        }
     }
 
     const toHex = "0123456789abcdef";
