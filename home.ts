@@ -83,7 +83,7 @@ namespace tileworld {
             });
             this.drawImage(9, 0, settingsIcon);
 
-            screen.print("Tiles", 16, yoff + 32 + 6);
+            screen.print("Backgrounds", 16, yoff + 32 + 6);
             this.p.fixed().forEach((img,i) => {
                 this.drawImage(1+(i<<1), 3, img);
                 this.dirMap.setPixel(1+(i<<1), 3, i)
