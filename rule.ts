@@ -1,5 +1,12 @@
 // in memory program representation
 
+// TODO: rule type redo
+// - StartRound
+// - ButtonPress
+// - Collision
+// - GlobalCheck
+// - no need for sprite kind or direction in rule anymore
+
 enum RuleType {
     Resting = 0,        // a sprite at rest 
     Moving,             // a sprite that just moved in a given direction
