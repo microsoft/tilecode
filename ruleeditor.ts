@@ -1,10 +1,10 @@
 namespace tileworld {
     
-    enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu, MultipleMenu };
+    enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu };
     enum CommandTokens { Last=CommandType.Last, SpaceTile, Delete };
 
     const editorRow = 2;
-    const menuHelpString = "06add sprite,10map,20play,30debug,60delete rule,80add rule,90next rule,70previous rule,";
+    const menuHelpString = "10map,20play,30debug,60delete rule,80add rule,90next rule,70previous rule,";
     const attrHelpString = "00include,10exclude,90reset,";
 
     export class RuleEditor extends RuleVisualsBase {
@@ -81,18 +81,6 @@ namespace tileworld {
                     this.attrUpdate();
                 } else if (this.menu == RuleEditorMenus.CommandMenu) {
                     this.commandUpdate();
-                } else if (this.menu == RuleEditorMenus.MultipleMenu) {
-                    if (this.row() == 1) {
-                        let kind = this.dirMap.getPixel(this.col(), this.row());
-                        if (kind != 0xf) {
-                            let kinds = this.p.getKinds(this.rule);
-                            if (kinds.indexOf(kind) == -1)
-                                kinds.push(kind);
-                            else
-                                kinds.removeElement(kind);
-                            this.p.setKinds(this.rule, kinds);
-                        }
-                    }
                 } else if (this.menu == RuleEditorMenus.MainMenu) {
                     if (this.row() == 0) {
                         if (7 <= this.col() && this.col() <= 9) {
@@ -122,10 +110,6 @@ namespace tileworld {
                         } 
                     } else if (this.col() > 5 && this.row() >= editorRow) {
                         this.tryEditCommand();
-                    } else if (this.row() == 1) {
-                        if (this.col() == 0) {
-                            this.menu = RuleEditorMenus.MultipleMenu;
-                        }
                     }
                 }
                 this.update();
@@ -239,7 +223,7 @@ namespace tileworld {
             screen.print("Do", 70, (editorRow << 4) + 8);
             // sets collideCol and collideRow
             this.showRuleType(this.p.getType(this.rule), this.p.getDir(this.rule), 2, 2+editorRow);
-            let usedSecondRow = this.makeContext();
+            this.makeContext();
             this.showRuleType(this.p.getType(this.rule), this.p.getDir(this.rule), 2, 2+editorRow);
             if (this.p.getKinds(this.rule).length > 1)
                 this.drawImage(2, 2 + editorRow, oneof);
@@ -251,28 +235,12 @@ namespace tileworld {
                 }
             }
             if (this.menu == RuleEditorMenus.MainMenu) {
-                this.showMainMenu(usedSecondRow);
+                this.showMainMenu();
             } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                 this.dirMap.fill(0xf);
                 this.attrMenu(this.col(false), this.row(false)-editorRow);
             } else if (this.menu == RuleEditorMenus.CommandMenu) {
                 this.modifyCommandMenu();
-            } else if (this.menu == RuleEditorMenus.MultipleMenu) {
-                this.dirMap.fill(0xf);
-                this.drawImage(1, 0, this.centerImage());
-                let kinds = this.p.getKinds(this.rule);
-                let next = this.p.fixed().length;
-                let col = 0;
-                this.p.movable().forEach((img,i) => {
-                    let kind = next + i;
-                    if (kind != this.kind) {
-                        this.drawImage(col, 1, img);
-                        this.dirMap.setPixel(col,1,kind);
-                        if (kinds.indexOf(kind) != -1)
-                            this.drawImage(col, 1, oneof);
-                        col++;
-                    }
-                });
             }
             if (this.askDeleteRule) {
                 this.cursor.setFlag(SpriteFlag.Invisible, true);
@@ -292,19 +260,14 @@ namespace tileworld {
             return this.p.getImage(this.kind);
         }
 
-        private showMainMenu(usedSecondRow: boolean) {
+        private showMainMenu() {
             //screen.fillRect(0, yoff, 160, 19, 0);
             this.fillTile(0, 0, 11);
             this.drawImage(0, 0, code);
-            if (!usedSecondRow) {
-                this.drawImage(0, 1, this.centerImage());
-                if (this.p.getKinds(this.rule).length > 1)
-                    this.drawImage(0,1,oneof);
-                if (this.getType() == RuleType.Pushing) {
-                    let image = this.getDirectionImage();
-                    if (image)
-                        this.drawImage(1, 1, image);
-                }
+            if (this.getType() == RuleType.Pushing) {
+                let image = this.getDirectionImage();
+                if (image)
+                    this.drawImage(0, 3, image);
             }
             this.drawImage(1, 0, map);
             this.drawImage(2, 0, play);
@@ -325,18 +288,15 @@ namespace tileworld {
         }
 
         private makeContext() {
-            let usedSecondRow = false;
             for (let i = 0; i <= 4; i++) {
                 for (let j = 0; j <= 4; j++) {
                     let dist = Math.abs(2-j) + Math.abs(2-i);
                     if (dist <= 2 && this.active(i,j)) {
                         this.drawImage(i, j+editorRow, emptyTile);
-                        if (this.showAttributes(this.rule, i, j))
-                            usedSecondRow = true;
+                        this.showAttributes(this.rule, i, j);
                     }
                 }
             }
-            return usedSecondRow;
         }
 
         // map from row 0-4 to (col,row) in diamond
