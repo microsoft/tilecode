@@ -3,10 +3,10 @@
 // enums must fit in 4 bits (16 values maximum)
 
 enum RuleType {
-    StartRound,     // internal
-    ButtonPress,    // external
-    Collision,      // resolve conflicts
-    NegateRule,     // check spec
+    ButtonPress,    // user button press
+    ContextChange,  // neighborhood changed
+    Collision,      // sprite collision
+    NegationCheck,  // check spec
 };
 
 // directions are 0-3 and move clockwise
@@ -18,8 +18,7 @@ enum MoveDirection {
 }
 
 enum ButtonArg {
-    Left, Up, Right, Down, 
-    AButton
+    Left, Up, Right, Down, A, B
 }
 
 enum CommandType {
@@ -45,8 +44,7 @@ enum SpriteArg {
 // only Win, Lose implemented so far
 enum GameArg {
     Win, Lose, 
-    ScoreUp, ScoreDown,
-    PlayerLifeUp, PlayerLifeDown, 
+    ScoreUp,
     NextLevel
 }
 
@@ -70,7 +68,7 @@ class WhenDo {
     constructor(
         public col: number,            // the guards and commands associated with a tile in the neighborhood
         public row: number,            // (2,2) is the center of neighborhood, graphics coordinate system
-        public attrs: AttrType[],      // 
+        public predicate: AttrType[],  // 
         public dir: MoveDirection,     // direction to match against (for movable sprite)
         public commands: Command[]     // the commands that execute if the guard succeeds
     ) { }
@@ -83,6 +81,8 @@ class Rule {
         public whenDo: WhenDo[]     // guarded commands
     ) { }
 }
+
+// how to represent mirrored, rotated rules??
 
 class IdRule {
     constructor(
