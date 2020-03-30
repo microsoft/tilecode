@@ -1,51 +1,39 @@
 // in memory program representation
 
-// TODO: rule type redo
-// - StartRound
-// - ButtonPress
-// - Collision
-// - GlobalCheck
-// - no need for sprite kind or direction in rule anymore
-
-enum NewRuleType {
-    StartRound,     // internal
-    ButtonPress,    // external
-    Collision,      // resolve conflicts
-    GlobalCheck,    // check spec
-};
+// enums must fit in 4 bits (16 values maximum)
 
 enum RuleType {
-    Resting = 0,        // a sprite at rest 
-    Moving,             // a sprite that just moved in a given direction
-    Pushing,            // a sprite being pushed in a given direction (by dpad button press)
-    CollidingResting,   // a moving sprite about to collide with a resting sprite
-    CollidingMoving,    // a moving sprite about to collide with another moving sprite
+    ButtonPress,    // user button press
+    ContextChange,  // neighborhood changed
+    Collision,      // sprite collision
+    NegationCheck,  // check spec
+};
+
+// directions are 0-3 and move clockwise
+enum MoveDirection {
+    Left, Up, Right, Down,
+    Resting,         // sprite is at rest
+    Moving,          // this is wildcard for Left-Down
+    Any              // this is wildcard for Left-Resting
 }
 
-// there are four directions in TileWorld
-enum MoveDirection {
-    Left = 0, Right, Up, Down
+enum ButtonArg {
+    Left, Up, Right, Down, A, B
 }
 
 enum CommandType {
     Move,           // sprite move in (MoveDirection) + Stop, UTurn
-    Paint,          // paint a space with one of 4 tiles
-    Sprite,         // various commands
-    SpritePred,     // 4 sprites, operator
-    Game,           // various commands
-    // the commands below have not been implemented
-    // CreateInMotion,   // 4 sprites, 4 directions
-    // CreateAtRest,     // 4 sprites
+    Paint,          // paint a tile with a background
+    Sprite,         // various commands for sprites
+    Game,           // various top-level game commands
+    Spawn,          // spawn a sprite at a tile going in a direction (requires 4-bits for sprite and 4-bits for direction)
     Last,
-}
-
-enum PushingArg {
-    Left, Right, Up, Down, AButton
 }
 
 // arguments to Move command (the last two are only used in Colliding rules)
 enum MoveArg {
-    Left, Right, Up, Down, Stop, UTurn,
+    Left, Up, Right, Down,
+    Stop, UTurn,
 }
 
 // arguments to affect the state of the sprite (other than movement)
@@ -55,20 +43,22 @@ enum SpriteArg {
 
 // only Win, Lose implemented so far
 enum GameArg {
-    Win, Lose, // Reset, ScoreUp, ScoreDown, NextLevel
+    Win, Lose, 
+    ScoreUp,
+    NextLevel
 }
 
 enum AttrType {
-    OK = 0,    // don't care
-    Include,   // tile must contain this kind
-    OneOf,     // tile must contain at least one labelled thusly
-    Exclude    // tile cannot contain this kind
+    OK,        // don't care
+    Include,   // tile must contain one from kind
+    Exclude,   // tile cannot contain this kind
+    Pinned     // for pinned sprite at center (2,2)
 }
 
 class Command {
     constructor(
-        public inst: CommandType,
-        public arg: MoveArg | SpriteArg | GameArg | number
+        public inst: CommandType,                           // one byte
+        public arg: MoveArg | SpriteArg | GameArg | number  // one byte
     ) { }
 }
 
@@ -78,20 +68,21 @@ class WhenDo {
     constructor(
         public col: number,            // the guards and commands associated with a tile in the neighborhood
         public row: number,            // (2,2) is the center of neighborhood, graphics coordinate system
-        public predicate: AttrType[],  // the guard predicate (one attribute per fixed/movable sprite)
-        public dir: number,            // the direction associated with witness
+        public predicate: AttrType[],  // 
+        public dir: MoveDirection,     // direction to match against (for movable sprite)
         public commands: Command[]     // the commands that execute if the guard succeeds
     ) { }
 }
 
 class Rule {
     constructor( 
-        public kind: number[],      // the (movable) sprite kinds this rule is defined over
-        public rt: RuleType,        // the type of rule
-        public dir: MoveDirection,  // the direction associated with rule type (Moving, Colliding, Pushing)
+        public ruleType: RuleType,  // the type of rule
+        public ruleArg: number,     // rule argument
         public whenDo: WhenDo[]     // guarded commands
     ) { }
 }
+
+// how to represent mirrored, rotated rules??
 
 class IdRule {
     constructor(
