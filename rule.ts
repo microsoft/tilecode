@@ -21,12 +21,16 @@ enum ButtonArg {
     Left, Up, Right, Down, A, B
 }
 
+type RuleArg = number | ButtonArg;
+
+// TODO: need a way to address a whole class of sprite, possibly to select a single sprite
+
 enum CommandType {
     Move,           // sprite move in (MoveDirection) + Stop, UTurn
     Paint,          // paint a tile with a background
+    Spawn,          // spawn a sprite at a tile going in a direction (requires 4-bits for sprite and 4-bits for direction)
     Sprite,         // various commands for sprites
     Game,           // various top-level game commands
-    Spawn,          // spawn a sprite at a tile going in a direction (requires 4-bits for sprite and 4-bits for direction)
     Last,
 }
 
@@ -68,7 +72,8 @@ class WhenDo {
     constructor(
         public col: number,            // the guards and commands associated with a tile in the neighborhood
         public row: number,            // (2,2) is the center of neighborhood, graphics coordinate system
-        public predicate: AttrType[],  // 
+        public backgrounds: AttrType[],     // predicate on background
+        public sprites: AttrType[],         // predicate on sprites
         public dir: MoveDirection,     // direction to match against (for movable sprite)
         public commands: Command[]     // the commands that execute if the guard succeeds
     ) { }
@@ -87,7 +92,11 @@ class Rule {
 class IdRule {
     constructor(
         public id: number,
-        public rule: Rule
+        public rule: Rule,
+        public locked: boolean,     // prevent the user from editing this rule, 
+                                    // which may be a mirror or fourway rule
+        public mirror: number,      // the rules that are views on this rule
+        public fourway: number[]
     ) { }
 }
 // transform: FlipRotate of rule with different id
@@ -96,8 +105,9 @@ enum FlipRotate { Horizontal, Vertical, Left, Right };
 
 namespace tileworld {
 
-    export function makeNewRule(kind: number[], rt: RuleType, dir: MoveDirection): Rule {
-        return new Rule(kind, rt, dir, []);
+    export function makeNewRule(rt: RuleType, ra: RuleArg, kind: number[], dir: MoveDirection): Rule {
+        // TODO: need to initialize based on kind and dir for center sprite
+        return new Rule(rt, ra, []);
     }
 
     // useful utilities
