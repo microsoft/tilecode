@@ -16,6 +16,8 @@
 
 // 3. forall rules: termination checking event at beginning of round
 
+// 4. spawn sprite at a location
+
 // post UIST: -------------------------
 
 // 4. portals
