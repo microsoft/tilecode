@@ -20,16 +20,18 @@
 
 // post UIST: -------------------------
 
-// 4. portals
+// - reduce to 3x3 patterns and allow two 3x3 patterns in when
+
+// 5. portals
 //   - doors between levels (one way, two way)
 //   - counters with wrap around
 
-// 5. commands on non-local sprites
+// 6. commands on non-local sprites
 //      - addressing by sprite kind means every sprite of that kind is sent message (broadcast)
 //      - other forms of addressing?
 //    - how do we condition on multiple (non-local) sprites in the same rule
 
-// 6. scratchpad and associated commands
+// 7. scratchpad and associated commands
 //    - a separate tile map for "counters"
 //      - for now, one tile map with different rooms in it
 //      - the counter room is unreachable in game play. 
@@ -45,6 +47,7 @@
 //    - each row has one (named or indexed) counter sprite
 //      - sprite-left-move: counter decrement
 //      - sprite-right-move: counter increment
+
 
 
 // see games.ts for built-in game

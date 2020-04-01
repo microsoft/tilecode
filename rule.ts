@@ -66,8 +66,9 @@ class Command {
     ) { }
 }
 
-// this represents a predicate in the neighborhood centered at (2,2), at most two steps from center
-// in Manhattan distance. 
+// a tile "predicate" at (col,row), where (2,2) is center and associated commands
+// ties together coordinate, predicate, and actions. It's useful to pair the first
+// two since we don't expect many predicates 
 class WhenDo {
     constructor(
         public col: number,            // the guards and commands associated with a tile in the neighborhood
@@ -93,10 +94,10 @@ class IdRule {
     constructor(
         public id: number,
         public rule: Rule,
-        public locked: boolean,     // prevent the user from editing this rule, 
-                                    // which may be a mirror or fourway rule
-        public mirror: number,      // the rules that are views on this rule
-        public fourway: number[]
+        public locked: boolean = false,     // prevent the user from editing this rule, 
+                                            // which may be a mirror or fourway rule
+        public mirror: number = -1,         // the rules that are views on this rule
+        public fourway: number[] = []
     ) { }
 }
 // transform: FlipRotate of rule with different id
@@ -219,74 +220,39 @@ namespace tileworld {
         return readWriteBuf(0, bits, false);
     }
 
-    function colRowToLRUD(col: number, row: number) {
-        let dist = Math.abs(2 - col) + Math.abs(2 - row);
-        if (dist == 0) {
-            writeBuf(MoveDirection.Left, 2);
-            writeBuf(MoveDirection.Right, 2);
-            return;
-        } else if (dist == 1) {
-            // trick encoding here
-            if (col == 2 && row == 1) {
-                writeBuf(MoveDirection.Right, 2);
-                writeBuf(MoveDirection.Up, 2);
-            } else if (col == 2 && row == 3) {
-                writeBuf(MoveDirection.Left, 2);
-                writeBuf(MoveDirection.Down, 2);
-            } else if (col == 1 && row == 2) {
-                writeBuf(MoveDirection.Left, 2);
-                writeBuf(MoveDirection.Up, 2);
-            } else {
-                writeBuf(MoveDirection.Right, 2);
-                writeBuf(MoveDirection.Down, 2);   
-            }
-        } else {
-            // important for row to go first, see dist == 1
-            while (row < 2) { writeBuf(MoveDirection.Up, 2); row++; }
-            while (row > 2) { writeBuf(MoveDirection.Down, 2); row--; }
-            while (col < 2) { writeBuf(MoveDirection.Left, 2); col++; }
-            while (col > 2) { writeBuf(MoveDirection.Right, 2); col--; }
-        }
-    }
-
     // pack things so that they'll be easy to read off
     export function packRule(r: Rule) {
         bitIndex = 0;
         // compute length (at most 13 whenDo, at most 5 whenDo have commands)
-        // so max = 3 + 39 + 20 = 62
-        let len = 4 + r.whenDo.length * 3;
+        // so max = 2 + 13*10 + 5*8 = 172  (old 62)
+        let len = 2 + r.whenDo.length * 10;
         for (let i = 0; i<r.whenDo.length; i++) {
-            len += (r.whenDo[i].commands.length > 0 ? 4 : 0);
+            len += (r.whenDo[i].commands.length > 0 ? 8 : 0);
         }
         ruleBuf = control.createBuffer(len);
 
-        r.kind.forEach(v => { writeBuf(v, 4); });   // 2 bytes
-        // pad out the rest with 0xf
-        for(let i = r.kind.length; i < 4; i++) { writeBuf(0xf, 4); }
-
-        writeBuf(r.rt, 4);
-        writeBuf(r.dir, 4);                         // 3 bytes
-        // how many when dos do we have
-        writeBuf(r.whenDo.length, 4);               // 3.5 bytes
-        // should we establish an order??
-        // TODO: optimization - remove whendo that are true have no command (waste of space and time)
+        writeBuf(r.ruleType, 4);
+        writeBuf(r.ruleArg, 4);
+        writeBuf(r.whenDo.length, 4);
+        writeBuf(0, 4);                                        // 2 bytes
         r.whenDo.forEach(wd => {
-            colRowToLRUD(wd.col, wd.row);                       // + .5 byte
-            wd.predicate.forEach(a => { writeBuf(a, 2);  });        // +2 bytes
-            for (let cnt = wd.predicate.length; cnt < 8; cnt++) { writeBuf(0, 2); }
-            writeBuf(wd.commands.length, 4);                    // +.5 byte
+            writeBuf(wd.col, 4);
+            writeBuf(wd.row, 4);                               // + 1 byte
+            wd.backgrounds.forEach(b => { writeBuf(b, 2); });  // + 4 bytes
+            wd.sprites.forEach(s => { writeBuf(s, 2); });      // + 4 bytes
+            writeBuf(wd.commands.length, 4);                   
+            writeBuf(0, 4);                                    // + 1 bute
         });
-        // align to byte
-        writeBuf(0,4);
+        
         // now, write out the commands (at most 5 non-zero)
         r.whenDo.forEach(wd => {
             if (wd.commands.length > 0) {
                 for(let i = 0; i < wd.commands.length; i++) {
-                    writeBuf(wd.commands[i].inst, 4);
-                    writeBuf(wd.commands[i].arg, 4);
+                    writeBuf(wd.commands[i].inst, 8);
+                    writeBuf(wd.commands[i].arg, 8);
                 }
                 for(let j = wd.commands.length; j < 4; j++) {
-                    writeBuf(0xff, 8);
+                    writeBuf(0xff, 16);
                 }
             }
         });
