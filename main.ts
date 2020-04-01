@@ -14,12 +14,14 @@
 
 // 3. forall rules: termination checking event at beginning of round
 
-// 4. scratchpad and associated commands
+// 4. portals
+//   - doors between levels
+//   - counters with wrap around
+
+// 5. scratchpad and associated commands
 //    - a separate tile map for "counters"
-//      - but now we have the problem of two different "namespaces" and
-//        which namespace a rule belongs to
-//      - instead, it's just part of the one tile map and we use distinct
-//        counter sprites (but how to hide this? special marker for hiding tiles) 
+//      - for now, one tile map with different rooms in it
+//      - the counter room is unreachable in game play. 
 
 //    - pattern is to have one row per counter, with left-marker for zero
 //      and right-marker for upper-bound
