@@ -1,5 +1,7 @@
 // refactoring TODO list
 
+// for UIST paper
+
 // 1. separation of rule event from rule's associated central sprite witness
 //    - this paves the way for having rules over tiles, to do cellular automata stuff
 //    - other events that could be interesting
@@ -14,11 +16,18 @@
 
 // 3. forall rules: termination checking event at beginning of round
 
+// post UIST: -------------------------
+
 // 4. portals
-//   - doors between levels
+//   - doors between levels (one way, two way)
 //   - counters with wrap around
 
-// 5. scratchpad and associated commands
+// 5. commands on non-local sprites
+//      - addressing by sprite kind means every sprite of that kind is sent message (broadcast)
+//      - other forms of addressing?
+//    - how do we condition on multiple (non-local) sprites in the same rule
+
+// 6. scratchpad and associated commands
 //    - a separate tile map for "counters"
 //      - for now, one tile map with different rooms in it
 //      - the counter room is unreachable in game play. 
@@ -34,13 +43,7 @@
 //    - each row has one (named or indexed) counter sprite
 //      - sprite-left-move: counter decrement
 //      - sprite-right-move: counter increment
-//    - collision on markers for boundary conditions
-//       - allows us to take action "within round"  
-//    - raises the following questions
-//      - how do we invoke commands on "non-local" sprites
-//      - addressing by sprite kind means every spriter of that kind is sent message (broadcast)
-//      - other forms of addressing?
-//    - how do we condition on multiple (non-local) sprites in the same rule
+
 
 // see games.ts for built-in game
 let TileWorld = new tileworld.LoadScreen(null);
