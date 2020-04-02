@@ -304,24 +304,32 @@ namespace tileworld {
         return buf;
     }
 
+    const VersionKey = "VersionS";
+    const HelpKey = "HelpN";
+    const BackImgCntKey = "BackN";
+    const SpriteImgCntKey = "SpriteN";
+    const PlayerIndexKey = "PlayerN";
+    const BackMapKey = "BackB";
+    const SpriteMapKey = "SpriteB"
+
     export function loadProject(prefix: string, output: boolean = false) {
         let names = settings.list(prefix);
         if (names.length == 0)
             return null;
         if (output) console.log("function create"+prefix.slice(0,-1)+"() {");
-        let version = settingsReadString(prefix + "VS", output);
+        let version = settingsReadString(prefix + VersionKey, output);
         // get the tile map, handling errors
-        let buf = settingsReadBuffer(prefix + "TM", output);
+        let buf = settingsReadBuffer(prefix + BackMapKey, output);
         let world = buf && buf.length > 0 ? bufferToImage(buf) : null;
         world = world ? world : image.create(32, 24);
         // sprite map
-        buf = settingsReadBuffer(prefix + "TS", output);
+        buf = settingsReadBuffer(prefix + SpriteMapKey, output);
         let sprites = buf && buf.length > 0 ? bufferToImage(buf) : null;
         // sprite images
         sprites = sprites ? sprites : image.create(32, 24);
         let fixedImages: Image[] = [];
-        if (names.indexOf(prefix + "FL") != -1) {
-            let fixed = settingsReadNumber(prefix + "FL", output);
+        if (names.indexOf(prefix + BackImgCntKey) != -1) {
+            let fixed = settingsReadNumber(prefix + BackImgCntKey, output);
             for (let i = 0; i < fixed; i++) {
                 let key = prefix + "FS" + i.toString();
                 let buf = settingsReadBuffer(key, output);
@@ -331,8 +339,8 @@ namespace tileworld {
             }
         }
         let movableImages: Image[] = [];
-        if (names.indexOf(prefix + "ML") != -1) {
-            let movable = settingsReadNumber(prefix + "ML", output);
+        if (names.indexOf(prefix + SpriteImgCntKey) != -1) {
+            let movable = settingsReadNumber(prefix + SpriteImgCntKey, output);
             for (let i = 0; i < movable; i++) {
                 let key = prefix + "MS" + i.toString();
                 let buf = settingsReadBuffer(key, output);
@@ -342,8 +350,8 @@ namespace tileworld {
             }
         }
         let help = false;
-        if (names.indexOf(prefix + "HM") != -1) {
-            let helpNum = settingsReadNumber(prefix + "HM", output);
+        if (names.indexOf(prefix + HelpKey) != -1) {
+            let helpNum = settingsReadNumber(prefix + HelpKey, output);
             help = helpNum ? true: false;
         }
         // get the rules, at least
@@ -356,7 +364,7 @@ namespace tileworld {
             let rule = unPackRule(buf);
             rules.push(new IdRule(rid, rule));
         });
-        let player = settingsReadNumber(prefix + "PL", output);
+        let player = settingsReadNumber(prefix + PlayerIndexKey, output);
         if (output) console.log("}");
         let p = new Project(prefix, fixedImages, movableImages, rules);
         p.setWorld(world);
@@ -367,9 +375,9 @@ namespace tileworld {
         return p;
     }
 
-    function saveImage(prefix: string, kind: number, img: Image, fixed: boolean) {
+    function saveImage(prefix: string, kind: number, img: Image, background: boolean) {
         let buf = imageToBuffer(img);
-        settings.writeBuffer(prefix + (fixed ? "FS" : "MS") + kind.toString(), buf);
+        settings.writeBuffer(prefix + (background ? "BackImg" : "SprImg") + kind.toString(), buf);
         return buf;
     }
 
@@ -384,25 +392,25 @@ namespace tileworld {
             return;
         let prefix = p.prefix;
         let length = 8;
-        settings.writeString(prefix + "VS", p.version);
-        settings.writeNumber(prefix + "HM", p.help ? 1 : 0);
-        settings.writeNumber(prefix + "FL", p.fixed().length);
-        settings.writeNumber(prefix + "ML", p.movable().length);
-        settings.writeNumber(prefix + "PL", p.getPlayer());
-        p.fixed().forEach((img, i) => {
+        settings.writeString(prefix + VersionKey, p.version);
+        settings.writeNumber(prefix + HelpKey, p.help ? 1 : 0);
+        settings.writeNumber(prefix + BackImgCntKey, p.backgroundImages().length);
+        settings.writeNumber(prefix + SpriteImgCntKey, p.spriteImages().length);
+        settings.writeNumber(prefix + PlayerIndexKey, p.getPlayer());
+        p.backgroundImages().forEach((img, i) => {
             let buf = saveImage(prefix, i, img, true);
             length += buf.length;
         });
-        p.movable().forEach((img, i) => {
+        p.spriteImages().forEach((img, i) => {
             let buf = saveImage(prefix, i, img, false);
             length += buf.length;
         });
         let worldBuf = imageToBuffer(p.getWorld());
         length += worldBuf.length;
-        settings.writeBuffer(prefix + "TM", worldBuf);
+        settings.writeBuffer(prefix + BackMapKey, worldBuf);
         let spritesBuf = imageToBuffer(p.getSprites());
         length += spritesBuf.length;
-        settings.writeBuffer(prefix + "TS", spritesBuf);        
+        settings.writeBuffer(prefix + SpriteMapKey, spritesBuf);        
         p.getRules().forEach(r => { 
             let buf = storeRule(prefix, r.id, r.rule); 
             length += buf.length;

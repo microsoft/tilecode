@@ -73,33 +73,31 @@ class WhenDo {
     constructor(
         public col: number,            // the guards and commands associated with a tile in the neighborhood
         public row: number,            // (2,2) is the center of neighborhood, graphics coordinate system
-        public backgrounds: AttrType[],     // predicate on background
-        public sprites: AttrType[],         // predicate on sprites
+        public bgPred: Buffer,         // predicate on background
+        public spPred: Buffer,         // predicate on sprites
         public dir: MoveDirection,     // direction to match against (for movable sprite)
-        public commands: Command[]     // the commands that execute if the guard succeeds
+        public commands: Buffer        // the commands that execute if the guard succeeds
     ) { }
 }
+
+enum RuleViews { Single, Mirrored, FourWay };
 
 class Rule {
     constructor( 
         public ruleType: RuleType,  // the type of rule
         public ruleArg: number,     // rule argument
-        public whenDo: WhenDo[]     // guarded commands
+        public whenDo: WhenDo[],    // guarded commands
+        public view: RuleViews = RuleViews.Single
     ) { }
 }
-
-// how to represent mirrored, rotated rules??
 
 class IdRule {
     constructor(
         public id: number,
-        public rule: Rule,
-        public locked: boolean = false,     // prevent the user from editing this rule, 
-                                            // which may be a mirror or fourway rule
-        public mirror: number = -1,         // the rules that are views on this rule
-        public fourway: number[] = []
+        public rule: Rule
     ) { }
 }
+
 // transform: FlipRotate of rule with different id
 
 enum FlipRotate { Horizontal, Vertical, Left, Right };
@@ -221,15 +219,13 @@ namespace tileworld {
     }
 
     // pack things so that they'll be easy to read off
-    export function packRule(r: Rule) {
+    export function packRule(r: Rule, bgLen: number, spLen: number) {
         bitIndex = 0;
-        // compute length (at most 13 whenDo, at most 5 whenDo have commands)
-        // so max = 2 + 13*10 + 5*8 = 172  (old 62)
-        let len = 2 + r.whenDo.length * 10;
+        let bytes = 2 + this.whenDo.length + (2 + (bgLen >> 2) + (spLen >> 2));
         for (let i = 0; i<r.whenDo.length; i++) {
-            len += (r.whenDo[i].commands.length > 0 ? 8 : 0);
+            bytes += (r.whenDo[i].commands.length > 0 ? 8 : 0);
         }
-        ruleBuf = control.createBuffer(len);
+        ruleBuf = control.createBuffer(bytes);
 
         writeBuf(r.ruleType, 4);
         writeBuf(r.ruleArg, 4);
@@ -238,10 +234,13 @@ namespace tileworld {
         r.whenDo.forEach(wd => {
             writeBuf(wd.col, 4);
             writeBuf(wd.row, 4);                               // + 1 byte
-            wd.backgrounds.forEach(b => { writeBuf(b, 2); });  // + 4 bytes
-            wd.sprites.forEach(s => { writeBuf(s, 2); });      // + 4 bytes
+            control.assert(wd.bgPred.length == bgLen, 42);
+            control.assert(wd.spPred.length == spLen, 42);
+            wd.bgPred.forEach(a => { writeBuf(a, 2); });       // + {1, 2, 3} byte
+            wd.spPred.forEach(a => { writeBuf(a, 2); });       // + {1, 2, 3} byte
+
             writeBuf(wd.commands.length, 4);                   
-            writeBuf(0, 4);                                    // + 1 bute
+            writeBuf(0, 4);                                    // + 1 byte
         });
         
         // now, write out the commands (at most 5 non-zero)
@@ -260,7 +259,7 @@ namespace tileworld {
     }
 
     // first, let's fully unpack
-    export function unPackRule(buf: Buffer) {
+    export function unPackRule(buf: Buffer, bgLen: number, spLen: number) {
         ruleBuf = buf;
         bitIndex = 0;
         let kinds = [];
@@ -269,29 +268,16 @@ namespace tileworld {
           if (kind != 0xf) kinds.push(kind);
         }
         let rt = readBuf(4);
-        let dir = readBuf(4);
-        let rule = new Rule(kinds, rt, dir, []);
+        let ra = readBuf(4);
+        let rule = new Rule(rt, ra, []);
         let whenDoLen = readBuf(4);
+        readBuf(4);
         let hasCommands: WhenDo[] = [];
         for(let i = 0; i<whenDoLen; i++) {
-            let firstMove = readBuf(2);
-            let secondMove = readBuf(2);
-            let col = 2;
-            let row = 2;
-            if (firstMove == MoveDirection.Left && secondMove == MoveDirection.Up) {
-                col = 1;
-            } else if (firstMove == MoveDirection.Right && secondMove == MoveDirection.Up) {
-                row = 1;
-            } else if (firstMove == MoveDirection.Left && secondMove == MoveDirection.Down) {
-                row = 3;
-            } else if (firstMove == MoveDirection.Right && secondMove == MoveDirection.Down) {
-                col = 3;;
-            } else {
-                col += moveXdelta(firstMove) + moveXdelta(secondMove);
-                row += moveYdelta(firstMove) + moveYdelta(secondMove);
-            }
+            let col = readBuf(4);
+            let row = readBuf(4);
             let whenDo = new WhenDo(col, row, [], 0, []);
-            for(let a = 0; a < 8; a++) {
+            for(let a = 0; a < bgLen; a++) {
                 let attr = readBuf(2);
                 whenDo.predicate.push(attr);
             }
