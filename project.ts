@@ -4,21 +4,21 @@ namespace tileworld {
 
     export class Project {
         private lastRule: IdRule = null;
-        private allImages: Image[] = null;
         private _player: number = -1;
         private _world: Image = null;
         private _sprites: Image = null;
         public debug: boolean = false;
         public help: boolean = true;
         public version: string;
-
+    
         constructor(
             public prefix: string,
-            private fixedImages: Image[],      // the number of fixed sprites
-            private movableImages: Image[],    // the number of movable sprites
+            private _backgroundsI: Image[],       // the user-defined backgrounds 
+            private _spritesI: Image[],            // the user-defined sprites
             private rules: IdRule[]     // the rules
         ) {
-
+            // TODO: enforce that backgroundI and spriteI lengths are from the set { 4, 8, 12, }
+            // TODO: leaving us room for 4 runtime backgrounds and sprites
         }
 
         public setPlayer(kind: number) {
@@ -29,7 +29,11 @@ namespace tileworld {
             return this._player;
         }
 
-        public setWorld(img: Image) {
+        // a world consists of two images
+        // - background (values 0-14)
+        // - sprites (values 0-14)
+
+        public setWorld(img: Image) {    // TODO: rename background
             this._world = img;
         }
 
@@ -41,47 +45,45 @@ namespace tileworld {
             this._sprites = img;
         }
 
-        public getSprites() { 
+        public getSprites() {
             return this._sprites;
         }
 
         // images
 
-        public fixed() { return this.fixedImages; }
-        public movable() { return this.movableImages; }
-        public all() { 
-            if (!this.allImages) {
-                this.allImages = [];
-                this.fixedImages.forEach(s => { this.allImages.push(s) });
-                this.movableImages.forEach(s => { this.allImages.push(s) });
-            }
-            return this.allImages; 
+        public backgroundImages() { return this._backgroundsI; }
+        public spriteImages() { return this._spritesI; }
+
+        public getBackgroundImage(kind: number) {
+            return 0 <= kind && kind < this._backgroundsI.length ? this._backgroundsI[kind] : null;
         }
 
-        public getImage(kind: number) {
-            return 0 <= kind && kind < this.all().length ? this.all()[kind] : null;
+        public getBackgroundKind(img: Image) {
+            return this._backgroundsI().indexOf(img);
         }
 
-        public getKind(img: Image) {
-            return this.all().indexOf(img);
+        public getSpriteImage(kind: number) {
+            return 0 <= kind && kind < this._spritesI.length ? this._spritesI[kind] : null;
         }
 
-        public saveImage(kind: number) {
-            let fixed = true;
-            let index = kind;
-            if (kind >= this.fixedImages.length()) { 
-                fixed = false; 
-                index -= this.fixedImages.length(); 
-            }
-            let buf = saveImage(this.prefix, index, this.getImage(kind), fixed);
+        public getSpriteKind(img: Image) {
+            return this._spritesI.indexOf(img);
+        }
+
+        public saveBackgroundImage(kind: number) {
+            let buf = saveImage(this.prefix, kind, this.getBackgroundImage(kind), true);
+        }
+        
+        public saveSpriteImage(kind: number) {
+            let buf = saveImage(this.prefix, kind, this.getSpriteImage(kind), false);
         }
 
         public saveRule(rid: number) {
             storeRule(this.prefix, rid, this.getRule(rid));
         }
 
-        public makeRule(kind: number, rt: RuleType, dir: MoveDirection): number {
-            let rid = this.wrapRule(makeNewRule([kind], rt, dir));
+        public makeRule(kind: number, rt: RuleType, ra: RuleArg): number {
+            let rid = this.wrapRule(makeNewRule(rt, ra));
             this.saveRule(rid);
             return rid;
         }
@@ -135,32 +137,25 @@ namespace tileworld {
             return this.rules.map(r => r.id);
         }
 
-        public getRulesForKind(kind: number): number[] {
-            return this.rules.filter(r => r.rule.kind.indexOf(kind) != -1).map(r => r.id)
+        public getRulesForSprite(kind: number): number[] {
+            // TODO: this needs to be reimplemented to look into the center (2,2) when clause
+            return [];
         }
 
-        public getKinds(rid: number): number[] {
-            return this.getRule(rid).kind;
+        public getRuleType(rid: number) {
+            return this.getRule(rid).ruleType;
         }
 
-        public setKinds(rid: number, kind: number[]) {
-            this.getRule(rid).kind = kind;
+        public setRuleType(rid: number, rt: RuleType) {
+            this.getRule(rid).ruleType = rt;
         }
 
-        public getType(rid: number) {
-            return this.getRule(rid).rt;
+        public getRuleArg(rid: number) {
+            return this.getRule(rid).ruleArg;
         }
 
-        public setType(rid: number, rt: RuleType) {
-            this.getRule(rid).rt = rt;
-        }
-
-        public getDir(rid: number): MoveDirection {
-            return this.getRule(rid).dir;
-        }
-
-        public setDir(rid: number, dir: MoveDirection) {
-            this.getRule(rid).dir = dir;
+        public setRuleArg(rid: number, ra: RuleArg) {
+            this.getRule(rid).ruleArg = ra;
         }
 
         public getWhenDo(rid: number, col: number, row: number) {
