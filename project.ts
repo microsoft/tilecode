@@ -13,7 +13,7 @@ namespace tileworld {
     
         constructor(
             public prefix: string,
-            private _backgroundsI: Image[],     // the user-defined backgrounds 
+            private _backgroundsI: Image[], // the user-defined backgrounds 
             private _spritesI: Image[],     // the user-defined sprites
             private rules: IdRule[]         // the rules
         ) {
@@ -50,11 +50,13 @@ namespace tileworld {
         }
 
         // images
+        public backCnt() { return this._backgroundsI.length; }
+        public spriteCnt() { return this._spritesI.length; }
         public backgroundImages() { return this._backgroundsI; }
         public spriteImages() { return this._spritesI; }
 
         public getBackgroundImage(kind: number) {
-            return 0 <= kind && kind < this._backgroundsI.length ? this._backgroundsI[kind] : null;
+            return 0 <= kind && kind < this.backCnt() ? this._backgroundsI[kind] : null;
         }
 
         public getBackgroundKind(img: Image) {
@@ -62,7 +64,7 @@ namespace tileworld {
         }
 
         public getSpriteImage(kind: number) {
-            return 0 <= kind && kind < this._spritesI.length ? this._spritesI[kind] : null;
+            return 0 <= kind && kind < this.spriteCnt() ? this._spritesI[kind] : null;
         }
 
         public getSpriteKind(img: Image) {
@@ -78,7 +80,7 @@ namespace tileworld {
         }
 
         public saveRule(rid: number) {
-            storeRule(this.prefix, rid, this.getRule(rid));
+            this.storeRule(this.prefix, rid, this.getRule(rid));
         }
 
         public makeRule(rt: RuleType, ra: RuleArg, kind: number = -1): number {
@@ -106,8 +108,39 @@ namespace tileworld {
             settings.writeNumber(this.prefix+HelpKey, this.help ? 1 : 0);
         }
 
-        // rules 
+        private storeRule(prefix: string, rid: number, rule: Rule) {
+            let buf = packRule(rule, this.backCnt(), this.spriteCnt());
+            settings.writeBuffer(prefix + RuleKey + rid.toString(), buf);
+            return buf;
+        }
 
+        public saveProject() {
+            let prefix = this.prefix;
+            let length = 8;
+            settings.writeString(prefix + VersionKey, this.version);
+            settings.writeNumber(prefix + HelpKey, this.help ? 1 : 0);
+            settings.writeNumber(prefix + BackImgCntKey, this.backCnt());
+            settings.writeNumber(prefix + SpriteImgCntKey, this.spriteCnt());
+            settings.writeNumber(prefix + PlayerIndexKey, this.getPlayer());
+            this.backgroundImages().forEach((img, i) => {
+                let buf = saveImage(prefix, i, img, true);
+                length += buf.length;
+            });
+            this.spriteImages().forEach((img, i) => {
+                let buf = saveImage(prefix, i, img, false);
+                length += buf.length;
+            });
+            let worldBuf = imageToBuffer(this.getWorldBackgrounds());
+            length += worldBuf.length;
+            settings.writeBuffer(prefix + WorldBackgroundsKey, worldBuf);
+            let spritesBuf = imageToBuffer(this.getWorldSprites());
+            length += spritesBuf.length;
+            settings.writeBuffer(prefix + WorldSpritesKey, spritesBuf);
+            this.getRules().forEach(r => {
+                let buf = this.storeRule(prefix, r.id, r.rule);
+                length += buf.length;
+            });
+        }
 
         public getRules() { return this.rules; }
 
@@ -166,17 +199,31 @@ namespace tileworld {
         }
 
         public makeWhenDo(rid: number, col: number, row: number) {
-            let whenDo = new WhenDo(col, row, [], 0, []);
-            this.getRule(rid).whenDo.push(whenDo);
+            let wd = new WhenDo(col, row);
+            wd.bgPred = control.createBuffer(this.backCnt());
+            wd.spPred = control.createBuffer(this.spriteCnt()); 
+            wd.commandsLen = 0;
+            wd.commands = control.createBuffer(8);
+            this.getRule(rid).whenDo.push(wd);
             return this.getRule(rid).whenDo.length - 1;
         }
 
-        public getAttr(rid: number, wdid: number, aid: number): AttrType {
-            return this.getRule(rid).whenDo[wdid].predicate[aid];
+        private getSetBuffAttr(buf: Buffer, index: number, val: number) {
+            let byte = buf.getUint8(index >> 2);
+            let remainder = index - ((index >> 2) << 2);
+            if (val != -1) {
+                let mask = (0x3 << (remainder << 1)) ^ 0xff;
+                let newByte = (byte & mask) | ((val & 0x3) << (remainder << 1));
+                buf.setUint8(index >> 2, newByte)
+            }
+            return (byte >> (remainder << 1)) & 0x3;
         }
 
-        public setAttr(rid: number, wdid: number, aid: number, attr: AttrType) {
-            this.getRule(rid).whenDo[wdid].predicate[aid] = attr;
+        public getSetBgAttr(rid: number, wdid: number, index: number, val: number = -1): AttrType {
+            return this.getSetBuffAttr(this.getRule(rid).whenDo[wdid].bgPred, index, val);
+        }
+        public getSetSpAttr(rid: number, wdid: number, index: number, val: number = -1): AttrType {
+            return this.getSetBuffAttr(this.getRule(rid).whenDo[wdid].spPred, index, val);
         }
 
         public getInst(rid: number, wdid: number, cid: number) {
@@ -340,16 +387,13 @@ namespace tileworld {
         buf = settingsReadBuffer(prefix + WorldSpritesKey, output);
         let sprites = buf && buf.length > 0 ? bufferToImage(buf) : null;
         sprites = sprites ? sprites : image.create(32, 24);
-        // backgroun images and sprite images
+        // background images and sprite images
         let backCnt = settingsReadNumber(prefix + BackImgCntKey, output);
         let backImages = readImages(backCnt, prefix+BackImageKey, output);
         let spriteCnt = settingsReadNumber(prefix + SpriteImgCntKey, output);
         let spriteImage = readImages(spriteCnt, prefix + SpriteImageKey, output);
-        let help = false;
-        if (names.indexOf(prefix + HelpKey) != -1) {
-            let helpNum = settingsReadNumber(prefix + HelpKey, output);
-            help = helpNum ? true: false;
-        }
+        let helpNum = settingsReadNumber(prefix + HelpKey, output);
+        let help = helpNum ? true: false;
         // get the rules, at least
         let ruleName = prefix + RuleKey;
         let ruleids = names.filter(s => s.indexOf(ruleName) == 0).map(s => parseInt(s.substr(ruleName.length())));
@@ -375,42 +419,6 @@ namespace tileworld {
         let buf = imageToBuffer(img);
         settings.writeBuffer(prefix + (background ? BackImageKey : SpriteImageKey) + kind.toString(), buf);
         return buf;
-    }
-
-    export function storeRule(prefix: string, rid: number, rule: Rule) {
-        let buf = packRule(rule);
-        settings.writeBuffer(prefix + RuleKey + rid.toString(), buf);
-        return buf;
-    }
-
-    export function saveEntireProject(p: Project){
-        if (p == null)
-            return;
-        let prefix = p.prefix;
-        let length = 8;
-        settings.writeString(prefix + VersionKey, p.version);
-        settings.writeNumber(prefix + HelpKey, p.help ? 1 : 0);
-        settings.writeNumber(prefix + BackImgCntKey, p.backgroundImages().length);
-        settings.writeNumber(prefix + SpriteImgCntKey, p.spriteImages().length);
-        settings.writeNumber(prefix + PlayerIndexKey, p.getPlayer());
-        p.backgroundImages().forEach((img, i) => {
-            let buf = saveImage(prefix, i, img, true);
-            length += buf.length;
-        });
-        p.spriteImages().forEach((img, i) => {
-            let buf = saveImage(prefix, i, img, false);
-            length += buf.length;
-        });
-        let worldBuf = imageToBuffer(p.getWorldBackgrounds());
-        length += worldBuf.length;
-        settings.writeBuffer(prefix + WorldBackgroundsKey, worldBuf);
-        let spritesBuf = imageToBuffer(p.getWorldSprites());
-        length += spritesBuf.length;
-        settings.writeBuffer(prefix + WorldSpritesKey, spritesBuf);        
-        p.getRules().forEach(r => { 
-            let buf = storeRule(prefix, r.id, r.rule); 
-            length += buf.length;
-        });
     }
 
     function wall () {

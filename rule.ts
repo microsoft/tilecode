@@ -71,10 +71,10 @@ class WhenDo {
     constructor(
         public col: number,             // the guards and commands associated with a tile in the neighborhood
         public row: number,             // (2,2) is the center of neighborhood, graphics coordinate system
-        public bgPred: Buffer = null,   // predicate on background (2 bits for AttrType)
-        public spPred: Buffer = null,   // predicate on sprites (2 bits for AttrType)
+        public bgPred: Buffer = null,   // predicate on background (2 bits per background)
+        public spPred: Buffer = null,   // predicate on sprites (2 bits for sprite)
         public dir: MoveDirection = -1, // direction to match against (for movable sprite)
-        public commands: Buffer = null, // the commands that execute if the guard succeeds
+        public commands: Buffer = null, // the commands that execute if the guard succeeds (2 bytes per command)
         public commandsLen: number = 0
     ) { }
 }
@@ -212,8 +212,9 @@ namespace tileworld {
         readWriteBuf(v, bits, true);
     }
 
-    function writeBufRaw(b: Buffer) {
-        for(let i=0;i<b.length;i++) {
+    // must be byte-aligned when writing a raw buffer
+    function writeBufRaw(b: Buffer, cnt: number) {
+        for(let i=0;i<cnt;i++) {
             writeBuf(b.getUint8(i), 8);
         }
     }
@@ -222,9 +223,10 @@ namespace tileworld {
         return readWriteBuf(0, bits, false);
     }
 
-    function readBufRaw(bytes: number) {
+    // must be byte-aligned when reading a raw buffer
+    function readBufRaw(bytes: number, cnt: number) {
         let b = control.createBuffer(bytes);
-        for (let i = 0; i < b.length; i++) {
+        for (let i = 0; i < cnt; i++) {
             b.setUint8(i,readBuf(8));
         }
         return b;
@@ -245,15 +247,15 @@ namespace tileworld {
         r.whenDo.forEach(wd => {
             writeBuf(wd.col, 4);
             writeBuf(wd.row, 4);                // + 1 byte
-            writeBufRaw(wd.bgPred);             // + {1, 2, 3} byte  
-            writeBufRaw(wd.spPred);             // + {1, 2, 3} byte  
+            writeBufRaw(wd.bgPred, bgLen)       // + {1, 2, 3} byte  
+            writeBufRaw(wd.spPred, spLen);      // + {1, 2, 3} byte  
             writeBuf(wd.commands.length, 4);                   
             writeBuf(0, 4);                     // + 1 byte
         });
         // now, write out the commands
         r.whenDo.forEach(wd => {
             if (wd.commands.length > 0) {
-                writeBufRaw(wd.commands);
+                writeBufRaw(wd.commands, wd.commandsLen << 1);
             }
         });
         return ruleBuf;
@@ -272,8 +274,8 @@ namespace tileworld {
             let col = readBuf(4);
             let row = readBuf(4);
             let wd = new WhenDo(col, row,
-                    readBufRaw(bgLen >> 2),
-                    readBufRaw(spLen >> 2), 
+                    readBufRaw(bgLen >> 2, bgLen >> 2),
+                    readBufRaw(spLen >> 2, spLen >> 2), 
                     -1, 
                     null);
             rule.whenDo.push(wd);
@@ -282,7 +284,9 @@ namespace tileworld {
         }
         rule.whenDo.forEach(wd => {
             if (wd.commandsLen > 0) {
-                wd.commands = readBufRaw(8);
+                wd.commands = readBufRaw(8, wd.commandsLen << 1);
+            } else {
+                wd.commands = control.createBuffer(8);
             }
         });
         return rule;
