@@ -5,7 +5,7 @@ namespace tileworld {
     export class Project {
         private lastRule: IdRule = null;
         private _player: number = -1;
-        private _world: Image = null;
+        private _backgrounds: Image = null;
         private _sprites: Image = null;
         public debug: boolean = false;
         public help: boolean = true;
@@ -13,9 +13,9 @@ namespace tileworld {
     
         constructor(
             public prefix: string,
-            private _backgroundsI: Image[],       // the user-defined backgrounds 
-            private _spritesI: Image[],            // the user-defined sprites
-            private rules: IdRule[]     // the rules
+            private _backgroundsI: Image[],     // the user-defined backgrounds 
+            private _spritesI: Image[],     // the user-defined sprites
+            private rules: IdRule[]         // the rules
         ) {
             // TODO: enforce that backgroundI and spriteI lengths are from the set { 4, 8, 12, }
             // TODO: leaving us room for 4 runtime backgrounds and sprites
@@ -30,27 +30,26 @@ namespace tileworld {
         }
 
         // a world consists of two images
-        // - background (values 0-14)
-        // - sprites (values 0-14)
+        // - tile backgrounds (values 0-14)
+        // - tile sprites (values 0-14)
 
-        public setWorld(img: Image) {    // TODO: rename background
-            this._world = img;
+        public setWorldBackgrounds(img: Image) {
+            this._backgrounds = img;
         }
 
-        public getWorld() {
-            return this._world;
+        public getWorldBackgrounds() {
+            return this._backgrounds;
         }
 
-        public setSprites(img: Image) { 
+        public setWorldSprites(img: Image) { 
             this._sprites = img;
         }
 
-        public getSprites() {
+        public getWorldSprites() {
             return this._sprites;
         }
 
         // images
-
         public backgroundImages() { return this._backgroundsI; }
         public spriteImages() { return this._spritesI; }
 
@@ -82,7 +81,7 @@ namespace tileworld {
             storeRule(this.prefix, rid, this.getRule(rid));
         }
 
-        public makeRule(kind: number, rt: RuleType, ra: RuleArg): number {
+        public makeRule(rt: RuleType, ra: RuleArg, kind: number = -1): number {
             let rid = this.wrapRule(makeNewRule(rt, ra));
             this.saveRule(rid);
             return rid;
@@ -92,19 +91,19 @@ namespace tileworld {
             let r = this.rules.find(r => r.id == rid);
             if (r) {
                 this.rules.removeElement(r);
-                settings.remove(this.prefix + "RL" + rid.toString());
+                settings.remove(this.prefix + RuleKey + rid.toString());
             }
         }
 
-        public saveWorldSprites() {
-            let worldBuf = imageToBuffer(this._world);
-            settings.writeBuffer(this.prefix + "TM", worldBuf);
+        public saveWorld() {
+            let worldBuf = imageToBuffer(this._backgrounds);
+            settings.writeBuffer(this.prefix + WorldBackgroundsKey, worldBuf);
             let spritesBuf = imageToBuffer(this._sprites);
-            settings.writeBuffer(this.prefix + "TS", spritesBuf);
+            settings.writeBuffer(this.prefix + WorldSpritesKey, spritesBuf);
         }
 
         public saveHelp() {
-            settings.writeNumber(this.prefix+"HM", this.help ? 1 : 0);
+            settings.writeNumber(this.prefix+HelpKey, this.help ? 1 : 0);
         }
 
         // rules 
@@ -309,8 +308,23 @@ namespace tileworld {
     const BackImgCntKey = "BackN";
     const SpriteImgCntKey = "SpriteN";
     const PlayerIndexKey = "PlayerN";
-    const BackMapKey = "BackB";
-    const SpriteMapKey = "SpriteB"
+    const WorldBackgroundsKey = "WBackM";
+    const WorldSpritesKey = "WSpriteM";
+    const BackImageKey = "BackI";
+    const SpriteImageKey = "SpriteI";
+    const RuleKey = "RuleB";
+
+    function readImages(cnt: number, prefix: string, output: boolean) {
+        let images: Image[] = []
+        for (let i = 0; i < cnt; i++) {
+            let key = prefix + i.toString();
+            let buf = settingsReadBuffer(key, output);
+            let img = buf && buf.length > 0 ? bufferToImage(buf) : null;
+            if (!img) { img = image.create(16, 16); img.fill(1 + i); }
+            images.push(img);
+        }
+        return images;
+    }
 
     export function loadProject(prefix: string, output: boolean = false) {
         let names = settings.list(prefix);
@@ -319,56 +333,38 @@ namespace tileworld {
         if (output) console.log("function create"+prefix.slice(0,-1)+"() {");
         let version = settingsReadString(prefix + VersionKey, output);
         // get the tile map, handling errors
-        let buf = settingsReadBuffer(prefix + BackMapKey, output);
+        let buf = settingsReadBuffer(prefix + WorldBackgroundsKey, output);
         let world = buf && buf.length > 0 ? bufferToImage(buf) : null;
         world = world ? world : image.create(32, 24);
         // sprite map
-        buf = settingsReadBuffer(prefix + SpriteMapKey, output);
+        buf = settingsReadBuffer(prefix + WorldSpritesKey, output);
         let sprites = buf && buf.length > 0 ? bufferToImage(buf) : null;
-        // sprite images
         sprites = sprites ? sprites : image.create(32, 24);
-        let fixedImages: Image[] = [];
-        if (names.indexOf(prefix + BackImgCntKey) != -1) {
-            let fixed = settingsReadNumber(prefix + BackImgCntKey, output);
-            for (let i = 0; i < fixed; i++) {
-                let key = prefix + "FS" + i.toString();
-                let buf = settingsReadBuffer(key, output);
-                let img = buf && buf.length > 0 ? bufferToImage(buf) : null;
-                if (!img) { img = image.create(16, 16); img.fill(1 + i); }
-                fixedImages.push(img);
-            }
-        }
-        let movableImages: Image[] = [];
-        if (names.indexOf(prefix + SpriteImgCntKey) != -1) {
-            let movable = settingsReadNumber(prefix + SpriteImgCntKey, output);
-            for (let i = 0; i < movable; i++) {
-                let key = prefix + "MS" + i.toString();
-                let buf = settingsReadBuffer(key, output);
-                let img = buf && buf.length > 0 ? bufferToImage(buf) : null;
-                if (!img) { img = image.create(16, 16); img.fill(1 + i); }
-                movableImages.push(img);
-            }
-        }
+        // backgroun images and sprite images
+        let backCnt = settingsReadNumber(prefix + BackImgCntKey, output);
+        let backImages = readImages(backCnt, prefix+BackImageKey, output);
+        let spriteCnt = settingsReadNumber(prefix + SpriteImgCntKey, output);
+        let spriteImage = readImages(spriteCnt, prefix + SpriteImageKey, output);
         let help = false;
         if (names.indexOf(prefix + HelpKey) != -1) {
             let helpNum = settingsReadNumber(prefix + HelpKey, output);
             help = helpNum ? true: false;
         }
         // get the rules, at least
-        let ruleName = prefix + "RL";
+        let ruleName = prefix + RuleKey;
         let ruleids = names.filter(s => s.indexOf(ruleName) == 0).map(s => parseInt(s.substr(ruleName.length())));
         let rules: IdRule[] = [];
         ruleids.forEach(rid => {
             let key = ruleName+rid.toString();
             let buf = settingsReadBuffer(key, output);
-            let rule = unPackRule(buf);
+            let rule = unPackRule(buf, backCnt, spriteCnt);
             rules.push(new IdRule(rid, rule));
         });
         let player = settingsReadNumber(prefix + PlayerIndexKey, output);
         if (output) console.log("}");
-        let p = new Project(prefix, fixedImages, movableImages, rules);
-        p.setWorld(world);
-        p.setSprites(sprites);
+        let p = new Project(prefix, backImages, spriteImages, rules);
+        p.setWorldBackgrounds(world);
+        p.setWorldSprites(sprites);
         p.setPlayer(player);
         p.help = help;
         p.version = version;
@@ -377,13 +373,13 @@ namespace tileworld {
 
     function saveImage(prefix: string, kind: number, img: Image, background: boolean) {
         let buf = imageToBuffer(img);
-        settings.writeBuffer(prefix + (background ? "BackImg" : "SprImg") + kind.toString(), buf);
+        settings.writeBuffer(prefix + (background ? BackImageKey : SpriteImageKey) + kind.toString(), buf);
         return buf;
     }
 
     export function storeRule(prefix: string, rid: number, rule: Rule) {
         let buf = packRule(rule);
-        settings.writeBuffer(prefix + "RL" + rid.toString(), buf);
+        settings.writeBuffer(prefix + RuleKey + rid.toString(), buf);
         return buf;
     }
 
@@ -405,12 +401,12 @@ namespace tileworld {
             let buf = saveImage(prefix, i, img, false);
             length += buf.length;
         });
-        let worldBuf = imageToBuffer(p.getWorld());
+        let worldBuf = imageToBuffer(p.getWorldBackgrounds());
         length += worldBuf.length;
-        settings.writeBuffer(prefix + BackMapKey, worldBuf);
-        let spritesBuf = imageToBuffer(p.getSprites());
+        settings.writeBuffer(prefix + WorldBackgroundsKey, worldBuf);
+        let spritesBuf = imageToBuffer(p.getWorldSprites());
         length += spritesBuf.length;
-        settings.writeBuffer(prefix + SpriteMapKey, spritesBuf);        
+        settings.writeBuffer(prefix + WorldSpritesKey, spritesBuf);        
         p.getRules().forEach(r => { 
             let buf = storeRule(prefix, r.id, r.rule); 
             length += buf.length;
@@ -467,8 +463,8 @@ namespace tileworld {
         let sprites = image.create(32, 24);
         sprites.fill(0xf);
         sprites.setPixel(5, 5, 4);
-        p.setWorld(world);
-        p.setSprites(sprites);
+        p.setWorldBackgrounds(world);
+        p.setWorldSprites(sprites);
         p.setPlayer(4);
         p.version = TileWorldVersion;
         return p;

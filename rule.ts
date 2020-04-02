@@ -23,8 +23,6 @@ enum ButtonArg {
 
 type RuleArg = number | ButtonArg;
 
-// TODO: need a way to address a whole class of sprite, possibly to select a single sprite
-
 enum CommandType {
     Move,           // sprite move in (MoveDirection) + Stop, UTurn
     Paint,          // paint a tile with a background
@@ -73,10 +71,11 @@ class WhenDo {
     constructor(
         public col: number,             // the guards and commands associated with a tile in the neighborhood
         public row: number,             // (2,2) is the center of neighborhood, graphics coordinate system
-        public bgPred: Buffer = null,   // predicate on background
-        public spPred: Buffer = null,   // predicate on sprites
+        public bgPred: Buffer = null,   // predicate on background (2 bits for AttrType)
+        public spPred: Buffer = null,   // predicate on sprites (2 bits for AttrType)
         public dir: MoveDirection = -1, // direction to match against (for movable sprite)
-        public commands: Buffer = null  // the commands that execute if the guard succeeds
+        public commands: Buffer = null, // the commands that execute if the guard succeeds
+        public commandsLen: number = 0
     ) { }
 }
 
@@ -104,8 +103,7 @@ enum FlipRotate { Horizontal, Vertical, Left, Right };
 
 namespace tileworld {
 
-    export function makeNewRule(rt: RuleType, ra: RuleArg, kind: number[], dir: MoveDirection): Rule {
-        // TODO: need to initialize based on kind and dir for center sprite
+    export function makeNewRule(rt: RuleType, ra: RuleArg): Rule {
         return new Rule(rt, ra, []);
     }
 
@@ -240,23 +238,19 @@ namespace tileworld {
             bytes += (r.whenDo[i].commands.length > 0 ? 8 : 0);
         }
         ruleBuf = control.createBuffer(bytes);
-
         writeBuf(r.ruleType, 4);
         writeBuf(r.ruleArg, 4);
         writeBuf(r.whenDo.length, 4);
-        writeBuf(0, 4);                                        // 2 bytes
+        writeBuf(0, 4);                         // 2 bytes
         r.whenDo.forEach(wd => {
             writeBuf(wd.col, 4);
-            writeBuf(wd.row, 4);                               // + 1 byte
-            control.assert(wd.bgPred.length == (bgLen >> 2), 42);
-            control.assert(wd.spPred.length == (spLen >> 2), 42);
-            writeBufRaw(wd.bgPred);                            // + {1, 2, 3} byte  
-            writeBufRaw(wd.spPred);                            // + {1, 2, 3} byte  
+            writeBuf(wd.row, 4);                // + 1 byte
+            writeBufRaw(wd.bgPred);             // + {1, 2, 3} byte  
+            writeBufRaw(wd.spPred);             // + {1, 2, 3} byte  
             writeBuf(wd.commands.length, 4);                   
-            writeBuf(0, 4);                                    // + 1 byte
+            writeBuf(0, 4);                     // + 1 byte
         });
-        
-        // now, write out the commands (at most 5 non-zero)
+        // now, write out the commands
         r.whenDo.forEach(wd => {
             if (wd.commands.length > 0) {
                 writeBufRaw(wd.commands);
@@ -274,22 +268,22 @@ namespace tileworld {
         let rule = new Rule(rt, ra, []);
         let whenDoLen = readBuf(4);
         readBuf(4);
-        let hasCommands: WhenDo[] = [];
         for(let i = 0; i<whenDoLen; i++) {
             let col = readBuf(4);
             let row = readBuf(4);
-            let whenDo = new WhenDo(col, row,
+            let wd = new WhenDo(col, row,
                     readBufRaw(bgLen >> 2),
-                    readBufRaw(spLen >> 2 ), 
-                    -1, null);
-            let cmdLen = readBuf(4);
-            if (cmdLen > 0) hasCommands.push(whenDo);
-            rule.whenDo.push(whenDo);
+                    readBufRaw(spLen >> 2), 
+                    -1, 
+                    null);
+            rule.whenDo.push(wd);
+            wd.commandsLen = readBuf(4);
             readBuf(4);
         }
-        readBuf(4);
-        hasCommands.forEach(wd => {
-            wd.commands = readBufRaw(8);
+        rule.whenDo.forEach(wd => {
+            if (wd.commandsLen > 0) {
+                wd.commands = readBufRaw(8);
+            }
         });
         return rule;
     }
