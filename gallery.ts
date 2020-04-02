@@ -302,9 +302,11 @@ namespace tileworld {
     export class Gallery extends RuleVisualsBase {
         private current: Image;
         private newImage: Image;
-        constructor(p: Project, private kind: number, private gallery: Image[]) {
+        constructor(p: Project, private kind: number, 
+                    private wrapper: ImageExport,
+                    private gallery: Image[]) {
             super(p);
-            this.current = this.p.getImage(kind).clone();
+            this.current = this.wrapper.getImage(kind).clone();
             this.newImage = this.current.clone();
             this.setCol(2); this.setRow(1);
             this.setTileSaved();
@@ -321,8 +323,8 @@ namespace tileworld {
             });
 
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
-                this.p.getImage(this.kind).copyFrom(this.newImage);
-                this.p.saveImage(this.kind);
+                this.wrapper.getImage(this.kind).copyFrom(this.newImage);
+                this.wrapper.saveImage(this.kind);
                 game.popScene();
             });
         }

@@ -2,6 +2,8 @@
 
 // for UIST paper
 
+// 0. separation of background and sprite images and kinds
+
 // 1. separation of rule event from rule's associated central sprite witness
 //    - this paves the way for having rules over tiles, to do cellular automata stuff
 //    - other events that could be interesting

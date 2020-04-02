@@ -2,6 +2,21 @@ namespace tileworld {
 
     export let TileWorldVersion = "1.0.0";
 
+    export class ImageExport {
+        constructor(private p: Project, private backgrounds: boolean = true) {
+
+        }
+        public getImages() {
+            return this.backgrounds ? this.p.backgroundImages() : this.p.spriteImages();
+        }
+        public getImage(kind: number) {
+            return this.backgrounds ? this.p.getBackgroundImage(kind) : this.p.getSpriteImage(kind);
+        }
+        public saveImage(kind: number){
+            this.backgrounds ? this.p.saveBackgroundImage(kind) : this.p.saveSpriteImage(kind);
+        }
+    }
+
     export class Project {
         private lastRule: IdRule = null;
         private _player: number = -1;
@@ -59,16 +74,8 @@ namespace tileworld {
             return 0 <= kind && kind < this.backCnt() ? this._backgroundsI[kind] : null;
         }
 
-        public getBackgroundKind(img: Image) {
-            return this._backgroundsI().indexOf(img);
-        }
-
         public getSpriteImage(kind: number) {
             return 0 <= kind && kind < this.spriteCnt() ? this._spritesI[kind] : null;
-        }
-
-        public getSpriteKind(img: Image) {
-            return this._spritesI.indexOf(img);
         }
 
         public saveBackgroundImage(kind: number) {

@@ -16,7 +16,9 @@ namespace tileworld {
                 let index = this.dirMap.getPixel(this.col(), this.row())
                 if (index != 0xf) {
                     game.pushScene();
-                    new Gallery(this.p, index, index < this.p.fixed().length ? galleryTiles : gallerySprites )
+                    new Gallery(this.p, index,
+                                new ImageExport(this.p, this.row() ==3), 
+                                this.row() == 3 ? galleryTiles : gallerySprites )
                     return;
                 }
                 if (this.row()>0)
@@ -27,7 +29,7 @@ namespace tileworld {
                     if (rules.length > 0) {
                         game.pushScene();
                         let g = new RunGame(this.p, rules);
-                        g.setWorld(this.p.getWorld(), this.p.getSprites());
+                        g.setWorld(this.p.getWorldBackgrounds(), this.p.getWorldSprites());
                         g.start();
                     }
                 } else if (command == map) {
@@ -84,14 +86,14 @@ namespace tileworld {
             this.drawImage(9, 0, settingsIcon);
 
             screen.print("Backgrounds", 16, yoff + 32 + 6);
-            this.p.fixed().forEach((img,i) => {
+            this.p.backgroundImages().forEach((img,i) => {
                 this.drawImage(1+(i<<1), 3, img);
                 this.dirMap.setPixel(1+(i<<1), 3, i)
             });
             screen.print("Sprites", 16, yoff + 64 + 6);
-            this.p.movable().forEach((img, i) => {
+            this.p.spriteImages().forEach((img, i) => {
                 this.drawImage(1 + (i << 1), 5, img);
-                this.dirMap.setPixel(1 + (i << 1), 5, this.p.fixed().length + i)
+                this.dirMap.setPixel(1 + (i << 1), 5, i)
             });
         }
 
