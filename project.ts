@@ -204,17 +204,19 @@ namespace tileworld {
             wd.spPred = control.createBuffer(this.spriteCnt()); 
             wd.commandsLen = 0;
             wd.commands = control.createBuffer(8);
+            // TODO: fill with 0xf
             this.getRule(rid).whenDo.push(wd);
             return this.getRule(rid).whenDo.length - 1;
         }
 
         private getSetBuffAttr(buf: Buffer, index: number, val: number) {
-            let byte = buf.getUint8(index >> 2);
-            let remainder = index - ((index >> 2) << 2);
+            let byteIndex = index >> 2;
+            let byte = buf.getUint8(byteIndex);
+            let remainder = index - (byteIndex << 2);
             if (val != -1) {
                 let mask = (0x3 << (remainder << 1)) ^ 0xff;
                 let newByte = (byte & mask) | ((val & 0x3) << (remainder << 1));
-                buf.setUint8(index >> 2, newByte)
+                buf.setUint8(byteIndex, newByte)
             }
             return (byte >> (remainder << 1)) & 0x3;
         }
@@ -222,53 +224,41 @@ namespace tileworld {
         public getSetBgAttr(rid: number, wdid: number, index: number, val: number = -1): AttrType {
             return this.getSetBuffAttr(this.getRule(rid).whenDo[wdid].bgPred, index, val);
         }
+
         public getSetSpAttr(rid: number, wdid: number, index: number, val: number = -1): AttrType {
             return this.getSetBuffAttr(this.getRule(rid).whenDo[wdid].spPred, index, val);
         }
 
-        public getInst(rid: number, wdid: number, cid: number) {
-            let c = this.getRule(rid).whenDo[wdid].commands[cid];
-            return (c == null) ? -1 : c.inst;
+        // TODO: buffer
+        public getCmdInst(rid: number, wdid: number, cid: number) {
+            let c = this.getRule(rid).whenDo[wdid].commands;
         }
 
-        public getArg(rid: number, wdid: number, cid: number) {
-            let c = this.getRule(rid).whenDo[wdid].commands[cid];
-            return (c == null) ? -1 : c.arg;
+        public getCmdArg(rid: number, wdid: number, cid: number) {
+            let c = this.getRule(rid).whenDo[wdid].commands;
         }
 
-        public setInst(rid: number, wdid: number, cid: number, n: number) {
-            let commands = this.getRule(rid).whenDo[wdid].commands;
-            while (cid >= commands.length && cid < 4) {
-                commands.push(new Command(-1, -1));
-            }
-            commands[cid].inst = n;
+        public setCmdInst(rid: number, wdid: number, cid: number, n: number) {
+            let c = this.getRule(rid).whenDo[wdid].commands;
         }
 
-        public setArg(rid: number, wdid: number, cid: number, n: number) {
-            let commands = this.getRule(rid).whenDo[wdid].commands;
-            while (cid >= commands.length && cid < 4) {
-                commands.push(new Command(-1, -1));
-            }
-            commands[cid].arg = n;
+        public setCmdArg(rid: number, wdid: number, cid: number, n: number) {
+            let c = this.getRule(rid).whenDo[wdid].commands;
         }
 
         public removeCommand(rid: number, wdid: number, cid: number) {
-            let commands = this.getRule(rid).whenDo[wdid].commands;
-            if (cid < commands.length) {
-                commands.removeAt(cid);
-            }
+            // TODO: need to shift
         }
 
         // predicates
 
         public whendoTrue(rid: number, whendo: number) {
-            for (let kind = 0; kind < this.all().length; kind++) {
-                if (this.getAttr(rid, whendo, kind) != AttrType.OK)
-                    return false;
-            }
+            let wd = this.getRule(rid).whenDo[whendo];
+            // TODO: check if any non-zero byte in wd.bgPred or wd.spPred
             return true;
         }
 
+        // TODO: we really need to parameterize neighborhood 
         public allTrue(rid: number) {
             for (let col = 0; col < 5; col++) {
                 for (let row = 0; row < 5; row++) {
@@ -285,6 +275,7 @@ namespace tileworld {
         // transformations
 
         public flipRule(rid: number, fr: FlipRotate) {
+            /* 
             let tgtRule = this.makeRule(this.getKinds(rid)[0], this.getType(rid), 
                                         flipRotateDir(this.getDir(rid), fr));
             for (let row = 0; row < 5; row++) {
@@ -311,7 +302,8 @@ namespace tileworld {
                     }
                 }
             }
-            return tgtRule;
+            */
+            return -1;
         }
     }
 
@@ -430,8 +422,9 @@ namespace tileworld {
     }
 
     function makePushRule(dir: MoveDirection) {
-        return new Rule([4], RuleType.Pushing, dir, 
-        [new WhenDo(2+moveXdelta(dir), 2+moveYdelta(dir), wall(), 0, []), new WhenDo(2, 2, ok(), 0, [new Command(CommandType.Move, dir)])]);
+        return new Rule(RuleType.ButtonPress, dir, []);
+        // TODO: finish this off
+        // [new WhenDo(2+moveXdelta(dir), 2+moveYdelta(dir), wall(), 0, []), new WhenDo(2, 2, ok(), 0, [new Command(CommandType.Move, dir)])]);
     }
 
     const player = img`
