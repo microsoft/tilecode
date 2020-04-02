@@ -215,6 +215,11 @@ namespace tileworld {
             this.getRule(rid).ruleArg = ra;
         }
 
+        public getDirFromRule(rid: number) {
+            let wd = this.getWhenDo(rid, 2, 2);
+            return wd == -1 ? -1 : this.getCenterDirection(rid, wd);        
+        }
+
         public getWhenDo(rid: number, col: number, row: number) {
             let whendo = this.getRule(rid).whenDo.find(wd => wd.col == col && wd.row == row);
             if (whendo == null)
@@ -252,6 +257,14 @@ namespace tileworld {
 
         public getSetSpAttr(rid: number, wdid: number, index: number, val: number = -1): AttrType {
             return this.getSetBuffAttr(this.getRule(rid).whenDo[wdid].spPred, index, val);
+        }
+
+        public getCenterDirection(rid: number, wdid: number) {
+            return this.getRule(rid).whenDo[wdid].dir;
+        }
+
+        public setCenterDirection(rid: number, wdid: number, val:number) {
+            this.getRule(rid).whenDo[wdid].dir = val;
         }
 
         // TODO: buffer

@@ -91,7 +91,7 @@ namespace tileworld {
         protected okToMove() { return true; }
 
         protected getRulesForTypeDir(rules: number[], rt: RuleType, dir: MoveDirection) {
-            return rules.filter(rid => this.p.getType(rid) == rt && (rt == RuleType.Resting || this.p.getDir(rid) == dir));
+            return rules.filter(rid => this.p.getRuleType(rid) == rt && (rt == RuleType.Resting || this.p.getDir(rid) == dir));
         }
         
         protected setCol(col: number) {
