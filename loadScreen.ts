@@ -13,7 +13,7 @@ namespace tileworld {
                     this.update();
                     if (!this.p) {
                         this.p = emptyProject(prefix);
-                        saveEntireProject(this.p);
+                        this.p.saveProject();
                     }
                     this.lastDir = -1;
                     this.lastDir = -1;
@@ -26,7 +26,7 @@ namespace tileworld {
             });
             this.update();
             if (this.bootstrap && !settings.exists("TW1-TM")) {
-                saveEntireProject(this.bootstrap);
+                this.bootstrap.saveProject();
             }
         }
         

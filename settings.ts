@@ -55,9 +55,9 @@ namespace tileworld {
 
                 let worldY = 32 + yoff + 6;
                 screen.print("World", 16, worldY);
-                screen.print(this.p.getWorld().width.toString(), 64, worldY);
+                screen.print(this.p.getWorldBackgrounds().width.toString(), 64, worldY);
                 screen.print("by", 96, worldY);
-                screen.print(this.p.getWorld().height.toString(), 128, worldY);
+                screen.print(this.p.getWorldBackgrounds().height.toString(), 128, worldY);
                 screen.print(this.p.version, 120, yoff);
                 screen.print("Export", 16, 92);
                 this.drawImage(4, 5, diskIcon);
