@@ -60,7 +60,7 @@ namespace tileworld {
         private Adown: boolean = false;
         private kind: number = 0;
         private dirty: boolean = false;
-        constructor(private p: Project) {
+        constructor(private p: AllExport) {
             super();
             this.image = p.getImage(this.kind);
 
@@ -119,7 +119,7 @@ namespace tileworld {
                 this.image.setPixel(col, row, this.selectedColor);
             } else {
                 let col = this.menuCursor.x >> 4;
-                if (2 <= col && col < 2 + this.p.all().length) {
+                if (2 <= col && col < 2 + this.p.getImages().length) {
                     if (this.dirty)
                         this.p.saveImage(this.kind);
                     this.kind = col - 2;
@@ -209,7 +209,7 @@ namespace tileworld {
             screen.fill(0);
             screen.fillRect(0, yoff, 16, 16, 11);
             screen.drawTransparentImage(paint, 0, yoff)
-            this.p.all().forEach((img, index) => {
+            this.p.getImages().forEach((img, index) => {
                 screen.drawImage(img, (2 + index)*16, yoff);
                 if (index == this.kind) {
                     screen.drawTransparentImage(cursorOut, (2+index)*16, yoff);

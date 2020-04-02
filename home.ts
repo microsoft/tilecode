@@ -17,7 +17,7 @@ namespace tileworld {
                 if (index != 0xf) {
                     game.pushScene();
                     new Gallery(this.p, index,
-                                new ImageExport(this.p, this.row() ==3), 
+                                new SwitchExport(this.p, this.row() == 3), 
                                 this.row() == 3 ? galleryTiles : gallerySprites )
                     return;
                 }
@@ -37,7 +37,7 @@ namespace tileworld {
                     new MapEditor(this.p);
                 } else if (command == paint) {
                     game.pushScene();
-                    new ImageEditor(this.p);
+                    new ImageEditor(new AllExport(this.p));
                 } else if (command == code) {
                     game.pushScene();
                     new RuleRoom(this.p);

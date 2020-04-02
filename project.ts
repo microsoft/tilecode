@@ -2,7 +2,7 @@ namespace tileworld {
 
     export let TileWorldVersion = "1.0.0";
 
-    export class ImageExport {
+    export class SwitchExport {
         constructor(private p: Project, private backgrounds: boolean = true) {
 
         }
@@ -14,6 +14,24 @@ namespace tileworld {
         }
         public saveImage(kind: number){
             this.backgrounds ? this.p.saveBackgroundImage(kind) : this.p.saveSpriteImage(kind);
+        }
+    }
+
+    export class AllExport {
+        private allImages: Image[];
+        constructor(private p: Project) {
+            this.allImages = [];
+            this.p.backgroundImages().forEach(img => this.allImages.push(img));
+            this.p.spriteImages().forEach(img => this.allImages.push(img));
+        }
+        public getImages() {
+            return this.allImages;
+        }
+        public getImage(index: number) {
+            return this.allImages[index];
+        }
+        public saveImage(index: number) {
+            index < this.p.backCnt() ? this.p.saveBackgroundImage(index) : this.p.saveSpriteImage(index - this.p.backCnt());
         }
     }
 

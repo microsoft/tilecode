@@ -303,7 +303,7 @@ namespace tileworld {
         private current: Image;
         private newImage: Image;
         constructor(p: Project, private kind: number, 
-                    private wrapper: ImageExport,
+                    private wrapper: SwitchExport,
                     private gallery: Image[]) {
             super(p);
             this.current = this.wrapper.getImage(kind).clone();
