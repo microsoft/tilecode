@@ -27,7 +27,7 @@ namespace tileworld {
     `;
 
     export class MapEditor extends BackgroundBase {
-        private world: Image;
+        private backgrounds: Image;
         private sprites: Image;
         private offsetX: number; // where are we in the world?
         private offsetY: number; 
@@ -40,8 +40,8 @@ namespace tileworld {
         constructor(private p: Project) {
             super();
             this.aDown = false;
-            this.world = p.getWorld();
-            this.sprites = p.getSprites();
+            this.backgrounds = p.getWorldBackgrounds();
+            this.sprites = p.getWorldSprites();
             // cursors
             this.selected = sprites.create(cursorOut);
             this.selected.x = 16 + 8;
@@ -72,7 +72,7 @@ namespace tileworld {
             controller.A.onEvent(ControllerButtonEvent.Released, () => { this.aDown = false; });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.cursorType == CursorType.Menu) {
-                    this.p.saveWorldSprites();
+                    this.p.saveWorld();
                     game.popScene();
                 } else {
                     this.setCursor(CursorType.Menu);
@@ -156,9 +156,9 @@ namespace tileworld {
                 let col = (this.paintCursor.x >> 3) + this.offsetX;
                 let row = ((this.paintCursor.y - (editorY +4)) >> 3) + this.offsetY;
                 if (this.userSpriteIndex == 0xf) {
-                    this.world.setPixel(col, row, 0xf);
-                } else if (this.userSpriteIndex < this.p.fixed().length)
-                    this.world.setPixel(col, row, this.userSpriteIndex);
+                    this.backgrounds.setPixel(col, row, 0xf);
+                } else if (this.userSpriteIndex < this.p.backCnt())
+                    this.backgrounds.setPixel(col, row, this.userSpriteIndex);
                 else {
                     if (this.sprites.getPixel(col, row) == this.userSpriteIndex)
                         this.sprites.setPixel(col, row, 0xf);
@@ -207,13 +207,13 @@ namespace tileworld {
             // this.drawImage(emptyDiagTile, 9, 0);
             for(let x = this.offsetX; x<this.offsetX+20; x++) {
                 for (let y = this.offsetY; y < this.offsetY + 15; y++) {
-                    let inRange = 0 <= x && x < this.world.width && 0 <= y && y < this.world.height;
+                    let inRange = 0 <= x && x < this.backgrounds.width && 0 <= y && y < this.backgrounds.height;
                     let col = x - this.offsetX;
                     let row = y - this.offsetY;
                     let nx = col * paintSize;
                     let ny = editorY + row * paintSize;
                     // tile
-                    let index = inRange ? this.world.getPixel(x, y) : -1;
+                    let index = inRange ? this.backgrounds.getPixel(x, y) : -1;
                     let img = index == -1 ? emptyTile : index == 0xf ? emptyDiagTile : this.p.getImage(index);
                     for(let i=0;i<img.width;i+=2) {
                         for (let j = 0; j < img.height; j += 2) {
