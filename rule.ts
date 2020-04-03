@@ -11,11 +11,20 @@ enum RuleType {
 
 // directions are 0-3 and move clockwise
 enum MoveDirection {
-    Left, Up, Right, Down,
-    Resting,         // sprite is at rest
-    Moving,          // this is wildcard for Left-Down
-    Any              // this is wildcard for Left-Resting
+    Left, Up, Right, Down
 }
+
+const Resting = 4;
+const Moving = 5;
+const AnyDir = 6;
+
+type Resting = 4;
+type Moving = 5;
+type AnyDir = 6;
+
+type MoveRest = MoveDirection | Resting
+
+type MoveExpr = MoveRest | Moving | AnyDir;
 
 enum ButtonArg {
     Left, Up, Right, Down, A, B
