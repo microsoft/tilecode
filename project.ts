@@ -294,7 +294,7 @@ namespace tileworld {
             });
         }
         
-        public getSpriteKindsFromRule(rid: number) {
+        public getSpriteKinds(rid: number) {
             let wd = this.getWhenDo(rid, 2, 2);
             let ret: number[] = [];
             for(let i=0; i < this.spriteCnt(); i++) {
@@ -316,7 +316,7 @@ namespace tileworld {
             return -1;
         }
 
-        public isResting(rid: number) {
+        public isRestingRule(rid: number) {
             if (this.getRuleType(rid) == RuleType.ContextChange) {
                 return this.getDirFromRule(rid) == Resting;
             }

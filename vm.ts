@@ -65,9 +65,8 @@ namespace tileworld {
         public sprites: TileSprite[][];     // the sprites, sorted by kind
         public deadSprites: TileSprite[];   // the sprites removed by this round
         // during evaluating
-        public moving: TileSprite[];
-        public resting: TileSprite[];
-        public phase: Phase;
+        public buttonMatch: TileSprite[];   // which sprites had a button event rule (external influence)
+        public phase: RuleType;
         public queued: TileSprite[];
         constructor() {}
     }
@@ -82,9 +81,6 @@ namespace tileworld {
         }
     }
 
-    // the four phases of a round
-    enum Phase { Moving, Resting, Pushing, Colliding, Completed };
-
     class TileWorldVM {
         private vm: VMState;
         private dpad: number[];
@@ -96,15 +92,15 @@ namespace tileworld {
         
         constructor(private p: Project, private rules: number[]) {
             this.vm = null;
-            for (let i = RuleType.Resting; i<= RuleType.CollidingMoving; i++) {
+            for (let i = RuleType.FirstRule; i<= RuleType.LastRule; i++) {
                 this.ruleIndex[i] = [];
             }
             // populate indices for more efficient lookup
             this.rules.forEach(rid => {
-                if (this.p.getType(rid) == RuleType.Resting && this.p.allTrue(rid))
+                if (this.p.isRestingRule(rid) && this.p.allTrue(rid))
                     this.allTrueResting.push(rid);
                 else
-                    this.ruleIndex[this.p.getType(rid)].push(rid);
+                    this.ruleIndex[this.p.getRuleType(rid)].push(rid);
             });
         }
 
@@ -120,67 +116,51 @@ namespace tileworld {
             this.globalArgs = [];
             this.vm.deadSprites = [];
             this.vm.paintTile = [];
-            this.vm.moving = [];
-            this.vm.resting = [];
+            this.vm.buttonMatch = [];
             this.vm.queued = [];
-            this.vm.phase = Phase.Moving;
+            this.vm.phase = RuleType.ButtonPress;
             this.vm.nextWorld.fill(0xf);
 
             this.allSprites(ts => {
                 ts.x = ((ts.x >> 4) << 4) + 8;      // make sure sprite is centered
                 ts.y = ((ts.y >> 4) << 4) + 8;      // on its tile
                 ts.inst = -1;                       // reset instruction
-                if (ts.dir != -1) this.vm.moving.push(ts);  // separate sprites into moving
-                else this.vm.resting.push(ts);              // and resting
+                this.vm.queued.push(ts);
             });
         }
 
         processClosure(rc: RuleClosure) {
             this.evaluateRuleClosure(rc);
-            if (this.vm.phase == Phase.Moving) {
-                // TODO: this isn't quite right, needs to be done after phase is over
-                // if a previously moving sprite did not get a move command, it transitions to resting
-                if (!this.moving(rc.self)) this.vm.resting.push(rc.self);
+            if (this.p.getRuleType(rc.rid) == RuleType.ButtonPress) {
+                if (this.vm.buttonMatch.indexOf(rc.self) == -1)
+                    this.vm.buttonMatch.push(rc.self);
             }
         }
 
         continueRound() {
-            if (this.vm.phase == Phase.Moving) {
-                if (this.vm.moving.length > 0) {
-                    let ts = this.vm.moving.pop();
-                    let ret = this.applyRules(Phase.Moving, this.ruleIndex[RuleType.Moving], ts);
-                    if (ret.length == 0) {
-                       this.vm.resting.push(ts); 
-                    }
-                    return ret;
-                } else {
-                    this.vm.phase = Phase.Resting;
-                    // optimization for resting sprites - if neighborhood around sprite did 
-                    // not change, then no need to run resting rule on sprite
-                    this.vm.resting = this.vm.resting.filter(ts => this.restingWithChange(ts));
-                } 
-            }
-            if (this.vm.phase == Phase.Resting) {
-                if (this.vm.resting.length > 0) {
-                    let ts = this.vm.resting.pop();
-                    return this.applyRules(Phase.Resting, this.ruleIndex[RuleType.Resting], ts);
-                } else {
-                    this.vm.phase = Phase.Pushing;
-                    this.vm.queued = [];
-                    this.allSprites(ts => { this.vm.queued.push(ts) }); 
-                }
-            }
-            if (this.vm.phase == Phase.Pushing) {
+            if (this.vm.phase == RuleType.ButtonPress) {
                 if (this.vm.queued.length > 0) {
                     let ts = this.vm.queued.pop();
-                    return this.applyRules(Phase.Pushing, this.ruleIndex[RuleType.ButtonPress], ts);
+                    return this.applyRules(RuleType.ButtonPress, this.ruleIndex[RuleType.ButtonPress], ts);
                 } else {
-                    this.vm.phase = Phase.Colliding;
-                    this.vm.queued = [];
-                    this.allSprites(ts => { this.vm.queued.push(ts) }); 
+                    this.vm.phase = RuleType.ContextChange;
+                    this.allSprites(ts => { if (this.vm.buttonMatch.indexOf(ts) == -1) this.vm.queued.push(ts) });
                 }
             }
-            if (this.vm.phase == Phase.Colliding) {
+            if (this.vm.phase == RuleType.ContextChange) {
+                if (this.vm.queued.length > 0) {
+                    let ts = this.vm.queued.pop();
+                    if (ts.dir != Resting) {
+                        // TODO: partition rules based on resting/moving
+                        return this.applyRules(RuleType.ContextChange, this.ruleIndex[RuleType.ContextChange], ts);
+                   } else if (this.restingWithChange(ts)) {
+                        return this.applyRules(RuleType.ContextChange, this.ruleIndex[RuleType.ContextChange], ts);
+                   }
+                } else {
+                    this.vm.phase = RuleType.Collision;
+                }
+            }
+            if (this.vm.phase == RuleType.Collision) {
                 if (this.vm.queued.length > 0) {
                     let ts = this.vm.queued.pop();                           
                     // now, look for collisions
@@ -191,10 +171,10 @@ namespace tileworld {
                     // all sprites and will dimish over time 
                     return this.collisionDetection( ts );
                 } else {
-                    this.vm.phase = Phase.Completed;
+                    this.vm.phase = -1;
                 }
             }
-            if (this.vm.phase == Phase.Completed) {
+            if (this.vm.phase == -1) {
                 // finally, update the rules
                  this.updateWorld();
             }
@@ -247,16 +227,6 @@ namespace tileworld {
                         }
                         break;
                     }
-                    case CommandType.SpritePred: {
-                        let cc: TileSprite[] = this.vm.sprites[this.p.fixed().length + arg];
-                        if (cc && cc.length > 0) {
-                            let liveCount = cc.filter(ts => ts.state == SpriteState.Alive);
-                            // skip next instruction if predicate = 0 doesn't hold
-                            if (liveCount.length > 0)
-                                i = i + 1;
-                        }
-                        break;
-                    }
                 }
             }
         }
@@ -296,22 +266,21 @@ namespace tileworld {
         }
 
         private ruleMatchesSprite(rid: number, ts: TileSprite) {
-            return this.p.getKinds(rid).indexOf(ts.kind()) != -1;
+            return this.p.getSpriteKinds(rid).indexOf(ts.kind()) != -1;
         }
 
         // apply matching rules to tileSprite, based on the phase we are in
-        private matchingRules(rules: number[], phase: Phase, ts: TileSprite, handler: (rid: number) => void) {
+        private matchingRules(rules: number[], phase: RuleType, ts: TileSprite, handler: (rid: number) => void) {
             rules.forEach(rid => {
                 if (this.ruleMatchesSprite(rid, ts) &&
-                    (phase == Phase.Resting
-                  || phase == Phase.Moving  && this.p.getDir(rid) == ts.dir
-                  || phase == Phase.Pushing && this.dpad.indexOf(this.p.getDir(rid)) != -1)) {
+                    (phase == RuleType.ContextChange && this.p.getDirFromRule(rid) == ts.dir
+                  || phase == RuleType.ButtonPress && this.dpad.indexOf(this.p.getDirFromRule(rid)) != -1)) {
                     handler(rid);
                 }
             });
         }
 
-        private applyRules(phase: Phase, rules: number[], ts: TileSprite) {
+        private applyRules(phase: RuleType, rules: number[], ts: TileSprite) {
             let ruleClosures: RuleClosure[] = [];
             this.matchingRules(rules, phase, ts, (rid) => {
                 let closure = this.evaluateRule(ts, rid);

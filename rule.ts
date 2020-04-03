@@ -9,6 +9,8 @@ enum RuleType {
     ContextChange,  // neighborhood changed
     Collision,      // sprite collision
     NegationCheck,  // check spec
+    FirstRule = ButtonPress,
+    LastRule = Collision
 };
 
 // directions are 0-3 and move clockwise
