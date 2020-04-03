@@ -85,6 +85,7 @@ namespace tileworld {
         // images
         public backCnt() { return this._backgroundsI.length; }
         public spriteCnt() { return this._spritesI.length; }
+        public allCnt() { return this.backCnt() + this.spriteCnt(); }
         public backgroundImages() { return this._backgroundsI; }
         public spriteImages() { return this._spritesI; }
 

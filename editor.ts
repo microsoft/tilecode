@@ -160,10 +160,11 @@ namespace tileworld {
                 } else if (this.userSpriteIndex < this.p.backCnt())
                     this.backgrounds.setPixel(col, row, this.userSpriteIndex);
                 else {
-                    if (this.sprites.getPixel(col, row) == this.userSpriteIndex)
+                    let spriteIndex = this.userSpriteIndex - this.p.backCnt();
+                    if (this.sprites.getPixel(col, row) == spriteIndex)
                         this.sprites.setPixel(col, row, 0xf);
                     else
-                        this.sprites.setPixel(col, row, this.userSpriteIndex);
+                        this.sprites.setPixel(col, row, spriteIndex);
                 }
                 this.update();
                 return;
@@ -171,7 +172,7 @@ namespace tileworld {
             if (repeated)
                 return;
             if (this.row() == 0) {
-                if (1 <= this.col() && this.col() < 1 + this.p.all().length) {
+                if (1 <= this.col() && this.col() < 1 + this.p.allCnt()) {
                     // change user sprite
                     this.userSpriteIndex = this.col()-1;
                     this.updateSelection();
@@ -201,8 +202,14 @@ namespace tileworld {
             screen.fill(0);
             screen.fillRect(0, yoff, 16, 16, 11);
             this.drawImage(map, 0, 0);
-            this.p.all().forEach((img, index) => { 
-                this.drawImage(img, 1+index, 0); 
+            let index = 1;
+            this.p.backgroundImages().forEach(img => { 
+                this.drawImage(img, index, 0); 
+                index++;
+            });
+            this.p.spriteImages().forEach(img => {
+                this.drawImage(img, index, 0);
+                index++;
             });
             // this.drawImage(emptyDiagTile, 9, 0);
             for(let x = this.offsetX; x<this.offsetX+20; x++) {
@@ -214,7 +221,7 @@ namespace tileworld {
                     let ny = editorY + row * paintSize;
                     // tile
                     let index = inRange ? this.backgrounds.getPixel(x, y) : -1;
-                    let img = index == -1 ? emptyTile : index == 0xf ? emptyDiagTile : this.p.getImage(index);
+                    let img = index == -1 ? emptyTile : index == 0xf ? emptyDiagTile : this.p.getBackgroundImage(index);
                     for(let i=0;i<img.width;i+=2) {
                         for (let j = 0; j < img.height; j += 2) {
                             screen.setPixel(nx+(i>>1),ny+(j>>1),img.getPixel(i,j))
@@ -224,7 +231,7 @@ namespace tileworld {
                     if (inRange) {
                         let index = this.sprites.getPixel(x, y);
                         if (index != 0xf) {
-                            img = this.p.getImage(index);
+                            img = this.p.getSpriteImage(index);
                             for (let i = 0; i < img.width; i += 2) {
                                 for (let j = 0; j < img.height; j += 2) {
                                     if (img.getPixel(i,j) != 0) {
