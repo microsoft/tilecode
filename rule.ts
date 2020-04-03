@@ -64,6 +64,8 @@ class Command {
     ) { }
 }
 
+const MaxCommands = 4;
+
 // a tile "predicate" at (col,row), where (2,2) is center and associated commands
 // ties together coordinate, predicate, and actions. It's useful to pair the first
 // two since we don't expect many predicates 
@@ -284,9 +286,9 @@ namespace tileworld {
         }
         rule.whenDo.forEach(wd => {
             if (wd.commandsLen > 0) {
-                wd.commands = readBufRaw(8, wd.commandsLen << 1);
+                wd.commands = readBufRaw(MaxCommands << 1, wd.commandsLen << 1);
             } else {
-                wd.commands = control.createBuffer(8);
+                wd.commands = control.createBuffer(MaxCommands << 1);
             }
         });
         return rule;

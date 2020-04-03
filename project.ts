@@ -234,7 +234,7 @@ namespace tileworld {
             wd.bgPred = control.createBuffer(this.backCnt());
             wd.spPred = control.createBuffer(this.spriteCnt()); 
             wd.commandsLen = 0;
-            wd.commands = control.createBuffer(8);
+            wd.commands = control.createBuffer(MaxCommands << 1);
             this.getRule(rid).whenDo.push(wd);
             return this.getRule(rid).whenDo.length - 1;
         }
@@ -288,7 +288,9 @@ namespace tileworld {
 
         public removeCommand(rid: number, wdid: number, cid: number) {
             let wd = this.getRule(rid).whenDo[wdid];
-            // TODO: shift down
+            for(let i=(cid << 1); i <= ((MaxCommands-1)<<1)-1; i++) {
+                wd.commands.setUint8(i, wd.commands.getUint8(i+2));
+            }
             wd.commandsLen--;
         }
 
@@ -296,7 +298,10 @@ namespace tileworld {
 
         public whendoTrue(rid: number, whendo: number) {
             let wd = this.getRule(rid).whenDo[whendo];
-            // TODO: check if any non-zero byte in wd.bgPred or wd.spPred
+            for(let i = 0; i< wd.bgPred.length; i++)
+                if (wd.bgPred.getUint8(i)) return false;
+            for (let i = 0; i < wd.spPred.length; i++)
+                if (wd.spPred.getUint8(i)) return false;
             return true;
         }
 
