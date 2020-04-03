@@ -197,7 +197,7 @@ namespace tileworld {
 
         // a rule is sprite-based when the sprite is in the include set
         // of the center tile (2,2)
-        public getRulesForSprite(kind: number): number[] {
+        public getRulesForSpriteKind(kind: number): number[] {
             return this.getRuleIds().filter(rid => {
                 let wd = this.getWhenDo(rid, 2, 2);
                 return (wd == -1) ? false : this.getSetSpAttr(rid,wd,kind) == AttrType.Include
@@ -466,11 +466,11 @@ namespace tileworld {
     }
 
     function wall () {
-        return tileworld.fillAttr(AttrType.OK, 8, 0, AttrType.Exclude);
+        return fillAttr(AttrType.OK, 8, 0, AttrType.Exclude);
     }
 
     function ok() {
-        return tileworld.fillAttr(AttrType.OK, 8, 0, AttrType.OK);
+        return fillAttr(AttrType.OK, 8, 0, AttrType.OK);
     }
 
     function makePushRule(dir: MoveDirection) {

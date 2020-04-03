@@ -23,7 +23,7 @@ namespace tileworld {
             this.update();
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.col() == 0) {
-                    if (this.row() == 0 && this.p.getRulesForKind(this.kind).length > 0) {
+                    if (this.row() == 0 && this.p.getRulesForSpriteKind(this.kind).length > 0) {
                         game.pushScene();
                         new RuleEditor(this.p, this.kind, -1, -1);
                     } else if (this.row() >= 1 && this.row() <= this.p.spriteCnt()) {
@@ -101,14 +101,15 @@ namespace tileworld {
         private doBoth(rt: RuleType, rd: number, col: number, row: number, center: boolean = true) {
             let scol = 13;
             let rules = this.getRulesForTypeDir(this.rules, rt, rd);
-            if (rt >= RuleType.CollidingResting) {
+            if (rt >= RuleType.Collision) {
+                // TODO: this case only for resting
                 let tcol = col + moveXdelta(rd);
                 let trow = row + moveYdelta(rd);
                 this.setRuleType(rt, rd, tcol, trow);
                 if (rules.length > 0) { this.fillTile(tcol, trow, scol); this.drawOutline(tcol,trow, 1); }
-            } else if (rt == RuleType.Pushing) {
-                let tcol = rd < PushingArg.AButton ? col - moveXdelta(rd) : col;
-                let trow = rd < PushingArg.AButton ? row - moveYdelta(rd) : row;
+            } else if (rt == RuleType.ButtonPress) {
+                let tcol = rd < ButtonArg.A ? col - moveXdelta(rd) : col;
+                let trow = rd < ButtonArg.A ? row - moveYdelta(rd) : row;
                 this.setRuleType(rt, rd, tcol, trow);
                 if (rules.length > 0) { this.fillTile(tcol, trow, scol); this.drawOutline(tcol, trow, 1); }
                 this.drawImage(tcol, trow, buttonImages[rd]);
@@ -116,14 +117,14 @@ namespace tileworld {
                 this.setRuleType(rt, rd, col, row);
                 if (rules.length > 0) { this.fillTile(col, row, scol); this.drawOutline(col, row, 1); }
             }
-            if (rt != RuleType.Pushing)
+            if (rt != RuleType.ButtonPress)
                 this.showRuleType(rt, rd, col, row, center);
         }
 
         private showRuleMenu(x: number, y: number) {
-            this.rules = this.p.getRulesForKind(this.kind);
+            this.rules = this.p.getRulesForSpriteKind(this.kind);
             this.makeContext(x + 2, y + 1)
-            this.doBoth(RuleType.ContextChange, MoveDirection.Resting, x + 2, y + 1);
+            this.doBoth(RuleType.ContextChange, Resting, x + 2, y + 1);
 
             // if (this.kind < this.p.fixed().length)
             //    return;
@@ -146,7 +147,7 @@ namespace tileworld {
             this.doBoth(RuleType.Collision, MoveDirection.Left, x + 2, y + 5, false);
             this.doBoth(RuleType.Collision, MoveDirection.Up, x + 2, y + 5, false);
             this.doBoth(RuleType.Collision, MoveDirection.Down, x + 2, y + 5, false);
-            this.showRuleType(RuleType.Collision, MoveDirection.Resting, x + 2, y + 5);
+            this.showRuleType(RuleType.Collision, Resting, x + 2, y + 5);
         }
     }
 }
