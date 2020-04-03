@@ -91,6 +91,7 @@ namespace tileworld {
         protected okToMove() { return true; }
 
         protected getRulesForTypeDir(rules: number[], rt: RuleType, dir: MoveDirection) {
+            // TODO: MoveDirection was overload with ButtonArg
             return rules.filter(rid => this.p.getRuleType(rid) == rt && (rt == RuleType.Resting || this.p.getDir(rid) == dir));
         }
         

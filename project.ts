@@ -465,6 +465,15 @@ namespace tileworld {
         return buf;
     }
 
+    function fillAttr(f: number, n: number, i: number, g: number) {
+        // TODO: redo this using buffer
+        let res: AttrType[] = [];
+        for (let j = 0; j < n; j++) {
+            res.push(j == i ? g : f);
+        }
+        return res;
+    }
+
     function wall () {
         return fillAttr(AttrType.OK, 8, 0, AttrType.Exclude);
     }

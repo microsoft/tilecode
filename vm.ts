@@ -173,7 +173,7 @@ namespace tileworld {
             if (this.vm.phase == Phase.Pushing) {
                 if (this.vm.queued.length > 0) {
                     let ts = this.vm.queued.pop();
-                    return this.applyRules(Phase.Pushing, this.ruleIndex[RuleType.Pushing], ts);
+                    return this.applyRules(Phase.Pushing, this.ruleIndex[RuleType.ButtonPress], ts);
                 } else {
                     this.vm.phase = Phase.Colliding;
                     this.vm.queued = [];
@@ -491,15 +491,15 @@ namespace tileworld {
 
         private evaluateWhenDoCommands(rc: RuleClosure, col: number, row: number) {
             let wid = this.p.getWhenDo(rc.rid, col, row);
-            if (wid == -1 || this.p.getInst(rc.rid, wid, 0) == -1)
+            if (wid == -1 || this.p.getCmdInst(rc.rid, wid, 0) == -1)
                 return;
             let wcol = rc.self.col() + (col - 2);
             let wrow = rc.self.row() + (row - 2);
             let self = col == 2 && row == 2;
             for (let cid = 0; cid < 4; cid++) {
-                let inst = this.p.getInst(rc.rid, wid, cid);
+                let inst = this.p.getCmdInst(rc.rid, wid, cid);
                 if (inst == -1) break;
-                let arg = this.p.getArg(rc.rid, wid, cid);
+                let arg = this.p.getCmdArg(rc.rid, wid, cid);
                 switch(inst) {
                     case CommandType.Paint: {
                         if (this.vm.nextWorld.getPixel(wcol, wrow) == 0xf) {
