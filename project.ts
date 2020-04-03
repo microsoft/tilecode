@@ -195,9 +195,13 @@ namespace tileworld {
             return this.rules.map(r => r.id);
         }
 
+        // a rule is sprite-based when the sprite is in the include set
+        // of the center tile (2,2)
         public getRulesForSprite(kind: number): number[] {
-            // TODO: this needs to be reimplemented to look into the center (2,2) when clause
-            return [];
+            return this.getRuleIds().filter(rid => {
+                let wd = this.getWhenDo(rid, 2, 2);
+                return (wd == -1) ? false : this.getSetSpAttr(rid,wd,kind) == AttrType.Include
+            });
         }
 
         public getRuleType(rid: number) {
@@ -298,14 +302,15 @@ namespace tileworld {
 
         public whendoTrue(rid: number, whendo: number) {
             let wd = this.getRule(rid).whenDo[whendo];
-            for(let i = 0; i< wd.bgPred.length; i++)
+            for(let i = 0; i< wd.bgPred.length; i++) {
                 if (wd.bgPred.getUint8(i)) return false;
-            for (let i = 0; i < wd.spPred.length; i++)
+            }
+            for (let i = 0; i < wd.spPred.length; i++) {
                 if (wd.spPred.getUint8(i)) return false;
+            }
             return true;
         }
 
-        // TODO: we really need to parameterize neighborhood 
         public allTrue(rid: number) {
             for (let col = 0; col < 5; col++) {
                 for (let row = 0; row < 5; row++) {
