@@ -537,21 +537,19 @@ namespace tileworld {
             this.state.nextWorld = w.clone();
             this.state.changed = w.clone();
 
-            // initialize fixed and movable sprites
-            for (let kind = 0; kind < this.p.all().length; kind++) {
-                if (kind < this.p.fixed().length) {
-                    let art = this.p.getImage(kind);
-                    scene.setTile(kind, art);
-                } else {
-                    this.state.sprites[kind] = [];
-                }
+            // initialize backgrounds and sprites
+            this.p.backgroundImages().forEach((img,kind) => {
+                scene.setTile(kind, img);
+            });
+            for(let kind=0; kind<this.p.spriteCnt(); kind++) {
+                this.state.sprites[kind] = [];
             }
-        
+
             for(let x = 0; x<sprites.width; x++) {
                 for (let y = 0; y < sprites.height; y++) {
                     let kind = sprites.getPixel(x,y);
                     if (kind == 0xf) continue;
-                    let art = this.p.getImage(kind);
+                    let art = this.p.getSpriteImage(kind);
                     let ts = new TileSprite(art, kind, this.debug);
                     this.state.sprites[kind].push(ts);
                     ts.x = (x << 4) + 8;
@@ -562,7 +560,7 @@ namespace tileworld {
 
         private roundToCompletion(dirs: number[]) {
             this.vm.startRound(dirs);
-            while (this.state.phase != Phase.Completed) {
+            while (this.state.phase != -1) {
                 let rcs = this.vm.continueRound();
                 while (rcs && rcs.length > 0) {
                     let rc = rcs.pop();
@@ -669,10 +667,10 @@ namespace tileworld {
                 this.requestMove(MoveDirection.Down);
             });
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                this.requestMove(PushingArg.AButton);
+                this.requestMove(ButtonArg.A);
             });
             controller.A.onEvent(ControllerButtonEvent.Repeated, () => {
-                this.requestMove(PushingArg.AButton);
+                this.requestMove(ButtonArg.A);
             });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 // TODO: debugger
