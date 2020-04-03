@@ -306,8 +306,21 @@ namespace tileworld {
         }
 
         public getDirFromRule(rid: number) {
+            let rt = this.getRuleType(rid);
             let wd = this.getWhenDo(rid, 2, 2);
-            return wd == -1 ? -1 : this.getWitnessDirection(rid, wd);
+            if (rt == RuleType.Collision || rt == RuleType.ContextChange) {
+                return wd == -1 ? -1 : this.getWitnessDirection(rid, wd);
+            } else if (rt == RuleType.ButtonPress) {
+                return this.getRuleArg(rid);
+            }
+            return -1;
+        }
+
+        public isResting(rid: number) {
+            if (this.getRuleType(rid) == RuleType.ContextChange) {
+                return this.getDirFromRule(rid) == Resting;
+            }
+            return false;
         }
 
         // predicates

@@ -90,11 +90,11 @@ namespace tileworld {
 
         protected okToMove() { return true; }
 
+
         protected getRulesForTypeDir(rules: number[], rt: RuleType, dir: MoveDirection) {
-            // TODO: MoveDirection was overload with ButtonArg
-            return rules.filter(rid => this.p.getRuleType(rid) == rt && (rt == RuleType.Resting || this.p.getDir(rid) == dir));
+            return rules.filter(rid => this.p.getRuleType(rid) == rt && (this.p.isResting(rid) || this.p.getDirFromRule(rid) == dir));
         }
-        
+      
         protected setCol(col: number) {
             this.cursor.x = (col << 4) + 8;
         }
@@ -137,14 +137,12 @@ namespace tileworld {
         protected cursorMove(dir: MoveDirection, pressed: boolean = true) { }
         protected centerImage(): Image { return null; }
 
-        protected showRuleType(rt: RuleType, rd: MoveDirection, x: number, y: number, center: boolean = true) {
+        protected showRuleType(rt: RuleType, rd: MoveRest, x: number, y: number, center: boolean = true) {
             let selCol = 11;
             if (center) this.drawImage(x, y, this.centerImage());
-            if (rt == RuleType.ContextChange) {
-                // TODO: moving case
+            if (rt == RuleType.ContextChange && rd != Resting) {
                 this.drawImage(x, y, movedImages[rd])
-            } else if (rt >= RuleType.Collision) {
-                // TODO: resting case here
+            } else if (rt == RuleType.Collision) {
                 let ax = rd == MoveDirection.Left ? 1 : (rd == MoveDirection.Right ? -1 : 0)
                 let ay = rd == MoveDirection.Down ? -1 : (rd == MoveDirection.Up ? 1 : 0)
                 this.showCollision(x - ax, y - ay, rd, moveImages[rd], rt);
@@ -152,8 +150,7 @@ namespace tileworld {
         }
 
         protected showCollision(col: number, row: number, dir: MoveDirection, arrowImg: Image, rt: RuleType) {
-            // TODO: Colliding: Moving vs. Resting
-            this.drawImage(col, row, rt == RuleType.Collision ? collisionMovingSprite : collisionRestingSprite);
+            this.drawImage(col, row, collisionRestingSprite);
             let x = (dir == MoveDirection.Left) ? 7 : (dir == MoveDirection.Right) ? -7 : 0;
             let y = (dir == MoveDirection.Up) ? 7 : (dir == MoveDirection.Down) ? -7 : 0;
             this.drawImageAbs((col << 4) + x, (row << 4) + yoff + y, arrowImg);
