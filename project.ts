@@ -195,15 +195,6 @@ namespace tileworld {
             return this.rules.map(r => r.id);
         }
 
-        // a rule is sprite-based when the sprite is in the include set
-        // of the center tile (2,2)
-        public getRulesForSpriteKind(kind: number): number[] {
-            return this.getRuleIds().filter(rid => {
-                let wd = this.getWhenDo(rid, 2, 2);
-                return (wd == -1) ? false : this.getSetSpAttr(rid,wd,kind) == AttrType.Include
-            });
-        }
-
         public getRuleType(rid: number) {
             return this.getRule(rid).ruleType;
         }
@@ -218,11 +209,6 @@ namespace tileworld {
 
         public setRuleArg(rid: number, ra: RuleArg) {
             this.getRule(rid).ruleArg = ra;
-        }
-
-        public getDirFromRule(rid: number) {
-            let wd = this.getWhenDo(rid, 2, 2);
-            return wd == -1 ? -1 : this.getWitnessDirection(rid, wd);        
         }
 
         public getWhenDo(rid: number, col: number, row: number) {
@@ -296,6 +282,32 @@ namespace tileworld {
                 wd.commands.setUint8(i, wd.commands.getUint8(i+2));
             }
             wd.commandsLen--;
+        }
+
+        // the following accessors depend on the rule type
+        
+        public getRulesForSpriteKind(kind: number): number[] {
+            return this.getRuleIds().filter(rid => {
+                let wd = this.getWhenDo(rid, 2, 2);
+                let at = this.getSetSpAttr(rid, wd, kind);
+                return (wd == -1) ? false : (at == AttrType.Include || at == AttrType.Include2);
+            });
+        }
+        
+        public getSpriteKindsFromRule(rid: number) {
+            let wd = this.getWhenDo(rid, 2, 2);
+            let ret: number[] = [];
+            for(let i=0; i < this.spriteCnt(); i++) {
+                let at = this.getSetSpAttr(rid, wd, i);
+                if (at == AttrType.Include || at == AttrType.Include2)
+                    ret.push(i);
+            }
+            return ret;
+        }
+
+        public getDirFromRule(rid: number) {
+            let wd = this.getWhenDo(rid, 2, 2);
+            return wd == -1 ? -1 : this.getWitnessDirection(rid, wd);
         }
 
         // predicates

@@ -2,6 +2,8 @@
 
 // enums must fit in 4 bits (16 values maximum)
 
+// the first three rule types should have a central witness sprite
+
 enum RuleType {
     ButtonPress,    // user button press
     ContextChange,  // neighborhood changed
@@ -63,7 +65,7 @@ enum AttrType {
     OK,        // don't care
     Include,   // tile must contain one from kind
     Exclude,   // tile cannot contain this kind
-    Pinned     // for pinned sprite at center (2,2)
+    Include2   // second include set
 }
 
 class Command {
