@@ -181,62 +181,6 @@ namespace tileworld {
             return null;
          }
 
-        private updateWorld() {
-            this.vm.changed.fill(0);
-            // update the state of each sprite, based on instructions
-            this.allSprites(ts => { 
-                ts.update();
-                if (ts.dir != -1) {
-                    // if sprite is moving then dirty its current
-                    // location and next location
-                    this.vm.changed.setPixel(ts.col(), ts.row(), 1);
-                    this.vm.changed.setPixel(ts.col() + moveXdelta(ts.dir), 
-                                             ts.row() + moveYdelta(ts.dir), 1);
-                }
-            });
-            // update the tile map and set dirty bits in changed map
-            if (this.vm.paintTile != null) {
-                // fast path
-                this.vm.paintTile.forEach(pt => {
-                    const tm = game.currentScene().tileMap;
-                    tm.setTileAt(pt.col, pt.row, pt.tile);
-                    this.vm.changed.setPixel(pt.col, pt.row, 1);
-                });
-            } else {
-                // general backup
-                for (let x = 0; x < this.vm.nextWorld.width; x++) {
-                    for (let y = 0; y < this.vm.nextWorld.height; y++) {
-                        let pixel = this.vm.nextWorld.getPixel(x, y);
-                        if (pixel != 0xf) {
-                            //this.vm.world.setPixel(x, y, pixel);
-                            const tm = game.currentScene().tileMap;
-                            tm.setTileAt(x, y, pixel);
-                            this.vm.changed.setPixel(x,y,1);
-                        }
-                    }
-                }
-            }
-            // now, execute the global instructions
-            for (let i = 0; i < this.globalInsts.length; i++) {
-                let inst = this.globalInsts[i];
-                let arg = this.globalArgs[i];
-                switch (inst) {
-                    case CommandType.Game: {
-                        if (arg == GameArg.Win || arg == GameArg.Lose) {
-                            this.vm.game = arg == GameArg.Win ? GameState.Won : GameState.Lost;
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-
-        // a tile sprite is (going to be) moving if it has been
-        // issed an appropriate move command
-        private moving(ts: TileSprite) {
-            return ts.inst == CommandType.Move && ts.arg < MoveArg.Stop;
-        }
-
         public allSprites(handler: (ts:TileSprite) => void) {
             this.vm.sprites.forEach(ls => { 
                 if (ls) ls.forEach(ts => handler(ts));
@@ -287,7 +231,7 @@ namespace tileworld {
                 if (closure)
                     ruleClosures.push(closure);
             });
-            if (phase != Phase.Resting)
+            if (phase != RuleType.ContextChange || ts.dir != Resting)
                 return ruleClosures;
             // now deal with pesky resting rules that have precondition == true
             // this is need because of change optimization
@@ -302,19 +246,19 @@ namespace tileworld {
 
         // precondition: moving(ts)
         private collidingRules(ts: TileSprite, handler: (rid: number) => void) {
-            this.ruleIndex[RuleType.CollidingMoving].forEach(rid => {
-                if (this.ruleMatchesSprite(rid, ts) && this.p.getDir(rid) == ts.arg) {
-                    handler(rid);
-                }
-            });
-            this.ruleIndex[RuleType.CollidingResting].forEach(rid => {
-                if (this.ruleMatchesSprite(rid, ts) && this.p.getDir(rid) == ts.arg) {
+            this.ruleIndex[RuleType.Collision].forEach(rid => {
+                if (this.ruleMatchesSprite(rid, ts) && this.p.getDirFromRule(rid) == ts.arg) {
                     handler(rid);
                 }
             });
         }
 
-        // for each sprite ts that is NOW moving (into T):
+        // a tile sprite will move if it has been issued an appropriate move command
+        private moving(ts: TileSprite) {
+            return ts.inst == CommandType.Move && ts.arg < MoveArg.Stop;
+        }
+
+        // for each sprite ts that is will move (into T):
         // - look for colliding sprite os != ts, as defined
         //   (a) os in square T, resting or moving towards ts, or
         //   (b) os moving into T
@@ -325,7 +269,8 @@ namespace tileworld {
             let wrow = ts.row() + moveYdelta(ts.arg);
             this.collidingRules(ts, (rid) => {
                 // T = (wcol, wrow)
-                let moving = this.p.getType(rid) == RuleType.CollidingMoving;
+                let moving = !this.p.isCollidingResting(rid);
+                // TODO: moving is a predicate on the sprite direction of the other sprite
                 this.allSprites(os => {
                     if (os == ts) return;
                     // (a) os in square T, resting or moving towards ts, or
@@ -372,6 +317,60 @@ namespace tileworld {
             }
         }
 
+        // ---------------------------------------------------------------------
+
+        private updateWorld() {
+            this.vm.changed.fill(0);
+            // update the state of each sprite, based on instructions
+            this.allSprites(ts => {
+                ts.update();
+                if (ts.dir != -1) {
+                    // if sprite is moving then dirty its current
+                    // location and next location
+                    this.vm.changed.setPixel(ts.col(), ts.row(), 1);
+                    this.vm.changed.setPixel(ts.col() + moveXdelta(ts.dir),
+                        ts.row() + moveYdelta(ts.dir), 1);
+                }
+            });
+            // update the tile map and set dirty bits in changed map
+            if (this.vm.paintTile != null) {
+                // fast path
+                this.vm.paintTile.forEach(pt => {
+                    const tm = game.currentScene().tileMap;
+                    tm.setTileAt(pt.col, pt.row, pt.tile);
+                    this.vm.changed.setPixel(pt.col, pt.row, 1);
+                });
+            } else {
+                // general backup
+                for (let x = 0; x < this.vm.nextWorld.width; x++) {
+                    for (let y = 0; y < this.vm.nextWorld.height; y++) {
+                        let pixel = this.vm.nextWorld.getPixel(x, y);
+                        if (pixel != 0xf) {
+                            //this.vm.world.setPixel(x, y, pixel);
+                            const tm = game.currentScene().tileMap;
+                            tm.setTileAt(x, y, pixel);
+                            this.vm.changed.setPixel(x, y, 1);
+                        }
+                    }
+                }
+            }
+            // now, execute the global instructions
+            for (let i = 0; i < this.globalInsts.length; i++) {
+                let inst = this.globalInsts[i];
+                let arg = this.globalArgs[i];
+                switch (inst) {
+                    case CommandType.Game: {
+                        if (arg == GameArg.Win || arg == GameArg.Lose) {
+                            this.vm.game = arg == GameArg.Win ? GameState.Won : GameState.Lost;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        // ---------------------------------------------------------------------
+
         // store the sprite witnesses identified by guards
         private evaluateRule(ts: TileSprite, rid: number) {
             let witnesses: TileSprite[] = [];
@@ -411,28 +410,28 @@ namespace tileworld {
             let oneOf: boolean = false;
             let oneOfPassed: boolean = false;
             let captureWitness: TileSprite = null;
-            for(let kind = 0; kind < this.p.fixed().length; kind++) {
+            for(let kind = 0; kind < this.p.backCnt(); kind++) {
                 const tm = game.currentScene().tileMap;
                 let hasKind = tm.getTile(wcol, wrow).tileSet == kind;
-                let attr = this.p.getAttr(rid, whendo, kind);
+                let attr = this.p.getSetBgAttr(rid, whendo, kind);
                 if (attr == AttrType.Exclude && hasKind) {
                     return false;
-                } else if (attr == AttrType.OneOf || attr == AttrType.Include) {
+                } else if (attr == AttrType.Include) {
                     oneOf = true;
                     if (hasKind) oneOfPassed = true;
                 }
             }
             let adjacent = Math.abs(2 - col) + Math.abs(2 - row) <= 1;
-            for(let kind = this.p.fixed().length; kind<this.p.all().length; kind++) {
-                let attr = this.p.getAttr(rid, whendo, kind);
+            for(let kind = 0; kind < this.p.spriteCnt(); kind++) {
+                let attr = this.p.getSetSpAttr(rid, whendo, kind);
                 let witness = this.getWitness(kind, wcol, wrow, self ? ts : null);
                 // special case for collisions
-                if (this.p.getType(rid) >= RuleType.CollidingResting) {
+                if (this.p.getRuleType(rid) == RuleType.Collision) {
                     witness = witnesses[0].kind() == kind ? witnesses[0] : null;
                 }
                 if (attr == AttrType.Exclude && witness) {
                     return false;
-                } else if (attr == AttrType.Include || attr == AttrType.OneOf) {
+                } else if (attr == AttrType.Include) {
                     oneOf = true;
                     if (witness) oneOfPassed = true;
                     if (adjacent && !captureWitness)
@@ -442,7 +441,7 @@ namespace tileworld {
             // collision case: if we made it through here then 
             // we have witness and oneOf is false, as expected
             let ret = !oneOf || oneOfPassed;
-            if (ret && captureWitness && this.p.getType(rid) < RuleType.CollidingResting) {
+            if (ret && captureWitness && this.p.getRuleType(rid) != RuleType.Collision) {
                 witnesses.push(captureWitness);
             }
             return ret;
@@ -481,12 +480,12 @@ namespace tileworld {
                         break;
                     }
                     case CommandType.Move: {
-                        let colliding = this.p.getType(rc.rid) >= RuleType.CollidingResting;
-                        let pushing = this.p.getType(rc.rid) >= RuleType.Pushing;
+                        let colliding = this.p.getRuleType(rc.rid) == RuleType.Collision;
+                        let button = this.p.getRuleType(rc.rid) == RuleType.ButtonPress;
                         let witness = self ? rc.self : 
                                 (colliding ? rc.witnesses[0]
                                     : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow));
-                        if (witness && (witness.inst == -1 || Math.randomRange(0,1) < 0.5 || colliding || pushing)) {
+                        if (witness && (witness.inst == -1 || Math.randomRange(0,1) < 0.5 || colliding || button)) {
                             witness.inst = inst;
                             witness.arg = arg;
                         }
@@ -496,7 +495,8 @@ namespace tileworld {
                         // the witness is found where expected
                         let witness = rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
                         // except in the case of collisions with moving sprites
-                        if (this.p.getType(rc.rid) == RuleType.CollidingMoving) {
+                        if (this.p.getRuleType(rc.rid) == RuleType.Collision) {
+                            // TODO: moving against moving only here...
                             witness = rc.witnesses[0];
                         }
                         if (arg == SpriteArg.Remove && witness) {
@@ -505,11 +505,8 @@ namespace tileworld {
                         }
                         break;
                     }
-                    case CommandType.Game:
+                    case CommandType.Game: {
                         // all game commands are global
-                    case CommandType.SpritePred: {
-                        // TODO: if the next instruction is a local instruction, then we need to evaluate the 
-                        // TODO: sprite predicate now, otherwise it is global
                         this.globalInsts.push(inst);
                         this.globalArgs.push(arg);
                         break;
@@ -541,7 +538,7 @@ namespace tileworld {
             this.state.changed = w.clone();
 
             // initialize fixed and movable sprites
-            for (let kind = 0;kind < this.p.all().length; kind++) {
+            for (let kind = 0; kind < this.p.all().length; kind++) {
                 if (kind < this.p.fixed().length) {
                     let art = this.p.getImage(kind);
                     scene.setTile(kind, art);

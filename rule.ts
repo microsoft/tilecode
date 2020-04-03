@@ -2,7 +2,12 @@
 
 // enums must fit in 4 bits (16 values maximum)
 
-// the first three rule types should have a central witness sprite
+// the first three rule types should have a self (centered) witness sprite
+// that is moving in a direction from MoveDirection
+
+// the collision rule has two identified sprites (self, other)
+// the self sprite has a direction in MoveDirection 
+// other other sprite is either Resting, Moving, or AnyDir
 
 enum RuleType {
     ButtonPress,    // user button press

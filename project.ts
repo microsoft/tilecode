@@ -323,6 +323,14 @@ namespace tileworld {
             return false;
         }
 
+        public isCollidingResting(rid: number) {
+            if (this.getRuleType(rid) == RuleType.Collision) {
+                let wd = this.getWhenDo(rid, 2, 3);
+                return this.getDirFromRule(rid) == Resting || this.getDirFromRule(rid) == AnyDir
+            }
+            return false;  
+        }
+
         // predicates
 
         public whendoTrue(rid: number, whendo: number) {
