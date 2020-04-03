@@ -53,11 +53,12 @@ namespace tileworld {
                 this.helpCursor.say(null);
                 if (this.askDeleteRule) {
                     let index = this.currentRules().indexOf(this.rule);
-                    let kinds = this.p.getKinds(this.rule);
+                    let kinds = this.p.getSpriteKinds(this.rule);
                     if (kinds.length == 1)
                         this.p.removeRule(this.rule);
                     else {
                         kinds.removeElement(this.kind);
+                        // TODO
                         this.p.setKinds(this.rule, kinds);
                     }
                     let rules = this.currentRules();
@@ -102,7 +103,7 @@ namespace tileworld {
                             let rules = this.p.getRuleIds();
                             game.pushScene();
                             let g = new RunGame(this.p, rules, this.col() == 3);
-                            g.setWorld(this.p.getWorld(), this.p.getSprites());
+                            g.setWorld(this.p.getWorldBackgrounds(), this.p.getWorldSprites());
                             g.start();
                             return;
                         } else if (this.col() == 6) {
@@ -144,14 +145,15 @@ namespace tileworld {
         }
 
         private getType() {
-            return this.p.getType(this.rule);
+            return this.p.getRuleType(this.rule);
         }
 
         private getDirectionImage() {
-            let dir = this.p.getDir(this.rule);
-            if (this.getType() == RuleType.Resting)
+            let dir = this.p.getDirFromRule(this.rule);
+            // TODO: need an image for Resting, Moving and AnyDir
+            if (dir == Resting)
                 return null;
-            return this.getType() == RuleType.Pushing ? buttonImages[dir] : moveImages[dir];
+            return this.getType() == RuleType.ButtonPress ? buttonImages[dir] : moveImages[dir];
         }
 
         private changeRule(rid: number) {
@@ -166,7 +168,7 @@ namespace tileworld {
 
         protected currentRules() {
             // TODO: sort rules by id
-            let rules = this.p.getRulesForKind(this.kind);
+            let rules = this.p.getRulesForSpriteKind(this.kind);
             return this.rt == -1 ? rules : this.getRulesForTypeDir(rules, this.rt, this.dir);
         }
 
@@ -222,10 +224,10 @@ namespace tileworld {
                 screen.print(this.rule.toString(), 30, 0);
             screen.print("Do", 70, (editorRow << 4) + 8);
             // sets collideCol and collideRow
-            this.showRuleType(this.p.getType(this.rule), this.p.getDir(this.rule), 2, 2+editorRow);
+            this.showRuleType(this.p.getRuleType(this.rule), this.p.getDirFromRule(this.rule), 2, 2+editorRow);
             this.makeContext();
-            this.showRuleType(this.p.getType(this.rule), this.p.getDir(this.rule), 2, 2+editorRow);
-            if (this.p.getKinds(this.rule).length > 1)
+            this.showRuleType(this.p.getRuleType(this.rule), this.p.getDirFromRule(this.rule), 2, 2+editorRow);
+            if (this.p.getSpriteKinds(this.rule).length > 1)
                 this.drawImage(2, 2 + editorRow, oneof);
             this.showCommands();
             if (this.p.help && this.menu == RuleEditorMenus.MainMenu && this.col() > 5 && this.row() >= editorRow) {
@@ -257,14 +259,14 @@ namespace tileworld {
         }
 
         centerImage() {
-            return this.p.getImage(this.kind);
+            return this.p.getSpriteImage(this.kind);
         }
 
         private showMainMenu() {
             //screen.fillRect(0, yoff, 160, 19, 0);
             this.fillTile(0, 0, 11);
             this.drawImage(0, 0, code);
-            if (this.getType() == RuleType.Pushing) {
+            if (this.getType() == RuleType.ButtonPress) {
                 let image = this.getDirectionImage();
                 if (image)
                     this.drawImage(0, 3, image);
@@ -323,7 +325,7 @@ namespace tileworld {
             if (draw) {
                 let index = this.findWitnessColRow(wcol, wrow);
                 let img1 = this.collideCol == wcol && this.collideRow == wrow ? collisionRestingSprite : genericSprite;
-                let img2 = index == -1 ? img1 : this.p.getImage(index);
+                let img2 = index == -1 ? img1 : this.p.getSpriteImage(index);
                 this.drawImage(5, crow + editorRow, img2);
                 if (img1 == collisionRestingSprite)
                     this.drawImage(5, crow + editorRow, img1);
@@ -334,8 +336,8 @@ namespace tileworld {
             if (!draw) { this.tokens = tokens; }
             let cid = 0
             for(; cid < 4; cid++, col++) {
-                let inst = this.p.getInst(this.rule, whendo, cid);
-                let arg = this.p.getArg(this.rule, whendo, cid);
+                let inst = this.p.getCmdInst(this.rule, whendo, cid);
+                let arg = this.p.getCmdArg(this.rule, whendo, cid);
                 if (inst != -1 && arg != -1) {
                     this.showCommand(col, crow, whendo, cid, tokens, draw);
                 } else {
@@ -351,8 +353,8 @@ namespace tileworld {
         private showCommand(col: number, row: number, 
                             whendo: number, cid: number, tokens: number[],
                             draw: boolean) {
-            let inst = this.p.getInst(this.rule, whendo, cid);
-            let arg = this.p.getArg(this.rule, whendo, cid);
+            let inst = this.p.getCmdInst(this.rule, whendo, cid);
+            let arg = this.p.getCmdArg(this.rule, whendo, cid);
             if (inst == -1) {
                 if (draw) this.drawImage(col, row + editorRow, emptyTile);
             } else {
@@ -379,7 +381,8 @@ namespace tileworld {
             this.whenDo = this.getWhenDo(newCol, newRow);
             this.setTileSaved();
             this.currentCommand = col;
-            if (this.p.getInst(this.rule, this.whenDo, col) == -1) {
+            // TODO: need to transition to length-based rather than -1
+            if (this.p.getCmdInst(this.rule, this.whenDo, col) == -1) {
                 this.showCommandsAt(row, newCol, newRow, false);
                 this.makeCommandMenu(-1,-1);
             } else {
@@ -422,8 +425,8 @@ namespace tileworld {
         }
 
         private modifyCommandMenu() {
-            let inst = this.p.getInst(this.rule, this.whenDo, this.currentCommand);
-            let arg = this.p.getArg(this.rule, this.whenDo, this.currentCommand);
+            let inst = this.p.getCmdInst(this.rule, this.whenDo, this.currentCommand);
+            let arg = this.p.getCmdArg(this.rule, this.whenDo, this.currentCommand);
             if (this.tokens.length > 0) {
                 this.makeCommandMenu(inst, arg);
             } else if (inst != -1) {
@@ -446,7 +449,6 @@ namespace tileworld {
             if (this.findWitnessColRow(col, row) != -1) {
                 tokens.push(CommandType.Sprite);
             }
-            tokens.push(CommandType.SpritePred);
             tokens.push(CommandType.Game);
             return tokens;
         }
@@ -458,7 +460,6 @@ namespace tileworld {
                 case CommandType.Paint: 
                 case CommandType.Sprite:
                 case CommandType.Game:
-                case CommandType.SpritePred:
             }
             return 0;            
         }
@@ -469,7 +470,6 @@ namespace tileworld {
                 case CommandType.Paint: return [];
                 case CommandType.Sprite: return spriteText;
                 case CommandType.Game: return gameText;
-                case CommandType.SpritePred: return [];
             }
             return [];
         }
@@ -480,7 +480,6 @@ namespace tileworld {
                 case CommandType.Paint: return 4;
                 case CommandType.Sprite: return 1;
                 case CommandType.Game: return 2;
-                case CommandType.SpritePred: return 4;
             }
             return 0;
         }
@@ -490,21 +489,16 @@ namespace tileworld {
                 return emptyTile;
             switch (inst) {
                 case CommandType.Move: return moveImages[arg];
-                case CommandType.Paint: return this.p.fixed()[arg];
+                case CommandType.Paint: return this.p.backgroundImages()[arg];
                 case CommandType.Sprite: return spriteImages[arg];
                 case CommandType.Game: return gameImages[arg];
-                case CommandType.SpritePred: {
-                    let img = this.p.movable()[arg].clone();
-                    img.drawTransparentImage(equalZero, 0, 0);
-                    return img;
-                }
             }
             return emptyTile;
         }
 
         private checkCommand() {
             // don't allow incomplete commands 
-            let arg = this.p.getArg(this.rule, this.whenDo, this.currentCommand);
+            let arg = this.p.getCmdArg(this.rule, this.whenDo, this.currentCommand);
             if (arg == -1) {
                 this.setCommand(-1, -1);
             }
@@ -513,7 +507,7 @@ namespace tileworld {
         private commandUpdate(hover: boolean = false) {
             let tok = this.ruleTypeMap.getPixel(this.col(), this.row());
             let arg = this.dirMap.getPixel(this.col(), this.row());
-            let inst = this.p.getInst(this.rule, this.whenDo, this.currentCommand);
+            let inst = this.p.getCmdInst(this.rule, this.whenDo, this.currentCommand);
             if (tok == CommandTokens.Delete) {
                 if (hover) {
                     if (this.p.help) this.helpCursor.say("delete command");
@@ -535,7 +529,7 @@ namespace tileworld {
                 if (hover) {
                     this.helpCursor.say(this.instToArgText(inst)[arg]);
                 } else {
-                    this.p.setArg(this.rule, this.whenDo, this.currentCommand, arg);
+                    this.p.setCmdArg(this.rule, this.whenDo, this.currentCommand, arg);
                 }
             } else if (!hover && this.row() > 1) {
                 this.noMenu();
@@ -543,19 +537,19 @@ namespace tileworld {
         }
 
         private setCommand(inst: number, arg: number) {
-            this.p.setInst(this.rule, this.whenDo, this.currentCommand, inst);
-            this.p.setArg(this.rule, this.whenDo, this.currentCommand, arg);
+            this.p.setCmdInst(this.rule, this.whenDo, this.currentCommand, inst);
+            this.p.setCmdArg(this.rule, this.whenDo, this.currentCommand, arg);
         }
 
         private posSpritePosition(whendo: number, begin: number) {
             let index = this.attrIndex(this.rule, whendo, AttrType.Include, begin);
-            return (index == -1) ? this.attrIndex(this.rule, whendo, AttrType.OneOf, begin) : index;
+            return (index == -1) ? this.attrIndex(this.rule, whendo, AttrType.Include2, begin) : index;
         }
 
         private findWitnessWhenDo(whendo: number) {
             if (whendo == -1)
                 return -1;
-            return this.posSpritePosition(whendo, this.p.fixed().length);
+            return this.posSpritePosition(whendo, this.p.backCnt());
         }
 
         // what is ordering of sprites?
@@ -567,6 +561,7 @@ namespace tileworld {
             return wit;
         }
 
+        // TODO: we have separate functions on background and sprite attributes now... :(
         private attrMenu(col: number, row: number) {
             // which tile in the diamond are we attributing?
             let whenDo = this.getWhenDo(col, row);
