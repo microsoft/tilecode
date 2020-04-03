@@ -235,7 +235,6 @@ namespace tileworld {
             wd.spPred = control.createBuffer(this.spriteCnt()); 
             wd.commandsLen = 0;
             wd.commands = control.createBuffer(8);
-            // TODO: fill with 0xf
             this.getRule(rid).whenDo.push(wd);
             return this.getRule(rid).whenDo.length - 1;
         }
@@ -268,25 +267,29 @@ namespace tileworld {
             this.getRule(rid).whenDo[wdid].dir = val;
         }
 
-        // TODO: buffer
         public getCmdInst(rid: number, wdid: number, cid: number) {
-            let c = this.getRule(rid).whenDo[wdid].commands;
+            return this.getRule(rid).whenDo[wdid].commands.getUint8(cid << 1);
         }
 
         public getCmdArg(rid: number, wdid: number, cid: number) {
-            let c = this.getRule(rid).whenDo[wdid].commands;
+            return this.getRule(rid).whenDo[wdid].commands.getUint8((cid << 1)+1);
         }
 
         public setCmdInst(rid: number, wdid: number, cid: number, n: number) {
-            let c = this.getRule(rid).whenDo[wdid].commands;
+            let wd = this.getRule(rid).whenDo[wdid];
+            if (cid == wd.commandsLen)
+                wd.commandsLen++;
+            wd.commands.setUint8(cid << 1, n & 0xff);
         }
 
         public setCmdArg(rid: number, wdid: number, cid: number, n: number) {
-            let c = this.getRule(rid).whenDo[wdid].commands;
+            this.getRule(rid).whenDo[wdid].commands.setUint8((cid << 1)+1, n & 0xff);
         }
 
         public removeCommand(rid: number, wdid: number, cid: number) {
-            // TODO: need to shift
+            let wd = this.getRule(rid).whenDo[wdid];
+            // TODO: shift down
+            wd.commandsLen--;
         }
 
         // predicates
