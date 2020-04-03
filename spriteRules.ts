@@ -9,10 +9,10 @@ namespace tileworld {
         private moreHelp: Sprite;
         constructor(p: Project) {
             super(p);
-            this.kind = this.p.fixed().length();
+            this.kind = 0;
             // set cursor
             this.setCol(0);
-            this.setRow(this.kind - this.p.fixed().length + 1);
+            this.setRow(this.kind + 1);
             this.setTileSaved();
             this.setRow(0);
             this.moreHelp = sprites.create(cursorIn);
@@ -26,8 +26,8 @@ namespace tileworld {
                     if (this.row() == 0 && this.p.getRulesForKind(this.kind).length > 0) {
                         game.pushScene();
                         new RuleEditor(this.p, this.kind, -1, -1);
-                    } else if (this.row() >= 1 && this.row() <= this.p.movable().length) {
-                        this.kind = this.p.fixed().length + this.row() - 1;
+                    } else if (this.row() >= 1 && this.row() <= this.p.spriteCnt()) {
+                        this.kind = this.row() - 1;
                         this.setTileSaved();
                     }
                     this.update();
@@ -74,14 +74,14 @@ namespace tileworld {
             screen.fill(15);
             screen.fillRect(0, yoff, 16, 16, 11);
             screen.drawTransparentImage(code, 0, yoff)
-            this.p.movable().forEach((img,i) => {
+            this.p.spriteImages().forEach((img,i) => {
                 this.drawImage(0, i+1, img);
             })
             this.showRuleMenu(1, 0);
         }
 
         protected centerImage() {
-            return this.p.getImage(this.kind);
+            return this.p.getSpriteImage(this.kind);
         }
 
         private makeContext(col: number, row: number) {
@@ -123,37 +123,30 @@ namespace tileworld {
         private showRuleMenu(x: number, y: number) {
             this.rules = this.p.getRulesForKind(this.kind);
             this.makeContext(x + 2, y + 1)
-            this.doBoth(RuleType.Resting, 0, x + 2, y + 1);
+            this.doBoth(RuleType.ContextChange, MoveDirection.Resting, x + 2, y + 1);
 
             // if (this.kind < this.p.fixed().length)
             //    return;
 
             //this.makeContext(x + 6, y + 1)
-            this.doBoth(RuleType.Moving, MoveDirection.Right, x + 3, y + 1);
-            this.doBoth(RuleType.Moving, MoveDirection.Left, x + 1, y + 1);
-            this.doBoth(RuleType.Moving, MoveDirection.Up, x + 2, y);
-            this.doBoth(RuleType.Moving, MoveDirection.Down, x+2, y+2);
+            this.doBoth(RuleType.ContextChange, MoveDirection.Right, x + 3, y + 1);
+            this.doBoth(RuleType.ContextChange, MoveDirection.Left, x + 1, y + 1);
+            this.doBoth(RuleType.ContextChange, MoveDirection.Up, x + 2, y);
+            this.doBoth(RuleType.ContextChange, MoveDirection.Down, x+2, y+2);
 
             this.makeContext(x + 6, y + 1)
-            this.doBoth(RuleType.Pushing, MoveDirection.Right, x + 8, y + 1, false);
-            this.doBoth(RuleType.Pushing, MoveDirection.Left, x + 4, y + 1, false);
-            this.doBoth(RuleType.Pushing, MoveDirection.Down, x + 6, y + 3, false);
-            this.doBoth(RuleType.Pushing, MoveDirection.Up, x + 6, y - 1, false);
-            this.doBoth(RuleType.Pushing, PushingArg.AButton, x + 6, y + 1, false); 
+            this.doBoth(RuleType.ButtonPress, ButtonArg.Right, x + 8, y + 1, false);
+            this.doBoth(RuleType.ButtonPress, ButtonArg.Left, x + 4, y + 1, false);
+            this.doBoth(RuleType.ButtonPress, ButtonArg.Down, x + 6, y + 3, false);
+            this.doBoth(RuleType.ButtonPress, ButtonArg.Up, x + 6, y - 1, false);
+            this.doBoth(RuleType.ButtonPress, ButtonArg.A, x + 6, y + 1, false); 
 
             this.makeContext(x + 2, y + 5);
-            this.doBoth(RuleType.CollidingResting, MoveDirection.Right, x + 2, y + 5, false);
-            this.doBoth(RuleType.CollidingResting, MoveDirection.Left, x + 2, y + 5, false);
-            this.doBoth(RuleType.CollidingResting, MoveDirection.Up, x + 2, y + 5, false);
-            this.doBoth(RuleType.CollidingResting, MoveDirection.Down, x + 2, y + 5, false);
-            this.showRuleType(RuleType.Resting, 0, x + 2, y + 5);
-
-            this.makeContext(x + 6, y + 5);
-            this.doBoth(RuleType.CollidingMoving, MoveDirection.Right, x + 6, y + 5, false);
-            this.doBoth(RuleType.CollidingMoving, MoveDirection.Left, x + 6, y + 5, false);
-            this.doBoth(RuleType.CollidingMoving, MoveDirection.Up, x + 6, y + 5, false);
-            this.doBoth(RuleType.CollidingMoving, MoveDirection.Down, x + 6, y + 5, false);
-            this.showRuleType(RuleType.Resting, 0, x + 6, y + 5);
+            this.doBoth(RuleType.Collision, MoveDirection.Right, x + 2, y + 5, false);
+            this.doBoth(RuleType.Collision, MoveDirection.Left, x + 2, y + 5, false);
+            this.doBoth(RuleType.Collision, MoveDirection.Up, x + 2, y + 5, false);
+            this.doBoth(RuleType.Collision, MoveDirection.Down, x + 2, y + 5, false);
+            this.showRuleType(RuleType.Collision, MoveDirection.Resting, x + 2, y + 5);
         }
     }
 }
