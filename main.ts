@@ -2,17 +2,6 @@
 
 // for UIST paper
 
-// 0. separation of background and sprite images and kinds
-
-// 1. separation of rule event from rule's associated central sprite witness
-//    - this paves the way for having rules over tiles, to do cellular automata stuff
-//    - other events that could be interesting
-//    - main issue that arises: event ordering and event shadowing. Our underlying structure is:
-//      - start-round (termination/next-level check)
-//      - external events (button press)
-//      - context-change (generate and collect commands, then resolve)
-//      - collision detection
-
 // 2. ability to specify sprite's last direction in when pattern (to enable centipede)
 //    - actually in the "sprite separator" section between the when and do sections
 

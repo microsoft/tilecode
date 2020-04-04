@@ -145,7 +145,6 @@ namespace tileworld {
 
         public saveProject() {
             let prefix = this.prefix;
-            let length = 8;
             settings.writeString(prefix + VersionKey, this.version);
             settings.writeNumber(prefix + HelpKey, this.help ? 1 : 0);
             settings.writeNumber(prefix + BackImgCntKey, this.backCnt());
@@ -153,21 +152,16 @@ namespace tileworld {
             settings.writeNumber(prefix + PlayerIndexKey, this.getPlayer());
             this.backgroundImages().forEach((img, i) => {
                 let buf = saveImage(prefix, i, img, true);
-                length += buf.length;
             });
             this.spriteImages().forEach((img, i) => {
                 let buf = saveImage(prefix, i, img, false);
-                length += buf.length;
             });
             let worldBuf = imageToBuffer(this.getWorldBackgrounds());
-            length += worldBuf.length;
             settings.writeBuffer(prefix + WorldBackgroundsKey, worldBuf);
             let spritesBuf = imageToBuffer(this.getWorldSprites());
-            length += spritesBuf.length;
             settings.writeBuffer(prefix + WorldSpritesKey, spritesBuf);
             this.getRules().forEach(r => {
                 let buf = this.storeRule(prefix, r.id, r.rule);
-                length += buf.length;
             });
         }
 
@@ -471,7 +465,7 @@ namespace tileworld {
         let backCnt = settingsReadNumber(prefix + BackImgCntKey, output);
         let backImages = readImages(backCnt, prefix+BackImageKey, output);
         let spriteCnt = settingsReadNumber(prefix + SpriteImgCntKey, output);
-        let spriteImage = readImages(spriteCnt, prefix + SpriteImageKey, output);
+        let spriteImages = readImages(spriteCnt, prefix + SpriteImageKey, output);
         let helpNum = settingsReadNumber(prefix + HelpKey, output);
         let help = helpNum ? true: false;
         // get the rules, at least
@@ -555,7 +549,7 @@ namespace tileworld {
         }
         let rules: Rule[] = [];
         for(let dir = 0; dir < 4; dir++) { rules.push(makePushRule(dir)); }
-        let p = new Project(prefix, fixed, movable, makeIds(rules));
+        let p = new Project(prefix, fixed, movable, []); // makeIds(rules));
         let world = image.create(32, 24);
         helpers.imageFillRect(world, 1, 1, 30, 22, 1);
         let sprites = image.create(32, 24);
