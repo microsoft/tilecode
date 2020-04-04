@@ -259,7 +259,6 @@ namespace tileworld {
         }
 
         private showMainMenu() {
-            //screen.fillRect(0, yoff, 160, 19, 0);
             this.fillTile(0, 0, 11);
             this.drawImage(0, 0, code);
             if (this.getType() == RuleType.ButtonPress) {
@@ -331,7 +330,7 @@ namespace tileworld {
             let tokens = this.getTokens(wcol, wrow);
             if (!draw) { this.tokens = tokens; }
             let cid = 0
-            for(; cid < 4; cid++, col++) {
+            for(; cid < MaxCommands; cid++, col++) {
                 let inst = this.p.getCmdInst(this.rule, whendo, cid);
                 let arg = this.p.getCmdArg(this.rule, whendo, cid);
                 if (inst != -1 && arg != -1) {
