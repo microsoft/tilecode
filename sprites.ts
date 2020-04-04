@@ -819,10 +819,10 @@ export const equalZero = img`
     . . . . . . . . . . . . . . . .
 `;
 
-export const moveImages = [leftArrow, rightArrow, upArrow, downArrow, stopSign, uTurn];
-export const movedImages = [leftArrowOutline, rightArrowOutline, upArrowOutline, downArrowOutline];
-export const moveText = ["left", "right", "up", "down", "stop", "u-turn"];
-export const buttonImages = [leftButton, rightButton, upButton, downButton, AButton];
+export const moveImages = [leftArrow, upArrow, rightArrow, downArrow, stopSign, uTurn];
+export const movedImages = [leftArrowOutline, upArrowOutline, rightArrowOutline, downArrowOutline];
+export const moveText = ["left", "up", "right", "down", "stop", "u-turn"];
+export const buttonImages = [leftButton, upButton, rightButton, downButton, AButton];
 export const attrImages = [include, exclude, ok, oneof];
 export const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, AttrType.Include2];
 export const attrXoffsets = [-8, 0, 0, 0];
