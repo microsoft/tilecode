@@ -31,7 +31,7 @@ namespace tileworld {
 
             let rules = this.currentRules();
             if (rules.length == 0) {
-                rules.push(p.makeRule(kind, rt, dir));
+                rules.push(p.makeRule(rt, dir, kind));
             }
             this.rule = rules[0];
             this.askDeleteRule = false;
@@ -89,7 +89,7 @@ namespace tileworld {
                             } else if (this.col() == 9 && index < rules.length-1) {
                                 this.changeRule(rules[index+1]);
                             } else if (this.col() == 8 && this.rt != -1) {
-                                this.changeRule(p.makeRule(this.kind, this.rt, this.dir));
+                                this.changeRule(p.makeRule(this.rt, this.dir, this.kind));
                             }
                         } else if (this.col() == 1) {
                             game.pushScene();

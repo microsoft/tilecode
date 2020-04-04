@@ -53,16 +53,6 @@ namespace tileworld {
                 if (this.col() > 0) {
                     let message = getHelp(this.row() < 4 ? helpStringTop : helpStringBot, this.col(), this.row());
                     this.helpCursor.say(message);
-                    if (this.row() >= 4 && message) {
-                        // resting vs moving collision
-                        if (this.col() < 5) {
-                            this.moreHelp.say("into resting");
-                        } else {
-                            this.moreHelp.say("into moving");
-                        }
-                    } else {
-                        this.moreHelp.say(null);
-                    }
                 } else {
                     this.helpCursor.say(null);
                     this.moreHelp.say(null);
@@ -101,7 +91,7 @@ namespace tileworld {
         private doBoth(rt: RuleType, rd: number, col: number, row: number, center: boolean = true) {
             let scol = 13;
             let rules = this.getRulesForTypeDir(this.rules, rt, rd);
-            if (rt >= RuleType.Collision) {
+            if (rt == RuleType.Collision) {
                 // TODO: this case only for resting
                 let tcol = col + moveXdelta(rd);
                 let trow = row + moveYdelta(rd);

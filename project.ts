@@ -114,6 +114,10 @@ namespace tileworld {
 
         public makeRule(rt: RuleType, ra: RuleArg, kind: number = 0xffff): number {
             let rid = this.wrapRule(makeNewRule(rt, ra));
+            if (kind != 0xffff) {
+                let wd = this.makeWhenDo(rid, 2, 2);
+                this.getSetSpAttr(rid, wd, kind, AttrType.Include);
+            }
             this.saveRule(rid);
             return rid;
         }
