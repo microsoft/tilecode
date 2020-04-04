@@ -21,9 +21,12 @@ namespace tileworld {
         private whenDo: number;         // which WhenDo is being edited
         private currentCommand: number; // the current command (potentially null)
         private askDeleteRule: boolean;
+        private all: AllExport;
         
         constructor(p: Project, private kind: number, private rt: RuleType, private dir: MoveDirection) {
             super(p);
+            this.all = new AllExport(p);
+
             this.setCol(0); this.setRow(0);
 
             let rules = this.currentRules();
@@ -53,14 +56,7 @@ namespace tileworld {
                 this.helpCursor.say(null);
                 if (this.askDeleteRule) {
                     let index = this.currentRules().indexOf(this.rule);
-                    let kinds = this.p.getSpriteKinds(this.rule);
-                    if (kinds.length == 1)
-                        this.p.removeRule(this.rule);
-                    else {
-                        kinds.removeElement(this.kind);
-                        // TODO
-                        this.p.setKinds(this.rule, kinds);
-                    }
+                    this.p.removeRule(this.rule);
                     let rules = this.currentRules();
                     if (rules.length == 0) {
                         game.popScene();
@@ -440,10 +436,10 @@ namespace tileworld {
         private getTokens(col: number, row: number) {
             let tokens: number[] = [];
             if (this.findWitnessColRow(col, row) != -1) {
-                if ((col == 2 && row == 2) || this.getType() != RuleType.CollidingResting)
+                if ((col == 2 && row == 2) || this.getType() != RuleType.Collision)
                     tokens.push(CommandType.Move);
             }
-            if (this.getType() < RuleType.CollidingResting) {
+            if (this.getType() != RuleType.Collision) {
                 tokens.push(CommandType.Paint);
             }
             if (this.findWitnessColRow(col, row) != -1) {
@@ -456,7 +452,7 @@ namespace tileworld {
         // argument range for command
         private instToStartArg(inst: number) {
             switch (inst) {
-                case CommandType.Move: return this.getType() < RuleType.CollidingResting ? 0 : 4;
+                case CommandType.Move: return this.getType() != RuleType.Collision ? 0 : 4;
                 case CommandType.Paint: 
                 case CommandType.Sprite:
                 case CommandType.Game:
@@ -476,7 +472,7 @@ namespace tileworld {
 
         private instToNumArgs(inst: number) {
             switch (inst) {
-                case CommandType.Move: return this.getType() < RuleType.CollidingResting ? 4:  2;
+                case CommandType.Move: return this.getType() != RuleType.Collision ? 4:  2;
                 case CommandType.Paint: return 4;
                 case CommandType.Sprite: return 1;
                 case CommandType.Game: return 2;
@@ -572,10 +568,10 @@ namespace tileworld {
                 screen.drawTransparentImage(img, (i << 4) + 4, yoff + 4);
                 this.drawOutline(i, 0);
             });
-            this.p.all().forEach((image, i ) => {
-                if (i < this.p.fixed().length && this.getType() >= RuleType.CollidingResting)
+            this.all.getImages().forEach((image, i ) => {
+                if (i < this.p.backCnt() && this.getType() == RuleType.Collision)
                     return;
-                let a = this.p.getAttr(this.rule, whenDo, i);
+                let a = this.all.getSetAttr(this.rule, whenDo, i);
                 this.drawImage(i, 1, image);
                 this.drawImage(i, 1, attrImages[attrValues.indexOf(a)]);
                 this.dirMap.setPixel(i, 1, a);
@@ -594,7 +590,7 @@ namespace tileworld {
             let a = this.row() == 0 ? this.col() : -1
             if (a == 9) {
                 // reset attributes
-                for(let i = 0; i< this.p.all().length; i++) {
+                for(let i = 0; i< this.p.allCnt(); i++) {
                     this.setAttr(i, AttrType.OK);
                 }
                 return;
@@ -603,8 +599,8 @@ namespace tileworld {
                 this.selectAttr(a); return; 
             }
             let m = this.row() == 1 ? this.col() : -1; 
-            if (m != -1 && m < this.p.all().length) { 
-                if (m < this.p.fixed().length && this.getType() >= RuleType.CollidingResting)
+            if (m != -1 && m < this.p.allCnt()) { 
+                if (m < this.p.backCnt() && this.getType() == RuleType.Collision)
                     return;
                 let val = attrValues[this.attrSelected];
                 this.setAttr(m, val, true);
@@ -616,8 +612,8 @@ namespace tileworld {
             if (whendo == -1) {
                 whendo = this.p.makeWhenDo(this.rule, col, row);
                 // default mapping::everything is possible
-                this.p.all().forEach((img,i) => { 
-                    this.p.setAttr(this.rule, whendo, i, AttrType.OK);
+                this.all.getImages().forEach((img,i) => { 
+                    this.all.getSetAttr(this.rule, whendo, i, AttrType.OK);
                 });
             }
             return whendo;
@@ -625,14 +621,14 @@ namespace tileworld {
 
         private setAttr(m: number, val: AttrType, toggle: boolean = false) {
             let whenDo = this.getWhenDo(this.col(false), this.row(false)-editorRow);
-            if (toggle && this.p.getAttr(this.rule,whenDo,m) == val)
+            if (toggle && this.all.getSetAttr(this.rule,whenDo,m) == val)
                 val = AttrType.OK;
-            this.p.setAttr(this.rule, whenDo, m, val)
+            this.all.getSetAttr(this.rule, whenDo, m, val)
         }
 
         protected attrIndex(rid: number, whendo: number, a: AttrType, begin: number = 0) {
-            for (let i = begin; i < this.p.all().length; i++) {
-                if (this.p.getAttr(rid, whendo, i) == a)
+            for (let i = begin; i < this.p.allCnt(); i++) {
+                if (this.all.getSetAttr(rid, whendo, i) == a)
                     return i;
             }
             return -1;
@@ -652,14 +648,14 @@ namespace tileworld {
             if (whenDo >= 0) {
                 // if there is an include or single oneOf, show it.
                 let indexInclude = this.attrIndex(rid, whenDo, AttrType.Include);
-                let indexOneOf = indexInclude == -1 ? this.attrIndex(rid, whenDo, AttrType.OneOf) : indexInclude;
+                let indexOneOf = indexInclude == -1 ? this.attrIndex(rid, whenDo, AttrType.Include2) : indexInclude;
                 let index = indexOneOf == -1 ? this.attrIndex(rid, whenDo, AttrType.Exclude) : indexOneOf;
                 // and skip to the other (if it exists)
                 if (index != -1) { 
-                    this.drawImage(col, row + editorRow, this.p.getImage(index));
+                    this.drawImage(col, row + editorRow, this.all.getImage(index));
                 }
                 let begin = 0;
-                let end = this.p.all().length - 1;
+                let end = this.p.allCnt() - 1;
                 let project = this.projectAttrs(rid, whenDo, begin, end);
                 let done: AttrType[] = [];
                 project.forEach(a => {
@@ -670,8 +666,8 @@ namespace tileworld {
                 if (this.menu == RuleEditorMenus.MainMenu && this.col() == col && this.row() - editorRow == row) {
                     let x = 0;
                     screen.fillRect(0, 16 + yoff, 160, 16, 0);
-                    this.p.all().forEach((image, i) => {
-                        let a = this.p.getAttr(this.rule, whenDo, i);
+                    this.all.getImages().forEach((image, i) => {
+                        let a = this.all.getSetAttr(this.rule, whenDo, i);
                         if (a != AttrType.OK) {
                             this.drawImage(x, 1, image);
                             this.drawImage(x, 1, attrImages[attrValues.indexOf(a)]);
@@ -689,7 +685,7 @@ namespace tileworld {
                 return [];
             let res: number[] = [];
             for (let i = begin; i <= end; i++) {
-                let a = this.p.getAttr(rid, whendo, i);
+                let a = this.all.getSetAttr(rid, whendo, i);
                 if (a != AttrType.OK && res.indexOf(a) == -1) res.push(a);
             }
             if (res.length > 0) {

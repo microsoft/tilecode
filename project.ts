@@ -33,6 +33,9 @@ namespace tileworld {
         public saveImage(index: number) {
             index < this.p.backCnt() ? this.p.saveBackgroundImage(index) : this.p.saveSpriteImage(index - this.p.backCnt());
         }
+        public getSetAttr(rid: number, whendo: number, aid: number, val:number = -1) {
+            return aid < this.p.backCnt() ? this.p.getSetBgAttr(rid, whendo, aid, val) : this.p.getSetSpAttr(rid, whendo, aid - this.p.backCnt(), val);
+        }
     }
 
     export class Project {
