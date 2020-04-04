@@ -33,7 +33,7 @@ namespace tileworld {
         public saveImage(index: number) {
             index < this.p.backCnt() ? this.p.saveBackgroundImage(index) : this.p.saveSpriteImage(index - this.p.backCnt());
         }
-        public getSetAttr(rid: number, whendo: number, aid: number, val:number = -1) {
+        public getSetAttr(rid: number, whendo: number, aid: number, val:number = 0xffff) {
             return aid < this.p.backCnt() ? this.p.getSetBgAttr(rid, whendo, aid, val) : this.p.getSetSpAttr(rid, whendo, aid - this.p.backCnt(), val);
         }
     }
@@ -112,7 +112,7 @@ namespace tileworld {
             this.storeRule(this.prefix, rid, this.getRule(rid));
         }
 
-        public makeRule(rt: RuleType, ra: RuleArg, kind: number = -1): number {
+        public makeRule(rt: RuleType, ra: RuleArg, kind: number = 0xffff): number {
             let rid = this.wrapRule(makeNewRule(rt, ra));
             this.saveRule(rid);
             return rid;
@@ -244,11 +244,11 @@ namespace tileworld {
             return (byte >> (remainder << 1)) & 0x3;
         }
 
-        public getSetBgAttr(rid: number, wdid: number, index: number, val: number = -1): AttrType {
+        public getSetBgAttr(rid: number, wdid: number, index: number, val: number = 0xffff): AttrType {
             return this.getSetBuffAttr(this.getRule(rid).whenDo[wdid].bgPred, index, val);
         }
 
-        public getSetSpAttr(rid: number, wdid: number, index: number, val: number = -1): AttrType {
+        public getSetSpAttr(rid: number, wdid: number, index: number, val: number = 0xffff): AttrType {
             return this.getSetBuffAttr(this.getRule(rid).whenDo[wdid].spPred, index, val);
         }
 

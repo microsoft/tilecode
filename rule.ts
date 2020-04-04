@@ -93,7 +93,7 @@ class WhenDo {
         public row: number,             // (2,2) is the center of neighborhood, graphics coordinate system
         public bgPred: Buffer = null,   // predicate on background (2 bits per background)
         public spPred: Buffer = null,   // predicate on sprites (2 bits for sprite)
-        public dir: MoveDirection = -1, // direction to match against (for movable sprite)
+        public dir: MoveDirection = 0xffff, // direction to match against (for movable sprite)
         public commands: Buffer = null, // the commands that execute if the guard succeeds (2 bytes per command)
         public commandsLen: number = 0
     ) { }
@@ -255,7 +255,7 @@ namespace tileworld {
     // pack things so that they'll be easy to read off
     export function packRule(r: Rule, bgLen: number, spLen: number) {
         bitIndex = 0;
-        let bytes = 2 + this.whenDo.length + (2 + (bgLen >> 2) + (spLen >> 2));
+        let bytes = 2 + r.whenDo.length + (2 + (bgLen >> 2) + (spLen >> 2));
         for (let i = 0; i<r.whenDo.length; i++) {
             bytes += (r.whenDo[i].commands.length > 0 ? 8 : 0);
         }
