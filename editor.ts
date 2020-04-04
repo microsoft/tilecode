@@ -27,8 +27,6 @@ namespace tileworld {
     `;
 
     export class MapEditor extends BackgroundBase {
-        private backgrounds: Image;
-        private sprites: Image;
         private offsetX: number; // where are we in the world?
         private offsetY: number; 
         private cursor: Sprite;
@@ -40,8 +38,6 @@ namespace tileworld {
         constructor(private p: Project) {
             super();
             this.aDown = false;
-            this.backgrounds = p.getWorldBackgrounds();
-            this.sprites = p.getWorldSprites();
             // cursors
             this.selected = sprites.create(cursorOut);
             this.selected.x = 16 + 8;
@@ -155,16 +151,18 @@ namespace tileworld {
             if (this.cursorType == CursorType.Map) {
                 let col = (this.paintCursor.x >> 3) + this.offsetX;
                 let row = ((this.paintCursor.y - (editorY +4)) >> 3) + this.offsetY;
+                let backs = this.p.getWorldBackgrounds();
                 if (this.userSpriteIndex == 0xf) {
-                    this.backgrounds.setPixel(col, row, 0xf);
+                    backs.setPixel(col, row, 0xf);
                 } else if (this.userSpriteIndex < this.p.backCnt())
-                    this.backgrounds.setPixel(col, row, this.userSpriteIndex);
+                    backs.setPixel(col, row, this.userSpriteIndex);
                 else {
+                    let sprs = this.p.getWorldSprites();
                     let spriteIndex = this.userSpriteIndex - this.p.backCnt();
-                    if (this.sprites.getPixel(col, row) == spriteIndex)
-                        this.sprites.setPixel(col, row, 0xf);
+                    if (sprs.getPixel(col, row) == spriteIndex)
+                        sprs.setPixel(col, row, 0xf);
                     else
-                        this.sprites.setPixel(col, row, spriteIndex);
+                        sprs.setPixel(col, row, spriteIndex);
                 }
                 this.update();
                 return;
@@ -212,15 +210,16 @@ namespace tileworld {
                 index++;
             });
             // this.drawImage(emptyDiagTile, 9, 0);
+            let backs = this.p.getWorldBackgrounds();
             for(let x = this.offsetX; x<this.offsetX+20; x++) {
                 for (let y = this.offsetY; y < this.offsetY + 15; y++) {
-                    let inRange = 0 <= x && x < this.backgrounds.width && 0 <= y && y < this.backgrounds.height;
+                    let inRange = 0 <= x && x < backs.width && 0 <= y && y < backs.height;
                     let col = x - this.offsetX;
                     let row = y - this.offsetY;
                     let nx = col * paintSize;
                     let ny = editorY + row * paintSize;
                     // tile
-                    let index = inRange ? this.backgrounds.getPixel(x, y) : -1;
+                    let index = inRange ? backs.getPixel(x, y) : -1;
                     let img = index == -1 ? emptyTile : index == 0xf ? emptyDiagTile : this.p.getBackgroundImage(index);
                     for(let i=0;i<img.width;i+=2) {
                         for (let j = 0; j < img.height; j += 2) {
@@ -229,7 +228,7 @@ namespace tileworld {
                     }
                     // sprite
                     if (inRange) {
-                        let index = this.sprites.getPixel(x, y);
+                        let index = this.p.getWorldSprites().getPixel(x, y);
                         if (index != 0xf) {
                             img = this.p.getSpriteImage(index);
                             for (let i = 0; i < img.width; i += 2) {
