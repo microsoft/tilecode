@@ -316,7 +316,9 @@ namespace tileworld {
 
         private tokens: number[];
         private showCommandsAt(crow: number, wcol: number, wrow: number, draw: boolean = true) {
-            let whendo = this.getWhenDo(wcol, wrow);
+            let whendo = this.p.getWhenDo(this.rule, wcol, wrow);
+            if (whendo == -1)
+                return -1;
             if (draw) {
                 let index = this.findWitnessColRow(wcol, wrow);
                 let img1 = this.collideCol == wcol && this.collideRow == wrow ? collisionRestingSprite : genericSprite;
@@ -373,7 +375,9 @@ namespace tileworld {
             let newRow = this.rowToRowCoord(row);
             if (!this.active(newCol, newRow))
                 return false;
-            this.whenDo = this.getWhenDo(newCol, newRow);
+            this.whenDo = this.p.getWhenDo(this.rule, newCol, newRow);
+            if (this.whenDo == -1)
+                this.whenDo = this.p.makeWhenDo(this.rule, newCol, newRow);
             this.setTileSaved();
             this.currentCommand = col;
             // TODO: need to transition to length-based rather than -1
@@ -550,16 +554,15 @@ namespace tileworld {
         // what is ordering of sprites?
         // (0,0) always first
         private findWitnessColRow(col: number, row: number): number {
-            if (col == 2 && row == 2) return this.kind;
-            let whendo = this.getWhenDo(col, row);
-            let wit = this.findWitnessWhenDo(whendo);
-            return wit;
+            if (col == 2 && row == 2) return this.kind; 
+            return this.findWitnessWhenDo(this.p.getWhenDo(this.rule, col, row));
         }
 
-        // TODO: we have separate functions on background and sprite attributes now... :(
         private attrMenu(col: number, row: number) {
             // which tile in the diamond are we attributing?
-            let whenDo = this.getWhenDo(col, row);
+            let whenDo = this.p.getWhenDo(this.rule, col, row);
+            if (whenDo == -1)
+                whenDo = this.p.makeWhenDo(this.rule, col, row);
             // for all user-defined sprites
             attrImages.forEach((img, i) => {
                 if (i >= 2) return;  // no oneof
@@ -606,20 +609,8 @@ namespace tileworld {
             }
         }
 
-        private getWhenDo(col: number, row: number) {
-            let whendo = this.p.getWhenDo(this.rule, col, row);
-            if (whendo == -1) {
-                whendo = this.p.makeWhenDo(this.rule, col, row);
-                // default mapping::everything is possible
-                this.all.getImages().forEach((img,i) => { 
-                    this.all.getSetAttr(this.rule, whendo, i, AttrType.OK);
-                });
-            }
-            return whendo;
-        }
-
         private setAttr(m: number, val: AttrType, toggle: boolean = false) {
-            let whenDo = this.getWhenDo(this.col(false), this.row(false)-editorRow);
+            let whenDo = this.p.getWhenDo(this.rule, this.col(false), this.row(false)-editorRow);
             if (toggle && this.all.getSetAttr(this.rule,whenDo,m) == val)
                 val = AttrType.OK;
             this.all.getSetAttr(this.rule, whenDo, m, val)
