@@ -326,18 +326,16 @@ namespace tileworld {
             }
             // show the existing commands
             let whendo = this.p.getWhenDo(this.rule, wcol, wrow);
-            if (whendo == -1)
-                return -1;
             let col = 6;
             let tokens = this.getTokens(wcol, wrow);
             if (!draw) { this.tokens = tokens; }
             let cid = 0
-            for(; cid < this.p.getCmdsLen(this.rule, whendo); cid++, col++) {
+            for(; whendo != -1 && cid < this.p.getCmdsLen(this.rule, whendo); cid++, col++) {
                 let inst = this.p.getCmdInst(this.rule, whendo, cid);
                 let arg = this.p.getCmdArg(this.rule, whendo, cid);
                 this.showCommand(col, crow, whendo, cid, tokens, draw);
             }
-            if (cid < MaxCommands && tokens.length > 0) {
+            if (whendo == -1 || cid < MaxCommands && tokens.length > 0) {
                 this.showCommand(col, crow, whendo, cid, tokens, draw);
                 return cid+1;
             }
@@ -347,11 +345,11 @@ namespace tileworld {
         private showCommand(col: number, row: number, 
                             whendo: number, cid: number, tokens: number[],
                             draw: boolean) {
-            let inst = this.p.getCmdInst(this.rule, whendo, cid);
-            let arg = this.p.getCmdArg(this.rule, whendo, cid);
-            if (inst == 0xff) {
+            if (whendo == -1) {
                 if (draw) this.drawImage(col, row + editorRow, emptyTile);
             } else {
+                let inst = this.p.getCmdInst(this.rule, whendo, cid);
+                let arg = this.p.getCmdArg(this.rule, whendo, cid);
                 if (draw) this.drawImage(col, row + editorRow, this.instToImage(inst,arg));
                 tokens.removeElement(inst);
                 col++;
