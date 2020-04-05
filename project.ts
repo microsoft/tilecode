@@ -112,11 +112,15 @@ namespace tileworld {
             this.storeRule(this.prefix, rid, this.getRule(rid));
         }
 
-        public makeRule(rt: RuleType, ra: RuleArg, kind: number = 0xffff): number {
+        public makeRule(rt: RuleType, ra: RuleArg | MoveDirection, kind: number = 0xffff): number {
             let rid = this.wrapRule(makeNewRule(rt, ra));
             if (kind != 0xffff) {
+                // this is a bit of a mess
                 let wd = this.makeWhenDo(rid, 2, 2);
                 this.getSetSpAttr(rid, wd, kind, AttrType.Include);
+                if (rt == RuleType.ContextChange) {
+                    this.setWitnessDirection(rid, wd, ra);
+                }
             }
             this.saveRule(rid);
             return rid;
@@ -308,8 +312,8 @@ namespace tileworld {
 
         public getDirFromRule(rid: number) {
             let rt = this.getRuleType(rid);
-            let wd = this.getWhenDo(rid, 2, 2);
             if (rt == RuleType.Collision || rt == RuleType.ContextChange) {
+                let wd = this.getWhenDo(rid, 2, 2);
                 return wd == -1 ? -1 : this.getWitnessDirection(rid, wd);
             } else if (rt == RuleType.ButtonPress) {
                 return this.getRuleArg(rid);

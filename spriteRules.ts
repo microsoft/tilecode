@@ -91,8 +91,7 @@ namespace tileworld {
         private doBoth(rt: RuleType, rd: number, col: number, row: number, center: boolean = true) {
             let scol = 13;
             let rules = this.getRulesForTypeDir(this.rules, rt, rd);
-            if (rt == RuleType.Collision) {
-                // TODO: this case only for resting
+            if (rt == RuleType.Collision && rd != Resting) {
                 let tcol = col + moveXdelta(rd);
                 let trow = row + moveYdelta(rd);
                 this.setRuleType(rt, rd, tcol, trow);
@@ -103,7 +102,7 @@ namespace tileworld {
                 this.setRuleType(rt, rd, tcol, trow);
                 if (rules.length > 0) { this.fillTile(tcol, trow, scol); this.drawOutline(tcol, trow, 1); }
                 this.drawImage(tcol, trow, buttonImages[rd]);
-            } else {
+            } else if (rt == RuleType.ContextChange) {
                 this.setRuleType(rt, rd, col, row);
                 if (rules.length > 0) { this.fillTile(col, row, scol); this.drawOutline(col, row, 1); }
             }
@@ -113,13 +112,9 @@ namespace tileworld {
 
         private showRuleMenu(x: number, y: number) {
             this.rules = this.p.getRulesForSpriteKind(this.kind);
+            
             this.makeContext(x + 2, y + 1)
             this.doBoth(RuleType.ContextChange, Resting, x + 2, y + 1);
-
-            // if (this.kind < this.p.fixed().length)
-            //    return;
-
-            //this.makeContext(x + 6, y + 1)
             this.doBoth(RuleType.ContextChange, MoveDirection.Right, x + 3, y + 1);
             this.doBoth(RuleType.ContextChange, MoveDirection.Left, x + 1, y + 1);
             this.doBoth(RuleType.ContextChange, MoveDirection.Up, x + 2, y);
