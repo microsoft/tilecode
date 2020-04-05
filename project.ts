@@ -268,13 +268,13 @@ namespace tileworld {
 
         public getCmdInst(rid: number, wdid: number, cid: number) {
             let wd = this.getRule(rid).whenDo[wdid];
-            if (cid < wd.commandsLen) return 0xff;
+            if (cid >= wd.commandsLen) return 0xff;
             return wd.commands.getUint8(cid << 1);
         }
 
         public getCmdArg(rid: number, wdid: number, cid: number) {
             let wd = this.getRule(rid).whenDo[wdid];
-            if (cid < wd.commandsLen) return 0xff;
+            if (cid >= wd.commandsLen) return 0xff;
             return wd.commands.getUint8((cid << 1)+1);
         }
 
