@@ -316,9 +316,6 @@ namespace tileworld {
 
         private tokens: number[];
         private showCommandsAt(crow: number, wcol: number, wrow: number, draw: boolean = true) {
-            let whendo = this.p.getWhenDo(this.rule, wcol, wrow);
-            if (whendo == -1)
-                return -1;
             if (draw) {
                 let index = this.findWitnessColRow(wcol, wrow);
                 let img1 = this.collideCol == wcol && this.collideRow == wrow ? collisionRestingSprite : genericSprite;
@@ -328,23 +325,23 @@ namespace tileworld {
                     this.drawImage(5, crow + editorRow, img1);
             }
             // show the existing commands
+            let whendo = this.p.getWhenDo(this.rule, wcol, wrow);
+            if (whendo == -1)
+                return -1;
             let col = 6;
             let tokens = this.getTokens(wcol, wrow);
             if (!draw) { this.tokens = tokens; }
             let cid = 0
-            for(; cid < MaxCommands; cid++, col++) {
+            for(; cid < this.p.getCmdsLen(this.rule, whendo); cid++, col++) {
                 let inst = this.p.getCmdInst(this.rule, whendo, cid);
                 let arg = this.p.getCmdArg(this.rule, whendo, cid);
-                if (inst != -1 && arg != -1) {
-                    this.showCommand(col, crow, whendo, cid, tokens, draw);
-                } else {
-                    if (tokens.length > 0) {
-                        this.showCommand(col, crow, whendo, cid, tokens, draw);
-                    }
-                    break;
-                }
+                this.showCommand(col, crow, whendo, cid, tokens, draw);
             }
-            return cid+1;
+            if (cid < MaxCommands && tokens.length > 0) {
+                this.showCommand(col, crow, whendo, cid, tokens, draw);
+                return cid+1;
+            }
+            return cid;
         }
 
         private showCommand(col: number, row: number, 
@@ -352,7 +349,7 @@ namespace tileworld {
                             draw: boolean) {
             let inst = this.p.getCmdInst(this.rule, whendo, cid);
             let arg = this.p.getCmdArg(this.rule, whendo, cid);
-            if (inst == -1) {
+            if (inst == 0xff) {
                 if (draw) this.drawImage(col, row + editorRow, emptyTile);
             } else {
                 if (draw) this.drawImage(col, row + editorRow, this.instToImage(inst,arg));
@@ -380,10 +377,9 @@ namespace tileworld {
                 this.whenDo = this.p.makeWhenDo(this.rule, newCol, newRow);
             this.setTileSaved();
             this.currentCommand = col;
-            // TODO: need to transition to length-based rather than -1
-            if (this.p.getCmdInst(this.rule, this.whenDo, col) == -1) {
+            if (this.p.getCmdInst(this.rule, this.whenDo, col) == 0xff) {
                 this.showCommandsAt(row, newCol, newRow, false);
-                this.makeCommandMenu(-1,-1);
+                this.makeCommandMenu(0xff,0xff);
             } else {
                 this.tokens = [];
                 this.modifyCommandMenu();
@@ -403,7 +399,7 @@ namespace tileworld {
                 this.ruleTypeMap.setPixel(col, row, ct);
                 col++;
             });
-            if (inst != -1) {
+            if (inst != 0xff) {
                 this.makeArgMenu(inst, arg);
             }
         }
@@ -428,7 +424,7 @@ namespace tileworld {
             let arg = this.p.getCmdArg(this.rule, this.whenDo, this.currentCommand);
             if (this.tokens.length > 0) {
                 this.makeCommandMenu(inst, arg);
-            } else if (inst != -1) {
+            } else if (inst != 0xff) {
                 this.tokens = [inst, CommandTokens.Delete];
                 this.makeCommandMenu(inst, arg);
             }
@@ -484,7 +480,7 @@ namespace tileworld {
         }
 
         private instToImage(inst: number, arg: number): Image {
-            if (inst == -1 || arg == -1)
+            if (inst == 0xff || arg == 0xff)
                 return emptyTile;
             switch (inst) {
                 case CommandType.Move: return moveImages[arg];
@@ -498,8 +494,8 @@ namespace tileworld {
         private checkCommand() {
             // don't allow incomplete commands 
             let arg = this.p.getCmdArg(this.rule, this.whenDo, this.currentCommand);
-            if (arg == -1) {
-                this.setCommand(-1, -1);
+            if (arg == 0xff) {
+                this.setCommand(0xff, 0xff);
             }
         }
 
@@ -519,7 +515,7 @@ namespace tileworld {
                     if (this.p.help) this.helpCursor.say(categoryText[tok]);
                 } else {
                     if (tok != inst) {
-                        this.setCommand(tok, -1); // this.instToStartArg(tok));
+                        this.setCommand(tok, 0xff); // this.instToStartArg(tok));
                         this.cursor.y += 16;
                         this.helpCursor.say(null);
                     }

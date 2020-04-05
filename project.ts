@@ -262,31 +262,51 @@ namespace tileworld {
             this.getRule(rid).whenDo[wdid].dir = val;
         }
 
+        public getCmdsLen(rid: number, wdid: number) {
+            return this.getRule(rid).whenDo[wdid].commandsLen;
+        }
+
         public getCmdInst(rid: number, wdid: number, cid: number) {
-            return this.getRule(rid).whenDo[wdid].commands.getUint8(cid << 1);
+            let wd = this.getRule(rid).whenDo[wdid];
+            if (cid < wd.commandsLen) return 0xff;
+            return wd.commands.getUint8(cid << 1);
         }
 
         public getCmdArg(rid: number, wdid: number, cid: number) {
-            return this.getRule(rid).whenDo[wdid].commands.getUint8((cid << 1)+1);
+            let wd = this.getRule(rid).whenDo[wdid];
+            if (cid < wd.commandsLen) return 0xff;
+            return wd.commands.getUint8((cid << 1)+1);
         }
 
         public setCmdInst(rid: number, wdid: number, cid: number, n: number) {
             let wd = this.getRule(rid).whenDo[wdid];
+            if (cid > wd.commandsLen)
+                return 0xff;
             if (cid == wd.commandsLen)
                 wd.commandsLen++;
             wd.commands.setUint8(cid << 1, n & 0xff);
+            return n & 0xff;
         }
 
         public setCmdArg(rid: number, wdid: number, cid: number, n: number) {
-            this.getRule(rid).whenDo[wdid].commands.setUint8((cid << 1)+1, n & 0xff);
+            let wd = this.getRule(rid).whenDo[wdid];
+            if (cid > wd.commandsLen)
+                return 0xff;
+            if (cid == wd.commandsLen)
+                wd.commandsLen++;
+            wd.commands.setUint8((cid << 1)+1, n & 0xff);
+            return n & 0xff;
         }
 
         public removeCommand(rid: number, wdid: number, cid: number) {
             let wd = this.getRule(rid).whenDo[wdid];
+            if (wd.commandsLen == 0 || cid >= wd.commandsLen)
+                return 0xff;
             for(let i=(cid << 1); i <= ((MaxCommands-1)<<1)-1; i++) {
                 wd.commands.setUint8(i, wd.commands.getUint8(i+2));
             }
             wd.commandsLen--;
+            return wd.commandsLen;
         }
 
         // the following accessors depend on the rule type
