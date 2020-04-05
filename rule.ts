@@ -255,9 +255,9 @@ namespace tileworld {
     // pack things so that they'll be easy to read off
     export function packRule(r: Rule, bgLen: number, spLen: number) {
         bitIndex = 0;
-        let bytes = 2 + r.whenDo.length + (2 + (bgLen >> 2) + (spLen >> 2));
+        let bytes = 2 + r.whenDo.length * (2 + ((bgLen >> 2)+1) + ((spLen >> 2)+1));
         for (let i = 0; i<r.whenDo.length; i++) {
-            bytes += (r.whenDo[i].commands.length > 0 ? 8 : 0);
+            bytes += (r.whenDo[i].commands.length << 1);
         }
         ruleBuf = control.createBuffer(bytes);
         writeBuf(r.ruleType, 4);
@@ -267,8 +267,8 @@ namespace tileworld {
         r.whenDo.forEach(wd => {
             writeBuf(wd.col, 4);
             writeBuf(wd.row, 4);                // + 1 byte
-            writeBufRaw(wd.bgPred, bgLen)       // + {1, 2, 3} byte  
-            writeBufRaw(wd.spPred, spLen);      // + {1, 2, 3} byte  
+            writeBufRaw(wd.bgPred, (bgLen >> 2)+1)       // + {1, 2, 3} byte  
+            writeBufRaw(wd.spPred, (spLen >> 2)+1);      // + {1, 2, 3} byte  
             writeBuf(wd.commands.length, 4);                   
             writeBuf(0, 4);                     // + 1 byte
         });
@@ -294,8 +294,8 @@ namespace tileworld {
             let col = readBuf(4);
             let row = readBuf(4);
             let wd = new WhenDo(col, row,
-                    readBufRaw(bgLen >> 2, bgLen >> 2),
-                    readBufRaw(spLen >> 2, spLen >> 2), 
+                    readBufRaw((bgLen >> 2)+1, (bgLen >> 2)+1),
+                    readBufRaw((spLen >> 2)+1, (spLen >> 2)+1), 
                     -1, 
                     null);
             rule.whenDo.push(wd);
