@@ -70,9 +70,9 @@ enum GameArg {
 
 enum AttrType {
     OK,        // don't care
-    Include,   // tile must contain one from kind
-    Exclude,   // tile cannot contain this kind
-    Include2   // second include set
+    Include,   // tile must contain one from this
+    Include2,  // second include set
+    Exclude,   // tile cannot contain this
 }
 
 class Command {

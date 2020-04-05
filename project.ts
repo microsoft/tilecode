@@ -238,7 +238,7 @@ namespace tileworld {
             let byteIndex = index >> 2;
             let byte = buf.getUint8(byteIndex);
             let remainder = index - (byteIndex << 2);
-            if (val != -1) {
+            if (val != 0xffff) {
                 let mask = (0x3 << (remainder << 1)) ^ 0xff;
                 let newByte = (byte & mask) | ((val & 0x3) << (remainder << 1));
                 buf.setUint8(byteIndex, newByte)
