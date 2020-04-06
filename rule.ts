@@ -258,7 +258,7 @@ namespace tileworld {
 
     // must be byte-aligned when writing a raw buffer
     function writeBufRaw(b: Buffer, cnt: number) {
-        for(let i=0;i<cnt;i++) {
+        for(let i = 0; i < cnt; i++) {
             writeBuf(b.getUint8(i), 8);
         }
     }
@@ -271,7 +271,7 @@ namespace tileworld {
     function readBufRaw(bytes: number, cnt: number) {
         let b = control.createBuffer(bytes);
         for (let i = 0; i < cnt; i++) {
-            b.setUint8(i,readBuf(8));
+            b.setUint8(i, readBuf(8));
         }
         return b;
     }
@@ -279,17 +279,18 @@ namespace tileworld {
     // pack things so that they'll be easy to read off
     export function packRule(r: Rule, bgLen: number, spLen: number) {
         // determine vacuous whendo rules (predicate true, no commands)
+        let wds = r.whenDo.filter(wd => wd.commandsLen > 0 || !isWhenDoTrue(wd));
         bitIndex = 0;
-        let bytes = 2 + r.whenDo.length * (2 + ((bgLen >> 2)+1) + ((spLen >> 2)+1));
-        for (let i = 0; i<r.whenDo.length; i++) {
-            bytes += (r.whenDo[i].commands.length << 1);
+        let bytes = 2 + wds.length * (2 + ((bgLen >> 2)+1) + ((spLen >> 2)+1));
+        for (let i = 0; i<wds.length; i++) {
+            bytes += (wds[i].commands.length << 1);
         }
         ruleBuf = control.createBuffer(bytes);
         writeBuf(r.ruleType, 4);
         writeBuf(r.ruleArg, 4);
-        writeBuf(r.whenDo.length, 4);
+        writeBuf(wds.length, 4);
         writeBuf(0, 4);                         // 2 bytes
-        r.whenDo.forEach(wd => {
+        wds.forEach(wd => {
             writeBuf(wd.col, 4);
             writeBuf(wd.row, 4);                // + 1 byte
             writeBufRaw(wd.bgPred, (bgLen >> 2)+1)       // + {1, 2, 3} byte  
@@ -298,7 +299,7 @@ namespace tileworld {
             writeBuf(0, 4);                     // + 1 byte
         });
         // now, write out the commands
-        r.whenDo.forEach(wd => {
+        wds.forEach(wd => {
             if (wd.commands.length > 0) {
                 writeBufRaw(wd.commands, wd.commandsLen << 1);
             }
