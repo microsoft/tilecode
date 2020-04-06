@@ -141,7 +141,7 @@ namespace tileworld {
             if (this.vm.phase == RuleType.ButtonPress) {
                 if (this.vm.queued.length > 0) {
                     let ts = this.vm.queued.pop();
-                    return this.applyRules(RuleType.ButtonPress, this.ruleIndex[RuleType.ButtonPress], ts);
+                    return this.applyRules(RuleType.ButtonPress, ts);
                 } else {
                     this.vm.phase = RuleType.ContextChange;
                     this.allSprites(ts => { if (this.vm.buttonMatch.indexOf(ts) == -1) this.vm.queued.push(ts) });
@@ -152,7 +152,7 @@ namespace tileworld {
                     let ts = this.vm.queued.pop();
                     if (ts.dir != Resting || this.restingWithChange(ts)) {
                         // TODO: partition rules based on resting/moving
-                        return this.applyRules(RuleType.ContextChange, this.ruleIndex[RuleType.ContextChange], ts);
+                        return this.applyRules(RuleType.ContextChange,  ts);
                     }
                 } else {
                     this.vm.phase = RuleType.Collision;
@@ -209,7 +209,7 @@ namespace tileworld {
         }
 
         private ruleMatchesSprite(rid: number, ts: TileSprite) {
-            return this.p.getSpriteKinds(rid).indexOf(ts.kind()) != -1;
+            return this.p.hasSpriteKind(rid, ts.kind());
         }
 
         // apply matching rules to tileSprite, based on the phase we are in
@@ -223,7 +223,8 @@ namespace tileworld {
             });
         }
 
-        private applyRules(phase: RuleType, rules: number[], ts: TileSprite) {
+        private applyRules(phase: RuleType, ts: TileSprite) {
+            let rules = this.ruleIndex[phase];
             let ruleClosures: RuleClosure[] = [];
             this.matchingRules(rules, phase, ts, (rid) => {
                 let closure = this.evaluateRule(ts, rid);
@@ -536,14 +537,14 @@ namespace tileworld {
             this.state.nextWorld = w.clone();
             this.state.changed = w.clone();
 
-            // initialize backgrounds and sprites
+            // initialize backgrounds
             this.p.backgroundImages().forEach((img,kind) => {
                 scene.setTile(kind, img);
             });
+            // initialize sprites
             for(let kind=0; kind<this.p.spriteCnt(); kind++) {
                 this.state.sprites[kind] = [];
             }
-
             for(let x = 0; x<sprites.width; x++) {
                 for (let y = 0; y < sprites.height; y++) {
                     let kind = sprites.getPixel(x,y);

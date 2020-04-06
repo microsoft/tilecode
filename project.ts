@@ -319,6 +319,11 @@ namespace tileworld {
             });
         }
         
+        public hasSpriteKind(rid: number, kind: number) {
+            let wd = this.getWhenDo(rid, 2, 2);
+            return wd == -1 ?  false : this.getSetSpAttr(rid, wd, kind) == AttrType.Include
+        }
+        
         public getSpriteKinds(rid: number) {
             let wd = this.getWhenDo(rid, 2, 2);
             let ret: number[] = [];

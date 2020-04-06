@@ -1,6 +1,6 @@
 namespace tileworld {
     
-    enum RuleEditorMenus { MainMenu, AttrTypeMenu, CommandMenu };
+    enum RuleEditorMenus { MainMenu, AttrTypeMenu, DirExprMenu, CommandMenu };
     enum CommandTokens { Last=CommandType.Last, SpaceTile, Delete };
 
     const editorRow = 2;
