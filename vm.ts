@@ -426,6 +426,7 @@ namespace tileworld {
                     if (hasKind) oneOfPassed = true;
                 }
             }
+            // TODO: fix this up to deal with self (or undo the mess)
             let adjacent = Math.abs(2 - col) + Math.abs(2 - row) <= 1;
             for(let kind = 0; kind < this.p.spriteCnt(); kind++) {
                 let attr = this.p.getSetSpAttr(rid, whendo, kind);

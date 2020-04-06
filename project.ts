@@ -347,16 +347,13 @@ namespace tileworld {
         }
 
         public isRestingRule(rid: number) {
-            if (this.getRuleType(rid) == RuleType.ContextChange) {
-                return this.getDirFromRule(rid) == Resting;
-            }
-            return false;
+            return this.getRuleType(rid) == RuleType.ContextChange && this.getDirFromRule(rid) == Resting;
         }
 
         public isCollidingResting(rid: number) {
             if (this.getRuleType(rid) == RuleType.Collision) {
                 let wd = this.getWhenDo(rid, 2, 3);
-                return this.getDirFromRule(rid) == Resting || this.getDirFromRule(rid) == AnyDir
+                return this.getWitnessDirection(rid, wd) == Resting;
             }
             return false;  
         }
