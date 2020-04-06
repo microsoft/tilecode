@@ -337,7 +337,6 @@ namespace tileworld {
                 wd.commands = control.createBuffer(MaxCommands << 1);
             }
         });
-        console.logValue("bitIndexRead", bitIndex);
         return rule;
     }
 }
