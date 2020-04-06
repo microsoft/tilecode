@@ -254,7 +254,7 @@ namespace tileworld {
         }
 
         protected centerImage() {
-            return this.p.getSpriteImage(this.kind);
+            return ok; // this.p.getSpriteImage(this.kind);
         }
         
         private showMainMenu() {
