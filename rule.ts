@@ -110,13 +110,6 @@ class Rule {
     ) { }
 }
 
-class IdRule {
-    constructor(
-        public id: number,
-        public rule: Rule
-    ) { }
-}
-
 // transform: FlipRotate of rule with different id
 
 enum FlipRotate { Horizontal, Vertical, Left, Right };
@@ -125,11 +118,6 @@ namespace tileworld {
 
     export function makeNewRule(rt: RuleType, ra: RuleArg): Rule {
         return new Rule(rt, ra, []);
-    }
-
-    // useful utilities
-    export function makeIds(rules: Rule[]): IdRule[] {
-        return rules.map((r, i) => { return new IdRule(i, r); });
     }
 
     export function moveXdelta(dir: MoveDirection) {

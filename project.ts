@@ -32,28 +32,221 @@ namespace tileworld {
         public saveImage(index: number) {
             index < this.p.backCnt() ? this.p.saveBackgroundImage(index) : this.p.saveSpriteImage(index - this.p.backCnt());
         }
-        public getSetAttr(rid: number, whendo: number, aid: number, val:number = 0xffff) {
-            return aid < this.p.backCnt() ? this.p.getSetBgAttr(rid, whendo, aid, val) : this.p.getSetSpAttr(rid, whendo, aid - this.p.backCnt(), val);
+        public getSetAttr(rv: RuleView, whendo: number, aid: number, val:number = 0xffff) {
+            return aid < this.p.backCnt() ? rv.getSetBgAttr(whendo, aid, val) : rv.getSetSpAttr(whendo, aid - this.p.backCnt(), val);
+        }
+    }
+
+    export class RuleView {
+        constructor(private p: Project, private rid: number, private r: Rule) {
+        }
+
+        public getBaseRule() {
+            return this.r;
+        }
+
+        public getRuleId() {
+            return this.rid;
+        }
+
+        public getRuleType() {
+            return this.r.ruleType;
+        }
+
+        public setRuleType(rt: RuleType) {
+            this.r.ruleType = rt;
+        }
+
+        public getRuleArg() {
+            return this.r.ruleArg;
+        }
+
+        public setRuleArg(ra: RuleArg) {
+            this.r.ruleArg = ra;
+        }
+
+        public getWhenDo(col: number, row: number) {
+            let whendo = this.r.whenDo.find(wd => wd.col == col && wd.row == row);
+            if (whendo == null)
+                return -1;
+            else
+                return this.r.whenDo.indexOf(whendo);
+        }
+
+        public makeWhenDo(col: number, row: number) {
+            let wd = new WhenDo(col, row);
+            wd.bgPred = control.createBuffer(this.p.backCnt());
+            wd.spPred = control.createBuffer(this.p.spriteCnt()); 
+            wd.commandsLen = 0;
+            wd.commands = control.createBuffer(MaxCommands << 1);
+            this.r.whenDo.push(wd);
+            return this.r.whenDo.length - 1;
+        }
+
+        private getSetBuffAttr(buf: Buffer, index: number, val: number) {
+            let byteIndex = index >> 2;
+            let byte = buf.getUint8(byteIndex);
+            let remainder = index - (byteIndex << 2);
+            if (val != 0xffff) {
+                let mask = (0x3 << (remainder << 1)) ^ 0xff;
+                let newByte = (byte & mask) | ((val & 0x3) << (remainder << 1));
+                buf.setUint8(byteIndex, newByte)
+            }
+            return (byte >> (remainder << 1)) & 0x3;
+        }
+
+        public getSetBgAttr(wdid: number, index: number, val: number = 0xffff): AttrType {
+            return this.getSetBuffAttr(this.r.whenDo[wdid].bgPred, index, val);
+        }
+
+        public getSetSpAttr(wdid: number, index: number, val: number = 0xffff): AttrType {
+            return this.getSetBuffAttr(this.r.whenDo[wdid].spPred, index, val);
+        }
+
+        public getWitnessDirection(wdid: number) {
+            return this.r.whenDo[wdid].dir;
+        }
+
+        public setWitnessDirection(wdid: number, val:number) {
+            this.r.whenDo[wdid].dir = val;
+        }
+
+        public getCmdsLen(wdid: number) {
+            return this.r.whenDo[wdid].commandsLen;
+        }
+
+        public getCmdInst(wdid: number, cid: number) {
+            let wd = this.r.whenDo[wdid];
+            if (cid >= wd.commandsLen) return 0xff;
+            return wd.commands.getUint8(cid << 1);
+        }
+
+        public getCmdArg(wdid: number, cid: number) {
+            let wd = this.r.whenDo[wdid];
+            if (cid >= wd.commandsLen) return 0xff;
+            return wd.commands.getUint8((cid << 1)+1);
+        }
+
+        public setCmdInst(wdid: number, cid: number, n: number) {
+            let wd = this.r.whenDo[wdid];
+            if (cid > wd.commandsLen)
+                return 0xff;
+            if (cid == wd.commandsLen)
+                wd.commandsLen++;
+            wd.commands.setUint8(cid << 1, n & 0xff);
+            return n & 0xff;
+        }
+
+        public setCmdArg(wdid: number, cid: number, n: number) {
+            let wd = this.r.whenDo[wdid];
+            if (cid > wd.commandsLen)
+                return 0xff;
+            if (cid == wd.commandsLen)
+                wd.commandsLen++;
+            wd.commands.setUint8((cid << 1)+1, n & 0xff);
+            return n & 0xff;
+        }
+
+        public removeCommand(rid: number, wdid: number, cid: number) {
+            let wd = this.r.whenDo[wdid];
+            if (wd.commandsLen == 0 || cid >= wd.commandsLen)
+                return 0xff;
+            for(let i=(cid << 1); i <= ((MaxCommands-1)<<1)-1; i++) {
+                wd.commands.setUint8(i, wd.commands.getUint8(i+2));
+            }
+            wd.commandsLen--;
+            return wd.commandsLen;
+        }
+
+        public getSpriteKinds() {
+            let wd = this.getWhenDo(2, 2);
+            let ret: number[] = [];
+            for(let i=0; i < this.p.spriteCnt(); i++) {
+                let at = this.getSetSpAttr(wd, i);
+                if (at == AttrType.Include || at == AttrType.Include2)
+                    ret.push(i);
+            }
+            return ret;
+        }
+
+        public hasSpriteKind(kind: number) {
+            let wd = this.getWhenDo(2, 2);
+            return wd == -1 ?  false : this.getSetSpAttr(wd, kind) == AttrType.Include
+        }
+
+        public getDirFromRule() {
+            let rt = this.getRuleType();
+            if (rt == RuleType.Collision || rt == RuleType.ContextChange) {
+                let wd = this.getWhenDo(2, 2);
+                return wd == -1 ? -1 : this.getWitnessDirection(wd);
+            } else if (rt == RuleType.ButtonPress) {
+                return this.getRuleArg();
+            }
+            return -1;
+        }
+
+        public isRestingRule() {
+            return this.getRuleType() == RuleType.ContextChange && this.getDirFromRule() == Resting;
+        }
+
+        public isCollidingResting() {
+            if (this.getRuleType() == RuleType.Collision) {
+                let wd = this.getWhenDo(2, 3);
+                return this.getWitnessDirection(wd) == Resting;
+            }
+            return false;  
+        }
+
+        // predicates
+
+        public whendoTrue(whendo: number) {
+            let wd = this.r.whenDo[whendo];
+            return isWhenDoTrue(wd);
+        }
+
+        public isRuleTrue() {
+            return isRuleTrue(this.r);
+        }
+
+        // transformations
+        // TODO: options:
+        // 1. deeply imbed as as rule view via default parameter (so you can see in editor)
+        // 2. new rule, but in memory only
+        // 3. new rules, stored in flash, with lock/unlock
+        public flipRule(fr: FlipRotate) {
+            // transforms
+            // - ButtonArg and Witness Dir: flipRotateDir(this.getDir(rid), fr));
+            // - WhenDo coordinate: let tgtWhenDo = this.makeWhenDo(tgtRule, transformCol(col, row, fr), 
+            //                                           transformRow(row, col, fr));
+            // - argument  this.setArg(tgtRule, tgtWhenDo, c, inst == CommandType.Move ? flipRotateDir(arg,fr): arg);
         }
     }
 
     export class Project {
-        private lastRule: IdRule = null;
+        private lastRule: RuleView = null;
         private _player: number = -1;
         private _backgrounds: Image = null;
         private _sprites: Image = null;
         public debug: boolean = false;
         public help: boolean = true;
         public version: string;
-    
+        private rules: RuleView[] = [];     // the rules
+
         constructor(
             public prefix: string,
             private _backgroundsI: Image[], // the user-defined backgrounds 
-            private _spritesI: Image[],     // the user-defined sprites
-            private rules: IdRule[]         // the rules
+            private _spritesI: Image[]      // the user-defined sprites
         ) {
             // TODO: enforce that backgroundI and spriteI lengths are from the set { 4, 8, 12, }
             // TODO: leaving us room for 4 runtime backgrounds and sprites
+        }
+
+        public setRules(rvl: RuleView[]) {
+            this.rules = rvl;
+        }
+
+        public getRules() {
+            return this.rules;
         }
 
         public setPlayer(kind: number) {
@@ -107,26 +300,26 @@ namespace tileworld {
             let buf = saveImage(this.prefix, kind, this.getSpriteImage(kind), false);
         }
 
-        public saveRule(rid: number) {
-            this.storeRule(this.prefix, rid, this.getRule(rid));
+        public saveRule(rv: RuleView) {
+            this.storeRule(this.prefix, rv.getRuleId(), rv.getBaseRule());
         }
 
-        public makeRule(rt: RuleType, ra: RuleArg | MoveDirection, kind: number = 0xffff): number {
-            let rid = this.wrapRule(makeNewRule(rt, ra));
+        public makeRule(rt: RuleType, ra: RuleArg | MoveDirection, kind: number = 0xffff) {
+            let rv = this.wrapRule(makeNewRule(rt, ra));
             if (kind != 0xffff) {
                 // this is a bit of a mess
-                let wd = this.makeWhenDo(rid, 2, 2);
-                this.getSetSpAttr(rid, wd, kind, AttrType.Include);
+                let wd = rv.makeWhenDo(2, 2);
+                rv.getSetSpAttr(wd, kind, AttrType.Include);
                 if (rt == RuleType.ContextChange) {
-                    this.setWitnessDirection(rid, wd, ra);
+                    rv.setWitnessDirection(wd, ra);
                 }
             }
-            this.saveRule(rid);
-            return rid;
+            this.saveRule(rv);
+            return rv;
         }
 
         public removeRule(rid: number) {
-            let r = this.rules.find(r => r.id == rid);
+            let r = this.rules.find(r => r.getRuleId() == rid);
             if (r) {
                 this.rules.removeElement(r);
                 settings.remove(this.prefix + RuleKey + rid.toString());
@@ -168,218 +361,24 @@ namespace tileworld {
             let spritesBuf = imageToBuffer(this.getWorldSprites());
             settings.writeBuffer(prefix + WorldSpritesKey, spritesBuf);
             this.getRules().forEach(r => {
-                let buf = this.storeRule(prefix, r.id, r.rule);
+                let buf = this.storeRule(prefix, r.getRuleId(), r.getBaseRule());
             });
-        }
-
-        public getRules() { return this.rules; }
-
-        public getRule(rid: number) {
-            if (this.lastRule == null || this.lastRule.id != rid) {
-                this.lastRule = this.rules.find(r => r.id == rid);
-            }
-            return this.lastRule.rule;
         }
 
         private wrapRule(r: Rule) {
             // find a new id that is not in rule list
-            let rids = this.rules.map(r => r.id).sort((a,b) => a - b );
+            let rids = this.rules.map(r => r.getRuleId()).sort((a,b) => a - b );
             let rid = 0;
             for(let i = 0; i< rids.length; i++) {
                 if (rid != rids[i])
                     break;
                 rid = rids[i]+1;
             }
-            let newRule = new IdRule(rid, r);
+            let newRule = new RuleView(this, rid, r);
             this.rules.push(newRule);
-            return newRule.id;
+            return newRule;
         }
-
-        public getRuleIds(): number[] {
-            return this.rules.map(r => r.id);
-        }
-
-        public getRuleType(rid: number) {
-            return this.getRule(rid).ruleType;
-        }
-
-        public setRuleType(rid: number, rt: RuleType) {
-            this.getRule(rid).ruleType = rt;
-        }
-
-        public getRuleArg(rid: number) {
-            return this.getRule(rid).ruleArg;
-        }
-
-        public setRuleArg(rid: number, ra: RuleArg) {
-            this.getRule(rid).ruleArg = ra;
-        }
-
-        public getWhenDo(rid: number, col: number, row: number) {
-            let whendo = this.getRule(rid).whenDo.find(wd => wd.col == col && wd.row == row);
-            if (whendo == null)
-                return -1;
-            else
-                return this.getRule(rid).whenDo.indexOf(whendo);
-        }
-
-        public makeWhenDo(rid: number, col: number, row: number) {
-            let wd = new WhenDo(col, row);
-            wd.bgPred = control.createBuffer(this.backCnt());
-            wd.spPred = control.createBuffer(this.spriteCnt()); 
-            wd.commandsLen = 0;
-            wd.commands = control.createBuffer(MaxCommands << 1);
-            this.getRule(rid).whenDo.push(wd);
-            return this.getRule(rid).whenDo.length - 1;
-        }
-
-        private getSetBuffAttr(buf: Buffer, index: number, val: number) {
-            let byteIndex = index >> 2;
-            let byte = buf.getUint8(byteIndex);
-            let remainder = index - (byteIndex << 2);
-            if (val != 0xffff) {
-                let mask = (0x3 << (remainder << 1)) ^ 0xff;
-                let newByte = (byte & mask) | ((val & 0x3) << (remainder << 1));
-                buf.setUint8(byteIndex, newByte)
-            }
-            return (byte >> (remainder << 1)) & 0x3;
-        }
-
-        public getSetBgAttr(rid: number, wdid: number, index: number, val: number = 0xffff): AttrType {
-            return this.getSetBuffAttr(this.getRule(rid).whenDo[wdid].bgPred, index, val);
-        }
-
-        public getSetSpAttr(rid: number, wdid: number, index: number, val: number = 0xffff): AttrType {
-            return this.getSetBuffAttr(this.getRule(rid).whenDo[wdid].spPred, index, val);
-        }
-
-        public getWitnessDirection(rid: number, wdid: number) {
-            return this.getRule(rid).whenDo[wdid].dir;
-        }
-
-        public setWitnessDirection(rid: number, wdid: number, val:number) {
-            this.getRule(rid).whenDo[wdid].dir = val;
-        }
-
-        public getCmdsLen(rid: number, wdid: number) {
-            return this.getRule(rid).whenDo[wdid].commandsLen;
-        }
-
-        public getCmdInst(rid: number, wdid: number, cid: number) {
-            let wd = this.getRule(rid).whenDo[wdid];
-            if (cid >= wd.commandsLen) return 0xff;
-            return wd.commands.getUint8(cid << 1);
-        }
-
-        public getCmdArg(rid: number, wdid: number, cid: number) {
-            let wd = this.getRule(rid).whenDo[wdid];
-            if (cid >= wd.commandsLen) return 0xff;
-            return wd.commands.getUint8((cid << 1)+1);
-        }
-
-        public setCmdInst(rid: number, wdid: number, cid: number, n: number) {
-            let wd = this.getRule(rid).whenDo[wdid];
-            if (cid > wd.commandsLen)
-                return 0xff;
-            if (cid == wd.commandsLen)
-                wd.commandsLen++;
-            wd.commands.setUint8(cid << 1, n & 0xff);
-            return n & 0xff;
-        }
-
-        public setCmdArg(rid: number, wdid: number, cid: number, n: number) {
-            let wd = this.getRule(rid).whenDo[wdid];
-            if (cid > wd.commandsLen)
-                return 0xff;
-            if (cid == wd.commandsLen)
-                wd.commandsLen++;
-            wd.commands.setUint8((cid << 1)+1, n & 0xff);
-            return n & 0xff;
-        }
-
-        public removeCommand(rid: number, wdid: number, cid: number) {
-            let wd = this.getRule(rid).whenDo[wdid];
-            if (wd.commandsLen == 0 || cid >= wd.commandsLen)
-                return 0xff;
-            for(let i=(cid << 1); i <= ((MaxCommands-1)<<1)-1; i++) {
-                wd.commands.setUint8(i, wd.commands.getUint8(i+2));
-            }
-            wd.commandsLen--;
-            return wd.commandsLen;
-        }
-
-        // the following accessors depend on the rule type
-        
-        public getRulesForSpriteKind(kind: number): number[] {
-            return this.getRuleIds().filter(rid => {
-                let wd = this.getWhenDo(rid, 2, 2);
-                let at = this.getSetSpAttr(rid, wd, kind);
-                return (wd == -1) ? false : (at == AttrType.Include || at == AttrType.Include2);
-            });
-        }
-        
-        public hasSpriteKind(rid: number, kind: number) {
-            let wd = this.getWhenDo(rid, 2, 2);
-            return wd == -1 ?  false : this.getSetSpAttr(rid, wd, kind) == AttrType.Include
-        }
-        
-        public getSpriteKinds(rid: number) {
-            let wd = this.getWhenDo(rid, 2, 2);
-            let ret: number[] = [];
-            for(let i=0; i < this.spriteCnt(); i++) {
-                let at = this.getSetSpAttr(rid, wd, i);
-                if (at == AttrType.Include || at == AttrType.Include2)
-                    ret.push(i);
-            }
-            return ret;
-        }
-
-        public getDirFromRule(rid: number) {
-            let rt = this.getRuleType(rid);
-            if (rt == RuleType.Collision || rt == RuleType.ContextChange) {
-                let wd = this.getWhenDo(rid, 2, 2);
-                return wd == -1 ? -1 : this.getWitnessDirection(rid, wd);
-            } else if (rt == RuleType.ButtonPress) {
-                return this.getRuleArg(rid);
-            }
-            return -1;
-        }
-
-        public isRestingRule(rid: number) {
-            return this.getRuleType(rid) == RuleType.ContextChange && this.getDirFromRule(rid) == Resting;
-        }
-
-        public isCollidingResting(rid: number) {
-            if (this.getRuleType(rid) == RuleType.Collision) {
-                let wd = this.getWhenDo(rid, 2, 3);
-                return this.getWitnessDirection(rid, wd) == Resting;
-            }
-            return false;  
-        }
-
-        // predicates
-
-        public whendoTrue(rid: number, whendo: number) {
-            let wd = this.getRule(rid).whenDo[whendo];
-            return isWhenDoTrue(wd);
-        }
-
-        public isRuleTrue(rid: number) {
-            return isRuleTrue(this.getRule(rid));
-        }
-        
-        // transformations
-        // TODO: options:
-        // 1. deeply imbed as as rule view via default parameter (so you can see in editor)
-        // 2. new rule, but in memory only
-        // 3. new rules, stored in flash, with lock/unlock
-        public flipRule(rid: number, fr: FlipRotate) {
-            // transforms
-            // - ButtonArg and Witness Dir: flipRotateDir(this.getDir(rid), fr));
-            // - WhenDo coordinate: let tgtWhenDo = this.makeWhenDo(tgtRule, transformCol(col, row, fr), 
-            //                                           transformRow(row, col, fr));
-            // - argument  this.setArg(tgtRule, tgtWhenDo, c, inst == CommandType.Move ? flipRotateDir(arg,fr): arg);
-        }
+    
     }
 
     const toHex = "0123456789abcdef";
@@ -461,19 +460,21 @@ namespace tileworld {
         let spriteImages = readImages(spriteCnt, prefix + SpriteImageKey, output);
         let helpNum = settingsReadNumber(prefix + HelpKey, output);
         let help = helpNum ? true: false;
+        // start project
+        let p = new Project(prefix, backImages, spriteImages);
         // get the rules, at least
         let ruleName = prefix + RuleKey;
         let ruleids = names.filter(s => s.indexOf(ruleName) == 0).map(s => parseInt(s.substr(ruleName.length())));
-        let rules: IdRule[] = [];
+        let rules: RuleView[] = [];
         ruleids.forEach(rid => {
             let key = ruleName+rid.toString();
             let buf = settingsReadBuffer(key, output);
             let rule = unPackRule(buf, backCnt, spriteCnt);
-            rules.push(new IdRule(rid, rule));
+            rules.push(new RuleView(p, rid, rule));
         });
         let player = settingsReadNumber(prefix + PlayerIndexKey, output);
         if (output) console.log("}");
-        let p = new Project(prefix, backImages, spriteImages, rules);
+        p.setRules(rules);
         p.setWorldBackgrounds(world);
         p.setWorldSprites(sprites);
         p.setPlayer(player);
@@ -544,7 +545,7 @@ namespace tileworld {
         }
         let rules: Rule[] = [];
         //for(let dir = 0; dir < 4; dir++) { rules.push(makePushRule(dir)); }
-        let p = new Project(prefix, fixed, movable, []); // makeIds(rules));
+        let p = new Project(prefix, fixed, movable); // makeIds(rules));
         let world = image.create(32, 24);
         helpers.imageFillRect(world, 1, 1, 30, 22, 1);
         let sprites = image.create(32, 24);

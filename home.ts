@@ -25,7 +25,7 @@ namespace tileworld {
                     return;
                 let command = commandImages[this.col()];
                 if (command == play) {
-                    let rules = this.p.getRuleIds();
+                    let rules = this.p.getRules();
                     if (rules.length > 0) {
                         game.pushScene();
                         let g = new RunGame(this.p, rules);

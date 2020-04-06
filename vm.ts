@@ -75,7 +75,7 @@ namespace tileworld {
     // for the evalation of rule's commands 
     class RuleClosure {
         constructor(
-            public rid: number,
+            public rv: RuleView,
             public self: TileSprite,
             public witnesses: TileSprite[]) {
         }
@@ -87,20 +87,20 @@ namespace tileworld {
         // (temporary) state for global commands
         private globalInsts: number[];
         private globalArgs: number[];
-        private allTrueResting: number[] = [];
-        private ruleIndex: number[][] = [];     // lookup of rules by phase
+        private allTrueResting: RuleView[] = [];
+        private ruleIndex: RuleView[][] = [];     // lookup of rules by phase
         
-        constructor(private p: Project, private rules: number[]) {
+        constructor(private p: Project, private rules: RuleView[]) {
             this.vm = null;
             for (let i = RuleType.FirstRule; i<= RuleType.LastRule; i++) {
                 this.ruleIndex[i] = [];
             }
             // populate indices for more efficient lookup
-            this.rules.forEach(rid => {
-                if (this.p.isRestingRule(rid) && this.p.isRuleTrue(rid))
-                    this.allTrueResting.push(rid);
+            this.rules.forEach(rv => {
+                if (rv.isRestingRule() && rv.isRuleTrue())
+                    this.allTrueResting.push(rv);
                 else
-                    this.ruleIndex[this.p.getRuleType(rid)].push(rid);
+                    this.ruleIndex[rv.getRuleType()].push(rv);
             });
         }
 
@@ -131,7 +131,7 @@ namespace tileworld {
 
         processClosure(rc: RuleClosure) {
             this.evaluateRuleClosure(rc);
-            if (this.p.getRuleType(rc.rid) == RuleType.ButtonPress) {
+            if (rc.rv.getRuleType() == RuleType.ButtonPress) {
                 if (this.vm.buttonMatch.indexOf(rc.self) == -1)
                     this.vm.buttonMatch.push(rc.self);
             }
@@ -209,8 +209,8 @@ namespace tileworld {
             return false;
         }
 
-        private ruleMatchesSprite(rid: number, ts: TileSprite) {
-            return this.p.hasSpriteKind(rid, ts.kind());
+        private ruleMatchesSprite(rv: RuleView, ts: TileSprite) {
+            return rv.hasSpriteKind(ts.kind());
         }
 
         private ruleMatchesDirection(rid: number, dir: number) {
@@ -528,7 +528,7 @@ namespace tileworld {
         private vm: TileWorldVM;
         private signal: TileSprite;
         private state: VMState;
-        constructor(private p: Project, rules: number[], private debug: boolean = false) {
+        constructor(private p: Project, rules: RuleView[], private debug: boolean = false) {
             super();
             this.vm = new TileWorldVM(p, rules);
         }
