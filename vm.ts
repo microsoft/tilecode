@@ -212,12 +212,17 @@ namespace tileworld {
             return this.p.hasSpriteKind(rid, ts.kind());
         }
 
+        private ruleMatchesDirection(rid: number, dir: number) {
+            let dirExpr = this.p.getDirFromRule(rid);
+            return dirExpr == AnyDir || (dirExpr == Moving && dir != Resting) || (dirExpr == dir);
+        }
+
         // apply matching rules to tileSprite, based on the phase we are in
         private matchingRules(rules: number[], phase: RuleType, ts: TileSprite, handler: (rid: number) => void) {
             rules.forEach(rid => {
                 if (this.ruleMatchesSprite(rid, ts) &&
-                    (phase == RuleType.ContextChange && this.p.getDirFromRule(rid) == ts.dir
-                  || phase == RuleType.ButtonPress && this.dpad.indexOf(this.p.getDirFromRule(rid)) != -1)) {
+                    (phase == RuleType.ContextChange && this.ruleMatchesDirection(rid, ts.dir)
+                  || phase == RuleType.ButtonPress && this.dpad.indexOf(this.p.getRuleArg(rid)) != -1)) {
                     handler(rid);
                 }
             });
@@ -247,7 +252,7 @@ namespace tileworld {
         // precondition: moving(ts)
         private collidingRules(ts: TileSprite, handler: (rid: number) => void) {
             this.ruleIndex[RuleType.Collision].forEach(rid => {
-                if (this.ruleMatchesSprite(rid, ts) && this.p.getDirFromRule(rid) == ts.arg) {
+                if (this.ruleMatchesSprite(rid, ts) && this.ruleMatchesDirection(rid,ts.arg)) {
                     handler(rid);
                 }
             });
