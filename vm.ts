@@ -150,14 +150,13 @@ namespace tileworld {
             if (this.vm.phase == RuleType.ContextChange) {
                 if (this.vm.queued.length > 0) {
                     let ts = this.vm.queued.pop();
-                    if (ts.dir != Resting) {
+                    if (ts.dir != Resting || this.restingWithChange(ts)) {
                         // TODO: partition rules based on resting/moving
                         return this.applyRules(RuleType.ContextChange, this.ruleIndex[RuleType.ContextChange], ts);
-                   } else if (this.restingWithChange(ts)) {
-                        return this.applyRules(RuleType.ContextChange, this.ruleIndex[RuleType.ContextChange], ts);
-                   }
+                    }
                 } else {
                     this.vm.phase = RuleType.Collision;
+                    this.allSprites(ts => { this.vm.queued.push(ts) });
                 }
             }
             if (this.vm.phase == RuleType.Collision) {

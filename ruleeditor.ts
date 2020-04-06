@@ -222,7 +222,6 @@ namespace tileworld {
             // sets collideCol and collideRow
             this.showRuleType(this.p.getRuleType(this.rule), this.p.getDirFromRule(this.rule), 2, 2+editorRow);
             this.makeContext();
-            this.showRuleType(this.p.getRuleType(this.rule), this.p.getDirFromRule(this.rule), 2, 2+editorRow);
             if (this.p.getSpriteKinds(this.rule).length > 1)
                 this.drawImage(2, 2 + editorRow, oneof);
             this.showCommands();
@@ -252,10 +251,6 @@ namespace tileworld {
             super.showCollision(col, row, dir, arrowImg, rt);
             this.collideCol = col;
             this.collideRow = row - editorRow;
-        }
-
-        centerImage() {
-            return this.p.getSpriteImage(this.kind);
         }
 
         private showMainMenu() {
