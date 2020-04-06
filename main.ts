@@ -7,7 +7,7 @@
 
 // 3. forall rules: termination checking event at beginning of round
 
-// 4. spawn sprite at a location
+// 4. spawn sprite at a location, with initial direction
 
 // 5. mirror/4-way feature
 

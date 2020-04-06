@@ -141,11 +141,10 @@ namespace tileworld {
     }
 
     export function oppDir(dir: MoveDirection, dir2: MoveDirection) {
-        return (dir == MoveDirection.Left && dir2 == MoveDirection.Right) ||
-            (dir == MoveDirection.Right && dir2 == MoveDirection.Left) ||
-            (dir == MoveDirection.Up && dir2 == MoveDirection.Down) ||
-            (dir == MoveDirection.Down && dir2 == MoveDirection.Up);
+        return (dir + 2) % 4 == dir2;
     }
+
+    // ---------------------------------------------------------------------------
 
     export function flipRotateDir(d: MoveDirection, fr: FlipRotate) {
         if (fr == FlipRotate.Horizontal) {
@@ -153,19 +152,9 @@ namespace tileworld {
         } else if (fr == FlipRotate.Vertical) {
             return d == MoveDirection.Up ? MoveDirection.Down : d == MoveDirection.Down ? MoveDirection.Up : d;
         } else if (fr == FlipRotate.Left) {
-            switch (d) { // counter clockwise
-                case MoveDirection.Left: return MoveDirection.Down;
-                case MoveDirection.Down: return MoveDirection.Right;
-                case MoveDirection.Right: return MoveDirection.Up;
-                case MoveDirection.Up: return MoveDirection.Left;
-            }
+            return d == 0 ? 3 : d - 1;
         } else {
-            switch (d) {  // clockwise
-                case MoveDirection.Left: return MoveDirection.Up;
-                case MoveDirection.Up: return MoveDirection.Right;
-                case MoveDirection.Right: return MoveDirection.Down;
-                case MoveDirection.Down: return MoveDirection.Left;
-            }
+            return (d + 1) % 4;
         }
         return d;
     }
@@ -189,7 +178,8 @@ namespace tileworld {
         }
     }
 
-    // predicates
+    // ---------------------------------------------------------------------------
+    // rule predicates
     export function isWhenDoTrue(wd: WhenDo) {
         for(let i = 0; i< wd.bgPred.length; i++) {
             if (wd.bgPred.getUint8(i)) return false;
@@ -212,6 +202,9 @@ namespace tileworld {
         }
         return true;
     }
+
+    // ---------------------------------------------------------------------------
+    // binary read/write of a rule
 
     let ruleBuf: Buffer = null
     let bitIndex = 0;
@@ -277,8 +270,6 @@ namespace tileworld {
     }
 
     // pack things so that they'll be easy to read off
-    // 46
-    // 2 + 2 * (4) + 2 = 8
     export function packRule(r: Rule, bgLen: number, spLen: number) {
         // determine vacuous whendo rules (predicate true, no commands)
         let wds = r.whenDo.filter(wd => wd.commandsLen > 0 || !isWhenDoTrue(wd));
@@ -309,7 +300,7 @@ namespace tileworld {
         return ruleBuf;
     }
 
-    // first, let's fully unpack
+    // fully unpack
     export function unPackRule(buf: Buffer, bgLen: number, spLen: number) {
         ruleBuf = buf;
         bitIndex = 0;
