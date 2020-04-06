@@ -318,10 +318,10 @@ namespace tileworld {
         private showCommandsAt(crow: number, wcol: number, wrow: number, draw: boolean = true) {
             if (draw) {
                 let index = this.findWitnessColRow(wcol, wrow);
-                let img1 = this.collideCol == wcol && this.collideRow == wrow ? collisionRestingSprite : genericSprite;
+                let img1 = this.collideCol == wcol && this.collideRow == wrow ? collisionSprite : genericSprite;
                 let img2 = index == -1 ? img1 : this.p.getSpriteImage(index);
                 this.drawImage(5, crow + editorRow, img2);
-                if (img1 == collisionRestingSprite)
+                if (img1 == collisionSprite)
                     this.drawImage(5, crow + editorRow, img1);
             }
             // show the existing commands

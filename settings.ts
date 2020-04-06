@@ -51,7 +51,7 @@ namespace tileworld {
             if (this.p) {
                 screen.print("Help", 16, 16 + yoff + 6);
                 this.drawImage(3, 1, emptyTile);
-                this.drawImage(3, 1, this.p.help ? collisionRestingSprite : genericSprite);
+                this.drawImage(3, 1, this.p.help ? collisionSprite : genericSprite);
 
                 let worldY = 32 + yoff + 6;
                 screen.print("World", 16, worldY);

@@ -182,7 +182,7 @@ export const cursorOut = img`
     1 1 . . . . . . . . . . . . 1 1
     . 1 1 1 1 1 1 1 1 1 1 1 1 1 1 .
 `;
-export const collisionRestingSprite = img`
+export const collisionSprite = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
@@ -193,24 +193,6 @@ export const collisionRestingSprite = img`
     . . . . f 2 2 2 2 2 2 f . . . .
     . . . . f 2 2 2 2 2 2 f . . . .
     . . . . f 2 2 2 2 2 2 f . . . .
-    . . . . . f 2 2 2 2 f . . . . .
-    . . . . . . f f f f . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-`;
-export const collisionMovingSprite = img`
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . f f f f . . . . . .
-    . . . . . f 2 2 2 2 f . . . . .
-    . . . . f 2 2 2 2 2 2 f 2 2 2 2
-    . . . . f 2 2 2 2 2 2 f f f f f
-    . . . . f 2 2 2 2 2 2 f 2 2 2 .
-    . . . . f 2 2 2 2 2 2 f f f f .
     . . . . . f 2 2 2 2 f . . . . .
     . . . . . . f f f f . . . . . .
     . . . . . . . . . . . . . . . .
@@ -800,24 +782,6 @@ export const trophyDown = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
 `;
-export const equalZero = img`
-    . . . . . . . . . f f f f f . .
-    . . . . . . . . f 1 1 1 1 1 f .
-    . f f f f f f f 1 1 f f f 1 1 f
-    . f 1 1 1 1 f f 1 f f f 1 f 1 f
-    . f f f f f f f 1 f f 1 f f 1 f
-    . f 1 1 1 1 f f 1 f 1 f f f 1 f
-    . f f f f f f f 1 1 f f f f 1 f
-    . . . . . . . . f 1 1 1 1 1 f .
-    . . . . . . . . . f f f f f . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-`;
 
 export const moveImages = [leftArrow, upArrow, rightArrow, downArrow, stopSign, uTurn];
 export const movedImages = [leftArrowOutline, upArrowOutline, rightArrowOutline, downArrowOutline];
@@ -830,8 +794,8 @@ export const attrYoffsets = [0, 0, -8, 0];
 export const commandImages = [map, paint, code, play];
 export const gameImages = [ trophyUp, trophyDown ];
 export const gameText = [ "win", "lose"];
-export const categoryImages = [allFour, paint, genericSprite, equalZero, gameIcon ];
-export const categoryText = ["move sprite", "paint tile", "sprite", "test", "game"];
+export const categoryImages = [allFour, paint, genericSprite, gameIcon ];
+export const categoryText = ["move sprite", "paint tile", "sprite",  "game"];
 export const spriteImages = [eat];
 export const spriteText = ["remove"];
 
