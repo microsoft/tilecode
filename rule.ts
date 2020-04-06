@@ -277,13 +277,15 @@ namespace tileworld {
     }
 
     // pack things so that they'll be easy to read off
+    // 46
+    // 2 + 2 * (4) + 2 = 8
     export function packRule(r: Rule, bgLen: number, spLen: number) {
         // determine vacuous whendo rules (predicate true, no commands)
         let wds = r.whenDo.filter(wd => wd.commandsLen > 0 || !isWhenDoTrue(wd));
         bitIndex = 0;
-        let bytes = 2 + wds.length * (2 + ((bgLen >> 2)+1) + ((spLen >> 2)+1));
+        let bytes = 2 + wds.length * (2 + (bgLen >> 2) + (spLen >> 2));
         for (let i = 0; i<wds.length; i++) {
-            bytes += (wds[i].commands.length << 1);
+            bytes += (wds[i].commandsLen << 1);
         }
         ruleBuf = control.createBuffer(bytes);
         writeBuf(r.ruleType, 4);
@@ -293,14 +295,14 @@ namespace tileworld {
         wds.forEach(wd => {
             writeBuf(wd.col, 4);
             writeBuf(wd.row, 4);                // + 1 byte
-            writeBufRaw(wd.bgPred, (bgLen >> 2)+1)       // + {1, 2, 3} byte  
-            writeBufRaw(wd.spPred, (spLen >> 2)+1);      // + {1, 2, 3} byte  
-            writeBuf(wd.commands.length, 4);                   
-            writeBuf(0, 4);                     // + 1 byte
+            writeBufRaw(wd.bgPred, (bgLen >> 2))        // + {1, 2, 3} byte  
+            writeBufRaw(wd.spPred, (spLen >> 2));       // + {1, 2, 3} byte
+            writeBuf(wd.dir, 4);  
+            writeBuf(wd.commandsLen, 4);            // + 1 byte       
         });
         // now, write out the commands
         wds.forEach(wd => {
-            if (wd.commands.length > 0) {
+            if (wd.commandsLen > 0) {
                 writeBufRaw(wd.commands, wd.commandsLen << 1);
             }
         });
@@ -320,12 +322,12 @@ namespace tileworld {
             let col = readBuf(4);
             let row = readBuf(4);
             let wd = new WhenDo(col, row,
-                    readBufRaw((bgLen >> 2)+1, (bgLen >> 2)+1),
-                    readBufRaw((spLen >> 2)+1, (spLen >> 2)+1), 
+                    readBufRaw((bgLen >> 2), (bgLen >> 2)),
+                    readBufRaw((spLen >> 2), (spLen >> 2)), 
                     -1, 
                     null);
+            wd.dir = readBuf(4);
             wd.commandsLen = readBuf(4);
-            readBuf(4);
             rule.whenDo.push(wd);
         }
         rule.whenDo.forEach(wd => {
@@ -335,6 +337,7 @@ namespace tileworld {
                 wd.commands = control.createBuffer(MaxCommands << 1);
             }
         });
+        console.logValue("bitIndexRead", bitIndex);
         return rule;
     }
 }
