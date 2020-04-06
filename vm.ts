@@ -151,7 +151,8 @@ namespace tileworld {
                 if (this.vm.queued.length > 0) {
                     let ts = this.vm.queued.pop();
                     if (ts.dir != Resting || this.restingWithChange(ts)) {
-                        // TODO: partition rules based on resting/moving
+                        // TODO: partition rules based on resting/moving and sprite kind
+                        // TODO: for more efficient lookup
                         return this.applyRules(RuleType.ContextChange,  ts);
                     }
                 } else {
@@ -392,8 +393,9 @@ namespace tileworld {
             return new RuleClosure(rid, ts, witnesses);
         }
 
-        private getWitness(kind: number, col: number, row: number, self: TileSprite) {
-            return this.vm.sprites[kind] && this.vm.sprites[kind].find(ts => ts != self && ts.col() == col && ts.row() == row);
+        private getWitness(kind: number, col: number, row: number) {
+            return this.vm.sprites[kind] && 
+                   this.vm.sprites[kind].find(ts => ts.col() == col && ts.row() == row);
         }
 
         private inBounds(col: number, row: number) {
@@ -407,7 +409,6 @@ namespace tileworld {
             let whendo = this.p.getWhenDo(rid, col, row);
             if (whendo == -1 || this.p.whendoTrue(rid, whendo))
                 return true;
-            let self = col == 2 && row == 2; 
             let wcol = ts.col() + (col - 2);
             let wrow = ts.row() + (row - 2);
             if (!this.inBounds(wcol, wrow))
@@ -430,7 +431,7 @@ namespace tileworld {
             let adjacent = Math.abs(2 - col) + Math.abs(2 - row) <= 1;
             for(let kind = 0; kind < this.p.spriteCnt(); kind++) {
                 let attr = this.p.getSetSpAttr(rid, whendo, kind);
-                let witness = this.getWitness(kind, wcol, wrow, self ? ts : null);
+                let witness = this.getWitness(kind, wcol, wrow);
                 // special case for collisions
                 if (this.p.getRuleType(rid) == RuleType.Collision) {
                     witness = witnesses[0].kind() == kind ? witnesses[0] : null;
