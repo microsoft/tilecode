@@ -360,28 +360,13 @@ namespace tileworld {
 
         public whendoTrue(rid: number, whendo: number) {
             let wd = this.getRule(rid).whenDo[whendo];
-            for(let i = 0; i< wd.bgPred.length; i++) {
-                if (wd.bgPred.getUint8(i)) return false;
-            }
-            for (let i = 0; i < wd.spPred.length; i++) {
-                if (wd.spPred.getUint8(i)) return false;
-            }
-            return true;
+            return isWhenDoTrue(wd);
         }
 
-        public allTrue(rid: number) {
-            for (let col = 0; col < 5; col++) {
-                for (let row = 0; row < 5; row++) {
-                    if (Math.abs(2 - col) + Math.abs(2 - row) > 2) {
-                        let whendo = this.getWhenDo(rid, col, row);
-                        if (whendo != -1 && !this.whendoTrue(rid, whendo))
-                            return false;
-                    }
-                }
-            }
-            return true;
+        public isRuleTrue(rid: number) {
+            return isRuleTrue(this.getRule(rid));
         }
-
+        
         // transformations
 
         public flipRule(rid: number, fr: FlipRotate) {

@@ -189,6 +189,30 @@ namespace tileworld {
         }
     }
 
+    // predicates
+    export function isWhenDoTrue(wd: WhenDo) {
+        for(let i = 0; i< wd.bgPred.length; i++) {
+            if (wd.bgPred.getUint8(i)) return false;
+        }
+        for (let i = 0; i < wd.spPred.length; i++) {
+            if (wd.spPred.getUint8(i)) return false;
+        }
+        return true;
+    }
+
+    export function isRuleTrue(r: Rule) {
+        for (let col = 0; col < 5; col++) {
+            for (let row = 0; row < 5; row++) {
+                if (Math.abs(2 - col) + Math.abs(2 - row) > 2) {
+                    let whendo = r.whenDo.find((wd) => wd.col == col && wd.row == row); 
+                    if (whendo && !isWhenDoTrue(whendo))
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
+
     let ruleBuf: Buffer = null
     let bitIndex = 0;
 
@@ -254,6 +278,7 @@ namespace tileworld {
 
     // pack things so that they'll be easy to read off
     export function packRule(r: Rule, bgLen: number, spLen: number) {
+        // determine vacuous whendo rules (predicate true, no commands)
         bitIndex = 0;
         let bytes = 2 + r.whenDo.length * (2 + ((bgLen >> 2)+1) + ((spLen >> 2)+1));
         for (let i = 0; i<r.whenDo.length; i++) {
@@ -298,9 +323,9 @@ namespace tileworld {
                     readBufRaw((spLen >> 2)+1, (spLen >> 2)+1), 
                     -1, 
                     null);
-            rule.whenDo.push(wd);
             wd.commandsLen = readBuf(4);
             readBuf(4);
+            rule.whenDo.push(wd);
         }
         rule.whenDo.forEach(wd => {
             if (wd.commandsLen > 0) {

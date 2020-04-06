@@ -97,7 +97,7 @@ namespace tileworld {
             }
             // populate indices for more efficient lookup
             this.rules.forEach(rid => {
-                if (this.p.isRestingRule(rid) && this.p.allTrue(rid))
+                if (this.p.isRestingRule(rid) && this.p.isRuleTrue(rid))
                     this.allTrueResting.push(rid);
                 else
                     this.ruleIndex[this.p.getRuleType(rid)].push(rid);
