@@ -253,6 +253,10 @@ namespace tileworld {
             this.collideRow = row - editorRow;
         }
 
+        protected centerImage() {
+            return this.p.getSpriteImage(this.kind);
+        }
+        
         private showMainMenu() {
             this.fillTile(0, 0, 11);
             this.drawImage(0, 0, code);
