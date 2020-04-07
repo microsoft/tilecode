@@ -147,7 +147,7 @@ namespace tileworld {
             return n & 0xff;
         }
 
-        public removeCommand(rid: number, wdid: number, cid: number) {
+        public removeCommand(wdid: number, cid: number) {
             let wd = this.r.whenDo[wdid];
             if (wd.commandsLen == 0 || cid >= wd.commandsLen)
                 return 0xff;
