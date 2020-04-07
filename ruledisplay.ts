@@ -21,8 +21,10 @@ namespace tileworld {
         }
 
         protected getKind() {
-            // TODO
-            return 0;
+            let kinds = this.rule.getSpriteKinds();
+            if (kinds.length > 0)
+                return kinds[0];
+            return -1;
         }
 
         protected centerImage() {
