@@ -11,18 +11,34 @@ namespace tileworld {
         constructor(p: Project, private baseRule: RuleView) {
             super(p, baseRule);
             this.setCol(0); this.setRow(0);
+            this.ruleViews = [];
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.row() == 0 && this.col() >=1 && this.col() <= 4) {
-
+                    let bit = 1 << (this.col()-1);
+                    let mask = bit ^ 0xf;
+                    let newval = this.rule.getTransforms() & bit ? 0x00 :bit;
+                    this.rule.setTransforms((this.rule.getTransforms() & mask) | newval);
+                    this.ruleViews = this.rule.getDerivedRules();
+                    this.update();
                 }
             });
         }
 
+        protected cursorMove(dir: MoveDirection, pressed: boolean) {
+            this.cursorToView()
+            this.update();
+        }
+
+        private cursorToView() {
+            if (this.row() == 0 && this.col() >= 1 && this.col() <= 4) {
+                let bit = 1 << (this.col() - 1);
+                let rule = this.ruleViews.find(rv => rv.getViewTransform() == bit);
+                this.rule = rule ? rule : this.baseRule;
+            }
+        }
+
         protected update() {
-            // show the options to apply to the base rule
-            // - horizontal mirror
-            // - vertical mirror
-            // - left/right rotate
+            super.update();
             let transforms = this.rule.getTransforms() 
             for (let bit = RuleTransforms.Begin, col = 1; bit != RuleTransforms.End; bit <<= 1, col++) {
                 this.drawImage(col, 0, transforms & bit ? genericSprite : collisionSprite);
@@ -117,7 +133,11 @@ namespace tileworld {
                             return;
                         } else if (this.col() == 6) {
                             this.askDeleteRule = true;                     
-                        } 
+                        } else if (this.col() == 5) {
+                            game.pushScene();
+                            new RuleViewDisplay(this.p, this.rule);
+                            return;
+                        }
                     } else if (this.col() > 5 && this.row() >= editorRow) {
                         this.tryEditCommand();
                     }

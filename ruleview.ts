@@ -30,8 +30,18 @@ namespace tileworld {
             return ret;
         }
 
+        public getViewTransform() {
+            if (this.rid == -1)
+                return this.view;
+            return -1;
+        }
+
         public getTransforms() {
             return this.r.transforms;
+        }
+
+        public setTransforms(n:number) {
+            this.r.transforms = n;
         }
 
         public getRuleId() {
