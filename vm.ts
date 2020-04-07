@@ -213,18 +213,18 @@ namespace tileworld {
             return rv.hasSpriteKind(ts.kind());
         }
 
-        private ruleMatchesDirection(rid: number, dir: number) {
-            let dirExpr = this.p.getDirFromRule(rid);
+        private ruleMatchesDirection(rv: RuleView, dir: number) {
+            let dirExpr = rv.getDirFromRule();
             return dirExpr == AnyDir || (dirExpr == Moving && dir != Resting) || (dirExpr == dir);
         }
 
         // apply matching rules to tileSprite, based on the phase we are in
-        private matchingRules(rules: number[], phase: RuleType, ts: TileSprite, handler: (rid: number) => void) {
-            rules.forEach(rid => {
-                if (this.ruleMatchesSprite(rid, ts) &&
-                    (phase == RuleType.ContextChange && this.ruleMatchesDirection(rid, ts.dir)
-                  || phase == RuleType.ButtonPress && this.dpad.indexOf(this.p.getRuleArg(rid)) != -1)) {
-                    handler(rid);
+        private matchingRules(rules: RuleView[], phase: RuleType, ts: TileSprite, handler: (rv: RuleView) => void) {
+            rules.forEach(rv => {
+                if (this.ruleMatchesSprite(rv, ts) &&
+                    (phase == RuleType.ContextChange && this.ruleMatchesDirection(rv, ts.dir)
+                  || phase == RuleType.ButtonPress && this.dpad.indexOf(rv.getRuleArg()) != -1)) {
+                    handler(rv);
                 }
             });
         }
@@ -232,8 +232,8 @@ namespace tileworld {
         private applyRules(phase: RuleType, ts: TileSprite) {
             let rules = this.ruleIndex[phase];
             let ruleClosures: RuleClosure[] = [];
-            this.matchingRules(rules, phase, ts, (rid) => {
-                let closure = this.evaluateRule(ts, rid);
+            this.matchingRules(rules, phase, ts, (rv) => {
+                let closure = this.evaluateRule(ts, rv);
                 if (closure)
                     ruleClosures.push(closure);
             });
@@ -241,8 +241,8 @@ namespace tileworld {
                 return ruleClosures;
             // now deal with pesky resting rules that have precondition == true
             // this is need because of change optimization
-            this.matchingRules(this.allTrueResting, phase, ts, (rid) => {
-                let closure = this.evaluateRule(ts, rid);
+            this.matchingRules(this.allTrueResting, phase, ts, (rv) => {
+                let closure = this.evaluateRule(ts, rv);
                 if (closure) {
                     ruleClosures.push(closure);
                 }
@@ -251,10 +251,10 @@ namespace tileworld {
         }
 
         // precondition: moving(ts)
-        private collidingRules(ts: TileSprite, handler: (rid: number) => void) {
-            this.ruleIndex[RuleType.Collision].forEach(rid => {
-                if (this.ruleMatchesSprite(rid, ts) && this.ruleMatchesDirection(rid,ts.arg)) {
-                    handler(rid);
+        private collidingRules(ts: TileSprite, handler: (rv: RuleView) => void) {
+            this.ruleIndex[RuleType.Collision].forEach(rv => {
+                if (this.ruleMatchesSprite(rv, ts) && this.ruleMatchesDirection(rv, ts.arg)) {
+                    handler(rv);
                 }
             });
         }
@@ -273,9 +273,9 @@ namespace tileworld {
             if (!this.moving(ts)) return rcs;
             let wcol = ts.col() + moveXdelta(ts.arg);
             let wrow = ts.row() + moveYdelta(ts.arg);
-            this.collidingRules(ts, (rid) => {
+            this.collidingRules(ts, (rv) => {
                 // T = (wcol, wrow)
-                let moving = !this.p.isCollidingResting(rid);
+                let moving = !rv.isCollidingResting();
                 // TODO: moving is a predicate on the sprite direction of the other sprite
                 this.allSprites(os => {
                     if (os == ts) return;
@@ -283,7 +283,7 @@ namespace tileworld {
                     if (os.col() == wcol && os.row() == wrow) {
                         if (!moving && !this.moving(os) || 
                                 moving && this.moving(os) && oppDir(ts.arg,os.arg)) {
-                            this.collide(rid, ts, os, rcs);
+                            this.collide(rv, ts, os, rcs);
                             return;
                         }
                     } else if (moving && this.moving(os)) {
@@ -291,20 +291,20 @@ namespace tileworld {
                         let osCol = wcol + moveXdelta(leftRotate);
                         let osRow = wrow + moveYdelta(leftRotate);
                         if (os.col() == osCol && os.row() == osRow && oppDir(leftRotate,os.arg)) {
-                            this.collide(rid, ts, os, rcs);
+                            this.collide(rv, ts, os, rcs);
                             return;
                         } 
                         let rightRotate = flipRotateDir(ts.arg, FlipRotate.Right);
                         osCol = wcol + moveXdelta(rightRotate);
                         osRow = wrow + moveYdelta(rightRotate);
                         if (os.col() == osCol && os.row() == osRow && oppDir(rightRotate, os.arg)) {
-                            this.collide(rid, ts, os, rcs);
+                            this.collide(rv, ts, os, rcs);
                             return;
                         }
                         osCol = wcol + moveXdelta(ts.arg);
                         osRow = wrow + moveYdelta(ts.arg);
                         if (os.col() == osCol && os.row() == osRow && oppDir(ts.arg, os.arg)) {
-                            this.collide(rid, ts, os, rcs);
+                            this.collide(rv, ts, os, rcs);
                             return;
                         }
                     }
@@ -313,13 +313,13 @@ namespace tileworld {
             return rcs;
         }
 
-        private collide(rid: number, ts: TileSprite, os: TileSprite, rcs: RuleClosure[]) {
+        private collide(rv: RuleView, ts: TileSprite, os: TileSprite, rcs: RuleClosure[]) {
             let wcol = ts.col() + moveXdelta(ts.arg);
             let wrow = ts.row() + moveYdelta(ts.arg);
             // we already have the witness
             let witnesses: TileSprite[] = [ os ];
-            if (this.evaluateWhenDo(ts, rid, 2+moveXdelta(ts.arg), 2+moveYdelta(ts.arg), witnesses)) {
-                rcs.push(new RuleClosure(rid, ts, witnesses));
+            if (this.evaluateWhenDo(ts, rv, 2+moveXdelta(ts.arg), 2+moveYdelta(ts.arg), witnesses)) {
+                rcs.push(new RuleClosure(rv, ts, witnesses));
             }
         }
 
@@ -378,19 +378,19 @@ namespace tileworld {
         // ---------------------------------------------------------------------
 
         // store the sprite witnesses identified by guards
-        private evaluateRule(ts: TileSprite, rid: number) {
+        private evaluateRule(ts: TileSprite, rv: RuleView) {
             let witnesses: TileSprite[] = [];
             for(let col = 0; col < 5; col++) {
                 for (let row = 0; row < 5; row++) {
                     if (Math.abs(2-col) + Math.abs(2-row) > 2)
                         continue;
-                    if (!this.evaluateWhenDo(ts, rid, col, row, witnesses))
+                    if (!this.evaluateWhenDo(ts, rv, col, row, witnesses))
                         return null;
                 }
             }
             // all the whendos passed and we've collected witnesses (other sprites)
             // so, we will execute the rule on the self sprite ts
-            return new RuleClosure(rid, ts, witnesses);
+            return new RuleClosure(rv, ts, witnesses);
         }
 
         private getWitness(kind: number, col: number, row: number) {
@@ -404,10 +404,10 @@ namespace tileworld {
         }
 
         // Include and OneOf are equivalent now
-        private evaluateWhenDo(ts: TileSprite, rid: number, 
+        private evaluateWhenDo(ts: TileSprite, rv: RuleView, 
                 col: number, row: number, witnesses: TileSprite[]) {
-            let whendo = this.p.getWhenDo(rid, col, row);
-            if (whendo == -1 || this.p.whendoTrue(rid, whendo))
+            let whendo = rv.getWhenDo(col, row);
+            if (whendo == -1 || rv.whendoTrue(whendo))
                 return true;
             let wcol = ts.col() + (col - 2);
             let wrow = ts.row() + (row - 2);
@@ -419,7 +419,7 @@ namespace tileworld {
             for(let kind = 0; kind < this.p.backCnt(); kind++) {
                 const tm = game.currentScene().tileMap;
                 let hasKind = tm.getTile(wcol, wrow).tileSet == kind;
-                let attr = this.p.getSetBgAttr(rid, whendo, kind);
+                let attr = rv.getSetBgAttr(whendo, kind);
                 if (attr == AttrType.Exclude && hasKind) {
                     return false;
                 } else if (attr == AttrType.Include) {
@@ -430,10 +430,10 @@ namespace tileworld {
             // TODO: fix this up to deal with self (or undo the mess)
             let adjacent = Math.abs(2 - col) + Math.abs(2 - row) <= 1;
             for(let kind = 0; kind < this.p.spriteCnt(); kind++) {
-                let attr = this.p.getSetSpAttr(rid, whendo, kind);
+                let attr = rv.getSetSpAttr(whendo, kind);
                 let witness = this.getWitness(kind, wcol, wrow);
                 // special case for collisions
-                if (this.p.getRuleType(rid) == RuleType.Collision) {
+                if (rv.getRuleType() == RuleType.Collision) {
                     witness = witnesses[0].kind() == kind ? witnesses[0] : null;
                 }
                 if (attr == AttrType.Exclude && witness) {
@@ -448,7 +448,7 @@ namespace tileworld {
             // collision case: if we made it through here then 
             // we have witness and oneOf is false, as expected
             let ret = !oneOf || oneOfPassed;
-            if (ret && captureWitness && this.p.getRuleType(rid) != RuleType.Collision) {
+            if (ret && captureWitness && rv.getRuleType() != RuleType.Collision) {
                 witnesses.push(captureWitness);
             }
             return ret;
@@ -465,16 +465,16 @@ namespace tileworld {
         }
 
         private evaluateWhenDoCommands(rc: RuleClosure, col: number, row: number) {
-            let wid = this.p.getWhenDo(rc.rid, col, row);
-            if (wid == -1 || this.p.getCmdInst(rc.rid, wid, 0) == -1)
+            let wid = rc.rv.getWhenDo(col, row);
+            if (wid == -1 || rc.rv.getCmdInst(wid, 0) == -1)
                 return;
             let wcol = rc.self.col() + (col - 2);
             let wrow = rc.self.row() + (row - 2);
             let self = col == 2 && row == 2;
             for (let cid = 0; cid < 4; cid++) {
-                let inst = this.p.getCmdInst(rc.rid, wid, cid);
+                let inst = rc.rv.getCmdInst(wid, cid);
                 if (inst == -1) break;
-                let arg = this.p.getCmdArg(rc.rid, wid, cid);
+                let arg = rc.rv.getCmdArg(wid, cid);
                 switch(inst) {
                     case CommandType.Paint: {
                         if (this.vm.nextWorld.getPixel(wcol, wrow) == 0xf) {
@@ -487,8 +487,8 @@ namespace tileworld {
                         break;
                     }
                     case CommandType.Move: {
-                        let colliding = this.p.getRuleType(rc.rid) == RuleType.Collision;
-                        let button = this.p.getRuleType(rc.rid) == RuleType.ButtonPress;
+                        let colliding = rc.rv.getRuleType() == RuleType.Collision;
+                        let button = rc.rv.getRuleType() == RuleType.ButtonPress;
                         let witness = self ? rc.self : 
                                 (colliding ? rc.witnesses[0]
                                     : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow));
@@ -502,7 +502,7 @@ namespace tileworld {
                         // the witness is found where expected
                         let witness = rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
                         // except in the case of collisions with moving sprites
-                        if (this.p.getRuleType(rc.rid) == RuleType.Collision) {
+                        if (rc.rv.getRuleType() == RuleType.Collision) {
                             // TODO: moving against moving only here...
                             witness = rc.witnesses[0];
                         }
