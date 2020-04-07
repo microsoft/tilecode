@@ -11,6 +11,7 @@
         "manual.md",
         "utilities.ts",
         "rule.ts",
+        "ruleview.ts",
         "project.ts",
         "sprites.ts",
         "vm.ts",
