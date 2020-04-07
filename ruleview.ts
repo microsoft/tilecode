@@ -1,11 +1,27 @@
 namespace tileworld {
     
     export class RuleView {
+        private view: RuleTransforms = RuleTransforms.None;
         constructor(private p: Project, private rid: number, private r: Rule) {
         }
 
         public getBaseRule() {
             return this.r;
+        }
+
+        public getDerivedRules() {
+            let ret: RuleView[] = [];
+            if (this.r.transforms = RuleTransforms.None)
+                return ret;
+            
+            for (let bit = RuleTransforms.Begin; bit != RuleTransforms.End; bit = bit << 1) {
+                if (this.r.transforms & bit) {
+                    let rv = new RuleView(this.p, -1, this.r);
+                    rv.view = bit;
+                    ret.push(rv);
+                }
+            }     
+            return ret;
         }
 
         public getRuleId() {
@@ -171,11 +187,6 @@ namespace tileworld {
             return isRuleTrue(this.r);
         }
 
-        // transformations
-        // TODO: options:
-        // 1. deeply imbed as as rule view via default parameter (so you can see in editor)
-        // 2. new rule, but in memory only
-        // 3. new rules, stored in flash, with lock/unlock
         public flipRule(fr: FlipRotate) {
             // transforms
             // - ButtonArg and Witness Dir: flipRotateDir(this.getDir(rid), fr));

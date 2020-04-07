@@ -99,14 +99,15 @@ class WhenDo {
     ) { }
 }
 
-enum RuleViews { Single, Mirrored, FourWay };
+// Horizontal and Vertical are mutually exclusive
+enum RuleTransforms { None=0, Begin=0x1, HorzMirror=0x1, VertMirror=0x2, LeftRotate=0x4, RightRotate=0x8, End=0x10 };
 
 class Rule {
     constructor( 
         public ruleType: RuleType,  // the type of rule
         public ruleArg: number,     // rule argument
         public whenDo: WhenDo[],    // guarded commands
-        public view: RuleViews = RuleViews.Single
+        public transforms: RuleTransforms = RuleTransforms.None
     ) { }
 }
 
@@ -269,7 +270,7 @@ namespace tileworld {
         ruleBuf = control.createBuffer(bytes);
         writeBuf(r.ruleType, 4);
         writeBuf(r.ruleArg, 4);
-        writeBuf(r.view, 4);
+        writeBuf(r.transforms, 4);
         writeBuf(wds.length, 4);    // 2 bytes
         wds.forEach(wd => {
             writeBuf(wd.col, 4);
