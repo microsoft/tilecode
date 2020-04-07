@@ -28,6 +28,10 @@ namespace tileworld {
             return 0;
         }
         
+        protected centerImage() {
+            return ok;
+        }
+
         protected getDirectionImage() {
             let dir = this.rule.getDirFromRule();
             // TODO: need an image for Resting, Moving and AnyDir
@@ -444,10 +448,6 @@ namespace tileworld {
             } else {
                 this.cursor.setFlag(SpriteFlag.Invisible, false);
             }
-        }
-
-        protected centerImage() {
-            return ok; // this.p.getSpriteImage(this.kind);
         }
         
         private showMainMenu() {
