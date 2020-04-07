@@ -1,5 +1,10 @@
 namespace tileworld {
     
+
+        // transforms
+        // - ButtonArg and Witness Dir: flipRotateDir(this.getDir(rid), fr));
+        // - argument  this.setArg(tgtRule, tgtWhenDo, c, inst == CommandType.Move ? flipRotateDir(arg,fr): arg);
+
     export class RuleView {
         private view: RuleTransforms = RuleTransforms.None;
         constructor(private p: Project, private rid: number, private r: Rule) {
@@ -11,16 +16,19 @@ namespace tileworld {
 
         public getDerivedRules() {
             let ret: RuleView[] = [];
-            if (this.r.transforms = RuleTransforms.None)
+            if (this.r.transforms == RuleTransforms.None)
                 return ret;
             
-            for (let bit = RuleTransforms.Begin; bit != RuleTransforms.End; bit = bit << 1) {
+            // create a new rule view for each bit that is set
+            for (let bit = RuleTransforms.Begin; bit != RuleTransforms.End; bit <<= 1) {
                 if (this.r.transforms & bit) {
                     let rv = new RuleView(this.p, -1, this.r);
-                    rv.view = bit;
+                    rv.view = bit == RuleTransforms.LeftRotate ? RuleTransforms.RightRotate : 
+                                (bit == RuleTransforms.RightRotate ? RuleTransforms.LeftRotate: bit);
                     ret.push(rv);
                 }
-            }     
+            }
+
             return ret;
         }
 
@@ -37,7 +45,8 @@ namespace tileworld {
         }
 
         public getRuleArg() {
-            return this.r.ruleArg;
+            return this.rid != -1 ? this.r.ruleArg : 
+                this.r.ruleType == RuleType.ButtonPress ? flipRotateDir(this.r.ruleArg, this.view) : this.r.ruleArg;
         }
 
         public setRuleArg(ra: RuleArg) {
@@ -45,6 +54,10 @@ namespace tileworld {
         }
 
         public getWhenDo(col: number, row: number) {
+            if (this.rid == -1) {
+                col = transformCol(col, row, this.view);
+                row = transformRow(row, col, this.view);
+            }
             let whendo = this.r.whenDo.find(wd => wd.col == col && wd.row == row);
             if (whendo == null)
                 return -1;
@@ -83,7 +96,7 @@ namespace tileworld {
         }
 
         public getWitnessDirection(wdid: number) {
-            return this.r.whenDo[wdid].dir;
+            return this.rid != -1 ? this.r.whenDo[wdid].dir : flipRotateDir(this.r.whenDo[wdid].dir, this.view);
         }
 
         public setWitnessDirection(wdid: number, val:number) {
@@ -103,7 +116,11 @@ namespace tileworld {
         public getCmdArg(wdid: number, cid: number) {
             let wd = this.r.whenDo[wdid];
             if (cid >= wd.commandsLen) return 0xff;
-            return wd.commands.getUint8((cid << 1)+1);
+            let arg = wd.commands.getUint8((cid << 1)+1);
+            if (this.rid == -1 && this.getCmdInst(wdid, cid) == CommandType.Move) {
+                arg = flipRotateDir(arg, this.view)
+            }
+            return arg;        
         }
 
         public setCmdInst(wdid: number, cid: number, n: number) {
@@ -185,14 +202,6 @@ namespace tileworld {
 
         public isRuleTrue() {
             return isRuleTrue(this.r);
-        }
-
-        public flipRule(fr: FlipRotate) {
-            // transforms
-            // - ButtonArg and Witness Dir: flipRotateDir(this.getDir(rid), fr));
-            // - WhenDo coordinate: let tgtWhenDo = this.makeWhenDo(tgtRule, transformCol(col, row, fr), 
-            //                                           transformRow(row, col, fr));
-            // - argument  this.setArg(tgtRule, tgtWhenDo, c, inst == CommandType.Move ? flipRotateDir(arg,fr): arg);
         }
     }
 }

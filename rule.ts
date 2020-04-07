@@ -113,8 +113,6 @@ class Rule {
 
 // transform: FlipRotate of rule with different id
 
-enum FlipRotate { Horizontal, Vertical, Left, Right };
-
 namespace tileworld {
 
     export function makeNewRule(rt: RuleType, ra: RuleArg): Rule {
@@ -134,13 +132,14 @@ namespace tileworld {
     }
 
     // ---------------------------------------------------------------------------
+    // rule transforms
 
-    export function flipRotateDir(d: MoveDirection, fr: FlipRotate) {
-        if (fr == FlipRotate.Horizontal) {
+    export function flipRotateDir(d: MoveDirection, rt: RuleTransforms) {
+        if (rt == RuleTransforms.HorzMirror) {
             return d == MoveDirection.Left ? MoveDirection.Right : d == MoveDirection.Right ? MoveDirection.Left : d;
-        } else if (fr == FlipRotate.Vertical) {
+        } else if (rt == RuleTransforms.VertMirror) {
             return d == MoveDirection.Up ? MoveDirection.Down : d == MoveDirection.Down ? MoveDirection.Up : d;
-        } else if (fr == FlipRotate.Left) {
+        } else if (rt == RuleTransforms.LeftRotate) {
             return d == 0 ? 3 : d - 1;
         } else {
             return (d + 1) % 4;
@@ -148,27 +147,28 @@ namespace tileworld {
         return d;
     }
 
-    export function transformCol(col: number, row: number, fr: FlipRotate) {
-        if (fr == FlipRotate.Horizontal || fr == FlipRotate.Vertical)
-            return fr == FlipRotate.Horizontal ? 4 - col : col;
+    export function transformCol(col: number, row: number, rt: RuleTransforms) {
+        if (rt == RuleTransforms.HorzMirror || rt == RuleTransforms.VertMirror)
+            return rt == RuleTransforms.HorzMirror ? 4 - col : col;
         else {
             // make (0,0) center for rotation
             row = 2 - row;
-            return fr == FlipRotate.Left ? (-row) + 2 : row + 2;
+            return rt == RuleTransforms.LeftRotate ? (-row) + 2 : row + 2;
         }
     }
 
-    export function transformRow(row: number, col: number, fr: FlipRotate) {
-        if (fr == FlipRotate.Horizontal || fr == FlipRotate.Vertical)
-            return fr == FlipRotate.Horizontal ? row : 4 - row;
+    export function transformRow(row: number, col: number, rt: RuleTransforms) {
+        if (rt == RuleTransforms.HorzMirror || rt == RuleTransforms.VertMirror)
+            return rt == RuleTransforms.HorzMirror ? row : 4 - row;
         else {
             col = col - 2;
-            return fr == FlipRotate.Left ? (-col) + 2 : col + 2;
+            return rt == RuleTransforms.LeftRotate ? (-col) + 2 : col + 2;
         }
     }
 
     // ---------------------------------------------------------------------------
     // rule predicates
+
     export function isWhenDoTrue(wd: WhenDo) {
         for(let i = 0; i< wd.bgPred.length; i++) {
             if (wd.bgPred.getUint8(i)) return false;
@@ -258,7 +258,6 @@ namespace tileworld {
         return b;
     }
 
-    // pack things so that they'll be easy to read off
     export function packRule(r: Rule, bgLen: number, spLen: number) {
         // determine vacuous whendo rules (predicate true, no commands)
         let wds = r.whenDo.filter(wd => wd.commandsLen > 0 || !isWhenDoTrue(wd));
@@ -289,7 +288,6 @@ namespace tileworld {
         return ruleBuf;
     }
 
-    // fully unpack
     export function unPackRule(buf: Buffer, bgLen: number, spLen: number) {
         ruleBuf = buf;
         bitIndex = 0;

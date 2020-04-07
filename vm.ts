@@ -287,14 +287,14 @@ namespace tileworld {
                             return;
                         }
                     } else if (moving && this.moving(os)) {
-                        let leftRotate = flipRotateDir(ts.arg, FlipRotate.Left);
+                        let leftRotate = flipRotateDir(ts.arg, RuleTransforms.LeftRotate);
                         let osCol = wcol + moveXdelta(leftRotate);
                         let osRow = wrow + moveYdelta(leftRotate);
                         if (os.col() == osCol && os.row() == osRow && oppDir(leftRotate,os.arg)) {
                             this.collide(rv, ts, os, rcs);
                             return;
                         } 
-                        let rightRotate = flipRotateDir(ts.arg, FlipRotate.Right);
+                        let rightRotate = flipRotateDir(ts.arg, RuleTransforms.RightRotate);
                         osCol = wcol + moveXdelta(rightRotate);
                         osRow = wrow + moveYdelta(rightRotate);
                         if (os.col() == osCol && os.row() == osRow && oppDir(rightRotate, os.arg)) {
