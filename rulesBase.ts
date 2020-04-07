@@ -90,8 +90,8 @@ namespace tileworld {
 
         protected okToMove() { return true; }
 
-        protected getRulesForTypeDir(rules: number[], rt: RuleType, dir: MoveDirection) {
-            return rules.filter(rid => this.p.getRuleType(rid) == rt && this.p.getDirFromRule(rid) == dir);
+        protected getRulesForTypeDir(rules: RuleView[], rt: RuleType, dir: MoveDirection) {
+            return rules.filter(rv => rv.getRuleType() == rt && rv.getDirFromRule() == dir);
         }
       
         protected setCol(col: number) {

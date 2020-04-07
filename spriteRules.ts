@@ -87,7 +87,7 @@ namespace tileworld {
             this.dirMap.setPixel(col, row, rd);
         }
 
-        private rules: number[];
+        private rules: RuleView[];
         private doBoth(rt: RuleType, rd: number, col: number, row: number, center: boolean = true) {
             let scol = 13;
             let rules = this.getRulesForTypeDir(this.rules, rt, rd);

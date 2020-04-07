@@ -379,6 +379,9 @@ namespace tileworld {
             return newRule;
         }
     
+        public getRulesForSpriteKind(kind: number) {
+            return this.rules.filter(rv => rv.hasSpriteKind(kind));
+        }
     }
 
     const toHex = "0123456789abcdef";
