@@ -1,10 +1,8 @@
 namespace tileworld {
     
-
-        // transforms
-        // - ButtonArg and Witness Dir: flipRotateDir(this.getDir(rid), fr));
-        // - argument  this.setArg(tgtRule, tgtWhenDo, c, inst == CommandType.Move ? flipRotateDir(arg,fr): arg);
-
+    // a rule view encapsulates a rule and allows editing of the rule
+    // as well as creating views of the underlying rule, where the
+    // views are mirrors or rotates of the underlying rule
     export class RuleView {
         private view: RuleTransforms = RuleTransforms.None;
         constructor(private p: Project, private rid: number, private r: Rule) {
