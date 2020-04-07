@@ -17,6 +17,7 @@
         "vm.ts",
         "imageeditor.ts",
         "rulesBase.ts",
+        "ruledisplay.ts",
         "spriteRules.ts",
         "debugger.ts",
         "ruleeditor.ts",
