@@ -19,6 +19,7 @@ namespace tileworld {
                     let newval = this.rule.getTransforms() & bit ? 0x00 :bit;
                     this.rule.setTransforms((this.rule.getTransforms() & mask) | newval);
                     this.ruleViews = this.rule.getDerivedRules();
+                    this.cursorToView();
                     this.update();
                 }
             });
@@ -34,6 +35,8 @@ namespace tileworld {
                 let bit = 1 << (this.col() - 1);
                 let rule = this.ruleViews.find(rv => rv.getViewTransform() == bit);
                 this.rule = rule ? rule : this.baseRule;
+            } else {
+                this.rule = this.baseRule;
             }
         }
 
@@ -41,7 +44,7 @@ namespace tileworld {
             super.update();
             let transforms = this.rule.getTransforms() 
             for (let bit = RuleTransforms.Begin, col = 1; bit != RuleTransforms.End; bit <<= 1, col++) {
-                this.drawImage(col, 0, transforms & bit ? genericSprite : collisionSprite);
+                this.drawImage(col, 0, transforms & bit ? collisionSprite : genericSprite);
             }
         }
     }
