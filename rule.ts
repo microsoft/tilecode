@@ -269,8 +269,8 @@ namespace tileworld {
         ruleBuf = control.createBuffer(bytes);
         writeBuf(r.ruleType, 4);
         writeBuf(r.ruleArg, 4);
-        writeBuf(wds.length, 4);
-        writeBuf(0, 4);                         // 2 bytes
+        writeBuf(r.view, 4);
+        writeBuf(wds.length, 4);    // 2 bytes
         wds.forEach(wd => {
             writeBuf(wd.col, 4);
             writeBuf(wd.row, 4);                // + 1 byte
@@ -294,9 +294,9 @@ namespace tileworld {
         bitIndex = 0;
         let rt = readBuf(4);
         let ra = readBuf(4);
-        let rule = new Rule(rt, ra, []);
+        let rv = readBuf(4);
+        let rule = new Rule(rt, ra, [], rv);
         let whenDoLen = readBuf(4);
-        readBuf(4);
         for(let i = 0; i<whenDoLen; i++) {
             let col = readBuf(4);
             let row = readBuf(4);
