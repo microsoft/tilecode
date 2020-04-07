@@ -23,9 +23,10 @@ namespace tileworld {
             this.update();
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.col() == 0) {
-                    if (this.row() == 0 && this.p.getRulesForSpriteKind(this.kind).length > 0) {
+                    let rules = this.p.getRulesForSpriteKind(this.kind);
+                    if (this.row() == 0 && rules.length > 0) {
                         game.pushScene();
-                        new RuleEditor(this.p, this.kind, -1, -1);
+                        new RuleEditor(this.p, rules[0]);
                     } else if (this.row() >= 1 && this.row() <= this.p.spriteCnt()) {
                         this.kind = this.row() - 1;
                         this.setTileSaved();
@@ -35,8 +36,12 @@ namespace tileworld {
                     let rt = this.ruleTypeMap.getPixel(this.col(), this.row());
                     let dir = this.dirMap.getPixel(this.col(), this.row());
                     if (rt != 0xf) {
+                        let rules = this.p.getRulesForSpriteKind(this.kind);
+                        if (rules.length == 0) {
+                            rules.push(this.p.makeRule(rt, dir, this.kind));
+                        }
                         game.pushScene();
-                        new RuleEditor(this.p, this.kind, rt, dir);
+                        new RuleEditor(this.p, rules[0]);
                     }
                 }
             });

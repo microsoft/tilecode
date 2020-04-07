@@ -18,16 +18,11 @@ namespace tileworld {
         private currentCommand: number; // the current command (potentially null)
         private askDeleteRule: boolean;
         
-        constructor(p: Project, kind: number, rt: RuleType, dir: MoveDirection) {
-            super(p, kind);
+        constructor(p: Project, rule: RuleView) {
+            super(p, rule);
 
             this.setCol(0); this.setRow(0);
 
-            let rules = this.currentRules();
-            if (rules.length == 0) {
-                rules.push(p.makeRule(rt, dir, kind));
-            }
-            this.rule = rules[0];
             this.askDeleteRule = false;
 
             // attribute menu view

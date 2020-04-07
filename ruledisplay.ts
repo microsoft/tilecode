@@ -5,10 +5,9 @@ namespace tileworld {
     export const editorRow = 2;
     
     export class RuleDisplay extends RuleVisualsBase {
-        protected rule: RuleView;           // the current rule
         protected all: AllExport;
 
-        constructor(p: Project, private kind: number) {
+        constructor(p: Project, protected rule: RuleView) {
             super(p);
             this.all = new AllExport(p);
         }
@@ -22,7 +21,8 @@ namespace tileworld {
         }
 
         protected getKind() {
-            return this.kind;
+            // TODO
+            return 0;
         }
 
         protected centerImage() {
