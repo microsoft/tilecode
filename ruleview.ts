@@ -30,6 +30,10 @@ namespace tileworld {
             return ret;
         }
 
+        public getTransforms() {
+            return this.r.transforms;
+        }
+
         public getRuleId() {
             return this.rid;
         }
@@ -51,6 +55,17 @@ namespace tileworld {
             this.r.ruleArg = ra;
         }
 
+        public getDirFromRule() {
+            let rt = this.getRuleType();
+            if (rt == RuleType.Collision || rt == RuleType.ContextChange) {
+                let wd = this.getWhenDo(2, 2);
+                return wd == -1 ? -1 : this.getWitnessDirection(wd);
+            } else if (rt == RuleType.ButtonPress) {
+                return this.getRuleArg();
+            }
+            return -1;
+        }
+        
         public getWhenDo(col: number, row: number) {
             if (this.rid == -1) {
                 col = transformCol(col, row, this.view);
@@ -152,6 +167,8 @@ namespace tileworld {
             return wd.commandsLen;
         }
 
+        // predicates/misc info
+
         public getSpriteKinds() {
             let wd = this.getWhenDo(2, 2);
             let ret: number[] = [];
@@ -168,17 +185,6 @@ namespace tileworld {
             return wd == -1 ?  false : this.getSetSpAttr(wd, kind) == AttrType.Include
         }
 
-        public getDirFromRule() {
-            let rt = this.getRuleType();
-            if (rt == RuleType.Collision || rt == RuleType.ContextChange) {
-                let wd = this.getWhenDo(2, 2);
-                return wd == -1 ? -1 : this.getWitnessDirection(wd);
-            } else if (rt == RuleType.ButtonPress) {
-                return this.getRuleArg();
-            }
-            return -1;
-        }
-
         public isRestingRule() {
             return this.getRuleType() == RuleType.ContextChange && this.getDirFromRule() == Resting;
         }
@@ -190,8 +196,6 @@ namespace tileworld {
             }
             return false;  
         }
-
-        // predicates
 
         public whendoTrue(whendo: number) {
             let wd = this.r.whenDo[whendo];

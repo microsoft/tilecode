@@ -6,6 +6,30 @@ namespace tileworld {
     const menuHelpString = "10map,20play,30debug,60delete rule,80add rule,90next rule,70previous rule,";
     const attrHelpString = "00include,10exclude,90reset,";
 
+    export class RuleViewDisplay extends RuleDisplay {
+        private ruleViews: RuleView[];
+        constructor(p: Project, private baseRule: RuleView) {
+            super(p, baseRule);
+            this.setCol(0); this.setRow(0);
+            controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
+                if (this.row() == 0 && this.col() >=1 && this.col() <= 4) {
+
+                }
+            });
+        }
+
+        protected update() {
+            // show the options to apply to the base rule
+            // - horizontal mirror
+            // - vertical mirror
+            // - left/right rotate
+            let transforms = this.rule.getTransforms() 
+            for (let bit = RuleTransforms.Begin, col = 1; bit != RuleTransforms.End; bit <<= 1, col++) {
+                this.drawImage(col, 0, transforms & bit ? genericSprite : collisionSprite);
+            }
+        }
+    }
+
     export class RuleEditor extends RuleDisplay {
         private otherCursor: Sprite;    // show correspondence between left and right
 
