@@ -139,7 +139,7 @@ namespace tileworld {
         protected showRuleType(rt: RuleType, rd: MoveRest, x: number, y: number, center: boolean = true) {
             let selCol = 11;
             if (center) this.drawImage(x, y, this.centerImage());
-            if (rt == RuleType.ContextChange && rd != Resting) {
+            if (rt == RuleType.ContextChange) {
                 this.drawImage(x, y, movedImages[rd])
             } else if (rt == RuleType.Collision) {
                 let ax = rd == MoveDirection.Left ? 1 : (rd == MoveDirection.Right ? -1 : 0)

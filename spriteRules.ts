@@ -37,11 +37,12 @@ namespace tileworld {
                     let dir = this.dirMap.getPixel(this.col(), this.row());
                     if (rt != 0xf) {
                         let rules = this.p.getRulesForSpriteKind(this.kind);
-                        if (rules.length == 0) {
-                            rules.push(this.p.makeRule(rt, dir, this.kind));
+                        let filteredRules = this.getRulesForTypeDir(rules, rt, dir);
+                        if (filteredRules.length == 0) {
+                            filteredRules.push(this.p.makeRule(rt, dir, this.kind));
                         }
                         game.pushScene();
-                        new RuleEditor(this.p, rules[0]);
+                        new RuleEditor(this.p, filteredRules[0]);
                     }
                 }
             });
