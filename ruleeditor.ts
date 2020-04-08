@@ -267,11 +267,6 @@ namespace tileworld {
         private showMainMenu() {
             this.fillTile(0, 0, 11);
             this.drawImage(0, 0, code);
-            if (this.getType() == RuleType.ButtonPress) {
-                let image = this.getDirectionImage();
-                if (image)
-                    this.drawImage(0, 3, image);
-            }
             this.drawImage(1, 0, map);
             this.drawImage(2, 0, play);
             this.drawImage(3, 0, debug);

@@ -59,6 +59,11 @@ namespace tileworld {
             this.showRuleType(this.rule.getRuleType(), this.rule.getDirFromRule(), 2, 2 + editorRow);
             this.makeContext();
             this.showCommands();
+            if (this.getType() == RuleType.ButtonPress) {
+                let image = this.getDirectionImage();
+                if (image)
+                    this.drawImage(0, 3, image);
+            }
         }
 
         private makeContext() {
