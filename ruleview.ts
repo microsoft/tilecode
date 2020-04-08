@@ -82,8 +82,10 @@ namespace tileworld {
         
         public getWhenDo(col: number, row: number) {
             if (this.rid == -1) {
-                col = transformCol(col, row, this.rawView());
-                row = transformRow(row, col, this.rawView());
+                let ncol = transformCol(col, row, this.rawView());
+                let nrow = transformRow(row, col, this.rawView());
+                col = ncol;
+                row = nrow;
             }
             let whendo = this.r.whenDo.find(wd => wd.col == col && wd.row == row);
             if (whendo == null)
