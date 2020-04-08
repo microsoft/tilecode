@@ -145,6 +145,17 @@ namespace tileworld {
             return cid;
         }
 
+        // TODO: this should be moved into RuleView
+        protected findWitnessColRow(col: number, row: number): number {
+            let whendo = this.rule.getWhenDo(col, row);
+            if (whendo == -1)
+                return -1;
+            let index = this.attrIndex(whendo, AttrType.Include, 0);
+            if (index == -1 || index < this.p.backCnt())
+                return -1;
+            return index - this.p.backCnt();
+        }
+
         private showCommand(col: number, row: number,
             whendo: number, cid: number, tokens: number[],
             draw: boolean) {
@@ -158,16 +169,6 @@ namespace tileworld {
                 col++;
             }
             return col;
-        }
-
-        private findWitnessColRow(col: number, row: number): number {
-            let whendo = this.rule.getWhenDo(col, row);
-            if (whendo == -1)
-                return -1;
-            let index = this.attrIndex(whendo, AttrType.Include, 0);
-            if (index == -1 || index < this.p.backCnt())
-                return -1;
-            return index - this.p.backCnt();
         }
 
         // what instructions are possible, given rule type and witness

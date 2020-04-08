@@ -156,9 +156,13 @@ namespace tileworld {
                     } else if (this.row() >= editorRow) {
                         if (this.col() > 5) {
                             this.tryEditCommand();
-                        } else if (this.col() == 5) {
-                            this.menu = RuleEditorMenus.DirExprMenu;
-                            this.setTileSaved();
+                        } else if (this.col() == 5 && this.row() < editorRow + 5) {
+                            let col = this.rowToColCoord(this.row()-editorRow);
+                            let row = this.rowToRowCoord(this.row()-editorRow);
+                            if (this.findWitnessColRow(col, row) != -1) {
+                                this.menu = RuleEditorMenus.DirExprMenu;
+                                this.setTileSaved();
+                            }
                         }
                     }
                 }
