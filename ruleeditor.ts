@@ -157,10 +157,11 @@ namespace tileworld {
                         if (this.col() > 5) {
                             this.tryEditCommand();
                         } else if (this.col() == 5 && this.row() < editorRow + 5) {
-                            let col = this.rowToColCoord(this.row()-editorRow);
-                            let row = this.rowToRowCoord(this.row()-editorRow);
+                            let col = this.rowToColCoord(this.row() - editorRow);
+                            let row = this.rowToRowCoord(this.row() - editorRow);
                             if (this.findWitnessColRow(col, row) != -1) {
                                 this.menu = RuleEditorMenus.DirExprMenu;
+                                this.whenDo = this.rule.getWhenDo(col, row);
                                 this.setTileSaved();
                             }
                         }
@@ -509,6 +510,7 @@ namespace tileworld {
             movedImages.forEach((img, i) => {
                 this.drawImage(i, 0, img);
             });
+            this.drawImage(this.rule.getWitnessDirection(this.whenDo), 0, cursorOut);
         }
 
     }
