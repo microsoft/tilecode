@@ -140,7 +140,7 @@ namespace tileworld {
         } else if (rt == RuleTransforms.VertMirror) {
             return d == MoveDirection.Up ? MoveDirection.Down : d == MoveDirection.Down ? MoveDirection.Up : d;
         } else if (rt == RuleTransforms.LeftRotate) {
-            return d == 0 ? 3 : d - 1;
+            return (d + 3) % 4
         } else {
             return (d + 1) % 4;
         }
