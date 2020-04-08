@@ -172,7 +172,7 @@ namespace tileworld {
         // what is ordering of sprites?
         // (0,0) always first
         private findWitnessColRow(col: number, row: number): number {
-            if (col == 2 && row == 2) return this.getKind();
+            if (col == 2 && row == 2) return this.getKind() + this.p.backCnt();
             return this.findWitnessWhenDo(this.rule.getWhenDo(col, row));
         }
 
