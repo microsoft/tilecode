@@ -792,7 +792,7 @@ export const trophyDown = img`
 `;
 
 export const moveImages = [leftArrow, upArrow, rightArrow, downArrow, stopSign, uTurn];
-export const movedImages = [leftArrowOutline, upArrowOutline, rightArrowOutline, downArrowOutline, restingOutline, allFourOutline];
+export const movedImages = [leftArrowOutline, upArrowOutline, rightArrowOutline, downArrowOutline, restingOutline, allFourOutline, ok];
 export const moveText = ["left", "up", "right", "down", "stop", "u-turn"];
 export const buttonImages = [leftButton, upButton, rightButton, downButton, AButton];
 export const attrImages = [include, exclude, ok, include];

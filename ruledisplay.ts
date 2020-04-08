@@ -33,9 +33,6 @@ namespace tileworld {
 
         protected getDirectionImage() {
             let dir = this.rule.getDirFromRule();
-            // TODO: need an image for Resting, Moving and AnyDir
-            if (dir == Resting)
-                return null;
             return this.getType() == RuleType.ButtonPress ? buttonImages[dir] : moveImages[dir];
         }
 
@@ -119,12 +116,16 @@ namespace tileworld {
         protected tokens: number[];
         protected showCommandsAt(crow: number, wcol: number, wrow: number, draw: boolean = true) {
             if (draw) {
-                let index = this.findWitnessColRow(wcol, wrow);
+                let kind = this.findWitnessColRow(wcol, wrow);
                 let img1 = this.collideCol == wcol && this.collideRow == wrow ? collisionSprite : genericSprite;
-                let img2 = index == -1 ? img1 : this.all.getImage(index);
+                let img2 = kind == -1 ? img1 : this.p.getSpriteImage(kind);
                 this.drawImage(5, crow + editorRow, img2);
                 if (img1 == collisionSprite)
                     this.drawImage(5, crow + editorRow, img1);
+                if (kind != -1) {
+                    let whendo = this.rule.getWhenDo(wcol, wrow);
+                    this.drawImage(5, crow + editorRow, movedImages[this.rule.getWitnessDirection(whendo)])
+                }
             }
             // show the existing commands
             let whendo = this.rule.getWhenDo(wcol, wrow);
@@ -159,21 +160,14 @@ namespace tileworld {
             return col;
         }
 
-        private posSpritePosition(whendo: number, begin: number) {
-            return this.attrIndex(whendo, AttrType.Include, begin);
-        }
-
-        private findWitnessWhenDo(whendo: number) {
+        private findWitnessColRow(col: number, row: number): number {
+            let whendo = this.rule.getWhenDo(col, row);
             if (whendo == -1)
                 return -1;
-            return this.posSpritePosition(whendo, this.p.backCnt());
-        }
-
-        // what is ordering of sprites?
-        // (0,0) always first
-        private findWitnessColRow(col: number, row: number): number {
-            if (col == 2 && row == 2) return this.getKind() + this.p.backCnt();
-            return this.findWitnessWhenDo(this.rule.getWhenDo(col, row));
+            let index = this.attrIndex(whendo, AttrType.Include, 0);
+            if (index == -1 || index < this.p.backCnt())
+                return -1;
+            return index - this.p.backCnt();
         }
 
         // what instructions are possible, given rule type and witness
@@ -204,6 +198,7 @@ namespace tileworld {
                 if (index != -1) {
                     this.drawImage(col, row + editorRow, this.all.getImage(index));
                 }
+                // show attributes
                 let begin = 0;
                 let end = this.p.allCnt() - 1;
                 let project = this.projectAttrs(whenDo, begin, end);
@@ -212,6 +207,10 @@ namespace tileworld {
                     let i = attrValues.indexOf(a);
                     screen.drawTransparentImage(attrImages[i], (col << 4) + 8 + attrXoffsets[i], ((row + editorRow) << 4) + 8 + yoff + attrYoffsets[i]);
                 });
+                // show direction 
+                if (this.findWitnessColRow(col, row) != -1) {
+                    this.drawImage(col, row + editorRow, movedImages[this.rule.getWitnessDirection(whenDo)])
+                }
             }
         }
 
