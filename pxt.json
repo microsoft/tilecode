@@ -28,8 +28,7 @@
         "loadScreen.ts",
         "main.ts",
         "games.ts",
-        "mytilemap.ts",
-        "viewmaker.ts"
+        "mytilemap.ts"
     ],
     "testFiles": [
         "test.ts"

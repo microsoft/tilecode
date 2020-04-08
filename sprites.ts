@@ -238,16 +238,6 @@ export const include = img`
     . f 7 7 7 f . .
     . . f 7 f . . .
 `;
-export const oneof = img`
-    . f f f f f f .
-    f f 5 5 5 5 f f
-    f 5 5 5 5 5 5 f
-    f 5 5 5 5 5 5 f
-    f 5 5 5 5 5 5 f
-    f 5 5 5 5 5 5 f
-    f f 5 5 5 5 f f
-    . f f f f f f .
-`;
 export const ok = img`
     . . . . . . . .
     . . . . . . . .
@@ -271,6 +261,24 @@ export const allFour = img`
     . . . 9 . . 9 9 9 . . 9 . . . .
     . . . . . . 9 9 9 . . . . . . .
     . . . . . 9 9 9 9 9 . . . . . .
+    . . . . . . 9 9 9 . . . . . . .
+    . . . . . . . 9 . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+`;
+export const allFourOutline = img`
+    . . . . . . . . . . . . . . . .
+    . . . . . . . 9 . . . . . . . .
+    . . . . . . 9 9 9 . . . . . . .
+    . . . . . 9 9 . 9 9 . . . . . .
+    . . . . . . 9 . 9 . . . . . . .
+    . . . 9 . . 9 . 9 . . 9 . . . .
+    . . 9 9 9 9 . . . 9 9 9 9 . . .
+    . 9 9 . . . . . . . . . 9 9 . .
+    . . 9 9 9 9 . . . 9 9 9 9 . . .
+    . . . 9 . . 9 . 9 . . 9 . . . .
+    . . . . . . 9 . 9 . . . . . . .
+    . . . . . 9 9 . 9 9 . . . . . .
     . . . . . . 9 9 9 . . . . . . .
     . . . . . . . 9 . . . . . . . .
     . . . . . . . . . . . . . . . .
@@ -787,7 +795,7 @@ export const moveImages = [leftArrow, upArrow, rightArrow, downArrow, stopSign, 
 export const movedImages = [leftArrowOutline, upArrowOutline, rightArrowOutline, downArrowOutline];
 export const moveText = ["left", "up", "right", "down", "stop", "u-turn"];
 export const buttonImages = [leftButton, upButton, rightButton, downButton, AButton];
-export const attrImages = [include, exclude, ok, oneof];
+export const attrImages = [include, exclude, ok, include];
 export const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, AttrType.Include2];
 export const attrXoffsets = [-8, 0, 0, 0];
 export const attrYoffsets = [0, 0, -8, 0];

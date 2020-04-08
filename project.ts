@@ -116,6 +116,8 @@ namespace tileworld {
         }
 
         public saveRule(rv: RuleView) {
+            if (rv.getRuleId() == -1)
+                return;
             this.storeRule(this.prefix, rv.getRuleId(), rv.getBaseRule());
         }
 
