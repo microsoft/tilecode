@@ -3,7 +3,7 @@ namespace tileworld {
     enum RuleEditorMenus { MainMenu, AttrTypeMenu, DirExprMenu, CommandMenu };
     enum CommandTokens { Last=CommandType.Last, SpaceTile, Delete };
 
-    const menuHelpString = "10map,20play,30debug,60delete rule,80add rule,90next rule,70previous rule,";
+    const menuHelpString = "10map,20play,30debug,50generalize rule,60delete rule,80add rule,90next rule,70previous rule,";
     const attrHelpString = "00include,10exclude,90reset,";
 
     export class RuleViewDisplay extends RuleDisplay {
@@ -275,6 +275,7 @@ namespace tileworld {
             this.drawImage(1, 0, map);
             this.drawImage(2, 0, play);
             this.drawImage(3, 0, debug);
+            this.drawImage(5, 0, genericSprite);
             this.drawImage(6, 0, garbageCan);
             let rules = this.currentRules();
             let index = rules.indexOf(this.rule);
