@@ -62,7 +62,7 @@ namespace tileworld {
 
         public getRuleArg() {
             return this.rid != -1 ? this.r.ruleArg : 
-                this.r.ruleType == RuleType.ButtonPress ? flipRotateDir(this.r.ruleArg, this.rawView()) : this.r.ruleArg;
+                this.r.ruleType == RuleType.ButtonPress ? flipRotateDir(this.r.ruleArg, this.view) : this.r.ruleArg;
         }
 
         public setRuleArg(ra: RuleArg) {
@@ -147,7 +147,7 @@ namespace tileworld {
             if (cid >= wd.commandsLen) return 0xff;
             let arg = wd.commands.getUint8((cid << 1)+1);
             if (this.rid == -1 && this.getCmdInst(wdid, cid) == CommandType.Move) {
-                arg = flipRotateDir(arg, this.rawView())
+                arg = flipRotateDir(arg, this.view);
             }
             return arg;        
         }
