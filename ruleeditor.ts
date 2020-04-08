@@ -11,7 +11,7 @@ namespace tileworld {
         constructor(p: Project, private baseRule: RuleView) {
             super(p, baseRule);
             this.setCol(0); this.setRow(0);
-            this.ruleViews = [];
+            this.ruleViews = this.rule.getDerivedRules();
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.row() == 0 && this.col() >=1 && this.col() <= 4) {
                     let bit = 1 << (this.col()-1);
@@ -22,6 +22,11 @@ namespace tileworld {
                     this.cursorToView();
                     this.update();
                 }
+            });
+            controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
+                this.p.saveRule(this.rule);
+                game.popScene();
+                return;
             });
         }
 

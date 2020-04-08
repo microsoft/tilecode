@@ -97,10 +97,14 @@ namespace tileworld {
             }
             // populate indices for more efficient lookup
             this.rules.forEach(rv => {
-                if (rv.isRestingRule() && rv.isRuleTrue())
-                    this.allTrueResting.push(rv);
-                else
-                    this.ruleIndex[rv.getRuleType()].push(rv);
+                let derivedRules = rv.getDerivedRules();
+                derivedRules.push(rv);
+                derivedRules.forEach(rv => {
+                    if (rv.isRestingRule() && rv.isRuleTrue())
+                        this.allTrueResting.push(rv);
+                    else
+                        this.ruleIndex[rv.getRuleType()].push(rv);
+                });
             });
         }
 
