@@ -116,7 +116,7 @@ namespace tileworld {
             if (draw) {
                 let index = this.findWitnessColRow(wcol, wrow);
                 let img1 = this.collideCol == wcol && this.collideRow == wrow ? collisionSprite : genericSprite;
-                let img2 = index == -1 ? img1 : this.p.getSpriteImage(index);
+                let img2 = index == -1 ? img1 : this.all.getImage(index);
                 this.drawImage(5, crow + editorRow, img2);
                 if (img1 == collisionSprite)
                     this.drawImage(5, crow + editorRow, img1);
@@ -155,8 +155,7 @@ namespace tileworld {
         }
 
         private posSpritePosition(whendo: number, begin: number) {
-            let index = this.attrIndex(whendo, AttrType.Include, begin);
-            return (index == -1) ? this.attrIndex(whendo, AttrType.Include2, begin) : index;
+            return this.attrIndex(whendo, AttrType.Include, begin);
         }
 
         private findWitnessWhenDo(whendo: number) {
@@ -195,8 +194,7 @@ namespace tileworld {
             if (whenDo >= 0) {
                 // if there is an include or single oneOf, show it.
                 let indexInclude = this.attrIndex(whenDo, AttrType.Include);
-                let indexOneOf = indexInclude == -1 ? this.attrIndex(whenDo, AttrType.Include2) : indexInclude;
-                let index = indexOneOf == -1 ? this.attrIndex(whenDo, AttrType.Exclude) : indexOneOf;
+                let index = indexInclude == -1 ? this.attrIndex(whenDo, AttrType.Exclude) : indexInclude;
                 // and skip to the other (if it exists)
                 if (index != -1) {
                     this.drawImage(col, row + editorRow, this.all.getImage(index));

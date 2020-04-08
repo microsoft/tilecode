@@ -142,7 +142,7 @@ namespace tileworld {
         } else if (rt == RuleTransforms.LeftRotate) {
             return ((d + 3) % 4) | 0x0;
         } else {
-            return ((d + 1) % 2) | 0x0;
+            return ((d + 1) % 4) | 0x0;
         }
         return d;
     }
