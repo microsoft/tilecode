@@ -188,7 +188,7 @@ namespace tileworld {
             return tokens;
         }
 
-        protected showAttributes(col: number, row: number) {
+        protected showAttributes(col: number, row: number, show: boolean = true) {
             let whenDo = this.rule.getWhenDo(col, row);
             if (whenDo >= 0) {
                 // if there is an include or single oneOf, show it.
@@ -210,6 +210,19 @@ namespace tileworld {
                 // show direction 
                 if (this.findWitnessColRow(col, row) != -1) {
                     this.drawImage(col, row + editorRow, movedImages[this.rule.getWitnessDirection(whenDo)])
+                }
+                // peek into attributions
+                if (show && this.col() == col && this.row() - editorRow == row) {
+                    let x = 0;
+                    screen.fillRect(0, 16 + yoff, 160, 16, 0);
+                    this.all.getImages().forEach((image, i) => {
+                        let a = this.all.getSetAttr(this.rule, whenDo, i);
+                        if (a != AttrType.OK) {
+                            this.drawImage(x, 1, image);
+                            this.drawImage(x, 1, attrImages[attrValues.indexOf(a)]);
+                            x++;
+                        }
+                    });
                 }
             }
         }

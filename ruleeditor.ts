@@ -146,8 +146,13 @@ namespace tileworld {
                             new RuleViewDisplay(this.p, this.rule);
                             return;
                         }
-                    } else if (this.col() > 5 && this.row() >= editorRow) {
-                        this.tryEditCommand();
+                    } else if (this.row() >= editorRow) {
+                        if (this.col() > 5) {
+                            this.tryEditCommand();
+                        } else if (this.col() == 5) {
+                            this.menu = RuleEditorMenus.DirExprMenu;
+                            this.setTileSaved();
+                        }
                     }
                 }
                 this.update();
@@ -255,6 +260,8 @@ namespace tileworld {
                 this.attrMenu(this.col(false), this.row(false)-editorRow);
             } else if (this.menu == RuleEditorMenus.CommandMenu) {
                 this.modifyCommandMenu();
+            } else if (this.menu == RuleEditorMenus.DirExprMenu) {
+                this.dirExprMenu();
             }
             if (this.askDeleteRule) {
                 this.cursor.setFlag(SpriteFlag.Invisible, true);
@@ -355,7 +362,6 @@ namespace tileworld {
             return 0;
         }
 
-        // inst must be -1, arg might be -1;
         private makeArgMenu(inst: number, arg: number) {
             let col = 4;
             let row = 1;
@@ -426,23 +432,8 @@ namespace tileworld {
             this.rule.setCmdArg(this.whenDo, this.currentCommand, arg);
         }
 
-        protected showAttributes(col: number, row: number) {
-            super.showAttributes(col, row);
-            let whenDo = this.rule.getWhenDo(col, row);
-            if (whenDo == -1)
-                return;
-            if (this.menu == RuleEditorMenus.MainMenu && this.col() == col && this.row() - editorRow == row) {
-                let x = 0;
-                screen.fillRect(0, 16 + yoff, 160, 16, 0);
-                this.all.getImages().forEach((image, i) => {
-                    let a = this.all.getSetAttr(this.rule, whenDo, i);
-                    if (a != AttrType.OK) {
-                        this.drawImage(x, 1, image);
-                        this.drawImage(x, 1, attrImages[attrValues.indexOf(a)]);
-                        x++;
-                    }
-                });
-            }
+        protected showAttributes(col: number, row: number, show: boolean) {
+            super.showAttributes(col, row, this.menu == RuleEditorMenus.MainMenu);
         }
 
         private attrMenu(col: number, row: number) {
@@ -502,5 +493,10 @@ namespace tileworld {
                 val = AttrType.OK;
             this.all.getSetAttr(this.rule, whenDo, m, val)
         }
+
+        private dirExprMenu() {
+
+        }
+
     }
 }
