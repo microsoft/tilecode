@@ -16,7 +16,6 @@ namespace tileworld {
             let ret: RuleView[] = [];
             if (this.r.transforms == RuleTransforms.None)
                 return ret;
-            
             // create a new rule view for each bit that is set
             for (let bit = RuleTransforms.Begin; bit != RuleTransforms.End; bit <<= 1) {
                 if (this.r.transforms & bit) {
@@ -25,7 +24,6 @@ namespace tileworld {
                     ret.push(rv);
                 }
             }
-
             return ret;
         }
 
@@ -37,7 +35,7 @@ namespace tileworld {
 
         private rawView() {
              return this.view == RuleTransforms.LeftRotate ? RuleTransforms.RightRotate : 
-                                (this.view == RuleTransforms.RightRotate ? RuleTransforms.LeftRotate: this.view);
+                   (this.view == RuleTransforms.RightRotate ? RuleTransforms.LeftRotate: this.view);
         }
 
         public getTransforms() {

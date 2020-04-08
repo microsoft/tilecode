@@ -9,9 +9,6 @@
 
 // 4. spawn sprite at a location, with initial direction
 
-// 5. mirror/4-way feature
-//    - no UI
-
 // post UIST: -------------------------
 
 // - reduce to 3x3 patterns and allow two 3x3 patterns in when
