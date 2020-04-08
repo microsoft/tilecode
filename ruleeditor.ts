@@ -1,10 +1,8 @@
 namespace tileworld {
-    
-    enum RuleEditorMenus { MainMenu, AttrTypeMenu, DirExprMenu, CommandMenu };
-    enum CommandTokens { Last=CommandType.Last, SpaceTile, Delete };
 
-    const menuHelpString = "10map,20play,30debug,50generalize rule,60delete rule,80add rule,90next rule,70previous rule,";
-    const attrHelpString = "00include,10exclude,90reset,";
+
+    // ------------------------------------------------------------------------------------
+    // a simple (but not complete) way to change the transforms on a rule
 
     export class RuleViewDisplay extends RuleDisplay {
         private ruleViews: RuleView[];
@@ -53,6 +51,15 @@ namespace tileworld {
             }
         }
     }
+
+    // ------------------------------------------------------------------------------------
+    // the rule editor
+
+    enum RuleEditorMenus { MainMenu, AttrTypeMenu, DirExprMenu, CommandMenu };
+    enum CommandTokens { Last=CommandType.Last, SpaceTile, Delete };
+
+    const menuHelpString = "10map,20play,30debug,50generalize rule,60delete rule,80add rule,90next rule,70previous rule,";
+    const attrHelpString = "00include,10exclude,90reset,";
 
     export class RuleEditor extends RuleDisplay {
         private otherCursor: Sprite;    // show correspondence between left and right
@@ -495,7 +502,9 @@ namespace tileworld {
         }
 
         private dirExprMenu() {
-
+            movedImages.forEach((img, i) => {
+                this.drawImage(i, 0, img);
+            });
         }
 
     }
