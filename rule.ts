@@ -93,10 +93,12 @@ class WhenDo {
         public row: number,             // (2,2) is the center of neighborhood, graphics coordinate system
         public bgPred: Buffer = null,   // predicate on background (2 bits per background)
         public spPred: Buffer = null,   // predicate on sprites (2 bits for sprite)
-        public dir: MoveDirection = 0xffff, // direction to match against (for movable sprite)
+        public dir: MoveDirection = 0, // direction to match against (for movable sprite)
         public commands: Buffer = null, // the commands that execute if the guard succeeds (2 bytes per command)
         public commandsLen: number = 0
-    ) { }
+    ) { 
+        this.dir = AnyDir;   // because we can't put AnyDir as default
+    }
 }
 
 // Horizontal and Vertical are mutually exclusive
