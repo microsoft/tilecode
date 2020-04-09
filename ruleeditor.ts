@@ -45,10 +45,14 @@ namespace tileworld {
 
         protected update() {
             super.update();
-            let transforms = this.rule.getTransforms() 
-            for (let bit = RuleTransforms.Begin, col = 1; bit != RuleTransforms.End; bit <<= 1, col++) {
-                this.drawImage(col, 0, transforms & bit ? collisionSprite : genericSprite);
-            }
+            this.drawImage(1, 0, flipHoriz);
+            this.drawImage(3, 0, flipVert);
+            this.drawImage(5, 0, rotate3way);
+
+            //let transforms = this.rule.getTransforms() 
+            //for (let bit = RuleTransforms.Begin, col = 1; bit != RuleTransforms.End; bit <<= 1, col++) {
+            //    this.drawImage(col, 0, transforms & bit ? collisionSprite : genericSprite);
+            //}
         }
     }
 
