@@ -1,6 +1,5 @@
 namespace tileworld {
 
-
     enum SpriteState { Alive, Dead, }
 
     // a TileSprite is centered on a 16x16 pixel tile
@@ -47,7 +46,7 @@ namespace tileworld {
             const t = this.top - oy;
 
             screen.drawTransparentImage(this.image(), l, t);
-            screen.drawTransparentImage(movedImages[this.dir], l, t);
+            // screen.drawTransparentImage(movedImages[this.dir], l, t);
         }
     }
 
