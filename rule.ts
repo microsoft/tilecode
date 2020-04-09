@@ -101,8 +101,8 @@ class WhenDo {
     }
 }
 
-// Horizontal and Vertical are mutually exclusive
-enum RuleTransforms { None=0, Begin=0x1, HorzMirror=0x1, VertMirror=0x2, LeftRotate=0x4, RightRotate=0x8, End=0x10 };
+// Triple Rotate = {LeftRotate, RightRotate, DoubleRotate}
+enum RuleTransforms { Begin=0, None=0, HorzMirror, VertMirror, LeftRotate, RightRotate, DoubleRotate, Rotate3Way, End=Rotate3Way };
 
 class Rule {
     constructor( 
@@ -143,8 +143,10 @@ namespace tileworld {
             return d == MoveDirection.Up ? MoveDirection.Down : d == MoveDirection.Down ? MoveDirection.Up : d;
         } else if (rt == RuleTransforms.LeftRotate) {
             return ((d + 3) % 4) | 0x0;
-        } else {
+        } else if (rt == RuleTransforms.RightRotate) {
             return ((d + 1) % 4) | 0x0;
+        } else if (rt == RuleTransforms.DoubleRotate) {
+            return ((d + 2) % 4) | 0x0;
         }
         return d;
     }
@@ -155,7 +157,8 @@ namespace tileworld {
         else {
             // make (0,0) center for rotation
             row = 2 - row;
-            return rt == RuleTransforms.LeftRotate ? (-row) + 2 : row + 2;
+            return rt == RuleTransforms.LeftRotate ? (-row) + 2 :
+                   rt == RuleTransforms.RightRotate ? row + 2 : -col;
         }
     }
 
@@ -164,7 +167,8 @@ namespace tileworld {
             return rt == RuleTransforms.HorzMirror ? row : 4 - row;
         else {
             col = col - 2;
-            return rt == RuleTransforms.LeftRotate ? (-col) + 2 : col + 2;
+            return rt == RuleTransforms.LeftRotate ? (-col) + 2 : 
+                   rt == RuleTransforms.RightRotate ? col + 2 : -row;
         }
     }
 

@@ -14,14 +14,21 @@ namespace tileworld {
 
         public getDerivedRules() {
             let ret: RuleView[] = [];
-            if (this.r.transforms == RuleTransforms.None)
-                return ret;
-            // create a new rule view for each bit that is set
-            for (let bit = RuleTransforms.Begin; bit != RuleTransforms.End; bit <<= 1) {
-                if (this.r.transforms & bit) {
+            switch(this.r.transforms){
+                case RuleTransforms.HorzMirror:
+                case RuleTransforms.VertMirror: {
                     let rv = new RuleView(this.p, -1, this.r);
-                    rv.view = bit;
+                    rv.view = this.r.transforms;
                     ret.push(rv);
+                    break;
+                }
+                case RuleTransforms.Rotate3Way: {
+                    for (let t = RuleTransforms.LeftRotate; t != RuleTransforms.Rotate3Way; t++) {
+                        let rv = new RuleView(this.p, -1, this.r);
+                        rv.view = t;
+                        ret.push(rv)
+                    }
+                    break;
                 }
             }
             return ret;
