@@ -123,7 +123,7 @@ namespace tileworld {
         }
 
         public getWitnessDirection(wdid: number) {
-            return this.rid != -1 ? this.r.whenDo[wdid].dir : flipRotateDir(this.r.whenDo[wdid].dir, this.rawView());
+            return this.rid != -1 ? this.r.whenDo[wdid].dir : flipRotateDir(this.r.whenDo[wdid].dir, this.view);
         }
 
         public setWitnessDirection(wdid: number, val:number) {
