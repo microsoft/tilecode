@@ -2,9 +2,6 @@
 
 // for UIST paper
 
-// 2. ability to specify sprite's last direction in when pattern (to enable centipede)
-//    - actually in the "sprite separator" section between the when and do sections
-
 // 3. forall rules: termination checking event at beginning of round
 
 // 4. spawn sprite at a location, with initial direction

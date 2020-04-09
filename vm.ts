@@ -16,7 +16,7 @@ namespace tileworld {
             scene.physicsEngine.addSprite(this);
             this.setKind(kind);
             this.debug = d;
-            this.dir = -1;
+            this.dir = Resting;
             this.inst = -1;
             this.state = SpriteState.Alive;
         }
@@ -24,7 +24,7 @@ namespace tileworld {
         public row() { return this.y >> 4; }    // coordinates
         public update() {
             // update the state of the sprite base on instruction
-            this.dir = this.inst == CommandType.Move && this.arg < MoveArg.Stop  ? this.arg : -1;
+            this.dir = this.inst == CommandType.Move && this.arg < MoveArg.Stop  ? this.arg : Resting;
             this.vx = this.dir == MoveDirection.Left ? -100 : this.dir == MoveDirection.Right ? 100 : 0;
             this.vy = this.dir == MoveDirection.Up ? -100 : this.dir == MoveDirection.Down ? 100 : 0;
         }
@@ -334,7 +334,7 @@ namespace tileworld {
             // update the state of each sprite, based on instructions
             this.allSprites(ts => {
                 ts.update();
-                if (ts.dir != -1) {
+                if (ts.dir != Resting) {
                     // if sprite is moving then dirty its current
                     // location and next location
                     this.vm.changed.setPixel(ts.col(), ts.row(), 1);
@@ -547,7 +547,8 @@ namespace tileworld {
             scene.setTileMap(w.clone());
             this.state.nextWorld = w.clone();
             this.state.changed = w.clone();
-
+            this.state.changed.fill(0xf);
+            
             // initialize backgrounds
             this.p.backgroundImages().forEach((img,kind) => {
                 scene.setTile(kind, img);
