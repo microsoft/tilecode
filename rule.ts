@@ -102,7 +102,7 @@ class WhenDo {
 }
 
 // Rotate3Way = {LeftRotate, RightRotate, DoubleRotate}
-enum RuleTransforms { Begin=0, None=0, HorzMirror, VertMirror, LeftRotate, RightRotate, DoubleRotate, Rotate3Way, End=Rotate3Way };
+enum RuleTransforms { Begin=0, None=0, HorzMirror, VertMirror, LeftRotate, DoubleRotate, RightRotate, Rotate3Way, End=Rotate3Way };
 
 class Rule {
     constructor( 
