@@ -2,12 +2,19 @@
 
 // for UIST paper
 
-// issues 
-// - snake logic isn't quite working
+// issues
+// - need to go over rule transforms to correct populate sprite-rule view
+// - remove debugger option for paper
 
 // 3. forall rules: termination checking event at beginning of round
+// - redo boulder dash
 
 // 4. spawn sprite at a location, with initial direction
+
+// - fix up collisions
+//   - restrict direction predicates to resting/moving
+//   - stop sign
+//   - 
 
 // post UIST: -------------------------
 
