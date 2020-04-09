@@ -86,7 +86,7 @@ namespace tileworld {
         private currentCommand: number; // the current command (potentially null)
         private askDeleteRule: boolean;
         
-        constructor(p: Project, rule: RuleView) {
+        constructor(p: Project, rule: RuleView, private kind: number) {
             super(p, rule);
 
             this.setCol(0); this.setRow(0);
@@ -224,9 +224,8 @@ namespace tileworld {
         }
 
         protected currentRules() {
-            // TODO: sort rules by id
-            let rules = this.p.getRulesForSpriteKind(this.getKind());
-            return this.getType() == -1 ? rules : this.getRulesForTypeDir(rules, this.getType(), this.getDir());
+            // we should sort this by ruletype and direction
+            return this.p.getRulesForSpriteKind(this.kind);
         }
 
         protected cursorMove(dir: MoveDirection, pressed: boolean) {
