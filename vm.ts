@@ -7,8 +7,8 @@ namespace tileworld {
     class TileSprite extends Sprite {
         public debug: boolean;
         public state: SpriteState;
-        public dir: MoveDirection;  // the direction the sprite moved in the last round
-        public lastDir: MoveDirection;
+        public dir: MoveRest;  // the direction the sprite moved in the last round
+        public lastDir: MoveRest;
         public inst: number;        // the one instruction history to apply to the sprite to 
         public arg: number;         // create the next sprite state
         constructor(img: Image, kind: number, d: boolean = false) {
@@ -217,7 +217,7 @@ namespace tileworld {
             return rv.hasSpriteKind(ts.kind());
         }
 
-        private ruleMatchesDirection(rv: RuleView, dir: number) {
+        private ruleMatchesDirection(rv: RuleView, dir: MoveRest) {
             let dirExpr = rv.getDirFromRule();
             return dirExpr == AnyDir || (dirExpr == Moving && dir != Resting) || (dirExpr == dir);
         }

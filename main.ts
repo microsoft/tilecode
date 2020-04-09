@@ -2,6 +2,9 @@
 
 // for UIST paper
 
+// issues 
+// - snake logic isn't quite working
+
 // 3. forall rules: termination checking event at beginning of round
 
 // 4. spawn sprite at a location, with initial direction
