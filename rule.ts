@@ -156,10 +156,10 @@ namespace tileworld {
             return rt == RuleTransforms.HorzMirror ? 4 - col : col;
         else {
             // make (0,0) center for rotation
-            row = 2 - row;
-            col = 2 - col;
-            return rt == RuleTransforms.LeftRotate ? (-row) + 2 :
-                   rt == RuleTransforms.RightRotate ? row + 2 : -col + 2;
+            row = row - 2;
+            col = col - 2;
+            return rt == RuleTransforms.LeftRotate ? row + 2 :
+                   rt == RuleTransforms.RightRotate ? -row + 2 : -col + 2;
         }
     }
 

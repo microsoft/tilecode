@@ -87,6 +87,9 @@ namespace tileworld {
         private askDeleteRule: boolean;
         
         constructor(p: Project, rule: RuleView, private kind: number) {
+            // kind optimization
+            // - don't allow the kind to be removed from (2,2)
+            // - make sure the kind is shown as witness for (2,2)
             super(p, rule);
 
             this.setCol(0); this.setRow(0);
