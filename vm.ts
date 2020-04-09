@@ -8,6 +8,7 @@ namespace tileworld {
         public debug: boolean;
         public state: SpriteState;
         public dir: MoveDirection;  // the direction the sprite moved in the last round
+        public lastDir: MoveDirection;
         public inst: number;        // the one instruction history to apply to the sprite to 
         public arg: number;         // create the next sprite state
         constructor(img: Image, kind: number, d: boolean = false) {
@@ -16,7 +17,7 @@ namespace tileworld {
             scene.physicsEngine.addSprite(this);
             this.setKind(kind);
             this.debug = d;
-            this.dir = Resting;
+            this.dir = this.lastDir = Resting;
             this.inst = -1;
             this.state = SpriteState.Alive;
         }
@@ -24,7 +25,8 @@ namespace tileworld {
         public row() { return this.y >> 4; }    // coordinates
         public update() {
             // update the state of the sprite base on instruction
-            this.dir = this.inst == CommandType.Move && this.arg < MoveArg.Stop  ? this.arg : Resting;
+            this.lastDir = this.dir;
+            this.dir = (this.inst == CommandType.Move && this.arg < MoveArg.Stop)  ? this.arg : Resting;
             this.vx = this.dir == MoveDirection.Left ? -100 : this.dir == MoveDirection.Right ? 100 : 0;
             this.vy = this.dir == MoveDirection.Up ? -100 : this.dir == MoveDirection.Down ? 100 : 0;
         }
@@ -154,9 +156,7 @@ namespace tileworld {
             if (this.vm.phase == RuleType.ContextChange) {
                 if (this.vm.queued.length > 0) {
                     let ts = this.vm.queued.pop();
-                    if (ts.dir != Resting || this.restingWithChange(ts)) {
-                        // TODO: partition rules based on resting/moving and sprite kind
-                        // TODO: for more efficient lookup
+                    if (ts.dir != Resting || ts.dir != ts.lastDir || this.restingWithChange(ts)) {
                         return this.applyRules(RuleType.ContextChange,  ts);
                     }
                 } else {
