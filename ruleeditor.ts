@@ -4,25 +4,24 @@ namespace tileworld {
     // ------------------------------------------------------------------------------------
     // a simple (but not complete) way to change the transforms on a rule
 
+    const transformMap = [ RuleTransforms.None, RuleTransforms.HorzMirror, RuleTransforms.VertMirror, RuleTransforms.Rotate3Way];
+    const transformCol = [ 1, 3, 5, 7];
+
     export class RuleViewDisplay extends RuleDisplay {
         private ruleViews: RuleView[];
         constructor(p: Project, private baseRule: RuleView) {
             super(p, baseRule);
             this.setCol(0); this.setRow(0);
-            this.ruleViews = this.rule.getDerivedRules();
+            this.ruleViews = this.baseRule.getDerivedRules();
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.row() == 0 && this.col() >=1 && this.col() <= 4) {
-                    let bit = 1 << (this.col()-1);
-                    let mask = bit ^ 0xf;
-                    let newval = this.rule.getTransforms() & bit ? 0x00 :bit;
-                    this.rule.setTransforms((this.rule.getTransforms() & mask) | newval);
-                    this.ruleViews = this.rule.getDerivedRules();
-                    this.cursorToView();
-                    this.update();
+                if (this.row() == 0 && this.col() >=1 && this.col() <= 7) {
+                    let index = (this.col()-1) >> 1;
+                    this.baseRule.setTransforms(transformMap[index]);
+                    this.ruleViews = this.baseRule.getDerivedRules();
                 }
             });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
-                this.p.saveRule(this.rule);
+                this.p.saveRule(this.baseRule);
                 game.popScene();
                 return;
             });
@@ -34,25 +33,35 @@ namespace tileworld {
         }
 
         private cursorToView() {
-            if (this.row() == 0 && this.col() >= 1 && this.col() <= 4) {
-                let bit = 1 << (this.col() - 1);
-                let rule = this.ruleViews.find(rv => rv.getViewTransform() == bit);
-                this.rule = rule ? rule : this.baseRule;
-            } else {
-                this.rule = this.baseRule;
+            let t = this.baseRule.getTransforms();
+            this.rule = this.baseRule;
+            if (this.row() == 1 && t != RuleTransforms.None && this.ruleViews.length > 0) {
+                let index = transformMap.indexOf(t);
+                let col = transformCol[index];
+                if (this.col() == col) {
+                    this.rule = this.ruleViews[0];
+                } else if (this.col() >= 7) {
+                    this.rule = this.ruleViews[this.col()-7];
+                }
             }
+            this.update();
         }
 
         protected update() {
             super.update();
-            this.drawImage(1, 0, flipHoriz);
-            this.drawImage(3, 0, flipVert);
-            this.drawImage(5, 0, rotate3way);
-
-            //let transforms = this.rule.getTransforms() 
-            //for (let bit = RuleTransforms.Begin, col = 1; bit != RuleTransforms.End; bit <<= 1, col++) {
-            //    this.drawImage(col, 0, transforms & bit ? collisionSprite : genericSprite);
-            //}
+            // menu options
+            this.drawImage(1, 0, yellowSprite);
+            this.drawImage(3, 0, flipHoriz);
+            this.drawImage(5, 0, flipVert);
+            this.drawImage(7, 0, rotate3way);
+            // which one selected
+            let index = transformMap.indexOf(this.baseRule.getTransforms());
+            this.drawImage(1 + (index << 1), 0, cursorOut);
+            // resulting rules
+            let col = transformCol[index];        
+            this.ruleViews.forEach((rv, index) => {
+                this.drawImage(col+index, 1, yellowSprite);
+            });
         }
     }
 
@@ -295,7 +304,7 @@ namespace tileworld {
             this.drawImage(1, 0, map);
             this.drawImage(2, 0, play);
             this.drawImage(3, 0, debug);
-            this.drawImage(5, 0, genericSprite);
+            this.drawImage(5, 0, flipHoriz);
             this.drawImage(6, 0, garbageCan);
             let rules = this.currentRules();
             let index = rules.indexOf(this.rule);

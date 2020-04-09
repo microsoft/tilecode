@@ -101,7 +101,7 @@ class WhenDo {
     }
 }
 
-// Triple Rotate = {LeftRotate, RightRotate, DoubleRotate}
+// Rotate3Way = {LeftRotate, RightRotate, DoubleRotate}
 enum RuleTransforms { Begin=0, None=0, HorzMirror, VertMirror, LeftRotate, RightRotate, DoubleRotate, Rotate3Way, End=Rotate3Way };
 
 class Rule {
@@ -157,8 +157,9 @@ namespace tileworld {
         else {
             // make (0,0) center for rotation
             row = 2 - row;
+            col = 2 - col;
             return rt == RuleTransforms.LeftRotate ? (-row) + 2 :
-                   rt == RuleTransforms.RightRotate ? row + 2 : -col;
+                   rt == RuleTransforms.RightRotate ? row + 2 : -col + 2;
         }
     }
 
@@ -167,8 +168,9 @@ namespace tileworld {
             return rt == RuleTransforms.HorzMirror ? row : 4 - row;
         else {
             col = col - 2;
+            row = row - 2;
             return rt == RuleTransforms.LeftRotate ? (-col) + 2 : 
-                   rt == RuleTransforms.RightRotate ? col + 2 : -row;
+                   rt == RuleTransforms.RightRotate ? col + 2 : -row + 2;
         }
     }
 
