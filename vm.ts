@@ -46,7 +46,8 @@ namespace tileworld {
             const l = this.left - ox + (this.debug ? 32 : 0);
             const t = this.top - oy;
 
-            screen.drawTransparentImage(this.image(), l, t)
+            screen.drawTransparentImage(this.image(), l, t);
+            screen.drawTransparentImage(movedImages[this.dir], l, t);
         }
     }
 
@@ -217,9 +218,12 @@ namespace tileworld {
             return rv.hasSpriteKind(ts.kind());
         }
 
-        private ruleMatchesDirection(rv: RuleView, dir: MoveRest) {
-            let dirExpr = rv.getDirFromRule();
+        private exprMatchesDirection(dirExpr: MoveExpr, dir: MoveRest) {
             return dirExpr == AnyDir || (dirExpr == Moving && dir != Resting) || (dirExpr == dir);
+        }
+
+        private ruleMatchesDirection(rv: RuleView, dir: MoveRest) {
+            return this.exprMatchesDirection(rv.getDirFromRule(), dir);
         }
 
         // apply matching rules to tileSprite, based on the phase we are in
@@ -453,6 +457,9 @@ namespace tileworld {
             // we have witness and oneOf is false, as expected
             let ret = !oneOf || oneOfPassed;
             if (ret && captureWitness && rv.getRuleType() != RuleType.Collision) {
+                // need to check direction of sprite against witness.dir
+                if (!this.exprMatchesDirection(rv.getWitnessDirection(whendo), captureWitness.dir))
+                    return false;
                 witnesses.push(captureWitness);
             }
             return ret;
