@@ -127,7 +127,7 @@ namespace tileworld {
                 // this is a bit of a mess
                 let wd = rv.makeWhenDo(2, 2);
                 rv.getSetSpAttr(wd, kind, AttrType.Include);
-                if (rt == RuleType.ContextChange) {
+                if (rt == RuleType.ContextChange || rt == RuleType.Collision) {
                     rv.setWitnessDirection(wd, ra);
                 }
             }

@@ -60,6 +60,8 @@ namespace tileworld {
                 let image = this.getDirectionImage();
                 if (image)
                     this.drawImage(0, 3, image);
+            } else if (this.getType() == RuleType.NegationCheck) {
+                this.drawImage(0, 3, negate);
             }
         }
 
