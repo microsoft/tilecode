@@ -102,7 +102,7 @@ namespace tileworld {
                 this.setRuleType(rt, rd, tcol, trow);
                 if (rules.length > 0) { this.fillTile(tcol, trow, scol); this.drawOutline(tcol, trow, 1); }
                 this.drawImage(tcol, trow, buttonImages[rd]);
-            } else if (rt == RuleType.ContextChange || rt == RuleType.NegationCheck) {
+            } else if (rt == RuleType.ContextChange) {
                 this.setRuleType(rt, rd, col, row);
                 if (rules.length > 0) { this.fillTile(col, row, scol); this.drawOutline(col, row, 1); }
             }
@@ -132,10 +132,7 @@ namespace tileworld {
             this.doBoth(RuleType.Collision, MoveDirection.Left, x + 2, y + 5, false);
             this.doBoth(RuleType.Collision, MoveDirection.Up, x + 2, y + 5, false);
             this.doBoth(RuleType.Collision, MoveDirection.Down, x + 2, y + 5, false);
-            this.drawImage(x + 2, y + 5, this.centerImage());
-
-            this.makeContext(x + 6, y + 5);
-            this.doBoth(RuleType.NegationCheck, -1, x + 5, y + 4, false);
+            this.showRuleType(RuleType.Collision, Resting, x + 2, y + 5);
         }
     }
 }
