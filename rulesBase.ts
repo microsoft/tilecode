@@ -145,6 +145,8 @@ namespace tileworld {
                 let ax = rd == MoveDirection.Left ? 1 : (rd == MoveDirection.Right ? -1 : 0)
                 let ay = rd == MoveDirection.Down ? -1 : (rd == MoveDirection.Up ? 1 : 0)
                 this.showCollision(x - ax, y - ay, rd, moveImages[rd], rt);
+            } else if (rt == RuleType.NegationCheck) {
+                this.drawImage(x, y, negate);
             }
         }
 
