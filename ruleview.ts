@@ -78,11 +78,11 @@ namespace tileworld {
             let rt = this.getRuleType();
             if (rt == RuleType.Collision || rt == RuleType.ContextChange) {
                 let wd = this.getWhenDo(2, 2);
-                return wd == -1 ? -1 : this.getWitnessDirection(wd);
+                return wd == -1 ? AnyDir : this.getWitnessDirection(wd);
             } else if (rt == RuleType.ButtonPress) {
                 return this.getRuleArg();
             }
-            return -1;
+            return AnyDir;
         }
         
         public getWhenDo(col: number, row: number) {
@@ -131,7 +131,7 @@ namespace tileworld {
 
         public getWitnessDirection(wdid: number) {
             let dir = this.r.whenDo[wdid].dir;
-            return this.rid != -1 || dir >= Resting ? dir : flipRotateDir(dir, this.view);
+            return (this.rid != -1 || dir >= Resting) ? dir : flipRotateDir(dir, this.view);
         }
 
         public setWitnessDirection(wdid: number, val:number) {
