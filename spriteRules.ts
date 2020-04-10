@@ -132,7 +132,7 @@ namespace tileworld {
             this.doBoth(RuleType.Collision, MoveDirection.Left, x + 2, y + 5, false);
             this.doBoth(RuleType.Collision, MoveDirection.Up, x + 2, y + 5, false);
             this.doBoth(RuleType.Collision, MoveDirection.Down, x + 2, y + 5, false);
-            this.showRuleType(RuleType.Collision, Resting, x + 2, y + 5);
+            this.drawImage(x + 2, y + 5, this.centerImage());
         }
     }
 }
