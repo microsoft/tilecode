@@ -129,6 +129,21 @@ namespace tileworld {
             return this.getSetBuffAttr(this.r.whenDo[wdid].spPred, index, val);
         }
 
+        private attrSpIndex(whendo: number, a: AttrType) {
+            for (let i = 0; i < this.p.spriteCnt(); i++) {
+                if (this.getSetSpAttr(whendo, i) == a)
+                    return i;
+            }
+            return -1;
+        }
+
+        public findWitnessColRow(col: number, row: number): number {
+            let whendo = this.getWhenDo(col, row);
+            if (whendo == -1)
+                return -1;
+            return this.attrSpIndex(whendo, AttrType.Include);
+        }
+
         public getWitnessDirection(wdid: number) {
             let dir = this.r.whenDo[wdid].dir;
             return (this.rid != -1 || dir >= Resting) ? dir : flipRotateDir(dir, this.view);

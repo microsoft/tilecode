@@ -148,7 +148,7 @@ namespace tileworld {
         protected tokens: number[];
         protected showCommandsAt(crow: number, wcol: number, wrow: number, draw: boolean = true) {
             if (draw) {
-                let kind = this.findWitnessColRow(wcol, wrow);
+                let kind = this.rule.findWitnessColRow(wcol, wrow);
                 let img1 = this.collideCol == wcol && this.collideRow == wrow ? collisionSprite : genericSprite;
                 let img2 = kind == -1 ? img1 : this.p.getSpriteImage(kind);
                 this.drawImage(5, crow + editorRow, img2);
@@ -177,17 +177,6 @@ namespace tileworld {
             return cid;
         }
 
-        // TODO: this should be moved into RuleView
-        protected findWitnessColRow(col: number, row: number): number {
-            let whendo = this.rule.getWhenDo(col, row);
-            if (whendo == -1)
-                return -1;
-            let index = this.attrIndex(whendo, AttrType.Include, 0);
-            if (index == -1 || index < this.p.backCnt())
-                return -1;
-            return index - this.p.backCnt();
-        }
-
         private showCommand(col: number, row: number,
             whendo: number, cid: number, tokens: number[],
             draw: boolean) {
@@ -207,14 +196,14 @@ namespace tileworld {
         // this defines the menu to present at the top-level
         private getTokens(col: number, row: number) {
             let tokens: number[] = [];
-            if (this.findWitnessColRow(col, row) != -1) {
+            if (this.rule.findWitnessColRow(col, row) != -1) {
                 if ((col == 2 && row == 2) || this.getType() != RuleType.Collision)
                     tokens.push(CommandType.Move);
             }
             if (this.getType() != RuleType.Collision) {
                 tokens.push(CommandType.Paint);
             }
-            if (this.findWitnessColRow(col, row) != -1) {
+            if (this.rule.findWitnessColRow(col, row) != -1) {
                 tokens.push(CommandType.Sprite);
             }
             tokens.push(CommandType.Game);
@@ -241,7 +230,7 @@ namespace tileworld {
                     screen.drawTransparentImage(attrImages[i], (col << 4) + 8 + attrXoffsets[i], ((row + editorRow) << 4) + 8 + yoff + attrYoffsets[i]);
                 });
                 // show direction 
-                if (this.getType() != RuleType.Collision && this.findWitnessColRow(col, row) != -1) {
+                if (this.getType() != RuleType.Collision && this.rule.findWitnessColRow(col, row) != -1) {
                     this.drawImage(col, row + editorRow, movedImages[this.rule.getWitnessDirection(whenDo)])
                 }
                 // peek into attributions
@@ -277,7 +266,7 @@ namespace tileworld {
             return res;
         }
 
-        protected attrIndex(whendo: number, a: AttrType, begin: number = 0) {
+        private attrIndex(whendo: number, a: AttrType, begin: number = 0) {
             for (let i = begin; i < this.p.allCnt(); i++) {
                 if (this.all.getSetAttr(this.rule, whendo, i) == a)
                     return i;

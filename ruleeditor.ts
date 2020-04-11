@@ -170,7 +170,7 @@ namespace tileworld {
                         } else if (this.col() == 5 && this.row() < editorRow + 5) {
                             let col = this.rowToColCoord(this.row() - editorRow);
                             let row = this.rowToRowCoord(this.row() - editorRow);
-                            if (this.findWitnessColRow(col, row) != -1) {
+                            if (this.rule.findWitnessColRow(col, row) != -1) {
                                 this.menu = RuleEditorMenus.DirExprMenu;
                                 this.whenDo = this.rule.getWhenDo(col, row);
                                 this.setTileSaved();
