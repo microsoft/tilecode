@@ -7,9 +7,19 @@ namespace tileworld {
     export class RuleDisplay extends RuleVisualsBase {
         protected all: AllExport;
 
+        private otherCursor: Sprite;    // show correspondence between left and right
+
+        
         constructor(p: Project, protected rule: RuleView) {
             super(p);
             this.all = new AllExport(p);
+            
+            // linked cursor
+            this.otherCursor = sprites.create(cursorOut)
+            this.otherCursor.setFlag(SpriteFlag.Invisible, true)
+            this.otherCursor.x = 88
+            this.otherCursor.y = yoff+40
+            this.otherCursor.z = 50;
         }
 
         protected getDir() {
@@ -34,6 +44,22 @@ namespace tileworld {
         protected getDirectionImage() {
             let dir = this.rule.getDirFromRule();
             return this.getType() == RuleType.ButtonPress ? buttonImages[dir] : moveImages[dir];
+        }
+
+        private otherCursorMove() {
+            if (this.col() >= 5 && this.row() >= editorRow) {
+                let row = this.row() - editorRow;
+                this.otherCursor.setFlag(SpriteFlag.Invisible, false);
+                // compute mapping from right to left hand side
+                this.otherCursor.x = this.rowToColCoord(row) * 16 + 8;
+                this.otherCursor.y = this.rowToRowCoord(row) * 16 + 8 + yoff + (editorRow *16);
+            } else {
+                this.otherCursor.setFlag(SpriteFlag.Invisible, true);
+            }
+        }
+
+        protected cursorMove(dir: MoveDirection, pressed: boolean) {
+            this.otherCursorMove();
         }
 
         protected collideCol: number;

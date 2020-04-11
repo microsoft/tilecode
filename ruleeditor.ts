@@ -28,6 +28,7 @@ namespace tileworld {
         }
 
         protected cursorMove(dir: MoveDirection, pressed: boolean) {
+            super.cursorMove(dir, pressed);
             this.cursorToView()
             this.update();
         }
@@ -75,7 +76,6 @@ namespace tileworld {
     const attrHelpString = "00include,10exclude,90reset,";
 
     export class RuleEditor extends RuleDisplay {
-        private otherCursor: Sprite;    // show correspondence between left and right
 
         // in-world menus
         private menu: RuleEditorMenus;  // which menu is active?
@@ -101,13 +101,6 @@ namespace tileworld {
 
             // Control
             this.menu = RuleEditorMenus.MainMenu;
-
-            // linked cursor
-            this.otherCursor = sprites.create(cursorOut)
-            this.otherCursor.setFlag(SpriteFlag.Invisible, true)
-            this.otherCursor.x = 88
-            this.otherCursor.y = yoff+40
-            this.otherCursor.z = 50;
 
             // refresh display
             this.update();
@@ -233,7 +226,7 @@ namespace tileworld {
 
         protected cursorMove(dir: MoveDirection, pressed: boolean) {
             if (this.menu == RuleEditorMenus.MainMenu) {
-                this.otherCursorMove();
+                super.cursorMove(dir, pressed);
             } 
             if (this.p.help) {
                 this.helpCursor.x = this.col() < 6 ? this.cursor.x + 16 : this.cursor.x - 16;
@@ -254,18 +247,6 @@ namespace tileworld {
                 } else if (this.menu == RuleEditorMenus.CommandMenu) {
                     this.commandUpdate(true);
                 }
-            }
-        }
-
-        private otherCursorMove() {
-            if (this.col() >= 5 && this.row() >= editorRow) {
-                let row = this.row() - editorRow;
-                this.otherCursor.setFlag(SpriteFlag.Invisible, false);
-                // compute mapping from right to left hand side
-                this.otherCursor.x = this.rowToColCoord(row) * 16 + 8;
-                this.otherCursor.y = this.rowToRowCoord(row) * 16 + 8 + yoff + (editorRow *16);
-            } else {
-                this.otherCursor.setFlag(SpriteFlag.Invisible, true);
             }
         }
 
