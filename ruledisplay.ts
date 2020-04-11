@@ -78,9 +78,12 @@ namespace tileworld {
             if (this.p.debug)
                 screen.print(this.rule.getRuleId().toString(), 30, 0);
             screen.print("Do", 70, (editorRow << 4) + 8);
+            
             // sets collideCol and collideRow
             this.showRuleType(this.rule.getRuleType(), this.rule.getDirFromRule(), 2, 2 + editorRow);
             this.makeContext();
+            this.showRuleType(this.rule.getRuleType(), this.rule.getDirFromRule(), 2, 2 + editorRow);
+         
             this.showCommands();
             if (this.getType() == RuleType.ButtonPress) {
                 let image = this.getDirectionImage();
