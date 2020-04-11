@@ -150,7 +150,7 @@ namespace tileworld {
                 this.drawImage(5, crow + editorRow, img2);
                 if (img1 == collisionSprite)
                     this.drawImage(5, crow + editorRow, img1);
-                if (kind != -1) {
+                if (kind != -1 && this.getType() != RuleType.Collision) {
                     let whendo = this.rule.getWhenDo(wcol, wrow);
                     this.drawImage(5, crow + editorRow, movedImages[this.rule.getWitnessDirection(whendo)])
                 }
@@ -237,7 +237,7 @@ namespace tileworld {
                     screen.drawTransparentImage(attrImages[i], (col << 4) + 8 + attrXoffsets[i], ((row + editorRow) << 4) + 8 + yoff + attrYoffsets[i]);
                 });
                 // show direction 
-                if (this.findWitnessColRow(col, row) != -1) {
+                if (this.getType() != RuleType.Collision && this.findWitnessColRow(col, row) != -1) {
                     this.drawImage(col, row + editorRow, movedImages[this.rule.getWitnessDirection(whenDo)])
                 }
                 // peek into attributions
