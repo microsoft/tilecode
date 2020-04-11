@@ -15,7 +15,7 @@ enum RuleType {
     Collision,      // sprite collision
     NegationCheck,  // check spec
     FirstRule = ButtonPress,
-    LastRule = Collision
+    LastRule = NegationCheck
 };
 
 // directions are 0-3 and move clockwise
