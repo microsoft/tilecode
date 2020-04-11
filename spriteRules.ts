@@ -135,7 +135,7 @@ namespace tileworld {
             this.drawImage(x + 2, y + 5, this.centerImage());
 
             this.makeContext(x + 6, y + 5);
-            this.doBoth(RuleType.NegationCheck, -1, x + 5, y + 4, false);
+            this.doBoth(RuleType.NegationCheck, AnyDir, x + 5, y + 4, false);
         }
     }
 }

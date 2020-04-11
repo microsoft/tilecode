@@ -82,7 +82,8 @@ namespace tileworld {
             // sets collideCol and collideRow
             this.showRuleType(this.rule.getRuleType(), this.rule.getDirFromRule(), 2, 2 + editorRow);
             this.makeContext();
-            this.showRuleType(this.rule.getRuleType(), this.rule.getDirFromRule(), 2, 2 + editorRow);
+            if (this.getType() != RuleType.NegationCheck)
+                this.showRuleType(this.rule.getRuleType(), this.rule.getDirFromRule(), 2, 2 + editorRow);
          
             this.showCommands();
             if (this.getType() == RuleType.ButtonPress) {
