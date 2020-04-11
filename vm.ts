@@ -121,7 +121,7 @@ namespace tileworld {
             this.vm.paintTile = [];
             this.vm.buttonMatch = [];
             this.vm.queued = [];
-            this.vm.phase = RuleType.ButtonPress;
+            this.vm.phase = RuleType.NegationCheck;
             this.vm.nextWorld.fill(0xf);
 
             this.allSprites(ts => {
