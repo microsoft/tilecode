@@ -207,19 +207,6 @@ namespace tileworld {
             return wd == -1 ?  false : this.getSetSpAttr(wd, kind) == AttrType.Include
         }
 
-        public isRestingRule() {
-            return this.getRuleType() == RuleType.ContextChange && this.getDirFromRule() == Resting;
-        }
-
-        public isCollidingResting() {
-            if (this.getRuleType() == RuleType.Collision) {
-                let wd = this.getWhenDo(2, 3);
-                // TODO: this isn't quite right
-                return wd == -1 ?  true : this.getWitnessDirection(wd) == Resting;
-            }
-            return false;  
-        }
-
         public whendoTrue(whendo: number) {
             let wd = this.r.whenDo[whendo];
             return isWhenDoTrue(wd);

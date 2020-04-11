@@ -1,10 +1,5 @@
 namespace tileworld {
 
-    // TODO: complete redo change-based propagation
-    // Ideas:
-    // - if a rule R evaluates false/true on a sprite-S-context in round N and nothing changes
-    //   then R will evaluate false/true in round N+1
-
     enum SpriteState { Alive, Dead, }
 
     // a TileSprite is centered on a 16x16 pixel tile
@@ -98,15 +93,16 @@ namespace tileworld {
         
         constructor(private p: Project, private rules: RuleView[]) {
             this.vm = null;
-            for (let i = RuleType.FirstRule; i<= RuleType.LastRule; i++) {
-                this.ruleIndex[i] = [];
-            }
-            // populate indices for more efficient lookup
+            // populate indices for more efficient lookup over
+            // rules (and derived rules)
             this.rules.forEach(rv => {
                 let derivedRules = rv.getDerivedRules();
                 derivedRules.push(rv);
                 derivedRules.forEach(rv => {
-                    this.ruleIndex[rv.getRuleType()].push(rv);
+                    let rt = rv.getRuleType();
+                    if (!this.ruleIndex[rt])
+                        this.ruleIndex[rt] = [];
+                    this.ruleIndex[rt].push(rv);
                 });
             });
         }
@@ -145,6 +141,17 @@ namespace tileworld {
         }
 
         continueRound() {
+            if (this.vm.phase == RuleType.NegationCheck) {
+                // negation rules currently only inspect (2,2)
+                this.ruleIndex[RuleType.NegationCheck].forEach(rv => {
+                    let whendo = rv.getWhenDo(2, 2);
+                
+                    // for now, we will deal only with rules that have 
+                    // witness in (2,2).
+                    // Sokoban check: no empty box (every box has cargo in it)
+                    // - positive witness plus a negative
+                });
+            }
             if (this.vm.phase == RuleType.ButtonPress) {
                 if (this.vm.queued.length > 0) {
                     let ts = this.vm.queued.pop();
@@ -263,17 +270,14 @@ namespace tileworld {
             let wrow = ts.row() + moveYdelta(ts.arg);
             this.collidingRules(ts, (rv) => {
                 // T = (wcol, wrow)
-                let moving = !rv.isCollidingResting();
                 this.allSprites(os => {
                     if (os == ts) return;
                     // (a) os in square T, resting or moving towards ts, or
                     if (os.col() == wcol && os.row() == wrow) {
-                        if (!moving && !this.moving(os) || 
-                                moving && this.moving(os) && oppDir(ts.arg,os.arg)) {
+                        if (!this.moving(os) || oppDir(ts.arg,os.arg)) {
                             this.collide(rv, ts, os, rcs);
-                            return;
                         }
-                    } else if (moving && this.moving(os)) {
+                    } else if (this.moving(os)) {
                         let leftRotate = flipRotateDir(ts.arg, RuleTransforms.LeftRotate);
                         let osCol = wcol + moveXdelta(leftRotate);
                         let osRow = wrow + moveYdelta(leftRotate);
