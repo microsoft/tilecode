@@ -4,14 +4,6 @@ namespace tileworld {
     // Ideas:
     // - if a rule R evaluates false/true on a sprite-S-context in round N and nothing changes
     //   then R will evaluate false/true in round N+1
-    // - so, if ALL rules on a sprite S (context) evaluate false in round N and nothing changes
-    //   then we don't need to look at ANY rules for S in round N+1.
-    // - if ANY rule evaluates true on sprite-S-context and nothing changes, then that rule
-    //   did nothing!
-
-    // - all true resting is bogus because it is just a special case of a rule that continues
-    //   to fire true
-
 
     enum SpriteState { Alive, Dead, }
 
@@ -272,7 +264,6 @@ namespace tileworld {
             this.collidingRules(ts, (rv) => {
                 // T = (wcol, wrow)
                 let moving = !rv.isCollidingResting();
-                // TODO: moving is a predicate on the sprite direction of the other sprite
                 this.allSprites(os => {
                     if (os == ts) return;
                     // (a) os in square T, resting or moving towards ts, or
@@ -436,7 +427,7 @@ namespace tileworld {
                 let witness = this.getWitness(kind, wcol, wrow);
                 // special case for collisions
                 if (rv.getRuleType() == RuleType.Collision) {
-                    witness = witnesses[0].kind() == kind ? witnesses[0] : null;
+                    witness = (witnesses[0].kind() == kind) ? witnesses[0] : null;
                 }
                 if (attr == AttrType.Exclude && witness) {
                     return false;

@@ -214,7 +214,8 @@ namespace tileworld {
         public isCollidingResting() {
             if (this.getRuleType() == RuleType.Collision) {
                 let wd = this.getWhenDo(2, 3);
-                return this.getWitnessDirection(wd) == Resting;
+                // TODO: this isn't quite right
+                return wd == -1 ?  true : this.getWitnessDirection(wd) == Resting;
             }
             return false;  
         }
