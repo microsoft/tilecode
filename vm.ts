@@ -483,14 +483,16 @@ namespace tileworld {
             let wid = rc.rv.getWhenDo(col, row);
             if (wid == -1 || rc.rv.getCmdInst(wid, 0) == -1)
                 return;
-            let wcol = rc.self.col() + (col - 2);
-            let wrow = rc.self.row() + (row - 2);
+            let wcol = rc.self ? rc.self.col() + (col - 2) : -1;
+            let wrow = rc.self ? rc.self.row() + (row - 2) : -1;
             for (let cid = 0; cid < 4; cid++) {
                 let inst = rc.rv.getCmdInst(wid, cid);
                 if (inst == -1) break;
                 let arg = rc.rv.getCmdArg(wid, cid);
                 switch(inst) {
                     case CommandType.Paint: {
+                        if (!rc.self)
+                            break;
                         if (this.vm.nextWorld.getPixel(wcol, wrow) == 0xf) {
                             this.vm.nextWorld.setPixel(wcol, wrow, arg);
                             if (this.vm.paintTile && this.vm.paintTile.length < 5) {
@@ -501,6 +503,8 @@ namespace tileworld {
                         break;
                     }
                     case CommandType.Move: {
+                        if (!rc.self)
+                            break;
                         let colliding = rc.rv.getRuleType() == RuleType.Collision;
                         let button = rc.rv.getRuleType() == RuleType.ButtonPress;
                         let self = col == 2 && row == 2;
@@ -514,6 +518,8 @@ namespace tileworld {
                         break;
                     }
                     case CommandType.Sprite: {
+                        if (!rc.self)
+                            break;
                         // the witness is found where expected
                         let witness = rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
                         // except in the case of collisions with moving sprites
