@@ -142,15 +142,24 @@ namespace tileworld {
 
         continueRound() {
             if (this.vm.phase == RuleType.NegationCheck) {
+                let ruleClosures: RuleClosure[] = [];
                 // negation rules currently only inspect (2,2)
                 this.ruleIndex[RuleType.NegationCheck].forEach(rv => {
-                    let whendo = rv.getWhenDo(2, 2);
-                
-                    // for now, we will deal only with rules that have 
-                    // witness in (2,2).
-                    // Sokoban check: no empty box (every box has cargo in it)
-                    // - positive witness plus a negative
+                    // for now, we will deal only with rules that have witness in (2,2)
+                    // TODO: could generalize to a Bg witness
+                    let kind = rv.findWitnessColRow(2, 2);
+                    if (kind == -1)
+                        return;
+                    let witnesses = this.vm.sprites[kind];
+                    if (!witnesses || witnesses.length == 0) {
+                        // SUCCESS!
+                        ruleClosures.push(new RuleClosure(rv, null, []));
+                    } else {
+
+                    }
                 });
+                this.vm.phase = RuleType.ButtonPress;
+                return ruleClosures;
             }
             if (this.vm.phase == RuleType.ButtonPress) {
                 if (this.vm.queued.length > 0) {
