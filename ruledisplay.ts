@@ -137,7 +137,11 @@ namespace tileworld {
                 return emptyTile;
             switch (inst) {
                 case CommandType.Move: return moveImages[arg];
-                case CommandType.Paint: return this.p.backgroundImages()[arg];
+                case CommandType.Paint: {
+                    let ret = this.p.backgroundImages()[arg].clone();
+                    ret.drawTransparentImage(smallPaint, 0, 0);
+                    return ret;
+                }
                 case CommandType.Sprite: return spriteImages[arg];
                 case CommandType.Game: return gameImages[arg];
                 case CommandType.Spawn: {

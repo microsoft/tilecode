@@ -1,5 +1,10 @@
 // refactoring TODO list
 
+
+// Paper
+// - @bg command: teleport to background 
+
+// User
 // - deletion of spawn command should delete (optional) following move command
 // - fix up collision editing
 //   - no direction predicate on self sprite
