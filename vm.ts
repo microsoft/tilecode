@@ -80,10 +80,8 @@ namespace tileworld {
         constructor(
             public rv: RuleView,
             public self: TileSprite,
-            public witnesses: TileSprite[],
-            public spawned: TileSprite[] = null
+            public witnesses: TileSprite[]
         ) {
-            this.spawned = [];
         }
     }
 
@@ -497,6 +495,7 @@ namespace tileworld {
                 return;
             let wcol = rc.self ? rc.self.col() + (col - 2) : -1;
             let wrow = rc.self ? rc.self.row() + (row - 2) : -1;
+            let spawned: TileSprite = null;
             for (let cid = 0; cid < 4; cid++) {
                 let inst = rc.rv.getCmdInst(wid, cid);
                 if (inst == -1) break;
@@ -517,14 +516,14 @@ namespace tileworld {
                     case CommandType.Move: {
                         if (!rc.self)
                             break;
-                        // TODO: problem - what sprite to apply move command to?
-                        // TODO: self, witnesses, spawned
                         let colliding = rc.rv.getRuleType() == RuleType.Collision;
                         let button = rc.rv.getRuleType() == RuleType.ButtonPress;
                         let self = col == 2 && row == 2;
-                        let witness = self ? rc.self : 
-                                (colliding ? rc.witnesses[0]
-                                    : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow));
+                        let witness =
+                            spawned ? spawned : 
+                            self ? rc.self : 
+                            (colliding ? rc.witnesses[0]
+                                       : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow));
                         if (witness && (witness.inst == -1 || Math.randomRange(0,1) < 0.5 || colliding || button)) {
                             witness.inst = inst;
                             witness.arg = arg;
@@ -549,12 +548,11 @@ namespace tileworld {
                     case CommandType.Spawn: {
                         if (!rc.self)
                             break;
-                        let ts = new TileSprite(this.p.spriteImages()[arg], arg);
-                        rc.spawned.push(ts);
-                        this.vm.spawnedSprites.push(ts);
-                        ts.x = (wcol << 4) + 8;
-                        ts.y = (wrow << 4) + 8;
-                        ts.setFlag(SpriteFlag.Invisible, true);
+                        spawned = new TileSprite(this.p.spriteImages()[arg], arg);
+                        this.vm.spawnedSprites.push(spawned);
+                        spawned.x = (wcol << 4) + 8;
+                        spawned.y = (wrow << 4) + 8;
+                        spawned.setFlag(SpriteFlag.Invisible, true);
                     }
                     case CommandType.Game: {
                         // all game commands are global
