@@ -242,6 +242,8 @@ namespace tileworld {
 
         private applyRules(phase: RuleType, ts: TileSprite) {
             let ruleClosures: RuleClosure[] = [];
+            if (!this.ruleIndex[phase])
+                return ruleClosures;
             this.ruleIndex[phase].forEach(rv => {
                 if (this.ruleMatchesSprite(rv, ts) &&
                     (phase == RuleType.ContextChange && this.ruleMatchesDirection(rv, ts.dir)
