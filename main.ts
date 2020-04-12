@@ -1,12 +1,6 @@
 // refactoring TODO list
 
-// 4. spawn sprite at a location, with initial direction
-// - does a spawn in round N participate in collision in round N?
-//   - probably not, since it isn't visible until after round completes
-// - how to track spawn witness for subsequent move command?
-//   - store spawned sprites in a list for searching
 // - deletion of spawn command should delete (optional) following move command
-
 // - fix up collision editing
 //   - no direction predicate on self sprite
 //   - restrict direction predicates to resting/moving for other sprite
@@ -16,7 +10,6 @@
 //   - command restrictions
 // - all rule types available
 // - easier access to derived rules
-// - witness command (must follow sprite directly)
 
 // post UIST: -------------------------
 
