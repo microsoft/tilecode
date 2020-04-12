@@ -195,6 +195,14 @@ namespace tileworld {
         }
 
         private noMenu() {
+            if (this.menu == RuleEditorMenus.CommandMenu) {
+                // this should be encapsulated elsewhere
+                if (this.currentCommand < this.rule.getCmdsLen(this.whenDo) &&
+                    (this.rule.getCmdInst(this.whenDo, this.currentCommand) == 0xff ||
+                     this.rule.getCmdArg(this.whenDo, this.currentCommand) == 0xff )) {
+                        this.rule.removeCommand(this.whenDo, this.currentCommand)
+                }
+            }
             this.whenDo = -1;
             this.currentCommand = -1;
             this.attrSelected = -1;
@@ -410,7 +418,6 @@ namespace tileworld {
                     if (this.p.help) this.helpCursor.say("delete command");
                 } else {
                     let len = this.rule.removeCommand(this.whenDo, this.currentCommand);
-                    console.logValue("len", len);
                     this.noMenu();
                 }
             } else if (this.row() == 0 && tok != 0xf) {
