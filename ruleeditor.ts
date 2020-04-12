@@ -195,9 +195,6 @@ namespace tileworld {
         }
 
         private noMenu() {
-            if (this.menu == RuleEditorMenus.CommandMenu) {
-                this.checkCommand();
-            }
             this.whenDo = -1;
             this.currentCommand = -1;
             this.attrSelected = -1;
@@ -404,14 +401,6 @@ namespace tileworld {
             }
         }
 
-        private checkCommand() {
-            // don't allow incomplete commands 
-            let arg = this.rule.getCmdArg(this.whenDo, this.currentCommand);
-            if (arg == 0xff) {
-                this.setCommand(0xff, 0xff);
-            }
-        }
-
         private commandUpdate(hover: boolean = false) {
             let tok = this.ruleTypeMap.getPixel(this.col(), this.row());
             let arg = this.dirMap.getPixel(this.col(), this.row());
@@ -421,7 +410,8 @@ namespace tileworld {
                 if (hover) {
                     if (this.p.help) this.helpCursor.say("delete command");
                 } else {
-                    this.rule.removeCommand(this.whenDo, this.currentCommand);
+                    let len = this.rule.removeCommand(this.whenDo, this.currentCommand);
+                    console.logValue("len", len);
                     this.noMenu();
                 }
             } else if (this.row() == 0 && tok != 0xf) {

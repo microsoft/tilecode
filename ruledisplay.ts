@@ -115,6 +115,7 @@ namespace tileworld {
         // map from row 0-4 to (col,row) in diamond
         protected rowToColCoord(lr: number) { return lr % 2 == 0 ? 2 : lr; }
         protected rowToRowCoord(lr: number) { return lr == 0 ? 1 : (lr == 4 ? 3 : 2); }
+        // compute number of commands in each row, for editing
         protected commandLengths: number[];
 
         private showCommands() {
@@ -169,8 +170,6 @@ namespace tileworld {
             if (!draw) { this.tokens = tokens; }
             let cid = 0
             for (; whendo != -1 && cid < this.rule.getCmdsLen(whendo); cid++ , col++) {
-                let inst = this.rule.getCmdInst(whendo, cid);
-                let arg = this.rule.getCmdArg(whendo, cid);
                 this.showCommand(col, crow, whendo, cid, tokens, draw);
             }
             if (whendo == -1 || cid < MaxCommands && tokens.length > 0) {

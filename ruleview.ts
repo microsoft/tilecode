@@ -196,7 +196,7 @@ namespace tileworld {
         public removeCommand(wdid: number, cid: number) {
             let wd = this.r.whenDo[wdid];
             if (wd.commandsLen == 0 || cid >= wd.commandsLen)
-                return 0xff;
+                return wd.commandsLen;
             for(let i=(cid << 1); i <= ((MaxCommands-1)<<1)-1; i++) {
                 wd.commands.setUint8(i, wd.commands.getUint8(i+2));
             }
