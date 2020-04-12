@@ -1,13 +1,11 @@
 // refactoring TODO list
 
-// for UIST paper
-
-// issues
-
 // 4. spawn sprite at a location, with initial direction
-// - create commands - select a sprite
+// - spawn command - select a sprite
 // - default is resting
 // - add a direction after if needed
+// Sprite commands must immediately follow the sprite
+// - witness or spawned
 
 // - command length bug?
 // - fix up collision editing
