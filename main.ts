@@ -5,13 +5,21 @@
 // issues
 
 // 4. spawn sprite at a location, with initial direction
+// - create commands - select a sprite
+// - default is resting
+// - add a direction after if needed
 
-// - fix up collisions
-//   - restrict direction predicates to resting/moving
-// - restrict collision and negation rules
+// - command length bug?
+// - fix up collision editing
+//   - no direction predicate on self sprite
+//   - restrict direction predicates to resting/moving for other sprite
+//   - command restrictions
+// - negation editing
+//   - only one command line, no witnesses
+//   - command restrictions
 // - all rule types available
-// - witness to generalized rules
-
+// - easier access to derived rules
+// - witness command (must follow sprite directly)
 
 // post UIST: -------------------------
 
