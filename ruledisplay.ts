@@ -6,10 +6,8 @@ namespace tileworld {
     
     export class RuleDisplay extends RuleVisualsBase {
         protected all: AllExport;
-
         private otherCursor: Sprite;    // show correspondence between left and right
 
-        
         constructor(p: Project, protected rule: RuleView) {
             super(p);
             this.all = new AllExport(p);
@@ -191,13 +189,21 @@ namespace tileworld {
                 let inst = this.rule.getCmdInst(whendo, cid);
                 let arg = this.rule.getCmdArg(whendo, cid);
                 if (draw) this.drawImage(col, row + editorRow, this.instToImage(inst, arg));
-                // depending on the instruction, we may need to alter
-                // the tokens next available
+                // TODO: depending on the instruction, we may need to alter
+                // TODO: the tokens next available, not just remove  
                 tokens.removeElement(inst);
                 col++;
             }
             return col;
         }
+
+        // at-most-once: paint, spawn, destroy
+
+        // instructions-following(T): 
+        //   T=witness: move, destroy, paint, spawn, global (ALL)
+        //   T=move:   paint, spawn, global
+        //   T=paint: spawn, global
+        //   T=spawn: move, paint, global
 
         // what instructions are possible, given rule type and witness
         // this defines the menu to present at the top-level

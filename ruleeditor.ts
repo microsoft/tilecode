@@ -299,8 +299,9 @@ namespace tileworld {
         private tryEditCommand() {
             let row = this.row()-editorRow;
             if (row > 4) return false;
-            let col = this.col() - 6;
-            if (col >= Math.abs(this.commandLengths[row])) return false;
+            let cmd = this.col() - 6;
+            let len = this.commandLengths[row];
+            if (len == -1 || cmd >= len) return false;
             // set up the state
             this.menu = RuleEditorMenus.CommandMenu;
             this.ruleTypeMap.fill(0xf);
@@ -317,9 +318,9 @@ namespace tileworld {
                 this.whenDo = this.rule.makeWhenDo(newCol, newRow);
             // remember where we are
             this.setTileSaved();
-            this.currentCommand = col;
+            this.currentCommand = cmd;
             // creat the menu
-            if (this.rule.getCmdInst(this.whenDo, col) == 0xff) {
+            if (this.rule.getCmdInst(this.whenDo, cmd) == 0xff) {
                 this.showCommandsAt(row, newCol, newRow, false);
                 this.makeCommandMenu(0xff,0xff);
             } else {
