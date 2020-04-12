@@ -149,6 +149,11 @@ namespace tileworld {
                     ret.drawTransparentImage(spawn, 0, 0);
                     return ret;
                 }
+                case CommandType.Teleport: {
+                    let ret = this.p.backgroundImages()[arg].clone();
+                    ret.drawTransparentImage(teleport, 0, 0);
+                    return ret;
+                }
             }
             return emptyTile;
         }
@@ -213,6 +218,7 @@ namespace tileworld {
             if (this.getType() != RuleType.Collision) {
                 tokens.push(CommandType.Paint);
                 tokens.push(CommandType.Spawn);
+                tokens.push(CommandType.Teleport);
             }
             tokens.push(CommandType.Game);
             return tokens;

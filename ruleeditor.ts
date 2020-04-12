@@ -336,7 +336,7 @@ namespace tileworld {
         }
 
         private makeCommandMenu(inst: number, arg: number) {
-            let col = 5;
+            let col = 4;
             let row = 0;
             // show the categories
             // which one is currently selected?
@@ -364,10 +364,8 @@ namespace tileworld {
         private instToArgText(inst: number): string[] {
             switch (inst) {
                 case CommandType.Move: return moveText;
-                case CommandType.Paint: return [];
                 case CommandType.Sprite: return spriteText;
                 case CommandType.Game: return gameText;
-                case CommandType.Spawn: return [];
                 default: break;
             }
             return [];
@@ -380,6 +378,7 @@ namespace tileworld {
                 case CommandType.Sprite: return 1;
                 case CommandType.Game: return 2;
                 case CommandType.Spawn: return this.p.spriteCnt();
+                case CommandType.Teleport: return this.p.backCnt();
             }
             return 0;
         }

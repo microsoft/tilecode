@@ -93,24 +93,6 @@ export const paint = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
 `;
-export const smallPaint = img`
-    . . . . . . . . . . . . . . . .
-    . f f f f f f . . . . . . . . .
-    . f 4 1 4 1 f . . . . . . . . .
-    . f 4 1 4 1 f . . . . . . . . .
-    . f 1 1 1 1 f . . . . . . . . .
-    . f 9 9 9 9 f . . . . . . . . .
-    . f f e e f f . . . . . . . . .
-    . . f e e f . . . . . . . . . .
-    . . f f f f . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-`;
 export const music = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . 9 . . . . . . .
@@ -715,24 +697,6 @@ export const eat = img`
     . . . . . f f f f f f . . . . .
     . . . . . . . . . . . . . . . .
 `;
-export const spawn = img`
-    . . . f f f . . . . . . . . . .
-    . . . f 7 f . . . . . . . . . .
-    . . . f 7 f . . . . . . . . . .
-    f f f f 7 f f f f . . . . . . .
-    f 7 7 7 7 7 7 7 f . . . . . . .
-    f f f f 7 f f f f . . . . . . .
-    . . . f 7 f . . . . . . . . . .
-    . . . f 7 f . . . . . . . . . .
-    . . . f f f . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-    . . . . . . . . . . . . . . . .
-`;
 export const stopSign = img`
     . . . . . . . . . . . . . . . .
     . . . . . 1 1 1 1 1 1 . . . . .
@@ -768,6 +732,62 @@ export const uTurn = img`
     . f 5 5 5 5 5 5 5 5 5 5 5 5 f .
     . . f 5 5 5 5 5 5 5 5 5 5 f . .
     . . . f 5 5 5 5 5 5 5 5 f . . .
+`;
+
+// commands that apply to tiles (no sprite needed)
+export const spawn = img`
+    . . . f f f . . . . . . . . . .
+    . . . f 7 f . . . . . . . . . .
+    . . . f 7 f . . . . . . . . . .
+    f f f f 7 f f f f . . . . . . .
+    f 7 7 7 7 7 7 7 f . . . . . . .
+    f f f f 7 f f f f . . . . . . .
+    . . . f 7 f . . . . . . . . . .
+    . . . f 7 f . . . . . . . . . .
+    . . . f f f . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+`;
+export const smallPaint = img`
+    . . . . . . . . . . . . . . . .
+    . f f f f f f . . . . . . . . .
+    . f 4 1 4 1 f . . . . . . . . .
+    . f 4 1 4 1 f . . . . . . . . .
+    . f 1 1 1 1 f . . . . . . . . .
+    . f 9 9 9 9 f . . . . . . . . .
+    . f f e e f f . . . . . . . . .
+    . . f e e f . . . . . . . . . .
+    . . f f f f . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+`;
+export const teleport = img`
+    . . f f f f f . . . . . . . . .
+    . f 5 5 5 5 5 f . . . . . . . .
+    f 5 f f f f f 5 f . . . . . . .
+    f 5 f 5 5 5 f 5 f . . . . . . .
+    f 5 f 5 f 5 f 5 f . . . . . . .
+    f 5 f 5 5 5 5 5 f . . . . . . .
+    f 5 f f f f f f f . . . . . . .
+    . f 5 5 5 5 5 f . . . . . . . .
+    . . f f f f f . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
 `;
 
 // global commands
@@ -897,8 +917,8 @@ export const attrYoffsets = [0, 0, -8, 0];
 export const commandImages = [map, paint, code, play];
 export const gameImages = [ trophyUp, trophyDown ];
 export const gameText = [ "win", "lose"];
-export const categoryImages = [allFour, paint, spawn, genericSprite, gameIcon ];
-export const categoryText = ["move sprite", "paint tile", "spawn", "sprite",  "game"];
+export const categoryImages = [allFour, paint, spawn, genericSprite, gameIcon, teleport ];
+export const categoryText = ["move sprite", "paint tile", "spawn", "sprite",  "game", "teleport"];
 export const spriteImages = [eat];
 export const spriteText = ["remove"];
 

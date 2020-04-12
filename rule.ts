@@ -47,6 +47,7 @@ enum CommandType {
     Spawn,          // spawn a sprite at a tile going in a direction (requires 4-bits for sprite and 4-bits for direction)
     Sprite,         // various commands for sprites
     Game,           // various top-level game commands
+    Teleport,       // change location to a tile of particular background (random)
     Last,
 }
 
