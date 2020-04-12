@@ -166,8 +166,10 @@ namespace tileworld {
             // show the existing commands
             let whendo = this.rule.getWhenDo(wcol, wrow);
             let col = 6;
-            let tokens = this.getTokens(wcol, wrow);
-            if (!draw) { this.tokens = tokens; }
+            let tokens = this.startTokens(wcol, wrow);
+            if (!draw) { 
+                this.tokens = tokens; 
+            }
             let cid = 0
             for (; whendo != -1 && cid < this.rule.getCmdsLen(whendo); cid++ , col++) {
                 this.showCommand(col, crow, whendo, cid, tokens, draw);
@@ -188,40 +190,40 @@ namespace tileworld {
                 let inst = this.rule.getCmdInst(whendo, cid);
                 let arg = this.rule.getCmdArg(whendo, cid);
                 if (draw) this.drawImage(col, row + editorRow, this.instToImage(inst, arg));
-                // TODO: depending on the instruction, we may need to alter
-                // TODO: the tokens next available, not just remove  
-                tokens.removeElement(inst);
+                if (inst != 0xff)
+                    this.updateTokens(tokens, inst);
                 col++;
             }
             return col;
         }
 
-        // at-most-once: paint, spawn, destroy
-
-        // instructions-following(T): 
-        //   T=witness: move, destroy, paint, spawn, global (ALL)
-        //   T=move:   paint, spawn, global
-        //   T=paint: spawn, global
-        //   T=spawn: move, paint, global
-
         // what instructions are possible, given rule type and witness
         // this defines the menu to present at the top-level
-        // TODO: this should really be part of editor, rather than display,
-        private getTokens(col: number, row: number) {
+        private startTokens(col: number, row: number) {
             let tokens: number[] = [];
             if (this.rule.findWitnessColRow(col, row) != -1) {
-                if ((col == 2 && row == 2) || this.getType() != RuleType.Collision)
+                if (this.getType() != RuleType.Collision) {
                     tokens.push(CommandType.Move);
+                }
+                tokens.push(CommandType.Sprite);
             }
             if (this.getType() != RuleType.Collision) {
                 tokens.push(CommandType.Paint);
                 tokens.push(CommandType.Spawn);
             }
-            if (this.rule.findWitnessColRow(col, row) != -1) {
-                tokens.push(CommandType.Sprite);
-            }
             tokens.push(CommandType.Game);
             return tokens;
+        }
+
+        private updateTokens(tokens: number[], inst: number) {
+            // at-most-once: paint, spawn, destroy
+            tokens.removeElement(inst);
+            if (inst == CommandType.Spawn) {
+                tokens.push(CommandType.Move);
+            } else {
+                tokens.removeElement(CommandType.Move);
+                tokens.removeElement(CommandType.Sprite);
+            }
         }
 
         protected showAttributes(col: number, row: number, show: boolean = true) {

@@ -6,8 +6,8 @@
 // - add a direction after if needed
 // Sprite commands must immediately follow the sprite
 // - witness or spawned
+// - deletion of spawn command should delete (optional) following move command
 
-// - command length bug?
 // - fix up collision editing
 //   - no direction predicate on self sprite
 //   - restrict direction predicates to resting/moving for other sprite
