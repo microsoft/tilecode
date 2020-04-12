@@ -190,8 +190,7 @@ namespace tileworld {
                 let inst = this.rule.getCmdInst(whendo, cid);
                 let arg = this.rule.getCmdArg(whendo, cid);
                 if (draw) this.drawImage(col, row + editorRow, this.instToImage(inst, arg));
-                if (inst != 0xff)
-                    this.updateTokens(tokens, inst);
+                this.updateTokens(tokens, inst);
                 col++;
             }
             return col;
@@ -216,13 +215,15 @@ namespace tileworld {
         }
 
         private updateTokens(tokens: number[], inst: number) {
+            if (inst == 0xff)
+                return;
             // at-most-once: paint, spawn, destroy
             tokens.removeElement(inst);
+            // always remove move and destroy
+            tokens.removeElement(CommandType.Move);
+            tokens.removeElement(CommandType.Sprite);
             if (inst == CommandType.Spawn) {
-                tokens.push(CommandType.Move);
-            } else {
-                tokens.removeElement(CommandType.Move);
-                tokens.removeElement(CommandType.Sprite);
+                tokens.insertAt(0, CommandType.Move);
             }
         }
 
