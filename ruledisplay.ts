@@ -210,6 +210,7 @@ namespace tileworld {
             }
             if (this.getType() != RuleType.Collision) {
                 tokens.push(CommandType.Paint);
+                tokens.push(CommandType.Spawn);
             }
             if (this.rule.findWitnessColRow(col, row) != -1) {
                 tokens.push(CommandType.Sprite);
