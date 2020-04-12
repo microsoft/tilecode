@@ -80,7 +80,10 @@ namespace tileworld {
         constructor(
             public rv: RuleView,
             public self: TileSprite,
-            public witnesses: TileSprite[]) {
+            public witnesses: TileSprite[],
+            public spawned: TileSprite[] = null
+        ) {
+            this.spawned = [];
         }
     }
 
@@ -514,6 +517,8 @@ namespace tileworld {
                     case CommandType.Move: {
                         if (!rc.self)
                             break;
+                        // TODO: problem - what sprite to apply move command to?
+                        // TODO: self, witnesses, spawned
                         let colliding = rc.rv.getRuleType() == RuleType.Collision;
                         let button = rc.rv.getRuleType() == RuleType.ButtonPress;
                         let self = col == 2 && row == 2;
@@ -545,6 +550,7 @@ namespace tileworld {
                         if (!rc.self)
                             break;
                         let ts = new TileSprite(this.p.spriteImages()[arg], arg);
+                        rc.spawned.push(ts);
                         this.vm.spawnedSprites.push(ts);
                         ts.x = (wcol << 4) + 8;
                         ts.y = (wrow << 4) + 8;
