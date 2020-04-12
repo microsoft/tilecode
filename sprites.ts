@@ -166,6 +166,7 @@ export const addRule = img`
     . . . . . . . . . . . . . . . .
 `;
 
+// tiles
 export const emptyTile = img`
     b b b b b b b b b b b b b b b c
     b f f f f f f f f f f f f f f c
@@ -696,6 +697,24 @@ export const eat = img`
     . . . . . f f f f f f . . . . .
     . . . . . . . . . . . . . . . .
 `;
+export const spawn = img`
+    . . . . . . . . . . . . . . . .
+    . . . . 5 5 5 5 5 5 5 . . . . .
+    . . . 5 . . . . . . . 5 . . . .
+    . . 5 . . . . . . . . . 5 . . .
+    . 5 . . . . . 7 . . . . . 5 . .
+    . 5 . . . . . 7 . . . . . 5 . .
+    . 5 . . . . . 7 . . . . . 5 . .
+    . 5 . . 7 7 7 7 7 7 7 . . 5 . .
+    . 5 . . . . . 7 . . . . . 5 . .
+    . 5 . . . . . 7 . . . . . 5 . .
+    . 5 . . . . . 7 . . . . . 5 . .
+    . . 5 . . . . . . . . . 5 . . .
+    . . . 5 . . . . . . . 5 . . . .
+    . . . . 5 5 5 5 5 5 5 . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+`;
 export const stopSign = img`
     . . . . . . . . . . . . . . . .
     . . . . . 1 1 1 1 1 1 . . . . .
@@ -860,7 +879,7 @@ export const attrYoffsets = [0, 0, -8, 0];
 export const commandImages = [map, paint, code, play];
 export const gameImages = [ trophyUp, trophyDown ];
 export const gameText = [ "win", "lose"];
-export const categoryImages = [allFour, paint, genericSprite, genericSprite, gameIcon ];
+export const categoryImages = [allFour, paint, spawn, genericSprite, gameIcon ];
 export const categoryText = ["move sprite", "paint tile", "spawn", "sprite",  "game"];
 export const spriteImages = [eat];
 export const spriteText = ["remove"];

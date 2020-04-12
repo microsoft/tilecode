@@ -305,15 +305,20 @@ namespace tileworld {
             this.menu = RuleEditorMenus.CommandMenu;
             this.ruleTypeMap.fill(0xf);
             this.dirMap.fill(0xf);
+            // map the command row back to when context coordinates
             let newCol = this.rowToColCoord(row);
             let newRow = this.rowToRowCoord(row);
+            // no editing if coordinate not active
             if (!this.active(newCol, newRow))
                 return false;
+            // get the when do (lazy creation)
             this.whenDo = this.rule.getWhenDo(newCol, newRow);
             if (this.whenDo == -1)
                 this.whenDo = this.rule.makeWhenDo(newCol, newRow);
+            // remember where we are
             this.setTileSaved();
             this.currentCommand = col;
+            // creat the menu
             if (this.rule.getCmdInst(this.whenDo, col) == 0xff) {
                 this.showCommandsAt(row, newCol, newRow, false);
                 this.makeCommandMenu(0xff,0xff);

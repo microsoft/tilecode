@@ -141,6 +141,11 @@ namespace tileworld {
                 case CommandType.Paint: return this.p.backgroundImages()[arg];
                 case CommandType.Sprite: return spriteImages[arg];
                 case CommandType.Game: return gameImages[arg];
+                case CommandType.Spawn: {
+                    let ret = this.p.spriteImages()[arg].clone();
+                    ret.drawTransparentImage(spawn, 0, 0);
+                    return ret;
+                }
             }
             return emptyTile;
         }
@@ -186,6 +191,8 @@ namespace tileworld {
                 let inst = this.rule.getCmdInst(whendo, cid);
                 let arg = this.rule.getCmdArg(whendo, cid);
                 if (draw) this.drawImage(col, row + editorRow, this.instToImage(inst, arg));
+                // depending on the instruction, we may need to alter
+                // the tokens next available
                 tokens.removeElement(inst);
                 col++;
             }
@@ -194,6 +201,7 @@ namespace tileworld {
 
         // what instructions are possible, given rule type and witness
         // this defines the menu to present at the top-level
+        // TODO: this should really be part of editor, rather than display,
         private getTokens(col: number, row: number) {
             let tokens: number[] = [];
             if (this.rule.findWitnessColRow(col, row) != -1) {
