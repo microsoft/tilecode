@@ -65,7 +65,8 @@ namespace tileworld {
         public nextWorld: Image;            // record all paint commands (if log exceeded)
         public changed: Image;              // what changed in last round
         public sprites: TileSprite[][];     // the sprites, sorted by kind
-        public deadSprites: TileSprite[];   // the sprites removed by this round
+        public deadSprites: TileSprite[];   // the sprites removed this round
+        public spawnedSprites: TileSprite[]; // the sprites spawned this round
         // during evaluating
         public buttonMatch: TileSprite[];   // which sprites had a button event rule (external influence)
         public phase: RuleType;
@@ -118,6 +119,7 @@ namespace tileworld {
             this.globalInsts = [];
             this.globalArgs = [];
             this.vm.deadSprites = [];
+            this.vm.spawnedSprites = [];
             this.vm.paintTile = [];
             this.vm.buttonMatch = [];
             this.vm.queued = [];
@@ -329,6 +331,11 @@ namespace tileworld {
 
         private updateWorld() {
             this.vm.changed.fill(0);
+            this.vm.spawnedSprites.forEach(ts => {
+                this.vm.sprites[ts.kind()].push(ts);
+                ts.setFlag(SpriteFlag.Invisible, false);
+            });
+            this.vm.spawnedSprites = [];
             // update the state of each sprite, based on instructions
             this.allSprites(ts => {
                 ts.update();
@@ -526,7 +533,6 @@ namespace tileworld {
                         let witness = rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
                         // except in the case of collisions with moving sprites
                         if (rc.rv.getRuleType() == RuleType.Collision) {
-                            // TODO: moving against moving only here...
                             witness = rc.witnesses[0];
                         }
                         if (arg == SpriteArg.Remove && witness) {
@@ -534,6 +540,15 @@ namespace tileworld {
                             this.vm.deadSprites.push(witness);
                         }
                         break;
+                    }
+                    case CommandType.Spawn: {
+                        if (!rc.self)
+                            break;
+                        let ts = new TileSprite(this.p.spriteImages()[arg], arg);
+                        this.vm.spawnedSprites.push(ts);
+                        ts.x = (wcol << 4) + 8;
+                        ts.y = (wrow << 4) + 8;
+                        ts.setFlag(SpriteFlag.Invisible, true);
                     }
                     case CommandType.Game: {
                         // all game commands are global
