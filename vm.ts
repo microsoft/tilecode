@@ -95,12 +95,12 @@ namespace tileworld {
         
         constructor(private p: Project, private rules: RuleView[]) {
             this.vm = null;
+            for(let rt = RuleType.FirstRule; rt <= RuleType.LastRule; rt++) {
+                this.ruleIndex[rt] = [];
+            }       
             // populate indices for more efficient lookup over
             // rules (and derived rules)
             this.rules.forEach(rv => {
-                for(let rt = RuleType.FirstRule; rt <= RuleType.LastRule; rt++) {
-                    this.ruleIndex[rt] = [];
-                }       
                 let derivedRules = rv.getDerivedRules();
                 derivedRules.push(rv);
                 derivedRules.forEach(rv => {
