@@ -353,7 +353,7 @@ namespace tileworld {
                 this.vm.paintTile.forEach(pt => {
                     const tm = game.currentScene().tileMap;
                     let old = tm.getTileIndex(pt.col, pt.row);
-                    if (old != pt.kind()) {
+                    if (old != pt.kind) {
                         tm.setTileAt(pt.col, pt.row, pt.kind);
                         this.vm.changed.setPixel(pt.col, pt.row, 1);
                     }
