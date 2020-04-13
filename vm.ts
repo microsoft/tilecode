@@ -432,7 +432,7 @@ namespace tileworld {
             // check backgrounds
             for(let kind = 0; kind < this.p.backCnt(); kind++) {
                 const tm = game.currentScene().tileMap;
-                let hasKind = tm.getTile(wcol, wrow).tileSet == kind;
+                let hasKind = tm.getTileIndex(wcol, wrow) == kind;
                 let attr = rv.getSetBgAttr(whendo, kind);
                 if (attr == AttrType.Exclude && hasKind) {
                     return false;
@@ -556,20 +556,43 @@ namespace tileworld {
                         break;
                     }
                     case CommandType.Teleport: {
+                        // find a tile in the map with given background kind
+                        // that has no sprite on it.
+                        let tm = game.currentScene().tileMap;
                         let copy = this.vm.nextWorld.clone();
                         copy.fill(0);
                         // don't consider tiles with sprites on them
                         this.allSprites(ts => {
-                            copy.setPixel(ts.col(), ts.row(), 0xf);
+                            copy.setPixel(ts.col(), ts.row(), 1);
                         });
-                        // now, count colors
-                        // TODO: find a tile in the map with given background kind
-                        // that has no sprite on it.
-                        // basic algorithm: collect all tiles with no sprites on them
-                        // of the given background kind. Randomly choose among them.
-                        // optimizations: keep counts of background kinds. If there are
-                        // a small number, keep a list. If there are a lot, throw darts.
-                        // run list encoding.  
+                        // how many candidates to teleport to are there?
+                        let kindCnt = 0;
+                        let x = 0, y = 0;
+                        for(; x<copy.width(); x++) {
+                            y = 0;
+                            for(; y<copy.height(); y++) {
+                                if (copy.getPixel(x,y) == 0 && tm.getTileIndex(x,y) == arg)
+                                    kindCnt++;
+                            }                            
+                        }
+                        if (kindCnt > 0) {
+                            // select one
+                            let index = Math.randomRange(0,kindCnt-1);
+                            kindCnt = 0;
+                            x = 0;
+                            for(; x<copy.width(); x++) {
+                                y = 0;
+                                for(; y<copy.height(); y++) {
+                                    if (copy.getPixel(x,y) == 0 && tm.getTileIndex(x,y) == arg) {
+                                        if (kindCnt == index)
+                                            break;
+                                        kindCnt++;
+                                    }
+                                }                            
+                            }
+                            teleport = new Tile(x, y, 0);
+                        }
+
                         break;
                     }
                     case CommandType.Game: {
