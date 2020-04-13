@@ -497,6 +497,10 @@ namespace tileworld {
             let spawned: TileSprite = null;
             let teleport: Tile = null;
             for (let cid = 0; cid < 4; cid++) {
+                if (teleport) {
+                    wcol = teleport.col;
+                    wrow = teleport.row;
+                }
                 let inst = rc.rv.getCmdInst(wid, cid);
                 if (inst == -1) break;
                 let arg = rc.rv.getCmdArg(wid, cid);
