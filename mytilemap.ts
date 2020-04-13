@@ -11,18 +11,6 @@ namespace scene {
         const scene = game.currentScene();
         (scene.tileMap as tiles.legacy.LegacyTilemap).setTile(index, img, !!wall);
     }
-
-    function getTilesByType(index: number): tiles.Tile[] {
-        const scene = game.currentScene();
-        return (scene.tileMap as tiles.legacy.LegacyTilemap).getTilesByTypeLegacy(index);
-    }
-
-    export function placeOnRandomTile(sprite: Sprite, color: number): void {
-        if (!sprite || !game.currentScene().tileMap) return;
-        const tiles = getTilesByType(color);
-        if (tiles.length > 0)
-            Math.pickRandom(tiles).place(sprite);
-    }
 }
 
 namespace tiles.legacy {
