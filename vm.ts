@@ -595,8 +595,6 @@ namespace tileworld {
                                 for(; y<copy.height(); y++) {
                                     if (copy.getPixel(x,y) == 0 && tm.getTileIndex(x,y) == arg) {
                                         if (kindCnt == index) {
-                                            console.logValue("x", x);
-                                            console.logValue("y", y);
                                             teleport = new Tile(x, y, 0);
                                             break;
                                         }
