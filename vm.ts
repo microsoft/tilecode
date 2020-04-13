@@ -51,8 +51,8 @@ namespace tileworld {
     }
 
     // used to record effect of paint tile commands in a small log
-    class PaintTile {
-        constructor(public col: number, public row: number, public tile: number) {
+    class Tile {
+        constructor(public col: number, public row: number, public kind: number) {
         }
     }
 
@@ -61,7 +61,7 @@ namespace tileworld {
     // the interpreter state
     class VMState {
         public game: GameState;             // see type   
-        public paintTile: PaintTile[];      // log of paint commands
+        public paintTile: Tile[];      // log of paint commands
         public nextWorld: Image;            // record all paint commands (if log exceeded)
         public changed: Image;              // what changed in last round
         public sprites: TileSprite[][];     // the sprites, sorted by kind
@@ -98,12 +98,13 @@ namespace tileworld {
             // populate indices for more efficient lookup over
             // rules (and derived rules)
             this.rules.forEach(rv => {
+                for(let rt = RuleType.FirstRule; rt <= RuleType.LastRule; rt++) {
+                    this.ruleIndex[rt] = [];
+                }       
                 let derivedRules = rv.getDerivedRules();
                 derivedRules.push(rv);
                 derivedRules.forEach(rv => {
                     let rt = rv.getRuleType();
-                    if (!this.ruleIndex[rt])
-                        this.ruleIndex[rt] = [];
                     this.ruleIndex[rt].push(rv);
                 });
             });
@@ -245,8 +246,6 @@ namespace tileworld {
 
         private applyRules(phase: RuleType, ts: TileSprite) {
             let ruleClosures: RuleClosure[] = [];
-            if (!this.ruleIndex[phase])
-                return ruleClosures;
             this.ruleIndex[phase].forEach(rv => {
                 if (this.ruleMatchesSprite(rv, ts) &&
                     (phase == RuleType.ContextChange && this.ruleMatchesDirection(rv, ts.dir)
@@ -353,7 +352,7 @@ namespace tileworld {
                 // fast path
                 this.vm.paintTile.forEach(pt => {
                     const tm = game.currentScene().tileMap;
-                    tm.setTileAt(pt.col, pt.row, pt.tile);
+                    tm.setTileAt(pt.col, pt.row, pt.kind);
                     this.vm.changed.setPixel(pt.col, pt.row, 1);
                 });
             } else {
@@ -496,6 +495,7 @@ namespace tileworld {
             let wcol = rc.self ? rc.self.col() + (col - 2) : -1;
             let wrow = rc.self ? rc.self.row() + (row - 2) : -1;
             let spawned: TileSprite = null;
+            let teleport: Tile = null;
             for (let cid = 0; cid < 4; cid++) {
                 let inst = rc.rv.getCmdInst(wid, cid);
                 if (inst == -1) break;
@@ -507,7 +507,7 @@ namespace tileworld {
                         if (this.vm.nextWorld.getPixel(wcol, wrow) == 0xf) {
                             this.vm.nextWorld.setPixel(wcol, wrow, arg);
                             if (this.vm.paintTile && this.vm.paintTile.length < 5) {
-                                this.vm.paintTile.push(new PaintTile(wcol, wrow, arg));
+                                this.vm.paintTile.push(new Tile(wcol, wrow, arg));
                             } else 
                                 this.vm.paintTile = null;
                         }
@@ -553,6 +553,24 @@ namespace tileworld {
                         spawned.x = (wcol << 4) + 8;
                         spawned.y = (wrow << 4) + 8;
                         spawned.setFlag(SpriteFlag.Invisible, true);
+                        break;
+                    }
+                    case CommandType.Teleport: {
+                        let copy = this.vm.nextWorld.clone();
+                        copy.fill(0);
+                        // don't consider tiles with sprites on them
+                        this.allSprites(ts => {
+                            copy.setPixel(ts.col(), ts.row(), 0xf);
+                        });
+                        // now, count colors
+                        // TODO: find a tile in the map with given background kind
+                        // that has no sprite on it.
+                        // basic algorithm: collect all tiles with no sprites on them
+                        // of the given background kind. Randomly choose among them.
+                        // optimizations: keep counts of background kinds. If there are
+                        // a small number, keep a list. If there are a lot, throw darts.
+                        // run list encoding.  
+                        break;
                     }
                     case CommandType.Game: {
                         // all game commands are global
