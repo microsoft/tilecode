@@ -413,7 +413,6 @@ namespace tileworld {
             let arg = this.dirMap.getPixel(this.col(), this.row());
             let inst = this.rule.getCmdInst(this.whenDo, this.currentCommand);
 
-            
             if (tok == CommandTokens.Delete) {
                 if (hover) {
                     if (this.p.help) this.helpCursor.say("delete command");

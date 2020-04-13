@@ -588,13 +588,18 @@ namespace tileworld {
                                 y = 0;
                                 for(; y<copy.height(); y++) {
                                     if (copy.getPixel(x,y) == 0 && tm.getTileIndex(x,y) == arg) {
-                                        if (kindCnt == index)
+                                        if (kindCnt == index) {
+                                            console.logValue("x", x);
+                                            console.logValue("y", y);
+                                            teleport = new Tile(x, y, 0);
                                             break;
+                                        }
                                         kindCnt++;
                                     }
-                                }                            
+                                }
+                                if (teleport)
+                                    break;                 
                             }
-                            teleport = new Tile(x, y, 0);
                         }
 
                         break;
