@@ -352,8 +352,11 @@ namespace tileworld {
                 // fast path
                 this.vm.paintTile.forEach(pt => {
                     const tm = game.currentScene().tileMap;
-                    tm.setTileAt(pt.col, pt.row, pt.kind);
-                    this.vm.changed.setPixel(pt.col, pt.row, 1);
+                    let old = tm.getTileIndex(pt.col, pt.row);
+                    if (old != pt.kind()) {
+                        tm.setTileAt(pt.col, pt.row, pt.kind);
+                        this.vm.changed.setPixel(pt.col, pt.row, 1);
+                    }
                 });
             } else {
                 // general backup
@@ -363,8 +366,11 @@ namespace tileworld {
                         if (pixel != 0xf) {
                             //this.vm.world.setPixel(x, y, pixel);
                             const tm = game.currentScene().tileMap;
-                            tm.setTileAt(x, y, pixel);
-                            this.vm.changed.setPixel(x, y, 1);
+                            let old = tm.getTileIndex(x, y);
+                            if (old != pixel) {
+                                tm.setTileAt(x, y, pixel);
+                                this.vm.changed.setPixel(x, y, 1);
+                            }
                         }
                     }
                 }

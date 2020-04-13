@@ -1,8 +1,7 @@
 // refactoring TODO list
 
+// - change optimization still not working
 
-// Paper
-// - @bg command: teleport to background 
 
 // User
 // - deletion of spawn command should delete (optional) following move command
