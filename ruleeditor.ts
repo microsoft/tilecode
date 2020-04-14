@@ -513,7 +513,6 @@ namespace tileworld {
             movedImages.forEach((img, i) => {
                 this.drawImage(i, 0, img);
             });
-            screen.print("*", (6 << 4) + 6, 4 + yoff);
             this.drawImage(this.rule.getWitnessDirection(this.whenDo), 0, cursorOut);
         }
 

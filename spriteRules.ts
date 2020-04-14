@@ -119,6 +119,8 @@ namespace tileworld {
             this.doBoth(RuleType.ContextChange, MoveDirection.Left, x + 1, y + 1);
             this.doBoth(RuleType.ContextChange, MoveDirection.Up, x + 2, y);
             this.doBoth(RuleType.ContextChange, MoveDirection.Down, x+2, y+2);
+            this.doBoth(RuleType.ContextChange, AnyDir, x+1, y+2, false);
+            this.doBoth(RuleType.ContextChange, Moving, x+3, y+2, false);
 
             this.makeContext(x + 6, y + 1)
             this.doBoth(RuleType.ButtonPress, ButtonArg.Right, x + 8, y + 1, false);

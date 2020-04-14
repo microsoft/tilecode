@@ -329,7 +329,25 @@ export const ok = img`
     . . . . . . . .
 `;
 
-// motion predicates
+// motion predicates *
+export const anyOutline = img`
+    . . . f . . . . . . . . . . . .
+    . f . 1 . f . . . . . . . . . .
+    f 1 f 1 f 1 f . . . . . . . . .
+    . f 1 1 1 f . . . . . . . . . .
+    . . f 1 f . . . . . . . . . . .
+    . f 1 1 1 f . . . . . . . . . .
+    f 1 f 1 f 1 f . . . . . . . . .
+    . f f 1 f f . . . . . . . . . .
+    . . f f f . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . .
+`;
 export const allFourOutline = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . 9 . . . . . . . .
@@ -907,7 +925,7 @@ export const negate = img`
 // lists that parameterize the UI
 
 export const moveImages = [leftArrow, upArrow, rightArrow, downArrow, stopSign, uTurn];
-export const movedImages = [leftArrowOutline, upArrowOutline, rightArrowOutline, downArrowOutline, restingOutline, allFourOutline, ok];
+export const movedImages = [leftArrowOutline, upArrowOutline, rightArrowOutline, downArrowOutline, restingOutline, allFourOutline, anyOutline];
 export const moveText = ["left", "up", "right", "down", "stop", "u-turn"];
 export const buttonImages = [leftButton, upButton, rightButton, downButton, AButton];
 export const attrImages = [include, exclude, ok, include];
