@@ -16,7 +16,8 @@ namespace tileworld {
             scene.physicsEngine.addSprite(this);
             this.setKind(kind);
             this.debug = d;
-            this.dir = this.lastDir = Resting;
+            this.dir = Resting;
+            this.lastDir = Resting;
             this.inst = -1;
             this.state = SpriteState.Alive;
         }
@@ -676,7 +677,6 @@ namespace tileworld {
                     this.vm.processClosure(rc);
                 }
             }
-            this.vm.continueRound();
         }
 
         private currentDirection: MoveDirection[];
