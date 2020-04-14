@@ -508,7 +508,10 @@ namespace tileworld {
             let wrow = rc.self ? rc.self.row() + (row - 2) : -1;
             let spawned: TileSprite = null;
             let teleport: Tile = null;
-            for (let cid = 0; cid < 4; cid++) {
+            let ok = true;
+            for (let cid = 0; cid < rc.rv.getCmdsLen(wid); cid++) {
+                if (!ok)
+                    break;
                 if (teleport) {
                     wcol = teleport.col;
                     wrow = teleport.row;
@@ -610,6 +613,9 @@ namespace tileworld {
                                 if (teleport)
                                     break;                 
                             }
+                        } else {
+                            // teleport failed, so stop execution
+                            ok = false;
                         }
 
                         break;

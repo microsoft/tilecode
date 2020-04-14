@@ -329,7 +329,7 @@ export const ok = img`
     . . . . . . . .
 `;
 
-// motion predicates *
+// motion predicates
 export const anyOutline = img`
     . . . f . . . . . . . . . . . .
     . f . 1 . f . . . . . . . . . .
