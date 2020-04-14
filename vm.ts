@@ -20,8 +20,10 @@ namespace tileworld {
             this.inst = -1;
             this.state = SpriteState.Alive;
         }
+
         public col() { return this.x >> 4; }    // the position of sprite in tile world
         public row() { return this.y >> 4; }    // coordinates
+        
         public update() {
             // update the state of the sprite base on instruction
             this.lastDir = this.dir;
@@ -29,6 +31,7 @@ namespace tileworld {
             this.vx = this.dir == MoveDirection.Left ? -100 : this.dir == MoveDirection.Right ? 100 : 0;
             this.vy = this.dir == MoveDirection.Up ? -100 : this.dir == MoveDirection.Down ? 100 : 0;
         }
+        
         isOutOfScreen(camera: scene.Camera): boolean {
             const ox = (this.flags & sprites.Flag.RelativeToCamera) ? 0 : camera.drawOffsetX;
             const oy = (this.flags & sprites.Flag.RelativeToCamera) ? 0 : camera.drawOffsetY;
@@ -171,7 +174,10 @@ namespace tileworld {
                     return this.applyRules(RuleType.ButtonPress, ts);
                 } else {
                     this.vm.phase = RuleType.ContextChange;
-                    this.allSprites(ts => { if (this.vm.buttonMatch.indexOf(ts) == -1) this.vm.queued.push(ts) });
+                    this.allSprites(ts => { 
+                        if (this.vm.buttonMatch.indexOf(ts) == -1) 
+                            this.vm.queued.push(ts);
+                    });
                 }
             }
             if (this.vm.phase == RuleType.ContextChange) {
@@ -364,7 +370,6 @@ namespace tileworld {
                     for (let y = 0; y < this.vm.nextWorld.height; y++) {
                         let pixel = this.vm.nextWorld.getPixel(x, y);
                         if (pixel != 0xf) {
-                            //this.vm.world.setPixel(x, y, pixel);
                             const tm = game.currentScene().tileMap;
                             let old = tm.getTileIndex(x, y);
                             if (old != pixel) {

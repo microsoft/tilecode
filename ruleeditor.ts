@@ -291,7 +291,8 @@ namespace tileworld {
             this.drawImage(0, 0, code);
             this.drawImage(1, 0, map);
             this.drawImage(2, 0, play);
-            this.drawImage(3, 0, debug);
+            // no debugger for paper
+            // this.drawImage(3, 0, debug);
             this.drawImage(5, 0, flipHoriz);
             this.drawImage(6, 0, garbageCan);
             let rules = this.currentRules();
