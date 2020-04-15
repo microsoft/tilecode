@@ -237,20 +237,29 @@ namespace tileworld {
             }
         }
 
+        protected getWhenDoImage(col: number, row: number) {
+            let whenDo = this.rule.getWhenDo(col, row);
+            // if there is an include or single oneOf, show it.
+            let include = this.attrIndex(whenDo, AttrType.Include);
+            let include2 = include == -1 ? -1 : this.attrIndex(whenDo, AttrType.Include, include + 1);
+            let exclude = this.attrIndex(whenDo, AttrType.Exclude);
+            let exclude2 = exclude == -1 ? -1 : this.attrIndex(whenDo, AttrType.Exclude, exclude + 1);
+            let index = include == -1 ? exclude : include;
+            // and skip to the other (if it exists)
+            if (include != -1 && include2 != -1)
+                return splitImage(this.all.getImage(include), this.all.getImage(include2));
+            else if (include == -1 && exclude != -1 && exclude2 != -1)
+                return splitImage(this.all.getImage(exclude), this.all.getImage(exclude2));
+            else if (index != -1)
+                return this.all.getImage(index);
+            else
+                return ok;
+        }
+
         protected showAttributes(col: number, row: number, show: boolean = true) {
             let whenDo = this.rule.getWhenDo(col, row);
             if (whenDo >= 0) {
-                // if there is an include or single oneOf, show it.
-                let indexInclude = this.attrIndex(whenDo, AttrType.Include);
-                let indexInclude2 = indexInclude == -1 ? -1 : this.attrIndex(whenDo, AttrType.Include, indexInclude+1);
-                let index = indexInclude == -1 ? this.attrIndex(whenDo, AttrType.Exclude) : indexInclude;
-                // and skip to the other (if it exists)
-                if (index != -1) {
-                    if (indexInclude2 != -1)
-                        this.drawImage(col, row + editorRow, splitImage(this.all.getImage(index), this.all.getImage(indexInclude2)));
-                    else
-                        this.drawImage(col, row + editorRow, this.all.getImage(index));
-                }
+                this.drawImage(col, row + editorRow, this.getWhenDoImage(col, row));
                 // show attributes
                 let begin = 0;
                 let end = this.p.allCnt() - 1;
