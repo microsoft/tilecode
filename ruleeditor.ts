@@ -13,6 +13,7 @@ namespace tileworld {
             super(p, baseRule);
             this.setCol(0); this.setRow(0);
             this.ruleViews = this.baseRule.getDerivedRules();
+            
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.row() == 0 && this.col() >=1 && this.col() <= 7) {
                     let index = (this.col()-1) >> 1;

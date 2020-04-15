@@ -40,6 +40,16 @@ namespace tileworld {
         return ret;
     }
 
+    export function splitImage(imgLeft: Image, imgRight: Image): Image {
+        let ret: Image = imgLeft.clone();
+        for(let x=(ret.width()>>1); x<ret.width(); x++) {
+            for (let y = 0; y < ret.height(); y++) {
+                ret.setPixel(x,y,imgRight.getPixel(x,y));
+            }
+        }
+        return ret;
+    }
+
     export function imageToBuffer(img: Image) {
         // worst case = 1 byte per pixel
         let buf = control.createBuffer(2 + (img.width() * img.height()));
