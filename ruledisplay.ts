@@ -242,10 +242,14 @@ namespace tileworld {
             if (whenDo >= 0) {
                 // if there is an include or single oneOf, show it.
                 let indexInclude = this.attrIndex(whenDo, AttrType.Include);
+                let indexInclude2 = indexInclude == -1 ? -1 : this.attrIndex(whenDo, AttrType.Include, indexInclude+1);
                 let index = indexInclude == -1 ? this.attrIndex(whenDo, AttrType.Exclude) : indexInclude;
                 // and skip to the other (if it exists)
                 if (index != -1) {
-                    this.drawImage(col, row + editorRow, this.all.getImage(index));
+                    if (indexInclude2 != -1)
+                        this.drawImage(col, row + editorRow, splitImage(this.all.getImage(index), this.all.getImage(indexInclude2)));
+                    else
+                        this.drawImage(col, row + editorRow, this.all.getImage(index));
                 }
                 // show attributes
                 let begin = 0;
