@@ -716,8 +716,8 @@ namespace tileworld {
                     if (this.state.game != GameState.InPlay) {
                         this.running = false;
                         let win = this.state.game == GameState.Won;
-                        pause(400);
                         game.showDialog("Game Over", " you " + (win ? "won" : "lost"));
+                        pause(500);
                         game.waitAnyButton();
                         return;
                     } 
