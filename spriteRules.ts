@@ -1,8 +1,8 @@
 namespace tileworld {
 
     const yoff = 6;
-    const helpStringTop = "31resting,21moved left,41moved right,30moved up,32moved down,61dpad left,81dpad right,70dpad up,72dpad down,71A button,";
-    const helpStringBot = "25collide left,34collide up,36collide down,45collide right,65collide left,74collide up,76collide down,85collide right,";
+    const helpStringTop = "31any,21moved left,41moved right,30moved up,32moved down,22rested,42moved,61dpad left,81dpad right,70dpad up,72dpad down,71A button,";
+    const helpStringBot = "25collide left,34collide up,36collide down,45collide right,64never,";
 
     export class RuleRoom extends RuleVisualsBase {
         private kind: number;
@@ -114,12 +114,12 @@ namespace tileworld {
             this.rules = this.p.getRulesForSpriteKind(this.kind);
             
             this.makeContext(x + 2, y + 1)
-            this.doBoth(RuleType.ContextChange, Resting, x + 2, y + 1);
+            this.doBoth(RuleType.ContextChange, AnyDir, x + 2, y + 1);
             this.doBoth(RuleType.ContextChange, MoveDirection.Right, x + 3, y + 1);
             this.doBoth(RuleType.ContextChange, MoveDirection.Left, x + 1, y + 1);
             this.doBoth(RuleType.ContextChange, MoveDirection.Up, x + 2, y);
             this.doBoth(RuleType.ContextChange, MoveDirection.Down, x+2, y+2);
-            this.doBoth(RuleType.ContextChange, AnyDir, x+1, y+2, false);
+            this.doBoth(RuleType.ContextChange, Resting, x+1, y+2, false);
             this.doBoth(RuleType.ContextChange, Moving, x+3, y+2, false);
 
             this.makeContext(x + 6, y + 1)
