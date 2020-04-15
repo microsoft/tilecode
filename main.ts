@@ -1,8 +1,5 @@
 // refactoring TODO list
 
-// - change optimization still not working
-
-
 // User
 // - deletion of spawn command should delete (optional) following move command
 // - fix up collision editing

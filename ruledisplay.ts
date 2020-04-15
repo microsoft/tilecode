@@ -163,13 +163,18 @@ namespace tileworld {
             if (draw) {
                 let kind = this.rule.findWitnessColRow(wcol, wrow);
                 let img1 = this.collideCol == wcol && this.collideRow == wrow ? collisionSprite : genericSprite;
-                let img2 = kind == -1 ? img1 : this.getWhenDoImage(wcol, wrow)
+                let img2 = kind == -1 ? img1 : this.getWhenDoImage(wcol, wrow);
                 this.drawImage(5, crow + editorRow, img2);
                 if (img1 == collisionSprite)
                     this.drawImage(5, crow + editorRow, img1);
                 if (kind != -1 && this.getType() != RuleType.Collision) {
                     let whendo = this.rule.getWhenDo(wcol, wrow);
                     this.drawImage(5, crow + editorRow, movedImages[this.rule.getWitnessDirection(whendo)])
+                } 
+                if (this.p.help) {
+                    screen.print((crow +1).toString(), (5 << 4) + 10, ((editorRow + crow) << 4)+13);
+                    // do it in the when-do as well
+                    screen.print((crow + 1).toString(), (wcol << 4) + 10, ((editorRow + wrow) << 4) + 13);
                 }
             }
             // show the existing commands
