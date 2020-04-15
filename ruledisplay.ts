@@ -163,7 +163,7 @@ namespace tileworld {
             if (draw) {
                 let kind = this.rule.findWitnessColRow(wcol, wrow);
                 let img1 = this.collideCol == wcol && this.collideRow == wrow ? collisionSprite : genericSprite;
-                let img2 = kind == -1 ? img1 : this.p.getSpriteImage(kind);
+                let img2 = kind == -1 ? img1 : this.getWhenDoImage(wcol, wrow)
                 this.drawImage(5, crow + editorRow, img2);
                 if (img1 == collisionSprite)
                     this.drawImage(5, crow + editorRow, img1);
@@ -239,6 +239,8 @@ namespace tileworld {
 
         protected getWhenDoImage(col: number, row: number) {
             let whenDo = this.rule.getWhenDo(col, row);
+            if (whenDo == -1)
+                return ok;
             // if there is an include or single oneOf, show it.
             let include = this.attrIndex(whenDo, AttrType.Include);
             let include2 = include == -1 ? -1 : this.attrIndex(whenDo, AttrType.Include, include + 1);
