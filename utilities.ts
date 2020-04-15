@@ -50,6 +50,24 @@ namespace tileworld {
         return ret;
     }
 
+    export function drawHalfSize(img: Image, nx: number, ny: number, transparent: boolean = false) {
+        if (!transparent) {
+            for (let i = 0; i < img.width; i += 2) {
+                for (let j = 0; j < img.height; j += 2) {
+                    screen.setPixel(nx + (i >> 1), ny + (j >> 1), img.getPixel(i, j))
+                }
+            }
+        } else {
+            for (let i = 0; i < img.width; i += 2) {
+                for (let j = 0; j < img.height; j += 2) {
+                    let pix = img.getPixel(i,j);
+                    if (pix)
+                        screen.setPixel(nx + (i >> 1), ny + (j >> 1), pix);
+                }
+            }        
+        }
+    }
+
     export function imageToBuffer(img: Image) {
         // worst case = 1 byte per pixel
         let buf = control.createBuffer(2 + (img.width() * img.height()));

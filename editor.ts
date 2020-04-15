@@ -221,23 +221,12 @@ namespace tileworld {
                     // tile
                     let index = inRange ? backs.getPixel(x, y) : -1;
                     let img = index == -1 ? emptyTile : index == 0xf ? emptyDiagTile : this.p.getBackgroundImage(index);
-                    for(let i=0;i<img.width;i+=2) {
-                        for (let j = 0; j < img.height; j += 2) {
-                            screen.setPixel(nx+(i>>1),ny+(j>>1),img.getPixel(i,j))
-                        }   
-                    }
+                    drawHalfSize(img, nx, ny);
                     // sprite
                     if (inRange) {
                         let index = this.p.getWorldSprites().getPixel(x, y);
                         if (index != 0xf) {
-                            img = this.p.getSpriteImage(index);
-                            for (let i = 0; i < img.width; i += 2) {
-                                for (let j = 0; j < img.height; j += 2) {
-                                    if (img.getPixel(i,j) != 0) {
-                                        screen.setPixel(nx + (i >> 1), ny + (j >> 1), img.getPixel(i, j))
-                                    }
-                                }
-                            }
+                            drawHalfSize(this.p.getSpriteImage(index), nx, ny, true);
                         }
                     }
                 }    
