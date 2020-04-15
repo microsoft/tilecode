@@ -215,9 +215,7 @@ namespace tileworld {
         private startTokens(col: number, row: number) {
             let tokens: number[] = [];
             if (this.rule.findWitnessColRow(col, row) != -1) {
-                if (this.getType() != RuleType.Collision) {
-                    tokens.push(CommandType.Move);
-                }
+                tokens.push(CommandType.Move);
                 tokens.push(CommandType.Sprite);
             }
             if (this.getType() != RuleType.Collision) {
