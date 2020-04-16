@@ -161,12 +161,11 @@ namespace tileworld {
         protected tokens: number[];
         protected showCommandsAt(crow: number, wcol: number, wrow: number, draw: boolean = true) {
             if (draw) {
+                // TODO: fix this up
                 let kind = this.rule.findWitnessColRow(wcol, wrow);
                 let img1 = this.collideCol == wcol && this.collideRow == wrow ? collisionSprite : genericSprite;
                 let img2 = kind == -1 ? img1 : this.getWhenDoImage(wcol, wrow);
                 this.drawImage(5, crow + editorRow, img2);
-                if (img1 == collisionSprite)
-                    this.drawImage(5, crow + editorRow, img1);
                 if (kind != -1 && this.getType() != RuleType.Collision) {
                     let whendo = this.rule.getWhenDo(wcol, wrow);
                     this.drawImage(5, crow + editorRow, movedImages[this.rule.getWitnessDirection(whendo)])
@@ -218,11 +217,9 @@ namespace tileworld {
                 tokens.push(CommandType.Move);
                 tokens.push(CommandType.Sprite);
             }
-            if (this.getType() != RuleType.Collision) {
-                tokens.push(CommandType.Paint);
-                tokens.push(CommandType.Spawn);
-                tokens.push(CommandType.Teleport);
-            }
+            tokens.push(CommandType.Paint);
+            tokens.push(CommandType.Spawn);
+            tokens.push(CommandType.Teleport);
             tokens.push(CommandType.Game);
             return tokens;
         }
