@@ -148,12 +148,14 @@ namespace tileworld {
                                 this.changeRule(p.makeRule(this.getType(), this.getDir(), this.getKind()));
                             }
                         } else if (this.col() == 1) {
+                            this.p.saveRule(this.rule);
                             game.pushScene();
                             new MapEditor(this.p);
                             return; 
                         } else if (this.col() == 2 || this.col() == 3) {
-                            let rules = this.p.getRules();
+                            this.p.saveRule(this.rule);
                             game.pushScene();
+                            let rules = this.p.getRules();
                             let g = new RunGame(this.p, rules, this.col() == 3);
                             g.setWorld(this.p.getWorldBackgrounds(), this.p.getWorldSprites());
                             g.start();
@@ -161,6 +163,7 @@ namespace tileworld {
                         } else if (this.col() == 6) {
                             this.askDeleteRule = true;                     
                         } else if (this.col() == 5) {
+                            this.p.saveRule(this.rule);
                             game.pushScene();
                             new RuleViewDisplay(this.p, this.rule);
                             return;
@@ -414,7 +417,6 @@ namespace tileworld {
             let tok = this.ruleTypeMap.getPixel(this.col(), this.row());
             let arg = this.dirMap.getPixel(this.col(), this.row());
             let inst = this.rule.getCmdInst(this.whenDo, this.currentCommand);
-            
             if (tok == CommandTokens.Delete) {
                 if (hover) {
                     if (this.p.help) this.helpCursor.say("delete command");

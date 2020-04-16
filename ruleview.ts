@@ -129,6 +129,14 @@ namespace tileworld {
             return this.getSetBuffAttr(this.r.whenDo[wdid].spPred, index, val);
         }
 
+        private attrBgIndex(whendo: number, a: AttrType) {
+            for (let i = 0; i < this.p.backCnt(); i++) {
+                if (this.getSetBgAttr(whendo, i) == a)
+                    return i;
+            }
+            return -1;
+        }
+
         private attrSpIndex(whendo: number, a: AttrType) {
             for (let i = 0; i < this.p.spriteCnt(); i++) {
                 if (this.getSetSpAttr(whendo, i) == a)
@@ -140,6 +148,8 @@ namespace tileworld {
         public findWitnessColRow(col: number, row: number): number {
             let whendo = this.getWhenDo(col, row);
             if (whendo == -1)
+                return -1;
+            if (this.attrBgIndex(whendo, AttrType.Include) != -1)
                 return -1;
             return this.attrSpIndex(whendo, AttrType.Include);
         }
