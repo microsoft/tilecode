@@ -154,7 +154,7 @@ namespace tileworld {
                 // negation rules currently only inspect (2,2)
                 this.ruleIndex[RuleType.NegationCheck].forEach(rv => {
                     // for now, we will deal only with rules that have witness in (2,2)
-                    // TODO: could generalize to a Bg witness
+                    // TODO: generalize this rule
                     let kind = rv.findWitnessColRow(2, 2);
                     if (kind == -1)
                         return;
@@ -169,6 +169,7 @@ namespace tileworld {
                 this.vm.phase = RuleType.ButtonPress;
                 return ruleClosures;
             }
+            // external events
             if (this.vm.phase == RuleType.ButtonPress) {
                 if (this.vm.queued.length > 0) {
                     let ts = this.vm.queued.pop();
@@ -181,6 +182,7 @@ namespace tileworld {
                     });
                 }
             }
+            // context change
             if (this.vm.phase == RuleType.ContextChange) {
                 if (this.vm.queued.length > 0) {
                     let ts = this.vm.queued.pop();
@@ -192,6 +194,7 @@ namespace tileworld {
                     this.allSprites(ts => { this.vm.queued.push(ts) });
                 }
             }
+            // collisions
             if (this.vm.phase == RuleType.Collision) {
                 if (this.vm.queued.length > 0) {
                     let ts = this.vm.queued.pop();                           
@@ -206,8 +209,8 @@ namespace tileworld {
                     this.vm.phase = -1;
                 }
             }
+            // finally, update the rules
             if (this.vm.phase == -1) {
-                // finally, update the rules
                  this.updateWorld();
             }
             return null;
@@ -335,6 +338,8 @@ namespace tileworld {
         }
 
         // ---------------------------------------------------------------------
+        // update the world and compute change map
+        // TODO: change optimization still not completely working 
 
         private updateWorld() {
             this.vm.changed.fill(0);
@@ -355,7 +360,7 @@ namespace tileworld {
                     // location and next location
                     this.vm.changed.setPixel(ts.col(), ts.row(), 1);
                     this.vm.changed.setPixel(ts.col() + moveXdelta(ts.dir),
-                        ts.row() + moveYdelta(ts.dir), 1);
+                                             ts.row() + moveYdelta(ts.dir), 1);
                 }
             });
             // update the tile map and set dirty bits in changed map
