@@ -54,6 +54,60 @@ namespace tileworld {
         . c 1 c f f 1 c 7 6 f 6 6 c c .
         . c c c c c c c c c c c c . . .
     `;
+    const ship = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . e 2 . . . . . . .
+        . . . . . . e e 4 e . . . . . .
+        . . . . . . e 2 4 e . . . . . .
+        . . . . . c c c e e e . . . . .
+        . . . . e e 2 2 2 4 e e . . . .
+        . . c f f f c c e e f f e e . .
+        . c c c c e e 2 2 2 2 4 2 e e .
+        c c c c c c e e 2 2 2 4 2 2 e e
+        c c c c c c e e 2 2 2 2 4 2 e e
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `;
+    const alien = img`
+        . . . . . . f f f f . . . . . .
+        . . . . f f 1 1 1 1 f f . . . .
+        . . . f b 1 1 1 1 1 1 b f . . .
+        . . . f 1 1 1 1 1 1 1 1 f . . .
+        . . f d 1 1 1 1 1 1 1 1 d f . .
+        . . f d 1 1 1 1 1 1 1 1 d f . .
+        . . f d d d 1 1 1 1 d d d f . .
+        . . f b d b f d d f b d b f . .
+        . . f c d c f 1 1 f c d c f . .
+        . . . f b 1 1 1 1 1 1 b f . . .
+        . . f f f c d b 1 b d f f f f .
+        . c 1 1 1 c b f b f c 1 1 1 c .
+        . 1 b 1 b 1 f . . f 1 b 1 b 1 .
+        . b f b f f . . . . b f b f b .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `;
+    const missile = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . 5 4 . . . . . .
+        . . . . . . . 5 4 . . . . . . .
+        . . . . . . 5 4 . . . . . . . .
+        . . . . . . . 5 4 . . . . . . .
+        . . . . . . . . 5 4 . . . . . .
+        . . . . . . . 5 4 . . . . . . .
+        . . . . . . 5 4 . . . . . . . .
+        . . . . . . . 5 4 . . . . . . .
+        . . . . . . . . 5 4 . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `;
     const cat = img`
         . . . . . . . . . . . . . . . .
         . e e e . . . . e e e . . . . .
@@ -344,8 +398,7 @@ namespace tileworld {
     `;
 
     // up to 15 max
-    export const galleryPlayers = [player, cat, dog, chimp];
-    export const gallerySprites = [fish, cat, dog, chimp, player, diamond, boulder, enemy, apple, snakeHead, snakeBody ];
+    export const gallerySprites = [ship, alien, missile, chimp, player, diamond, boulder, enemy, apple, snakeHead, snakeBody ];
     export const galleryTiles = [brick, grass, water, dirt, dirt2, space, wall];
 
 /*
