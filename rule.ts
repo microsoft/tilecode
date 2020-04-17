@@ -138,6 +138,8 @@ namespace tileworld {
     // rule transforms
 
     export function flipRotateDir(d: MoveDirection, rt: RuleTransforms) {
+        if (d >= 4)
+            return d;
         if (rt == RuleTransforms.HorzMirror) {
             return d == MoveDirection.Left ? MoveDirection.Right : d == MoveDirection.Right ? MoveDirection.Left : d;
         } else if (rt == RuleTransforms.VertMirror) {
