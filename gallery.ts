@@ -1,5 +1,23 @@
 namespace tileworld {
 
+    const twCursor = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . f f f f f f f f . . . .
+        . . . f 5 5 5 5 5 5 5 5 f . . .
+        . . f 5 5 5 5 5 5 5 5 5 5 f . .
+        . . f 5 5 5 f f f f 5 5 5 f . .
+        . . f 5 5 f . . . . f 5 5 f . .
+        . . f 5 5 f . . . . f 5 5 f . .
+        . . f 5 5 f . . . . f 5 5 f . .
+        . . f 5 5 5 f f f f 5 5 5 f . .
+        . . f 5 5 5 5 5 5 5 5 5 5 f . .
+        . . . f 5 5 5 5 5 5 5 5 f . . .
+        . . . . f f f f f f f f . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `;
     const apple = img`
         . . . . . . . e c 7 . . . . . .
         . . . . e e e c 7 7 e e . . . .
@@ -398,7 +416,7 @@ namespace tileworld {
     `;
 
     // up to 15 max
-    export const gallerySprites = [ship, alien, missile, cursorIn, player, diamond, boulder, enemy, apple, snakeHead, snakeBody ];
+    export const gallerySprites = [ship, alien, missile, twCursor, player, diamond, boulder, enemy, apple, snakeHead, snakeBody ];
     export const galleryTiles = [brick, grass, water, dirt, dirt2, space, wall];
 
 /*

@@ -186,7 +186,7 @@ namespace tileworld {
             if (this.vm.phase == RuleType.ContextChange) {
                 if (this.vm.queued.length > 0) {
                     let ts = this.vm.queued.pop();
-                    if (ts.dir != Resting || ts.dir != ts.lastDir || this.contextChanged(ts)) {
+                    if (true) { // ts.dir != Resting || ts.dir != ts.lastDir || this.contextChanged(ts)) {
                         return this.applyRules(RuleType.ContextChange,  ts);
                     }
                 } else {
