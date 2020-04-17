@@ -398,7 +398,7 @@ namespace tileworld {
     `;
 
     // up to 15 max
-    export const gallerySprites = [ship, alien, missile, chimp, player, diamond, boulder, enemy, apple, snakeHead, snakeBody ];
+    export const gallerySprites = [ship, alien, missile, cursorIn, player, diamond, boulder, enemy, apple, snakeHead, snakeBody ];
     export const galleryTiles = [brick, grass, water, dirt, dirt2, space, wall];
 
 /*

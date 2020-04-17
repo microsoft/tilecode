@@ -340,9 +340,13 @@ namespace tileworld {
             this.vm.changed.fill(0);
             this.vm.spawnedSprites.forEach(ts => {
                 this.vm.sprites[ts.kind()].push(ts);
+                this.vm.changed.setPixel(ts.col(), ts.row(), 1);
                 ts.setFlag(SpriteFlag.Invisible, false);
             });
             this.vm.spawnedSprites = [];
+            this.vm.deadSprites.forEach(ts => {
+                this.vm.changed.setPixel(ts.col(), ts.row(), 1);
+            });
             // update the state of each sprite, based on instructions
             this.allSprites(ts => {
                 ts.update();
