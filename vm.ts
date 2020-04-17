@@ -186,7 +186,7 @@ namespace tileworld {
             if (this.vm.phase == RuleType.ContextChange) {
                 if (this.vm.queued.length > 0) {
                     let ts = this.vm.queued.pop();
-                    if (true) { // ts.dir != Resting || ts.dir != ts.lastDir || this.contextChanged(ts)) {
+                    if (ts.dir != Resting || ts.dir != ts.lastDir || this.contextChanged(ts)) {
                         return this.applyRules(RuleType.ContextChange,  ts);
                     }
                 } else {
@@ -569,7 +569,8 @@ namespace tileworld {
                         }
                         if (arg == SpriteArg.Remove && witness) {
                             witness.state = SpriteState.Dead;
-                            this.vm.deadSprites.push(witness);
+                            if (this.vm.deadSprites.indexOf(witness) == -1)
+                                this.vm.deadSprites.push(witness);
                         }
                         break;
                     }
