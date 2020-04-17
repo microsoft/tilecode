@@ -593,6 +593,9 @@ namespace tileworld {
                         this.allSprites(ts => {
                             copy.setPixel(ts.col(), ts.row(), 1);
                         });
+                        this.vm.spawnedSprites.forEach(ts => {
+                             copy.setPixel(ts.col(), ts.row(), 1);
+                        });
                         // how many candidates to teleport to are there?
                         let kindCnt = 0;
                         let x = 0, y = 0;
