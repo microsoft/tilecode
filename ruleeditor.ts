@@ -341,7 +341,7 @@ namespace tileworld {
         }
 
         private makeCommandMenu(inst: number, arg: number) {
-            let col = 4;
+            let col = 3;
             let row = 0;
             // show the categories
             // which one is currently selected?
