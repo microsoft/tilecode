@@ -64,18 +64,24 @@ namespace tileworld {
 
     // the interpreter state
     class VMState {
+        // core state
         public game: GameState;             // see type   
-        public paintTile: Tile[];      // log of paint commands
-        public nextWorld: Image;            // record all paint commands (if log exceeded)
-        public changed: Image;              // what changed in last round
         public sprites: TileSprite[][];     // the sprites, sorted by kind
-        public deadSprites: TileSprite[];   // the sprites removed this round
-        public spawnedSprites: TileSprite[]; // the sprites spawned this round
+        public blockedSpriteKinds: number[];
         // during evaluating
-        public buttonMatch: TileSprite[];   // which sprites had a button event rule (external influence)
         public phase: RuleType;
         public queued: TileSprite[];
-        constructor() {}
+        public buttonMatch: TileSprite[];   // which sprites had a button event rule (external influence)
+        // affects of commands (before being committed)
+        public paintTile: Tile[];           // log of paint commands
+        public deadSprites: TileSprite[];   // the sprites removed this round
+        public spawnedSprites: TileSprite[]; // the sprites spawned this round
+        public nextBlockedSprites: number[];
+        // 
+        public changed: Image;              // what changed in last round
+        constructor() {
+            this.nextBlockedSprites = [];
+        }
     }
 
     // rule (rid) plus binding of self and other sprite, in preparation
@@ -124,13 +130,14 @@ namespace tileworld {
             this.dpad = currDir;
             this.globalInsts = [];
             this.globalArgs = [];
+            this.vm.blockedSpriteKinds = this.vm.nextBlockedSprites;
             this.vm.deadSprites = [];
             this.vm.spawnedSprites = [];
             this.vm.paintTile = [];
             this.vm.buttonMatch = [];
+            this.vm.nextBlockedSprites = [];
             this.vm.queued = [];
             this.vm.phase = RuleType.NegationCheck;
-            this.vm.nextWorld.fill(0xf);
 
             this.allSprites(ts => {
                 ts.x = ((ts.x >> 4) << 4) + 8;      // make sure sprite is centered
@@ -243,7 +250,7 @@ namespace tileworld {
         }
 
         private ruleMatchesSprite(rv: RuleView, ts: TileSprite) {
-            return rv.hasSpriteKind(ts.kind());
+            return rv.hasSpriteKind(ts.kind()) && this.vm.blockedSpriteKinds.indexOf(ts.kind()) == -1;
         }
 
         private exprMatchesDirection(dirExpr: MoveExpr, dir: MoveRest) {
@@ -364,32 +371,14 @@ namespace tileworld {
                 }
             });
             // update the tile map and set dirty bits in changed map
-            if (this.vm.paintTile != null) {
-                // fast path
-                this.vm.paintTile.forEach(pt => {
-                    const tm = game.currentScene().tileMap;
-                    let old = tm.getTileIndex(pt.col, pt.row);
-                    if (old != pt.kind) {
-                        tm.setTileAt(pt.col, pt.row, pt.kind);
-                        this.vm.changed.setPixel(pt.col, pt.row, 1);
-                    }
-                });
-            } else {
-                // general backup
-                for (let x = 0; x < this.vm.nextWorld.width; x++) {
-                    for (let y = 0; y < this.vm.nextWorld.height; y++) {
-                        let pixel = this.vm.nextWorld.getPixel(x, y);
-                        if (pixel != 0xf) {
-                            const tm = game.currentScene().tileMap;
-                            let old = tm.getTileIndex(x, y);
-                            if (old != pixel) {
-                                tm.setTileAt(x, y, pixel);
-                                this.vm.changed.setPixel(x, y, 1);
-                            }
-                        }
-                    }
+            this.vm.paintTile.forEach(pt => {
+                const tm = game.currentScene().tileMap;
+                let old = tm.getTileIndex(pt.col, pt.row);
+                if (old != pt.kind) {
+                    tm.setTileAt(pt.col, pt.row, pt.kind);
+                    this.vm.changed.setPixel(pt.col, pt.row, 1);
                 }
-            }
+            });
             // now, execute the global instructions
             for (let i = 0; i < this.globalInsts.length; i++) {
                 let inst = this.globalInsts[i];
@@ -429,8 +418,8 @@ namespace tileworld {
         }
 
         private inBounds(col: number, row: number) {
-            return 0 <= col && col < this.vm.nextWorld.width &&
-                   0 <= row && row < this.vm.nextWorld.height;
+            return 0 <= col && col < this.vm.changed.width &&
+                   0 <= row && row < this.vm.changed.height;
         }
 
         // Include and OneOf are equivalent now
@@ -532,13 +521,7 @@ namespace tileworld {
                     case CommandType.Paint: {
                         if (!rc.self)
                             break;
-                        if (this.vm.nextWorld.getPixel(wcol, wrow) == 0xf) {
-                            this.vm.nextWorld.setPixel(wcol, wrow, arg);
-                            if (this.vm.paintTile && this.vm.paintTile.length < 5) {
-                                this.vm.paintTile.push(new Tile(wcol, wrow, arg));
-                            } else 
-                                this.vm.paintTile = null;
-                        }
+                        this.vm.paintTile.push(new Tile(wcol, wrow, arg));
                         break;
                     }
                     case CommandType.Move: {
@@ -584,11 +567,16 @@ namespace tileworld {
                         spawned.setFlag(SpriteFlag.Invisible, true);
                         break;
                     }
+                    case CommandType.BlockSpriteRules: {
+                        if (this.vm.nextBlockedSprites.indexOf(arg) == -1)
+                            this.vm.nextBlockedSprites.push(arg);
+                        break;
+                    }
                     case CommandType.Teleport: {
                         // find a tile in the map with given background kind
                         // that has no sprite on it.
                         let tm = game.currentScene().tileMap;
-                        let copy = this.vm.nextWorld.clone();
+                        let copy = this.vm.changed.clone();
                         copy.fill(0);
                         // don't consider tiles with sprites on them
                         this.allSprites(ts => {
@@ -662,7 +650,6 @@ namespace tileworld {
             const currScene = game.currentScene();
             currScene.tileMap = new tiles.legacy.LegacyTilemap(TileScale.Sixteen, this.debug ? 2 : 0);
             scene.setTileMap(w.clone());
-            this.state.nextWorld = w.clone();
             this.state.changed = w.clone();
             this.state.changed.fill(0xf);
             
