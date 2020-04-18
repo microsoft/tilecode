@@ -1,3 +1,10 @@
+if (!settings.exists("TW3-"))
+    createBoulderGame();
+if (!settings.exists("TW2-"))
+    createSnakeGame();
+if (!settings.exists("TW1-"))
+    createBejeweledGame();
+    
 function createBoulderGame() {
 settings.writeString("TW3-VersionS","1.0.0");
 // buffer length = 108
@@ -179,7 +186,7 @@ settings.writeBuffer("TW2-RuleB10", hex`
 settings.writeNumber("TW2-PlayerN",0);
 }
 
-function createBejeweled() {
+function createBejeweledGame() {
 settings.writeString("TW1-VersionS","1.0.0");
 // buffer length = 87
 settings.writeBuffer("TW1-WBackM", hex`
