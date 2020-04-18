@@ -309,31 +309,6 @@ namespace tileworld {
         return buf;
     }
 
-/* TODO: reimplement using new APIs
-    function fillAttr(f: number, n: number, i: number, g: number) {
-        // TODO: redo this using buffer
-        let res: AttrType[] = [];
-        for (let j = 0; j < n; j++) {
-            res.push(j == i ? g : f);
-        }
-        return res;
-    }
-
-    function wall () {
-        return fillAttr(AttrType.OK, 8, 0, AttrType.Exclude);
-    }
-
-    function ok() {
-        return fillAttr(AttrType.OK, 8, 0, AttrType.OK);
-    }
-
-    function makePushRule(dir: MoveDirection) {
-        return new Rule(RuleType.ButtonPress, dir, []);
-        // TODO: finish this off
-        // [new WhenDo(2+moveXdelta(dir), 2+moveYdelta(dir), wall(), 0, []), new WhenDo(2, 2, ok(), 0, [new Command(CommandType.Move, dir)])]);
-    }
-*/
-
     const player = img`
         . . . . . . f f f f . . . . . .
         . . . . f f f 2 2 f f f . . . .
@@ -364,8 +339,7 @@ namespace tileworld {
             movable.push(gallerySprites[f].clone());
         }
         let rules: Rule[] = [];
-        //for(let dir = 0; dir < 4; dir++) { rules.push(makePushRule(dir)); }
-        let p = new Project(prefix, fixed, movable); // makeIds(rules));
+        let p = new Project(prefix, fixed, movable);
         let world = image.create(32, 24);
         helpers.imageFillRect(world, 1, 1, 30, 22, 1);
         let sprites = image.create(32, 24);
