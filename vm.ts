@@ -1,13 +1,13 @@
 namespace tileworld {
 
-
     enum SpriteState { Alive, Dead, }
 
     // a TileSprite is centered on a 16x16 pixel tile
     class TileSprite extends Sprite {
         public debug: boolean;
         public state: SpriteState;
-        public dir: MoveDirection;  // the direction the sprite moved in the last round
+        public dir: MoveRest;  // the direction the sprite moved in the last round
+        public lastDir: MoveRest;
         public inst: number;        // the one instruction history to apply to the sprite to 
         public arg: number;         // create the next sprite state
         constructor(img: Image, kind: number, d: boolean = false) {
@@ -16,18 +16,23 @@ namespace tileworld {
             scene.physicsEngine.addSprite(this);
             this.setKind(kind);
             this.debug = d;
-            this.dir = -1;
+            this.dir = Resting;
+            this.lastDir = Resting;
             this.inst = -1;
             this.state = SpriteState.Alive;
         }
+
         public col() { return this.x >> 4; }    // the position of sprite in tile world
         public row() { return this.y >> 4; }    // coordinates
+        
         public update() {
             // update the state of the sprite base on instruction
-            this.dir = this.inst == CommandType.Move && this.arg < MoveArg.Stop  ? this.arg : -1;
+            this.lastDir = this.dir;
+            this.dir = (this.inst == CommandType.Move && this.arg < MoveArg.Stop)  ? this.arg : Resting;
             this.vx = this.dir == MoveDirection.Left ? -100 : this.dir == MoveDirection.Right ? 100 : 0;
             this.vy = this.dir == MoveDirection.Up ? -100 : this.dir == MoveDirection.Down ? 100 : 0;
         }
+        
         isOutOfScreen(camera: scene.Camera): boolean {
             const ox = (this.flags & sprites.Flag.RelativeToCamera) ? 0 : camera.drawOffsetX;
             const oy = (this.flags & sprites.Flag.RelativeToCamera) ? 0 : camera.drawOffsetY;
@@ -44,13 +49,14 @@ namespace tileworld {
             const l = this.left - ox + (this.debug ? 32 : 0);
             const t = this.top - oy;
 
-            screen.drawTransparentImage(this.image(), l, t)
+            screen.drawTransparentImage(this.image(), l, t);
+            // screen.drawTransparentImage(movedImages[this.dir], l, t);
         }
     }
 
     // used to record effect of paint tile commands in a small log
-    class PaintTile {
-        constructor(public col: number, public row: number, public tile: number) {
+    class Tile {
+        constructor(public col: number, public row: number, public kind: number) {
         }
     }
 
@@ -58,32 +64,36 @@ namespace tileworld {
 
     // the interpreter state
     class VMState {
+        // core state
         public game: GameState;             // see type   
-        public paintTile: PaintTile[];      // log of paint commands
-        public nextWorld: Image;            // record all paint commands (if log exceeded)
-        public changed: Image;              // what changed in last round
         public sprites: TileSprite[][];     // the sprites, sorted by kind
-        public deadSprites: TileSprite[];   // the sprites removed by this round
+        public blockedSpriteKinds: number[];
         // during evaluating
-        public moving: TileSprite[];
-        public resting: TileSprite[];
-        public phase: Phase;
+        public phase: RuleType;
         public queued: TileSprite[];
-        constructor() {}
+        public buttonMatch: TileSprite[];   // which sprites had a button event rule (external influence)
+        // affects of commands (before being committed)
+        public paintTile: Tile[];           // log of paint commands
+        public deadSprites: TileSprite[];   // the sprites removed this round
+        public spawnedSprites: TileSprite[]; // the sprites spawned this round
+        public nextBlockedSprites: number[];
+        // 
+        public changed: Image;              // what changed in last round
+        constructor() {
+            this.nextBlockedSprites = [];
+        }
     }
 
     // rule (rid) plus binding of self and other sprite, in preparation
     // for the evalation of rule's commands 
     class RuleClosure {
         constructor(
-            public rid: number,
+            public rv: RuleView,
             public self: TileSprite,
-            public witnesses: TileSprite[]) {
+            public witnesses: TileSprite[]
+        ) {
         }
     }
-
-    // the four phases of a round
-    enum Phase { Moving, Resting, Pushing, Colliding, Completed };
 
     class TileWorldVM {
         private vm: VMState;
@@ -91,20 +101,22 @@ namespace tileworld {
         // (temporary) state for global commands
         private globalInsts: number[];
         private globalArgs: number[];
-        private allTrueResting: number[] = [];
-        private ruleIndex: number[][] = [];     // lookup of rules by phase
+        private ruleIndex: RuleView[][] = [];     // lookup of rules by phase
         
-        constructor(private p: Project, private rules: number[]) {
+        constructor(private p: Project, private rules: RuleView[]) {
             this.vm = null;
-            for (let i = RuleType.Resting; i<= RuleType.CollidingMoving; i++) {
-                this.ruleIndex[i] = [];
-            }
-            // populate indices for more efficient lookup
-            this.rules.forEach(rid => {
-                if (this.p.getType(rid) == RuleType.Resting && this.p.allTrue(rid))
-                    this.allTrueResting.push(rid);
-                else
-                    this.ruleIndex[this.p.getType(rid)].push(rid);
+            for(let rt = RuleType.FirstRule; rt <= RuleType.LastRule; rt++) {
+                this.ruleIndex[rt] = [];
+            }       
+            // populate indices for more efficient lookup over
+            // rules (and derived rules)
+            this.rules.forEach(rv => {
+                let derivedRules = rv.getDerivedRules();
+                derivedRules.push(rv);
+                derivedRules.forEach(rv => {
+                    let rt = rv.getRuleType();
+                    this.ruleIndex[rt].push(rv);
+                });
             });
         }
 
@@ -118,69 +130,79 @@ namespace tileworld {
             this.dpad = currDir;
             this.globalInsts = [];
             this.globalArgs = [];
+            this.vm.blockedSpriteKinds = this.vm.nextBlockedSprites;
             this.vm.deadSprites = [];
+            this.vm.spawnedSprites = [];
             this.vm.paintTile = [];
-            this.vm.moving = [];
-            this.vm.resting = [];
+            this.vm.buttonMatch = [];
+            this.vm.nextBlockedSprites = [];
             this.vm.queued = [];
-            this.vm.phase = Phase.Moving;
-            this.vm.nextWorld.fill(0xf);
+            this.vm.phase = RuleType.NegationCheck;
 
             this.allSprites(ts => {
                 ts.x = ((ts.x >> 4) << 4) + 8;      // make sure sprite is centered
                 ts.y = ((ts.y >> 4) << 4) + 8;      // on its tile
                 ts.inst = -1;                       // reset instruction
-                if (ts.dir != -1) this.vm.moving.push(ts);  // separate sprites into moving
-                else this.vm.resting.push(ts);              // and resting
+                this.vm.queued.push(ts);
             });
         }
 
         processClosure(rc: RuleClosure) {
             this.evaluateRuleClosure(rc);
-            if (this.vm.phase == Phase.Moving) {
-                // TODO: this isn't quite right, needs to be done after phase is over
-                // if a previously moving sprite did not get a move command, it transitions to resting
-                if (!this.moving(rc.self)) this.vm.resting.push(rc.self);
+            if (rc.rv.getRuleType() == RuleType.ButtonPress) {
+                if (this.vm.buttonMatch.indexOf(rc.self) == -1)
+                    this.vm.buttonMatch.push(rc.self);
             }
         }
 
         continueRound() {
-            if (this.vm.phase == Phase.Moving) {
-                if (this.vm.moving.length > 0) {
-                    let ts = this.vm.moving.pop();
-                    let ret = this.applyRules(Phase.Moving, this.ruleIndex[RuleType.Moving], ts);
-                    if (ret.length == 0) {
-                       this.vm.resting.push(ts); 
+            if (this.vm.phase == RuleType.NegationCheck) {
+                let ruleClosures: RuleClosure[] = [];
+                // negation rules currently only inspect (2,2)
+                this.ruleIndex[RuleType.NegationCheck].forEach(rv => {
+                    // for now, we will deal only with rules that have witness in (2,2)
+                    // TODO: generalize this rule
+                    let kind = rv.findWitnessColRow(2, 2);
+                    if (kind == -1)
+                        return;
+                    let witnesses = this.vm.sprites[kind];
+                    if (!witnesses || witnesses.length == 0) {
+                        // SUCCESS!
+                        ruleClosures.push(new RuleClosure(rv, null, []));
+                    } else {
+
                     }
-                    return ret;
-                } else {
-                    this.vm.phase = Phase.Resting;
-                    // optimization for resting sprites - if neighborhood around sprite did 
-                    // not change, then no need to run resting rule on sprite
-                    this.vm.resting = this.vm.resting.filter(ts => this.restingWithChange(ts));
-                } 
+                });
+                this.vm.phase = RuleType.ButtonPress;
+                return ruleClosures;
             }
-            if (this.vm.phase == Phase.Resting) {
-                if (this.vm.resting.length > 0) {
-                    let ts = this.vm.resting.pop();
-                    return this.applyRules(Phase.Resting, this.ruleIndex[RuleType.Resting], ts);
-                } else {
-                    this.vm.phase = Phase.Pushing;
-                    this.vm.queued = [];
-                    this.allSprites(ts => { this.vm.queued.push(ts) }); 
-                }
-            }
-            if (this.vm.phase == Phase.Pushing) {
+            // external events
+            if (this.vm.phase == RuleType.ButtonPress) {
                 if (this.vm.queued.length > 0) {
                     let ts = this.vm.queued.pop();
-                    return this.applyRules(Phase.Pushing, this.ruleIndex[RuleType.Pushing], ts);
+                    return this.applyRules(RuleType.ButtonPress, ts);
                 } else {
-                    this.vm.phase = Phase.Colliding;
-                    this.vm.queued = [];
-                    this.allSprites(ts => { this.vm.queued.push(ts) }); 
+                    this.vm.phase = RuleType.ContextChange;
+                    this.allSprites(ts => { 
+                        if (this.vm.buttonMatch.indexOf(ts) == -1) 
+                            this.vm.queued.push(ts);
+                    });
                 }
             }
-            if (this.vm.phase == Phase.Colliding) {
+            // context change
+            if (this.vm.phase == RuleType.ContextChange) {
+                if (this.vm.queued.length > 0) {
+                    let ts = this.vm.queued.pop();
+                    if (ts.dir != Resting || ts.dir != ts.lastDir || this.contextChanged(ts)) {
+                        return this.applyRules(RuleType.ContextChange,  ts);
+                    }
+                } else {
+                    this.vm.phase = RuleType.Collision;
+                    this.allSprites(ts => { this.vm.queued.push(ts) });
+                }
+            }
+            // collisions
+            if (this.vm.phase == RuleType.Collision) {
                 if (this.vm.queued.length > 0) {
                     let ts = this.vm.queued.pop();                           
                     // now, look for collisions
@@ -191,81 +213,15 @@ namespace tileworld {
                     // all sprites and will dimish over time 
                     return this.collisionDetection( ts );
                 } else {
-                    this.vm.phase = Phase.Completed;
+                    this.vm.phase = -1;
                 }
             }
-            if (this.vm.phase == Phase.Completed) {
-                // finally, update the rules
+            // finally, update the rules
+            if (this.vm.phase == -1) {
                  this.updateWorld();
             }
             return null;
          }
-
-        private updateWorld() {
-            this.vm.changed.fill(0);
-            // update the state of each sprite, based on instructions
-            this.allSprites(ts => { 
-                ts.update();
-                if (ts.dir != -1) {
-                    // if sprite is moving then dirty its current
-                    // location and next location
-                    this.vm.changed.setPixel(ts.col(), ts.row(), 1);
-                    this.vm.changed.setPixel(ts.col() + moveXdelta(ts.dir), 
-                                             ts.row() + moveYdelta(ts.dir), 1);
-                }
-            });
-            // update the tile map and set dirty bits in changed map
-            if (this.vm.paintTile != null) {
-                // fast path
-                this.vm.paintTile.forEach(pt => {
-                    const tm = game.currentScene().tileMap;
-                    tm.setTileAt(pt.col, pt.row, pt.tile);
-                    this.vm.changed.setPixel(pt.col, pt.row, 1);
-                });
-            } else {
-                // general backup
-                for (let x = 0; x < this.vm.nextWorld.width; x++) {
-                    for (let y = 0; y < this.vm.nextWorld.height; y++) {
-                        let pixel = this.vm.nextWorld.getPixel(x, y);
-                        if (pixel != 0xf) {
-                            //this.vm.world.setPixel(x, y, pixel);
-                            const tm = game.currentScene().tileMap;
-                            tm.setTileAt(x, y, pixel);
-                            this.vm.changed.setPixel(x,y,1);
-                        }
-                    }
-                }
-            }
-            // now, execute the global instructions
-            for (let i = 0; i < this.globalInsts.length; i++) {
-                let inst = this.globalInsts[i];
-                let arg = this.globalArgs[i];
-                switch (inst) {
-                    case CommandType.Game: {
-                        if (arg == GameArg.Win || arg == GameArg.Lose) {
-                            this.vm.game = arg == GameArg.Win ? GameState.Won : GameState.Lost;
-                        }
-                        break;
-                    }
-                    case CommandType.SpritePred: {
-                        let cc: TileSprite[] = this.vm.sprites[this.p.fixed().length + arg];
-                        if (cc && cc.length > 0) {
-                            let liveCount = cc.filter(ts => ts.state == SpriteState.Alive);
-                            // skip next instruction if predicate = 0 doesn't hold
-                            if (liveCount.length > 0)
-                                i = i + 1;
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-
-        // a tile sprite is (going to be) moving if it has been
-        // issed an appropriate move command
-        private moving(ts: TileSprite) {
-            return ts.inst == CommandType.Move && ts.arg < MoveArg.Stop;
-        }
 
         public allSprites(handler: (ts:TileSprite) => void) {
             this.vm.sprites.forEach(ls => { 
@@ -278,15 +234,13 @@ namespace tileworld {
         // needs to have its resting rules applied. If no space
         // in the neighborhood around the tile changed in the last
         // round, then there is no need to apply the resting rules.
-        private restingWithChange(ts: TileSprite) {
-            let col = ts.col();
-            let row = ts.row();
+        private contextChanged(ts: TileSprite) {
             // check neighborhood
             for(let i = -2; i <= 2; i++) {
                 for (let j = -2; j <= 2; j++) {
                     if (Math.abs(i) + Math.abs(j) <= 2) {
-                        let x = col + i;
-                        let y = row + j;
+                        let x = ts.col() + i;
+                        let y = ts.row() + j;
                         if (this.inBounds(x,y) && this.vm.changed.getPixel(x,y))
                             return true;
                     }
@@ -295,57 +249,47 @@ namespace tileworld {
             return false;
         }
 
-        private ruleMatchesSprite(rid: number, ts: TileSprite) {
-            return this.p.getKinds(rid).indexOf(ts.kind()) != -1;
+        private ruleMatchesSprite(rv: RuleView, ts: TileSprite) {
+            return rv.hasSpriteKind(ts.kind()) && this.vm.blockedSpriteKinds.indexOf(ts.kind()) == -1;
         }
 
-        // apply matching rules to tileSprite, based on the phase we are in
-        private matchingRules(rules: number[], phase: Phase, ts: TileSprite, handler: (rid: number) => void) {
-            rules.forEach(rid => {
-                if (this.ruleMatchesSprite(rid, ts) &&
-                    (phase == Phase.Resting
-                  || phase == Phase.Moving  && this.p.getDir(rid) == ts.dir
-                  || phase == Phase.Pushing && this.dpad.indexOf(this.p.getDir(rid)) != -1)) {
-                    handler(rid);
-                }
-            });
+        private exprMatchesDirection(dirExpr: MoveExpr, dir: MoveRest) {
+            return (dirExpr == AnyDir) || (dirExpr == Moving && dir != Resting) || (dirExpr == dir);
         }
 
-        private applyRules(phase: Phase, rules: number[], ts: TileSprite) {
+        private ruleMatchesDirection(rv: RuleView, dir: MoveRest) {
+            return this.exprMatchesDirection(rv.getDirFromRule(), dir);
+        }
+
+        private applyRules(phase: RuleType, ts: TileSprite) {
             let ruleClosures: RuleClosure[] = [];
-            this.matchingRules(rules, phase, ts, (rid) => {
-                let closure = this.evaluateRule(ts, rid);
-                if (closure)
-                    ruleClosures.push(closure);
-            });
-            if (phase != Phase.Resting)
-                return ruleClosures;
-            // now deal with pesky resting rules that have precondition == true
-            // this is need because of change optimization
-            this.matchingRules(this.allTrueResting, phase, ts, (rid) => {
-                let closure = this.evaluateRule(ts, rid);
-                if (closure) {
-                    ruleClosures.push(closure);
+            this.ruleIndex[phase].forEach(rv => {
+                if (this.ruleMatchesSprite(rv, ts) &&
+                    (phase == RuleType.ContextChange && this.ruleMatchesDirection(rv, ts.dir)
+                  || phase == RuleType.ButtonPress && this.dpad.indexOf(rv.getRuleArg()) != -1)) {
+                    let closure = this.evaluateRule(ts, rv);
+                    if (closure)
+                        ruleClosures.push(closure);
                 }
             });
             return ruleClosures;
         }
 
         // precondition: moving(ts)
-        private collidingRules(ts: TileSprite, handler: (rid: number) => void) {
-            this.ruleIndex[RuleType.CollidingMoving].forEach(rid => {
-                if (this.ruleMatchesSprite(rid, ts) && this.p.getDir(rid) == ts.arg) {
-                    handler(rid);
-                }
-            });
-            this.ruleIndex[RuleType.CollidingResting].forEach(rid => {
-                if (this.ruleMatchesSprite(rid, ts) && this.p.getDir(rid) == ts.arg) {
-                    handler(rid);
+        private collidingRules(ts: TileSprite, handler: (rv: RuleView) => void) {
+            this.ruleIndex[RuleType.Collision].forEach(rv => {
+                if (this.ruleMatchesSprite(rv, ts) && this.ruleMatchesDirection(rv, ts.arg)) {
+                    handler(rv);
                 }
             });
         }
 
-        // for each sprite ts that is NOW moving (into T):
+        // a tile sprite will move if it has been issued an appropriate move command
+        private moving(ts: TileSprite) {
+            return ts.inst == CommandType.Move && ts.arg < MoveArg.Stop;
+        }
+
+        // for each sprite ts that is will move (into T):
         // - look for colliding sprite os != ts, as defined
         //   (a) os in square T, resting or moving towards ts, or
         //   (b) os moving into T
@@ -354,37 +298,34 @@ namespace tileworld {
             if (!this.moving(ts)) return rcs;
             let wcol = ts.col() + moveXdelta(ts.arg);
             let wrow = ts.row() + moveYdelta(ts.arg);
-            this.collidingRules(ts, (rid) => {
+            this.collidingRules(ts, (rv) => {
                 // T = (wcol, wrow)
-                let moving = this.p.getType(rid) == RuleType.CollidingMoving;
                 this.allSprites(os => {
                     if (os == ts) return;
                     // (a) os in square T, resting or moving towards ts, or
                     if (os.col() == wcol && os.row() == wrow) {
-                        if (!moving && !this.moving(os) || 
-                                moving && this.moving(os) && oppDir(ts.arg,os.arg)) {
-                            this.collide(rid, ts, os, rcs);
-                            return;
+                        if (!this.moving(os) || oppDir(ts.arg,os.arg)) {
+                            this.collide(rv, ts, os, rcs);
                         }
-                    } else if (moving && this.moving(os)) {
-                        let leftRotate = flipRotateDir(ts.arg, FlipRotate.Left);
+                    } else if (this.moving(os)) {
+                        let leftRotate = flipRotateDir(ts.arg, RuleTransforms.LeftRotate);
                         let osCol = wcol + moveXdelta(leftRotate);
                         let osRow = wrow + moveYdelta(leftRotate);
                         if (os.col() == osCol && os.row() == osRow && oppDir(leftRotate,os.arg)) {
-                            this.collide(rid, ts, os, rcs);
+                            this.collide(rv, ts, os, rcs);
                             return;
                         } 
-                        let rightRotate = flipRotateDir(ts.arg, FlipRotate.Right);
+                        let rightRotate = flipRotateDir(ts.arg, RuleTransforms.RightRotate);
                         osCol = wcol + moveXdelta(rightRotate);
                         osRow = wrow + moveYdelta(rightRotate);
                         if (os.col() == osCol && os.row() == osRow && oppDir(rightRotate, os.arg)) {
-                            this.collide(rid, ts, os, rcs);
+                            this.collide(rv, ts, os, rcs);
                             return;
                         }
                         osCol = wcol + moveXdelta(ts.arg);
                         osRow = wrow + moveYdelta(ts.arg);
                         if (os.col() == osCol && os.row() == osRow && oppDir(ts.arg, os.arg)) {
-                            this.collide(rid, ts, os, rcs);
+                            this.collide(rv, ts, os, rcs);
                             return;
                         }
                     }
@@ -393,96 +334,164 @@ namespace tileworld {
             return rcs;
         }
 
-        private collide(rid: number, ts: TileSprite, os: TileSprite, rcs: RuleClosure[]) {
+        private collide(rv: RuleView, ts: TileSprite, os: TileSprite, rcs: RuleClosure[]) {
             let wcol = ts.col() + moveXdelta(ts.arg);
             let wrow = ts.row() + moveYdelta(ts.arg);
             // we already have the witness
             let witnesses: TileSprite[] = [ os ];
-            if (this.evaluateWhenDo(ts, rid, 2+moveXdelta(ts.arg), 2+moveYdelta(ts.arg), witnesses)) {
-                rcs.push(new RuleClosure(rid, ts, witnesses));
+            if (this.evaluateWhenDo(ts, rv, 2+moveXdelta(ts.arg), 2+moveYdelta(ts.arg), witnesses)) {
+                rcs.push(new RuleClosure(rv, ts, witnesses));
             }
         }
 
+        // ---------------------------------------------------------------------
+        // update the world and compute change map
+        // TODO: change optimization still not completely working 
+
+        private updateWorld() {
+            this.vm.changed.fill(0);
+            this.vm.spawnedSprites.forEach(ts => {
+                this.vm.sprites[ts.kind()].push(ts);
+                this.vm.changed.setPixel(ts.col(), ts.row(), 1);
+                ts.setFlag(SpriteFlag.Invisible, false);
+            });
+            this.vm.spawnedSprites = [];
+            this.vm.deadSprites.forEach(ts => {
+                this.vm.changed.setPixel(ts.col(), ts.row(), 1);
+            });
+            // update the state of each sprite, based on instructions
+            this.allSprites(ts => {
+                ts.update();
+                if (ts.dir != Resting) {
+                    // if sprite is moving then dirty its current
+                    // location and next location
+                    this.vm.changed.setPixel(ts.col(), ts.row(), 1);
+                    this.vm.changed.setPixel(ts.col() + moveXdelta(ts.dir),
+                                             ts.row() + moveYdelta(ts.dir), 1);
+                }
+            });
+            // update the tile map and set dirty bits in changed map
+            this.vm.paintTile.forEach(pt => {
+                const tm = game.currentScene().tileMap;
+                let old = tm.getTileIndex(pt.col, pt.row);
+                if (old != pt.kind) {
+                    tm.setTileAt(pt.col, pt.row, pt.kind);
+                    this.vm.changed.setPixel(pt.col, pt.row, 1);
+                }
+            });
+            // now, execute the global instructions
+            for (let i = 0; i < this.globalInsts.length; i++) {
+                let inst = this.globalInsts[i];
+                let arg = this.globalArgs[i];
+                switch (inst) {
+                    case CommandType.Game: {
+                        if (arg == GameArg.Win || arg == GameArg.Lose) {
+                            this.vm.game = arg == GameArg.Win ? GameState.Won : GameState.Lost;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        // ---------------------------------------------------------------------
+
         // store the sprite witnesses identified by guards
-        private evaluateRule(ts: TileSprite, rid: number) {
+        private evaluateRule(ts: TileSprite, rv: RuleView) {
             let witnesses: TileSprite[] = [];
             for(let col = 0; col < 5; col++) {
                 for (let row = 0; row < 5; row++) {
-                    if (Math.abs(2-col) + Math.abs(2-row) > 2)
+                    if (this.manhattan(col, row) > 2)
                         continue;
-                    if (!this.evaluateWhenDo(ts, rid, col, row, witnesses))
+                    if (!this.evaluateWhenDo(ts, rv, col, row, witnesses))
                         return null;
                 }
             }
             // all the whendos passed and we've collected witnesses (other sprites)
             // so, we will execute the rule on the self sprite ts
-            return new RuleClosure(rid, ts, witnesses);
+            return new RuleClosure(rv, ts, witnesses);
         }
 
-        private getWitness(kind: number, col: number, row: number, self: TileSprite) {
-            return this.vm.sprites[kind] && this.vm.sprites[kind].find(ts => ts != self && ts.col() == col && ts.row() == row);
+        private getWitness(kind: number, col: number, row: number) {
+            return this.vm.sprites[kind] && 
+                   this.vm.sprites[kind].find(ts => ts.col() == col && ts.row() == row);
         }
 
         private inBounds(col: number, row: number) {
-            return 0 <= col && col < this.vm.nextWorld.width &&
-                   0 <= row && row < this.vm.nextWorld.height;
+            return 0 <= col && col < this.vm.changed.width &&
+                   0 <= row && row < this.vm.changed.height;
         }
 
         // Include and OneOf are equivalent now
-        private evaluateWhenDo(ts: TileSprite, rid: number, 
+        private evaluateWhenDo(ts: TileSprite, rv: RuleView, 
                 col: number, row: number, witnesses: TileSprite[]) {
-            let whendo = this.p.getWhenDo(rid, col, row);
-            if (whendo == -1 || this.p.whendoTrue(rid, whendo))
+            // whendo
+            let whendo = rv.getWhenDo(col, row);
+            if (whendo == -1 || rv.whendoTrue(whendo))
                 return true;
-            let self = col == 2 && row == 2; 
+            
+            // world coordinates
             let wcol = ts.col() + (col - 2);
             let wrow = ts.row() + (row - 2);
             if (!this.inBounds(wcol, wrow))
                 return false;
-            let oneOf: boolean = false;
-            let oneOfPassed: boolean = false;
-            let captureWitness: TileSprite = null;
-            for(let kind = 0; kind < this.p.fixed().length; kind++) {
+
+            let hasInclude: boolean = false;
+            let includePassed: boolean = false;
+            let includeWitness: TileSprite = null;
+            // check backgrounds
+            for(let kind = 0; kind < this.p.backCnt(); kind++) {
                 const tm = game.currentScene().tileMap;
-                let hasKind = tm.getTile(wcol, wrow).tileSet == kind;
-                let attr = this.p.getAttr(rid, whendo, kind);
+                let hasKind = tm.getTileIndex(wcol, wrow) == kind;
+                let attr = rv.getSetBgAttr(whendo, kind);
                 if (attr == AttrType.Exclude && hasKind) {
                     return false;
-                } else if (attr == AttrType.OneOf || attr == AttrType.Include) {
-                    oneOf = true;
-                    if (hasKind) oneOfPassed = true;
+                } else if (attr == AttrType.Include) {
+                    hasInclude = true;
+                    if (hasKind) includePassed = true;
                 }
             }
-            let adjacent = Math.abs(2 - col) + Math.abs(2 - row) <= 1;
-            for(let kind = this.p.fixed().length; kind<this.p.all().length; kind++) {
-                let attr = this.p.getAttr(rid, whendo, kind);
-                let witness = this.getWitness(kind, wcol, wrow, self ? ts : null);
+            // check sprites
+            let adjacent = this.manhattan(col, row) <= 1;
+            for(let kind = 0; kind < this.p.spriteCnt(); kind++) {
+                let attr = rv.getSetSpAttr(whendo, kind);
+                // TODO: there could be multiple matching witnesses (cross product)
+                let witness = this.getWitness(kind, wcol, wrow);
                 // special case for collisions
-                if (this.p.getType(rid) >= RuleType.CollidingResting) {
-                    witness = witnesses[0].kind() == kind ? witnesses[0] : null;
+                if (rv.getRuleType() == RuleType.Collision) {
+                    witness = (witnesses[0].kind() == kind) ? witnesses[0] : null;
                 }
                 if (attr == AttrType.Exclude && witness) {
                     return false;
-                } else if (attr == AttrType.Include || attr == AttrType.OneOf) {
-                    oneOf = true;
-                    if (witness) oneOfPassed = true;
-                    if (adjacent && !captureWitness)
-                        captureWitness = witness;
+                } else if (attr == AttrType.Include) {
+                    hasInclude = true;
+                    if (witness)  {
+                        includePassed = true;
+                        // we only make witnesses available to the runtime
+                        // if they are in the center or adjacent to the center
+                        if (adjacent && !includeWitness)
+                            includeWitness = witness;
+                    }
                 }
             }
-            // collision case: if we made it through here then 
-            // we have witness and oneOf is false, as expected
-            let ret = !oneOf || oneOfPassed;
-            if (ret && captureWitness && this.p.getType(rid) < RuleType.CollidingResting) {
-                witnesses.push(captureWitness);
+            let ret = !hasInclude || includePassed;
+            if (ret && includeWitness && rv.getRuleType() != RuleType.Collision) {
+                // need to check direction of sprite against witness.dir
+                if (!this.exprMatchesDirection(rv.getWitnessDirection(whendo), includeWitness.dir))
+                    return false;
+                witnesses.push(includeWitness);
             }
             return ret;
+        }
+
+        private manhattan(col: number, row: number) {
+            return Math.abs(2 - col) + Math.abs(2 - row);
         }
     
         private evaluateRuleClosure(rc: RuleClosure) {
             for (let col = 0; col < 5; col++) {
                 for (let row = 0; row < 5; row++) {
-                    if (Math.abs(2 - col) + Math.abs(2 - row) > 2)
+                    if (this.manhattan(col, row) > 2)
                         continue;
                     this.evaluateWhenDoCommands(rc, col, row);
                 }
@@ -490,57 +499,130 @@ namespace tileworld {
         }
 
         private evaluateWhenDoCommands(rc: RuleClosure, col: number, row: number) {
-            let wid = this.p.getWhenDo(rc.rid, col, row);
-            if (wid == -1 || this.p.getInst(rc.rid, wid, 0) == -1)
+            let wid = rc.rv.getWhenDo(col, row);
+            if (wid == -1 || rc.rv.getCmdInst(wid, 0) == -1)
                 return;
-            let wcol = rc.self.col() + (col - 2);
-            let wrow = rc.self.row() + (row - 2);
-            let self = col == 2 && row == 2;
-            for (let cid = 0; cid < 4; cid++) {
-                let inst = this.p.getInst(rc.rid, wid, cid);
+            let wcol = rc.self ? rc.self.col() + (col - 2) : -1;
+            let wrow = rc.self ? rc.self.row() + (row - 2) : -1;
+            let spawned: TileSprite = null;
+            let teleport: Tile = null;
+            let ok = true;
+            for (let cid = 0; cid < rc.rv.getCmdsLen(wid); cid++) {
+                if (!ok)
+                    break;
+                if (teleport) {
+                    wcol = teleport.col;
+                    wrow = teleport.row;
+                }
+                let inst = rc.rv.getCmdInst(wid, cid);
                 if (inst == -1) break;
-                let arg = this.p.getArg(rc.rid, wid, cid);
+                let arg = rc.rv.getCmdArg(wid, cid);
                 switch(inst) {
                     case CommandType.Paint: {
-                        if (this.vm.nextWorld.getPixel(wcol, wrow) == 0xf) {
-                            this.vm.nextWorld.setPixel(wcol, wrow, arg);
-                            if (this.vm.paintTile && this.vm.paintTile.length < 5) {
-                                this.vm.paintTile.push(new PaintTile(wcol, wrow, arg));
-                            } else 
-                                this.vm.paintTile = null;
-                        }
+                        if (!rc.self)
+                            break;
+                        this.vm.paintTile.push(new Tile(wcol, wrow, arg));
                         break;
                     }
                     case CommandType.Move: {
-                        let colliding = this.p.getType(rc.rid) >= RuleType.CollidingResting;
-                        let pushing = this.p.getType(rc.rid) >= RuleType.Pushing;
-                        let witness = self ? rc.self : 
-                                (colliding ? rc.witnesses[0]
-                                    : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow));
-                        if (witness && (witness.inst == -1 || Math.randomRange(0,1) < 0.5 || colliding || pushing)) {
+                        if (!rc.self)
+                            break;
+                        let colliding = rc.rv.getRuleType() == RuleType.Collision;
+                        let button = rc.rv.getRuleType() == RuleType.ButtonPress;
+                        let self = col == 2 && row == 2;
+                        let witness =
+                            spawned ? spawned : 
+                            self ? rc.self : 
+                            (colliding ? rc.witnesses[0]
+                                       : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow));
+                        if (witness && (witness.inst == -1 || Math.randomRange(0,1) < 0.5 || colliding || button)) {
                             witness.inst = inst;
                             witness.arg = arg;
                         }
                         break;
                     }
                     case CommandType.Sprite: {
+                        if (!rc.self)
+                            break;
                         // the witness is found where expected
                         let witness = rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
                         // except in the case of collisions with moving sprites
-                        if (this.p.getType(rc.rid) == RuleType.CollidingMoving) {
+                        if (rc.rv.getRuleType() == RuleType.Collision) {
                             witness = rc.witnesses[0];
                         }
                         if (arg == SpriteArg.Remove && witness) {
                             witness.state = SpriteState.Dead;
-                            this.vm.deadSprites.push(witness);
+                            if (this.vm.deadSprites.indexOf(witness) == -1)
+                                this.vm.deadSprites.push(witness);
                         }
                         break;
                     }
-                    case CommandType.Game:
+                    case CommandType.Spawn: {
+                        if (!rc.self)
+                            break;
+                        spawned = new TileSprite(this.p.spriteImages()[arg], arg);
+                        this.vm.spawnedSprites.push(spawned);
+                        spawned.x = (wcol << 4) + 8;
+                        spawned.y = (wrow << 4) + 8;
+                        spawned.setFlag(SpriteFlag.Invisible, true);
+                        break;
+                    }
+                    case CommandType.BlockSpriteRules: {
+                        if (this.vm.nextBlockedSprites.indexOf(arg) == -1)
+                            this.vm.nextBlockedSprites.push(arg);
+                        break;
+                    }
+                    case CommandType.Teleport: {
+                        // find a tile in the map with given background kind
+                        // that has no sprite on it.
+                        let tm = game.currentScene().tileMap;
+                        let copy = this.vm.changed.clone();
+                        copy.fill(0);
+                        // don't consider tiles with sprites on them
+                        this.allSprites(ts => {
+                            copy.setPixel(ts.col(), ts.row(), 1);
+                        });
+                        this.vm.spawnedSprites.forEach(ts => {
+                             copy.setPixel(ts.col(), ts.row(), 1);
+                        });
+                        // how many candidates to teleport to are there?
+                        let kindCnt = 0;
+                        let x = 0, y = 0;
+                        for(; x<copy.width(); x++) {
+                            y = 0;
+                            for(; y<copy.height(); y++) {
+                                if (copy.getPixel(x,y) == 0 && tm.getTileIndex(x,y) == arg)
+                                    kindCnt++;
+                            }                            
+                        }
+                        if (kindCnt > 0) {
+                            // select one
+                            let index = Math.randomRange(0,kindCnt-1);
+                            kindCnt = 0;
+                            x = 0;
+                            for(; x<copy.width(); x++) {
+                                y = 0;
+                                for(; y<copy.height(); y++) {
+                                    if (copy.getPixel(x,y) == 0 && tm.getTileIndex(x,y) == arg) {
+                                        if (kindCnt == index) {
+                                            teleport = new Tile(x, y, 0);
+                                            break;
+                                        }
+                                        kindCnt++;
+                                    }
+                                }
+                                if (teleport)
+                                    break;                 
+                            }
+                        } else {
+                            // teleport failed, so stop execution
+                            ok = false;
+                        }
+
+                        break;
+                    }
+                    case CommandType.Game: {
                         // all game commands are global
-                    case CommandType.SpritePred: {
-                        // TODO: if the next instruction is a local instruction, then we need to evaluate the 
-                        // TODO: sprite predicate now, otherwise it is global
                         this.globalInsts.push(inst);
                         this.globalArgs.push(arg);
                         break;
@@ -555,7 +637,7 @@ namespace tileworld {
         private vm: TileWorldVM;
         private signal: TileSprite;
         private state: VMState;
-        constructor(private p: Project, rules: number[], private debug: boolean = false) {
+        constructor(private p: Project, rules: RuleView[], private debug: boolean = false) {
             super();
             this.vm = new TileWorldVM(p, rules);
         }
@@ -568,24 +650,22 @@ namespace tileworld {
             const currScene = game.currentScene();
             currScene.tileMap = new tiles.legacy.LegacyTilemap(TileScale.Sixteen, this.debug ? 2 : 0);
             scene.setTileMap(w.clone());
-            this.state.nextWorld = w.clone();
             this.state.changed = w.clone();
-
-            // initialize fixed and movable sprites
-            for (let kind = 0;kind < this.p.all().length; kind++) {
-                if (kind < this.p.fixed().length) {
-                    let art = this.p.getImage(kind);
-                    scene.setTile(kind, art);
-                } else {
-                    this.state.sprites[kind] = [];
-                }
+            this.state.changed.fill(0xf);
+            
+            // initialize backgrounds
+            this.p.backgroundImages().forEach((img,kind) => {
+                scene.setTile(kind, img);
+            });
+            // initialize sprites
+            for(let kind=0; kind<this.p.spriteCnt(); kind++) {
+                this.state.sprites[kind] = [];
             }
-        
             for(let x = 0; x<sprites.width; x++) {
                 for (let y = 0; y < sprites.height; y++) {
                     let kind = sprites.getPixel(x,y);
                     if (kind == 0xf) continue;
-                    let art = this.p.getImage(kind);
+                    let art = this.p.getSpriteImage(kind);
                     let ts = new TileSprite(art, kind, this.debug);
                     this.state.sprites[kind].push(ts);
                     ts.x = (x << 4) + 8;
@@ -596,14 +676,13 @@ namespace tileworld {
 
         private roundToCompletion(dirs: number[]) {
             this.vm.startRound(dirs);
-            while (this.state.phase != Phase.Completed) {
+            while (this.state.phase != -1) {
                 let rcs = this.vm.continueRound();
                 while (rcs && rcs.length > 0) {
                     let rc = rcs.pop();
                     this.vm.processClosure(rc);
                 }
             }
-            this.vm.continueRound();
         }
 
         private currentDirection: MoveDirection[];
@@ -637,8 +716,8 @@ namespace tileworld {
                     if (this.state.game != GameState.InPlay) {
                         this.running = false;
                         let win = this.state.game == GameState.Won;
-                        pause(400);
                         game.showDialog("Game Over", " you " + (win ? "won" : "lost"));
+                        pause(500);
                         game.waitAnyButton();
                         return;
                     } 
@@ -703,10 +782,10 @@ namespace tileworld {
                 this.requestMove(MoveDirection.Down);
             });
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                this.requestMove(PushingArg.AButton);
+                this.requestMove(ButtonArg.A);
             });
             controller.A.onEvent(ControllerButtonEvent.Repeated, () => {
-                this.requestMove(PushingArg.AButton);
+                this.requestMove(ButtonArg.A);
             });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 // TODO: debugger

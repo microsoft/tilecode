@@ -2,14 +2,6 @@
 
 namespace tileworld {
 
-    export function fillAttr(f: number, n: number, i: number, g: number) {
-        let res: AttrType[] = [];
-        for (let j = 0; j < n; j++) {
-            res.push(j == i ? g : f);
-        }
-        return res;
-    }
-
     const zeroCode = "0".charCodeAt(0);
 
     export function getHelp(help: string, col: number, row: number) {
@@ -46,6 +38,34 @@ namespace tileworld {
             }
         }
         return ret;
+    }
+
+    export function splitImage(imgLeft: Image, imgRight: Image): Image {
+        let ret: Image = imgLeft.clone();
+        for(let x=(ret.width()>>1); x<ret.width(); x++) {
+            for (let y = 0; y < ret.height(); y++) {
+                ret.setPixel(x,y,imgRight.getPixel(x,y));
+            }
+        }
+        return ret;
+    }
+
+    export function drawHalfSize(img: Image, nx: number, ny: number, transparent: boolean = false) {
+        if (!transparent) {
+            for (let i = 0; i < img.width; i += 2) {
+                for (let j = 0; j < img.height; j += 2) {
+                    screen.setPixel(nx + (i >> 1), ny + (j >> 1), img.getPixel(i, j))
+                }
+            }
+        } else {
+            for (let i = 0; i < img.width; i += 2) {
+                for (let j = 0; j < img.height; j += 2) {
+                    let pix = img.getPixel(i,j);
+                    if (pix)
+                        screen.setPixel(nx + (i >> 1), ny + (j >> 1), pix);
+                }
+            }        
+        }
     }
 
     export function imageToBuffer(img: Image) {

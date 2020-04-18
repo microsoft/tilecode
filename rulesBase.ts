@@ -90,10 +90,10 @@ namespace tileworld {
 
         protected okToMove() { return true; }
 
-        protected getRulesForTypeDir(rules: number[], rt: RuleType, dir: MoveDirection) {
-            return rules.filter(rid => this.p.getType(rid) == rt && (rt == RuleType.Resting || this.p.getDir(rid) == dir));
+        protected getRulesForTypeDir(rules: RuleView[], rt: RuleType, dir: MoveDirection) {
+            return rules.filter(rv => rv.getRuleType() == rt && rv.getDirFromRule() == dir);
         }
-        
+      
         protected setCol(col: number) {
             this.cursor.x = (col << 4) + 8;
         }
@@ -136,20 +136,22 @@ namespace tileworld {
         protected cursorMove(dir: MoveDirection, pressed: boolean = true) { }
         protected centerImage(): Image { return null; }
 
-        protected showRuleType(rt: RuleType, rd: MoveDirection, x: number, y: number, center: boolean = true) {
+        protected showRuleType(rt: RuleType, rd: MoveRest, x: number, y: number, center: boolean = true) {
             let selCol = 11;
             if (center) this.drawImage(x, y, this.centerImage());
-            if (rt == RuleType.Moving) {
+            if (rt == RuleType.ContextChange) {
                 this.drawImage(x, y, movedImages[rd])
-            } else if (rt >= RuleType.CollidingResting) {
+            } else if (rt == RuleType.Collision) {
                 let ax = rd == MoveDirection.Left ? 1 : (rd == MoveDirection.Right ? -1 : 0)
                 let ay = rd == MoveDirection.Down ? -1 : (rd == MoveDirection.Up ? 1 : 0)
                 this.showCollision(x - ax, y - ay, rd, moveImages[rd], rt);
+            } else if (rt == RuleType.NegationCheck) {
+                this.drawImage(x, y, negate);
             }
         }
 
         protected showCollision(col: number, row: number, dir: MoveDirection, arrowImg: Image, rt: RuleType) {
-            this.drawImage(col, row, rt == RuleType.CollidingMoving ? collisionMovingSprite : collisionRestingSprite);
+            this.drawImage(col, row, collisionSprite);
             let x = (dir == MoveDirection.Left) ? 7 : (dir == MoveDirection.Right) ? -7 : 0;
             let y = (dir == MoveDirection.Up) ? 7 : (dir == MoveDirection.Down) ? -7 : 0;
             this.drawImageAbs((col << 4) + x, (row << 4) + yoff + y, arrowImg);

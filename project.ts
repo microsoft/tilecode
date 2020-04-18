@@ -2,23 +2,66 @@ namespace tileworld {
 
     export let TileWorldVersion = "1.0.0";
 
+    export class SwitchExport {
+        constructor(private p: Project, private backgrounds: boolean = true) {
+        }
+        public getImages() {
+            return this.backgrounds ? this.p.backgroundImages() : this.p.spriteImages();
+        }
+        public getImage(kind: number) {
+            return this.backgrounds ? this.p.getBackgroundImage(kind) : this.p.getSpriteImage(kind);
+        }
+        public saveImage(kind: number){
+            this.backgrounds ? this.p.saveBackgroundImage(kind) : this.p.saveSpriteImage(kind);
+        }
+    }
+
+    export class AllExport {
+        private allImages: Image[];
+        constructor(private p: Project) {
+            this.allImages = [];
+            this.p.backgroundImages().forEach(img => this.allImages.push(img));
+            this.p.spriteImages().forEach(img => this.allImages.push(img));
+        }
+        public getImages() {
+            return this.allImages;
+        }
+        public getImage(index: number) {
+            return this.allImages[index];
+        }
+        public saveImage(index: number) {
+            index < this.p.backCnt() ? this.p.saveBackgroundImage(index) : this.p.saveSpriteImage(index - this.p.backCnt());
+        }
+        public getSetAttr(rv: RuleView, whendo: number, aid: number, val:number = 0xffff) {
+            return aid < this.p.backCnt() ? rv.getSetBgAttr(whendo, aid, val) : rv.getSetSpAttr(whendo, aid - this.p.backCnt(), val);
+        }
+    }
+
     export class Project {
-        private lastRule: IdRule = null;
-        private allImages: Image[] = null;
+        private lastRule: RuleView = null;
         private _player: number = -1;
-        private _world: Image = null;
+        private _backgrounds: Image = null;
         private _sprites: Image = null;
         public debug: boolean = false;
         public help: boolean = true;
         public version: string;
+        private rules: RuleView[] = [];     // the rules
 
         constructor(
             public prefix: string,
-            private fixedImages: Image[],      // the number of fixed sprites
-            private movableImages: Image[],    // the number of movable sprites
-            private rules: IdRule[]     // the rules
+            private _backgroundsI: Image[], // the user-defined backgrounds 
+            private _spritesI: Image[]      // the user-defined sprites
         ) {
+            // TODO: enforce that backgroundI and spriteI lengths are from the set { 4, 8, 12, }
+            // TODO: leaving us room for 4 runtime backgrounds and sprites
+        }
 
+        public setRules(rvl: RuleView[]) {
+            this.rules = rvl;
+        }
+
+        public getRules() {
+            return this.rules;
         }
 
         public setPlayer(kind: number) {
@@ -29,248 +72,132 @@ namespace tileworld {
             return this._player;
         }
 
-        public setWorld(img: Image) {
-            this._world = img;
+        // a world consists of two images
+        // - tile backgrounds (values 0-14)
+        // - tile sprites (values 0-14)
+
+        public setWorldBackgrounds(img: Image) {
+            this._backgrounds = img;
         }
 
-        public getWorld() {
-            return this._world;
+        public getWorldBackgrounds() {
+            return this._backgrounds;
         }
 
-        public setSprites(img: Image) { 
+        public setWorldSprites(img: Image) { 
             this._sprites = img;
         }
 
-        public getSprites() { 
+        public getWorldSprites() {
             return this._sprites;
         }
 
         // images
+        public backCnt() { return this._backgroundsI.length; }
+        public spriteCnt() { return this._spritesI.length; }
+        public allCnt() { return this.backCnt() + this.spriteCnt(); }
+        public backgroundImages() { return this._backgroundsI; }
+        public spriteImages() { return this._spritesI; }
 
-        public fixed() { return this.fixedImages; }
-        public movable() { return this.movableImages; }
-        public all() { 
-            if (!this.allImages) {
-                this.allImages = [];
-                this.fixedImages.forEach(s => { this.allImages.push(s) });
-                this.movableImages.forEach(s => { this.allImages.push(s) });
+        public getBackgroundImage(kind: number) {
+            return 0 <= kind && kind < this.backCnt() ? this._backgroundsI[kind] : null;
+        }
+
+        public getSpriteImage(kind: number) {
+            return 0 <= kind && kind < this.spriteCnt() ? this._spritesI[kind] : null;
+        }
+
+        public saveBackgroundImage(kind: number) {
+            let buf = saveImage(this.prefix, kind, this.getBackgroundImage(kind), true);
+        }
+        
+        public saveSpriteImage(kind: number) {
+            let buf = saveImage(this.prefix, kind, this.getSpriteImage(kind), false);
+        }
+
+        public saveRule(rv: RuleView) {
+            if (rv.getRuleId() == -1)
+                return;
+            this.storeRule(this.prefix, rv.getRuleId(), rv.getBaseRule());
+        }
+
+        public makeRule(rt: RuleType, ra: RuleArg | MoveDirection, kind: number = 0xffff) {
+            let rv = this.wrapRule(makeNewRule(rt, ra));
+            if (kind != 0xffff) {
+                // this is a bit of a mess
+                let wd = rv.makeWhenDo(2, 2);
+                rv.getSetSpAttr(wd, kind, AttrType.Include);
+                if (rt == RuleType.ContextChange || rt == RuleType.Collision) {
+                    rv.setWitnessDirection(wd, ra);
+                }
             }
-            return this.allImages; 
-        }
-
-        public getImage(kind: number) {
-            return 0 <= kind && kind < this.all().length ? this.all()[kind] : null;
-        }
-
-        public getKind(img: Image) {
-            return this.all().indexOf(img);
-        }
-
-        public saveImage(kind: number) {
-            let fixed = true;
-            let index = kind;
-            if (kind >= this.fixedImages.length()) { 
-                fixed = false; 
-                index -= this.fixedImages.length(); 
-            }
-            let buf = saveImage(this.prefix, index, this.getImage(kind), fixed);
-        }
-
-        public saveRule(rid: number) {
-            storeRule(this.prefix, rid, this.getRule(rid));
-        }
-
-        public makeRule(kind: number, rt: RuleType, dir: MoveDirection): number {
-            let rid = this.wrapRule(makeNewRule([kind], rt, dir));
-            this.saveRule(rid);
-            return rid;
+            this.saveRule(rv);
+            return rv;
         }
 
         public removeRule(rid: number) {
-            let r = this.rules.find(r => r.id == rid);
+            let r = this.rules.find(r => r.getRuleId() == rid);
             if (r) {
                 this.rules.removeElement(r);
-                settings.remove(this.prefix + "RL" + rid.toString());
+                settings.remove(this.prefix + RuleKey + rid.toString());
             }
         }
 
-        public saveWorldSprites() {
-            let worldBuf = imageToBuffer(this._world);
-            settings.writeBuffer(this.prefix + "TM", worldBuf);
+        public saveWorld() {
+            let worldBuf = imageToBuffer(this._backgrounds);
+            settings.writeBuffer(this.prefix + WorldBackgroundsKey, worldBuf);
             let spritesBuf = imageToBuffer(this._sprites);
-            settings.writeBuffer(this.prefix + "TS", spritesBuf);
+            settings.writeBuffer(this.prefix + WorldSpritesKey, spritesBuf);
         }
 
         public saveHelp() {
-            settings.writeNumber(this.prefix+"HM", this.help ? 1 : 0);
+            settings.writeNumber(this.prefix+HelpKey, this.help ? 1 : 0);
         }
 
-        // rules 
+        private storeRule(prefix: string, rid: number, rule: Rule) {
+            let buf = packRule(rule, this.backCnt(), this.spriteCnt());
+            settings.writeBuffer(prefix + RuleKey + rid.toString(), buf);
+            return buf;
+        }
 
-
-        public getRules() { return this.rules; }
-
-        public getRule(rid: number) {
-            if (this.lastRule == null || this.lastRule.id != rid) {
-                this.lastRule = this.rules.find(r => r.id == rid);
-            }
-            return this.lastRule.rule;
+        public saveProject() {
+            let prefix = this.prefix;
+            settings.writeString(prefix + VersionKey, this.version);
+            settings.writeNumber(prefix + HelpKey, this.help ? 1 : 0);
+            settings.writeNumber(prefix + BackImgCntKey, this.backCnt());
+            settings.writeNumber(prefix + SpriteImgCntKey, this.spriteCnt());
+            settings.writeNumber(prefix + PlayerIndexKey, this.getPlayer());
+            this.backgroundImages().forEach((img, i) => {
+                let buf = saveImage(prefix, i, img, true);
+            });
+            this.spriteImages().forEach((img, i) => {
+                let buf = saveImage(prefix, i, img, false);
+            });
+            let worldBuf = imageToBuffer(this.getWorldBackgrounds());
+            settings.writeBuffer(prefix + WorldBackgroundsKey, worldBuf);
+            let spritesBuf = imageToBuffer(this.getWorldSprites());
+            settings.writeBuffer(prefix + WorldSpritesKey, spritesBuf);
+            this.getRules().forEach(r => {
+                let buf = this.storeRule(prefix, r.getRuleId(), r.getBaseRule());
+            });
         }
 
         private wrapRule(r: Rule) {
             // find a new id that is not in rule list
-            let rids = this.rules.map(r => r.id).sort((a,b) => a - b );
+            let rids = this.rules.map(r => r.getRuleId()).sort((a,b) => a - b );
             let rid = 0;
             for(let i = 0; i< rids.length; i++) {
                 if (rid != rids[i])
                     break;
                 rid = rids[i]+1;
             }
-            let newRule = new IdRule(rid, r);
+            let newRule = new RuleView(this, rid, r);
             this.rules.push(newRule);
-            return newRule.id;
+            return newRule;
         }
-
-        public getRuleIds(): number[] {
-            return this.rules.map(r => r.id);
-        }
-
-        public getRulesForKind(kind: number): number[] {
-            return this.rules.filter(r => r.rule.kind.indexOf(kind) != -1).map(r => r.id)
-        }
-
-        public getKinds(rid: number): number[] {
-            return this.getRule(rid).kind;
-        }
-
-        public setKinds(rid: number, kind: number[]) {
-            this.getRule(rid).kind = kind;
-        }
-
-        public getType(rid: number) {
-            return this.getRule(rid).rt;
-        }
-
-        public setType(rid: number, rt: RuleType) {
-            this.getRule(rid).rt = rt;
-        }
-
-        public getDir(rid: number): MoveDirection {
-            return this.getRule(rid).dir;
-        }
-
-        public setDir(rid: number, dir: MoveDirection) {
-            this.getRule(rid).dir = dir;
-        }
-
-        public getWhenDo(rid: number, col: number, row: number) {
-            let whendo = this.getRule(rid).whenDo.find(wd => wd.col == col && wd.row == row);
-            if (whendo == null)
-                return -1;
-            else
-                return this.getRule(rid).whenDo.indexOf(whendo);
-        }
-
-        public makeWhenDo(rid: number, col: number, row: number) {
-            let whenDo = new WhenDo(col, row, [], 0, []);
-            this.getRule(rid).whenDo.push(whenDo);
-            return this.getRule(rid).whenDo.length - 1;
-        }
-
-        public getAttr(rid: number, wdid: number, aid: number): AttrType {
-            return this.getRule(rid).whenDo[wdid].predicate[aid];
-        }
-
-        public setAttr(rid: number, wdid: number, aid: number, attr: AttrType) {
-            this.getRule(rid).whenDo[wdid].predicate[aid] = attr;
-        }
-
-        public getInst(rid: number, wdid: number, cid: number) {
-            let c = this.getRule(rid).whenDo[wdid].commands[cid];
-            return (c == null) ? -1 : c.inst;
-        }
-
-        public getArg(rid: number, wdid: number, cid: number) {
-            let c = this.getRule(rid).whenDo[wdid].commands[cid];
-            return (c == null) ? -1 : c.arg;
-        }
-
-        public setInst(rid: number, wdid: number, cid: number, n: number) {
-            let commands = this.getRule(rid).whenDo[wdid].commands;
-            while (cid >= commands.length && cid < 4) {
-                commands.push(new Command(-1, -1));
-            }
-            commands[cid].inst = n;
-        }
-
-        public setArg(rid: number, wdid: number, cid: number, n: number) {
-            let commands = this.getRule(rid).whenDo[wdid].commands;
-            while (cid >= commands.length && cid < 4) {
-                commands.push(new Command(-1, -1));
-            }
-            commands[cid].arg = n;
-        }
-
-        public removeCommand(rid: number, wdid: number, cid: number) {
-            let commands = this.getRule(rid).whenDo[wdid].commands;
-            if (cid < commands.length) {
-                commands.removeAt(cid);
-            }
-        }
-
-        // predicates
-
-        public whendoTrue(rid: number, whendo: number) {
-            for (let kind = 0; kind < this.all().length; kind++) {
-                if (this.getAttr(rid, whendo, kind) != AttrType.OK)
-                    return false;
-            }
-            return true;
-        }
-
-        public allTrue(rid: number) {
-            for (let col = 0; col < 5; col++) {
-                for (let row = 0; row < 5; row++) {
-                    if (Math.abs(2 - col) + Math.abs(2 - row) > 2) {
-                        let whendo = this.getWhenDo(rid, col, row);
-                        if (whendo != -1 && !this.whendoTrue(rid, whendo))
-                            return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        // transformations
-
-        public flipRule(rid: number, fr: FlipRotate) {
-            let tgtRule = this.makeRule(this.getKinds(rid)[0], this.getType(rid), 
-                                        flipRotateDir(this.getDir(rid), fr));
-            for (let row = 0; row < 5; row++) {
-                for (let col = 0; col < 5; col++) {
-                    if (Math.abs(2 - col) + Math.abs(2 - row) > 2)
-                        continue;
-                    let whendo = this.getWhenDo(rid,col,row);
-                    if (whendo == -1)
-                        continue;
-                    let tgtWhenDo = this.makeWhenDo(tgtRule, transformCol(col, row, fr), 
-                                                             transformRow(row, col, fr));
-                    // copy the predicate
-                    for (let kind = 0; kind < this.all().length; kind++) {
-                        this.setAttr(tgtRule, tgtWhenDo, kind, this.getAttr(rid, whendo, kind));
-                    }
-                    // flip the commands using flipCommands
-                    for (let c = 0; c < 4; c++) {
-                        let inst = this.getInst(rid,whendo,c);
-                        if (inst == -1)
-                            break;
-                        let arg = this.getArg(rid,whendo,c);
-                        this.setInst(tgtRule, tgtWhenDo, c, inst);
-                        this.setArg(tgtRule, tgtWhenDo, c, inst == CommandType.Move ? flipRotateDir(arg,fr): arg);
-                    }
-                }
-            }
-            return tgtRule;
+    
+        public getRulesForSpriteKind(kind: number) {
+            return this.rules.filter(rv => rv.hasSpriteKind(kind));
         }
     }
 
@@ -309,123 +236,103 @@ namespace tileworld {
         return buf;
     }
 
+    const VersionKey = "VersionS";
+    const HelpKey = "HelpN";
+    const BackImgCntKey = "BackN";
+    const SpriteImgCntKey = "SpriteN";
+    const PlayerIndexKey = "PlayerN";
+    const WorldBackgroundsKey = "WBackM";
+    const WorldSpritesKey = "WSpriteM";
+    const BackImageKey = "BackI";
+    const SpriteImageKey = "SpriteI";
+    const RuleKey = "RuleB";
+
+    function readImages(cnt: number, prefix: string, output: boolean) {
+        let images: Image[] = []
+        for (let i = 0; i < cnt; i++) {
+            let key = prefix + i.toString();
+            let buf = settingsReadBuffer(key, output);
+            let img = buf && buf.length > 0 ? bufferToImage(buf) : null;
+            if (!img) { img = image.create(16, 16); img.fill(1 + i); }
+            images.push(img);
+        }
+        return images;
+    }
+
     export function loadProject(prefix: string, output: boolean = false) {
         let names = settings.list(prefix);
         if (names.length == 0)
             return null;
         if (output) console.log("function create"+prefix.slice(0,-1)+"() {");
-        let version = settingsReadString(prefix + "VS", output);
+        let version = settingsReadString(prefix + VersionKey, output);
         // get the tile map, handling errors
-        let buf = settingsReadBuffer(prefix + "TM", output);
+        let buf = settingsReadBuffer(prefix + WorldBackgroundsKey, output);
         let world = buf && buf.length > 0 ? bufferToImage(buf) : null;
         world = world ? world : image.create(32, 24);
         // sprite map
-        buf = settingsReadBuffer(prefix + "TS", output);
+        buf = settingsReadBuffer(prefix + WorldSpritesKey, output);
         let sprites = buf && buf.length > 0 ? bufferToImage(buf) : null;
-        // sprite images
         sprites = sprites ? sprites : image.create(32, 24);
-        let fixedImages: Image[] = [];
-        if (names.indexOf(prefix + "FL") != -1) {
-            let fixed = settingsReadNumber(prefix + "FL", output);
-            for (let i = 0; i < fixed; i++) {
-                let key = prefix + "FS" + i.toString();
-                let buf = settingsReadBuffer(key, output);
-                let img = buf && buf.length > 0 ? bufferToImage(buf) : null;
-                if (!img) { img = image.create(16, 16); img.fill(1 + i); }
-                fixedImages.push(img);
-            }
-        }
-        let movableImages: Image[] = [];
-        if (names.indexOf(prefix + "ML") != -1) {
-            let movable = settingsReadNumber(prefix + "ML", output);
-            for (let i = 0; i < movable; i++) {
-                let key = prefix + "MS" + i.toString();
-                let buf = settingsReadBuffer(key, output);
-                let img = buf && buf.length > 0 ? bufferToImage(buf) : null;
-                if (!img) { img = image.create(16, 16); img.fill(1 + i); }
-                movableImages.push(img);
-            }
-        }
-        let help = false;
-        if (names.indexOf(prefix + "HM") != -1) {
-            let helpNum = settingsReadNumber(prefix + "HM", output);
-            help = helpNum ? true: false;
-        }
+        // background images and sprite images
+        let backCnt = settingsReadNumber(prefix + BackImgCntKey, output);
+        let backImages = readImages(backCnt, prefix+BackImageKey, output);
+        let spriteCnt = settingsReadNumber(prefix + SpriteImgCntKey, output);
+        let spriteImages = readImages(spriteCnt, prefix + SpriteImageKey, output);
+        let helpNum = settingsReadNumber(prefix + HelpKey, output);
+        let help = helpNum ? true: false;
+        // start project
+        let p = new Project(prefix, backImages, spriteImages);
         // get the rules, at least
-        let ruleName = prefix + "RL";
+        let ruleName = prefix + RuleKey;
         let ruleids = names.filter(s => s.indexOf(ruleName) == 0).map(s => parseInt(s.substr(ruleName.length())));
-        let rules: IdRule[] = [];
+        let rules: RuleView[] = [];
         ruleids.forEach(rid => {
             let key = ruleName+rid.toString();
             let buf = settingsReadBuffer(key, output);
-            let rule = unPackRule(buf);
-            rules.push(new IdRule(rid, rule));
+            let rule = unPackRule(buf, backCnt, spriteCnt);
+            rules.push(new RuleView(p, rid, rule));
         });
-        let player = settingsReadNumber(prefix + "PL", output);
+        let player = settingsReadNumber(prefix + PlayerIndexKey, output);
         if (output) console.log("}");
-        let p = new Project(prefix, fixedImages, movableImages, rules);
-        p.setWorld(world);
-        p.setSprites(sprites);
+        p.setRules(rules);
+        p.setWorldBackgrounds(world);
+        p.setWorldSprites(sprites);
         p.setPlayer(player);
         p.help = help;
         p.version = version;
         return p;
     }
 
-    function saveImage(prefix: string, kind: number, img: Image, fixed: boolean) {
+    function saveImage(prefix: string, kind: number, img: Image, background: boolean) {
         let buf = imageToBuffer(img);
-        settings.writeBuffer(prefix + (fixed ? "FS" : "MS") + kind.toString(), buf);
+        settings.writeBuffer(prefix + (background ? BackImageKey : SpriteImageKey) + kind.toString(), buf);
         return buf;
     }
 
-    export function storeRule(prefix: string, rid: number, rule: Rule) {
-        let buf = packRule(rule);
-        settings.writeBuffer(prefix + "RL" + rid.toString(), buf);
-        return buf;
-    }
-
-    export function saveEntireProject(p: Project){
-        if (p == null)
-            return;
-        let prefix = p.prefix;
-        let length = 8;
-        settings.writeString(prefix + "VS", p.version);
-        settings.writeNumber(prefix + "HM", p.help ? 1 : 0);
-        settings.writeNumber(prefix + "FL", p.fixed().length);
-        settings.writeNumber(prefix + "ML", p.movable().length);
-        settings.writeNumber(prefix + "PL", p.getPlayer());
-        p.fixed().forEach((img, i) => {
-            let buf = saveImage(prefix, i, img, true);
-            length += buf.length;
-        });
-        p.movable().forEach((img, i) => {
-            let buf = saveImage(prefix, i, img, false);
-            length += buf.length;
-        });
-        let worldBuf = imageToBuffer(p.getWorld());
-        length += worldBuf.length;
-        settings.writeBuffer(prefix + "TM", worldBuf);
-        let spritesBuf = imageToBuffer(p.getSprites());
-        length += spritesBuf.length;
-        settings.writeBuffer(prefix + "TS", spritesBuf);        
-        p.getRules().forEach(r => { 
-            let buf = storeRule(prefix, r.id, r.rule); 
-            length += buf.length;
-        });
+/* TODO: reimplement using new APIs
+    function fillAttr(f: number, n: number, i: number, g: number) {
+        // TODO: redo this using buffer
+        let res: AttrType[] = [];
+        for (let j = 0; j < n; j++) {
+            res.push(j == i ? g : f);
+        }
+        return res;
     }
 
     function wall () {
-        return tileworld.fillAttr(AttrType.OK, 8, 0, AttrType.Exclude);
+        return fillAttr(AttrType.OK, 8, 0, AttrType.Exclude);
     }
 
     function ok() {
-        return tileworld.fillAttr(AttrType.OK, 8, 0, AttrType.OK);
+        return fillAttr(AttrType.OK, 8, 0, AttrType.OK);
     }
 
     function makePushRule(dir: MoveDirection) {
-        return new Rule([4], RuleType.Pushing, dir, 
-        [new WhenDo(2+moveXdelta(dir), 2+moveYdelta(dir), wall(), 0, []), new WhenDo(2, 2, ok(), 0, [new Command(CommandType.Move, dir)])]);
+        return new Rule(RuleType.ButtonPress, dir, []);
+        // TODO: finish this off
+        // [new WhenDo(2+moveXdelta(dir), 2+moveYdelta(dir), wall(), 0, []), new WhenDo(2, 2, ok(), 0, [new Command(CommandType.Move, dir)])]);
     }
+*/
 
     const player = img`
         . . . . . . f f f f . . . . . .
@@ -457,16 +364,15 @@ namespace tileworld {
             movable.push(gallerySprites[f].clone());
         }
         let rules: Rule[] = [];
-        for(let dir = 0; dir < 4; dir++) { rules.push(makePushRule(dir)); }
-        let p = new Project(prefix, fixed, movable, makeIds(rules));
+        //for(let dir = 0; dir < 4; dir++) { rules.push(makePushRule(dir)); }
+        let p = new Project(prefix, fixed, movable); // makeIds(rules));
         let world = image.create(32, 24);
         helpers.imageFillRect(world, 1, 1, 30, 22, 1);
         let sprites = image.create(32, 24);
         sprites.fill(0xf);
-        sprites.setPixel(5, 5, 4);
-        p.setWorld(world);
-        p.setSprites(sprites);
-        p.setPlayer(4);
+        p.setWorldBackgrounds(world);
+        p.setWorldSprites(sprites);
+        p.setPlayer(0);
         p.version = TileWorldVersion;
         return p;
     }

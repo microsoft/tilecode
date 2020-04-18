@@ -1,5 +1,131 @@
 namespace tileworld {
 
+    const twCursor = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . f f f f f f f f . . . .
+        . . . f 5 5 5 5 5 5 5 5 f . . .
+        . . f 5 5 5 5 5 5 5 5 5 5 f . .
+        . . f 5 5 5 f f f f 5 5 5 f . .
+        . . f 5 5 f . . . . f 5 5 f . .
+        . . f 5 5 f . . . . f 5 5 f . .
+        . . f 5 5 f . . . . f 5 5 f . .
+        . . f 5 5 5 f f f f 5 5 5 f . .
+        . . f 5 5 5 5 5 5 5 5 5 5 f . .
+        . . . f 5 5 5 5 5 5 5 5 f . . .
+        . . . . f f f f f f f f . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `;
+    const apple = img`
+        . . . . . . . e c 7 . . . . . .
+        . . . . e e e c 7 7 e e . . . .
+        . . c e e e e c 7 e 2 2 e e . .
+        . c e e e e e c 6 e e 2 2 2 e .
+        . c e e e 2 e c c 2 4 5 4 2 e .
+        c e e e 2 2 2 2 2 2 4 5 5 2 2 e
+        c e e 2 2 2 2 2 2 2 2 4 4 2 2 e
+        c e e 2 2 2 2 2 2 2 2 2 2 2 2 e
+        c e e 2 2 2 2 2 2 2 2 2 2 2 2 e
+        c e e 2 2 2 2 2 2 2 2 2 2 2 2 e
+        c e e 2 2 2 2 2 2 2 2 2 2 4 2 e
+        . e e e 2 2 2 2 2 2 2 2 2 4 e .
+        . 2 e e 2 2 2 2 2 2 2 2 4 2 e .
+        . . 2 e e 2 2 2 2 2 4 4 2 e . .
+        . . . 2 2 e e 4 4 4 2 e e . . .
+        . . . . . 2 2 e e e e . . . . .
+    `;
+    const snakeHead = img`
+        . . . . c c c c c c . . . . . .
+        . . . c 6 7 7 7 7 6 c . . . . .
+        . . c 7 7 7 7 7 7 7 7 c . . . .
+        . c 6 7 7 7 7 7 7 7 7 6 c . . .
+        . c 7 c 6 6 6 6 c 7 7 7 c . . .
+        . f 7 6 f 6 6 f 6 7 7 7 f . . .
+        . f 7 7 7 7 7 7 7 7 7 7 f . . .
+        . . f 7 7 7 7 6 c 7 7 6 f c . .
+        . . . f c c c c 7 7 6 f 7 7 c .
+        . . c 7 2 7 7 7 6 c f 7 7 7 7 c
+        . c 7 7 2 7 7 c f c 6 7 7 6 c c
+        c 1 1 1 1 7 6 f c c 6 6 6 c . .
+        f 1 1 1 1 1 6 6 c 6 6 6 6 f . .
+        f 6 1 1 1 1 1 6 6 6 6 6 c f . .
+        . f 6 1 1 1 1 1 1 6 6 6 f . . .
+        . . c c c c c c c c c f . . . .
+    `;
+    const snakeBody = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . c c c c c
+        . . . . . . . . . c c 7 7 7 6 c
+        . . . . . . . . c c 7 7 7 c c .
+        . . . . . . . . c 6 7 7 c . . .
+        . . . . . . . . c 6 6 6 c . . .
+        . . . c c c c c c 6 6 6 c c . .
+        . . c 6 7 7 7 7 6 c c 6 6 6 c .
+        . c 7 7 7 7 7 7 7 7 c 6 6 6 c c
+        c 6 7 7 7 7 7 7 7 7 6 c 6 6 6 c
+        c 7 c 6 6 6 6 c 7 7 7 c 6 6 6 c
+        f 7 c c 6 6 c c 7 7 7 f 6 6 6 c
+        f 7 6 f 6 6 f 6 7 7 7 f 6 6 6 c
+        . c 1 c f f 1 c 7 6 f 6 6 c c .
+        . c c c c c c c c c c c c . . .
+    `;
+    const ship = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . e 2 . . . . . . .
+        . . . . . . e e 4 e . . . . . .
+        . . . . . . e 2 4 e . . . . . .
+        . . . . . c c c e e e . . . . .
+        . . . . e e 2 2 2 4 e e . . . .
+        . . c f f f c c e e f f e e . .
+        . c c c c e e 2 2 2 2 4 2 e e .
+        c c c c c c e e 2 2 2 4 2 2 e e
+        c c c c c c e e 2 2 2 2 4 2 e e
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `;
+    const alien = img`
+        . . . . . . f f f f . . . . . .
+        . . . . f f 1 1 1 1 f f . . . .
+        . . . f b 1 1 1 1 1 1 b f . . .
+        . . . f 1 1 1 1 1 1 1 1 f . . .
+        . . f d 1 1 1 1 1 1 1 1 d f . .
+        . . f d 1 1 1 1 1 1 1 1 d f . .
+        . . f d d d 1 1 1 1 d d d f . .
+        . . f b d b f d d f b d b f . .
+        . . f c d c f 1 1 f c d c f . .
+        . . . f b 1 1 1 1 1 1 b f . . .
+        . . f f f c d b 1 b d f f f f .
+        . c 1 1 1 c b f b f c 1 1 1 c .
+        . 1 b 1 b 1 f . . f 1 b 1 b 1 .
+        . b f b f f . . . . b f b f b .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `;
+    const missile = img`
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . 5 4 . . . . . .
+        . . . . . . . 5 4 . . . . . . .
+        . . . . . . 5 4 . . . . . . . .
+        . . . . . . . 5 4 . . . . . . .
+        . . . . . . . . 5 4 . . . . . .
+        . . . . . . . 5 4 . . . . . . .
+        . . . . . . 5 4 . . . . . . . .
+        . . . . . . . 5 4 . . . . . . .
+        . . . . . . . . 5 4 . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+        . . . . . . . . . . . . . . . .
+    `;
     const cat = img`
         . . . . . . . . . . . . . . . .
         . e e e . . . . e e e . . . . .
@@ -290,8 +416,7 @@ namespace tileworld {
     `;
 
     // up to 15 max
-    export const galleryPlayers = [player, cat, dog, chimp];
-    export const gallerySprites = [fish, cat, dog, chimp, player, diamond, boulder, enemy, trophyUp, debug, eat ];
+    export const gallerySprites = [ship, alien, missile, twCursor, player, diamond, boulder, enemy, apple, snakeHead, snakeBody ];
     export const galleryTiles = [brick, grass, water, dirt, dirt2, space, wall];
 
 /*
@@ -302,9 +427,11 @@ namespace tileworld {
     export class Gallery extends RuleVisualsBase {
         private current: Image;
         private newImage: Image;
-        constructor(p: Project, private kind: number, private gallery: Image[]) {
+        constructor(p: Project, private kind: number, 
+                    private wrapper: SwitchExport,
+                    private gallery: Image[]) {
             super(p);
-            this.current = this.p.getImage(kind).clone();
+            this.current = this.wrapper.getImage(kind).clone();
             this.newImage = this.current.clone();
             this.setCol(2); this.setRow(1);
             this.setTileSaved();
@@ -321,8 +448,8 @@ namespace tileworld {
             });
 
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
-                this.p.getImage(this.kind).copyFrom(this.newImage);
-                this.p.saveImage(this.kind);
+                this.wrapper.getImage(this.kind).copyFrom(this.newImage);
+                this.wrapper.saveImage(this.kind);
                 game.popScene();
             });
         }

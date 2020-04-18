@@ -27,8 +27,6 @@ namespace tileworld {
     `;
 
     export class MapEditor extends BackgroundBase {
-        private world: Image;
-        private sprites: Image;
         private offsetX: number; // where are we in the world?
         private offsetY: number; 
         private cursor: Sprite;
@@ -40,8 +38,6 @@ namespace tileworld {
         constructor(private p: Project) {
             super();
             this.aDown = false;
-            this.world = p.getWorld();
-            this.sprites = p.getSprites();
             // cursors
             this.selected = sprites.create(cursorOut);
             this.selected.x = 16 + 8;
@@ -72,7 +68,7 @@ namespace tileworld {
             controller.A.onEvent(ControllerButtonEvent.Released, () => { this.aDown = false; });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.cursorType == CursorType.Menu) {
-                    this.p.saveWorldSprites();
+                    this.p.saveWorld();
                     game.popScene();
                 } else {
                     this.setCursor(CursorType.Menu);
@@ -155,15 +151,18 @@ namespace tileworld {
             if (this.cursorType == CursorType.Map) {
                 let col = (this.paintCursor.x >> 3) + this.offsetX;
                 let row = ((this.paintCursor.y - (editorY +4)) >> 3) + this.offsetY;
+                let backs = this.p.getWorldBackgrounds();
                 if (this.userSpriteIndex == 0xf) {
-                    this.world.setPixel(col, row, 0xf);
-                } else if (this.userSpriteIndex < this.p.fixed().length)
-                    this.world.setPixel(col, row, this.userSpriteIndex);
+                    backs.setPixel(col, row, 0xf);
+                } else if (this.userSpriteIndex < this.p.backCnt())
+                    backs.setPixel(col, row, this.userSpriteIndex);
                 else {
-                    if (this.sprites.getPixel(col, row) == this.userSpriteIndex)
-                        this.sprites.setPixel(col, row, 0xf);
+                    let sprs = this.p.getWorldSprites();
+                    let spriteIndex = this.userSpriteIndex - this.p.backCnt();
+                    if (sprs.getPixel(col, row) == spriteIndex)
+                        sprs.setPixel(col, row, 0xf);
                     else
-                        this.sprites.setPixel(col, row, this.userSpriteIndex);
+                        sprs.setPixel(col, row, spriteIndex);
                 }
                 this.update();
                 return;
@@ -171,7 +170,7 @@ namespace tileworld {
             if (repeated)
                 return;
             if (this.row() == 0) {
-                if (1 <= this.col() && this.col() < 1 + this.p.all().length) {
+                if (1 <= this.col() && this.col() < 1 + this.p.allCnt()) {
                     // change user sprite
                     this.userSpriteIndex = this.col()-1;
                     this.updateSelection();
@@ -201,37 +200,33 @@ namespace tileworld {
             screen.fill(0);
             screen.fillRect(0, yoff, 16, 16, 11);
             this.drawImage(map, 0, 0);
-            this.p.all().forEach((img, index) => { 
-                this.drawImage(img, 1+index, 0); 
+            let index = 1;
+            this.p.backgroundImages().forEach(img => { 
+                this.drawImage(img, index, 0); 
+                index++;
+            });
+            this.p.spriteImages().forEach(img => {
+                this.drawImage(img, index, 0);
+                index++;
             });
             // this.drawImage(emptyDiagTile, 9, 0);
+            let backs = this.p.getWorldBackgrounds();
             for(let x = this.offsetX; x<this.offsetX+20; x++) {
                 for (let y = this.offsetY; y < this.offsetY + 15; y++) {
-                    let inRange = 0 <= x && x < this.world.width && 0 <= y && y < this.world.height;
+                    let inRange = 0 <= x && x < backs.width && 0 <= y && y < backs.height;
                     let col = x - this.offsetX;
                     let row = y - this.offsetY;
                     let nx = col * paintSize;
                     let ny = editorY + row * paintSize;
                     // tile
-                    let index = inRange ? this.world.getPixel(x, y) : -1;
-                    let img = index == -1 ? emptyTile : index == 0xf ? emptyDiagTile : this.p.getImage(index);
-                    for(let i=0;i<img.width;i+=2) {
-                        for (let j = 0; j < img.height; j += 2) {
-                            screen.setPixel(nx+(i>>1),ny+(j>>1),img.getPixel(i,j))
-                        }   
-                    }
+                    let index = inRange ? backs.getPixel(x, y) : -1;
+                    let img = index == -1 ? emptyTile : index == 0xf ? emptyDiagTile : this.p.getBackgroundImage(index);
+                    drawHalfSize(img, nx, ny);
                     // sprite
                     if (inRange) {
-                        let index = this.sprites.getPixel(x, y);
+                        let index = this.p.getWorldSprites().getPixel(x, y);
                         if (index != 0xf) {
-                            img = this.p.getImage(index);
-                            for (let i = 0; i < img.width; i += 2) {
-                                for (let j = 0; j < img.height; j += 2) {
-                                    if (img.getPixel(i,j) != 0) {
-                                        screen.setPixel(nx + (i >> 1), ny + (j >> 1), img.getPixel(i, j))
-                                    }
-                                }
-                            }
+                            drawHalfSize(this.p.getSpriteImage(index), nx, ny, true);
                         }
                     }
                 }    
