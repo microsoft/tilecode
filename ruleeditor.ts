@@ -409,7 +409,7 @@ namespace tileworld {
             if (this.tokens.length > 0) {
                 this.makeCommandMenu(inst, arg);
             } else if (inst != 0xff) {
-                this.tokens = [inst, CommandTokens.Delete];
+                this.tokens = [inst, CommandTokens.Delete ];
                 this.makeCommandMenu(inst, arg);
             }
         }
