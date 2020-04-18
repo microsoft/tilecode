@@ -1,6 +1,6 @@
 namespace tileworld {
 
-    export let TileWorldVersion = "1.0.0";
+    export let TileWorldVersion = "4.0.0";
 
     export class SwitchExport {
         constructor(private p: Project, private backgrounds: boolean = true) {

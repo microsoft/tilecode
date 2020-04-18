@@ -6,7 +6,7 @@ if (!settings.exists("TW1-"))
     createBejeweledGame();
     
 function createBoulderGame() {
-settings.writeString("TW3-VersionS","1.0.0");
+settings.writeString("TW3-VersionS","4.0.0");
 // buffer length = 108
 settings.writeBuffer("TW3-WBackM", hex`
 2018f0a0f17120f17120f171204112f12120f17120f17120f171203122f121205132e1201132f131
@@ -104,7 +104,7 @@ settings.writeNumber("TW3-PlayerN",0);
 }
 
 function createSnakeGame() {
-settings.writeString("TW2-VersionS","1.0.0");
+settings.writeString("TW2-VersionS","4.0.0");
 // buffer length = 109
 settings.writeBuffer("TW2-WBackM", hex`
 2018f0a0f17120f17120f17120f17120f17120f17120f17120f17120f17120a122a1209142912081
@@ -187,7 +187,7 @@ settings.writeNumber("TW2-PlayerN",0);
 }
 
 function createBejeweledGame() {
-        settings.writeString("TW1-VersionS", "1.0.0");
+        settings.writeString("TW1-VersionS", "4.0.0");
         // buffer length = 87
         settings.writeBuffer("TW1-WBackM", hex`
 2018106110f111106110f111106110f111106110f111106110f111106110f111106110f111106110
