@@ -382,7 +382,8 @@ namespace tileworld {
                 case CommandType.Paint: return 4;
                 case CommandType.Sprite: return 1;
                 case CommandType.Game: return 2;
-                case CommandType.Spawn: return this.p.spriteCnt();
+                case CommandType.Spawn:
+                case CommandType.BlockSpriteRules: return this.p.spriteCnt();
                 case CommandType.Teleport: return this.p.backCnt();
             }
             return 0;

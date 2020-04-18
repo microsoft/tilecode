@@ -48,6 +48,7 @@ enum CommandType {
     Sprite,         // various commands for sprites
     Game,           // various top-level game commands
     Teleport,       // change location to a tile of particular background (random)
+    BlockSpriteRules, // in the next round, don't allow rules on sprite kind
     Last,
 }
 

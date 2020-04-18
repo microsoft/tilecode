@@ -935,8 +935,8 @@ export const attrYoffsets = [0, 0, -8, 0];
 export const commandImages = [map, paint, code, play];
 export const gameImages = [ trophyUp, trophyDown ];
 export const gameText = [ "win", "lose"];
-export const categoryImages = [allFour, paint, spawn, genericSprite, gameIcon, teleport ];
-export const categoryText = ["move sprite", "paint tile", "spawn", "sprite",  "game", "teleport"];
+export const categoryImages = [allFour, paint, spawn, genericSprite, gameIcon, teleport, exclude ];
+export const categoryText = ["move sprite", "paint tile", "spawn", "sprite",  "game", "teleport", "block"];
 export const spriteImages = [eat];
 export const spriteText = ["remove"];
 

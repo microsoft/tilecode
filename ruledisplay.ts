@@ -144,9 +144,11 @@ namespace tileworld {
                 }
                 case CommandType.Sprite: return spriteImages[arg];
                 case CommandType.Game: return gameImages[arg];
-                case CommandType.Spawn: {
+                case CommandType.Spawn: 
+                case CommandType.BlockSpriteRules:
+                {
                     let ret = this.p.spriteImages()[arg].clone();
-                    ret.drawTransparentImage(spawn, 0, 0);
+                    ret.drawTransparentImage(inst == CommandType.Spawn ? spawn : exclude, 0, 0);
                     return ret;
                 }
                 case CommandType.Teleport: {
@@ -219,6 +221,7 @@ namespace tileworld {
             }
             tokens.push(CommandType.Paint);
             tokens.push(CommandType.Spawn);
+            tokens.push(CommandType.BlockSpriteRules);
             tokens.push(CommandType.Teleport);
             tokens.push(CommandType.Game);
             return tokens;
