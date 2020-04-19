@@ -71,7 +71,7 @@ namespace tileworld {
     // the rule editor
 
     enum RuleEditorMenus { MainMenu, AttrTypeMenu, DirExprMenu, CommandMenu };
-    enum CommandTokens { Last=CommandType.Last, SpaceTile, Delete };
+    enum CommandTokens { Delete = 100 };
 
     const menuHelpString = "10map,20play,30debug,50generalize rule,60delete rule,80add rule,90next rule,70previous rule,";
     const attrHelpString = "00include,10exclude,90reset,";
