@@ -16,7 +16,10 @@ namespace tileworld {
             let ret: RuleView[] = [];
             switch(this.r.transforms){
                 case RuleTransforms.HorzMirror:
-                case RuleTransforms.VertMirror: {
+                case RuleTransforms.VertMirror: 
+                case RuleTransforms.LeftRotate: 
+                case RuleTransforms.RightRotate:        
+                {
                     let rv = new RuleView(this.p, -1, this.r);
                     rv.view = this.r.transforms;
                     ret.push(rv);

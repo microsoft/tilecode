@@ -4,8 +4,9 @@ namespace tileworld {
     // ------------------------------------------------------------------------------------
     // a simple (but not complete) way to change the transforms on a rule
 
-    const transformMap = [ RuleTransforms.None, RuleTransforms.HorzMirror, RuleTransforms.VertMirror, RuleTransforms.Rotate3Way];
-    const transformCol = [ 1, 3, 5, 7];
+    const transformMap = [ RuleTransforms.None, RuleTransforms.HorzMirror, RuleTransforms.VertMirror, 
+                           RuleTransforms.LeftRotate, RuleTransforms.RightRotate, RuleTransforms.Rotate3Way];
+    const transformImages = [ yellowSprite, flipHoriz, flipVert, leftRotate, rightRotate, rotate3way];
 
     export class RuleViewDisplay extends RuleDisplay {
         private ruleViews: RuleView[];
@@ -15,9 +16,8 @@ namespace tileworld {
             this.ruleViews = this.baseRule.getDerivedRules();
             
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                if (this.row() == 0 && this.col() >=1 && this.col() <= 7) {
-                    let index = (this.col()-1) >> 1;
-                    this.baseRule.setTransforms(transformMap[index]);
+                if (this.row() == 0 && this.col() >=1 && this.col() <= 6) {
+                    this.baseRule.setTransforms(transformMap[this.col()-1]);
                     this.ruleViews = this.baseRule.getDerivedRules();
                 }
             });
@@ -39,11 +39,10 @@ namespace tileworld {
             this.rule = this.baseRule;
             if (this.row() == 1 && t != RuleTransforms.None && this.ruleViews.length > 0) {
                 let index = transformMap.indexOf(t);
-                let col = transformCol[index];
-                if (this.col() == col) {
+                if (this.col() == index+1) {
                     this.rule = this.ruleViews[0];
-                } else if (this.col() >= 7) {
-                    this.rule = this.ruleViews[this.col()-7];
+                } else if (this.col() > 6 && this.col() <= 8) {
+                    this.rule = this.ruleViews[this.col()-6];
                 }
             }
             this.update();
@@ -52,15 +51,14 @@ namespace tileworld {
         protected update() {
             super.update();
             // menu options
-            this.drawImage(1, 0, yellowSprite);
-            this.drawImage(3, 0, flipHoriz);
-            this.drawImage(5, 0, flipVert);
-            this.drawImage(7, 0, rotate3way);
+            transformImages.forEach((img, i) => {
+                this.drawImage(i+1, 0, img);
+            });
             // which one selected
             let index = transformMap.indexOf(this.baseRule.getTransforms());
-            this.drawImage(1 + (index << 1), 0, cursorOut);
+            this.drawImage(1 + index, 0, cursorOut);
             // resulting rules
-            let col = transformCol[index];        
+            let col = index+1;        
             this.ruleViews.forEach((rv, index) => {
                 this.drawImage(col+index, 1, yellowSprite);
             });
