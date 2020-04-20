@@ -12,7 +12,6 @@ namespace tileworld {
                     if (this.p) {
                         let keys = settings.list(this.p.prefix);
                         keys.forEach(k => { settings.remove(k)});
-                        game.popScene();
                     } else {
                         settings.clear();
                     }
