@@ -139,7 +139,7 @@ namespace tileworld {
     // rule transforms
 
     export function flipRotateDir(d: MoveDirection, rt: RuleTransforms) {
-        if (d >= 4)
+        if (rt == RuleTransforms.None || d >= 4)
             return d;
         if (rt == RuleTransforms.HorzMirror) {
             return d == MoveDirection.Left ? MoveDirection.Right : d == MoveDirection.Right ? MoveDirection.Left : d;
@@ -156,7 +156,9 @@ namespace tileworld {
     }
 
     export function transformCol(col: number, row: number, rt: RuleTransforms) {
-        if (rt == RuleTransforms.HorzMirror || rt == RuleTransforms.VertMirror)
+        if (rt == RuleTransforms.None)
+            return col; 
+        else if (rt == RuleTransforms.HorzMirror || rt == RuleTransforms.VertMirror)
             return rt == RuleTransforms.HorzMirror ? 4 - col : col;
         else {
             // make (0,0) center for rotation
@@ -168,7 +170,9 @@ namespace tileworld {
     }
 
     export function transformRow(row: number, col: number, rt: RuleTransforms) {
-        if (rt == RuleTransforms.HorzMirror || rt == RuleTransforms.VertMirror)
+        if (rt == RuleTransforms.None)
+            return row; 
+        else if (rt == RuleTransforms.HorzMirror || rt == RuleTransforms.VertMirror)
             return rt == RuleTransforms.HorzMirror ? row : 4 - row;
         else {
             col = col - 2;
