@@ -18,6 +18,7 @@
         "imageeditor.ts",
         "rulesBase.ts",
         "ruledisplay.ts",
+        "ruleTransform.ts",
         "spriteRules.ts",
         "debugger.ts",
         "ruleeditor.ts",
@@ -28,7 +29,8 @@
         "loadScreen.ts",
         "main.ts",
         "games.ts",
-        "mytilemap.ts"
+        "mytilemap.ts",
+        "ruleTransform.ts"
     ],
     "testFiles": [
         "test.ts"
