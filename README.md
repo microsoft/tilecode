@@ -1,9 +1,3 @@
----
-title: Manual
----
-
-> Open this page at [https://microsoft.github.io/tileworld/](https://microsoft.github.io/tileworld/)
-
 # TileWorld
 
 [TileWorld](https://microsoft.github.io/tileworld/) is a game creation app that allows you to design and play games directly on [MakeCode Arcade](https://arcade.makecode.com/) devices. Learn more [here](https://microsoft.github.io/tileworld/manual).
@@ -21,8 +15,3 @@ provided by the bot. You will only need to do this once across all repos using o
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
 contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
-
-#### Metadata (used for search, rendering)
-
-* for PXT/arcade
-<script src="https://makecode.com/gh-pages-embed.js"></script><script>makeCodeRender("{{ site.makecode.home_url }}", "{{ site.github.owner_name }}/{{ site.github.repository_name }}");</script>
