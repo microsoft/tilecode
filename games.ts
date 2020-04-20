@@ -270,7 +270,7 @@ settings.writeBuffer("TW1-RuleB9", hex`
 402622f34016211000060102`);
 // buffer length = 18
 settings.writeBuffer("TW1-RuleB11", hex`
-6123223f1524213f15240000010100020101`);
+6123223f1526213f15260000010100020101`);
 // buffer length = 24
 settings.writeBuffer("TW1-RuleB10", hex`
 6156223f151621c0000612c0000623c00006324000060101`);
