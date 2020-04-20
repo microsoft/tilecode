@@ -1,7 +1,7 @@
 namespace tileworld {
 
     export class LoadScreen extends RuleVisualsBase {
-        constructor(private bootstrap: Project) {
+        constructor() {
             super(null);
             controller.setRepeatDefault(500, 80);
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
@@ -25,9 +25,6 @@ namespace tileworld {
                 }
             });
             this.update();
-            if (this.bootstrap && !settings.exists("TW1-TM")) {
-                this.bootstrap.saveProject();
-            }
         }
         
         private lastDir: MoveDirection = -1;
@@ -35,7 +32,6 @@ namespace tileworld {
             this.lastDir = pressed ? dir : -1;
         }
 
-        // TODO: is it in settings or not?
         private makeIt(col: number, row: number, id: string) {
             let prefix = "TW" + id + "-";
             let projectAvailable = settings.list(prefix).length > 0;
@@ -78,10 +74,6 @@ namespace tileworld {
             this.makeIt(7, 4, "4");
 
             this.drawImage(9, 0, settingsIcon);
-
-            //if (this.bootstrap) {
-            //    screen.print("bootstrap", 100, 105);
-            //}
         }
     }
 }
