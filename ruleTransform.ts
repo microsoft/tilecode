@@ -41,7 +41,7 @@ namespace tileworld {
                 let index = transformMap.indexOf(t);
                 if (this.col() == index+1) {
                     this.rule = this.ruleViews[0];
-                } else if (this.col() > 6 && this.col() <= 8) {
+                } else if (this.ruleViews.length > 1 && this.col() > 6 && this.col() <= 8) {
                     this.rule = this.ruleViews[this.col()-6];
                 }
             }
