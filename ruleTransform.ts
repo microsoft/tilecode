@@ -1,8 +1,4 @@
-// Add your code here
 namespace tileworld {
-
-    // ------------------------------------------------------------------------------------
-    // a simple (but not complete) way to change the transforms on a rule
 
     const transformMap = [ RuleTransforms.None, RuleTransforms.HorzMirror, RuleTransforms.VertMirror, 
                            RuleTransforms.LeftRotate, RuleTransforms.RightRotate, RuleTransforms.Rotate3Way];

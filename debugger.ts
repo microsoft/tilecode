@@ -1,8 +1,3 @@
-// Add your code here
-
-// debugger for a rule
-// - use neighborhood to generate a tile map
-
 namespace tileworld {
         // - attaches to VM
         // - shows state of sprites (old arrows; new arrows)

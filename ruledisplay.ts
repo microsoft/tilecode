@@ -1,5 +1,3 @@
-// Add your code here
-
 namespace tileworld {
 
     export const editorRow = 2;

@@ -1,4 +1,3 @@
-
 namespace tileworld {
 
     const helpString = "00map,10paint,20code,30play,90settings,";  // 40debug,50music

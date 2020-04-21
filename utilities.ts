@@ -1,5 +1,3 @@
-// Add your code here
-
 namespace tileworld {
 
     const zeroCode = "0".charCodeAt(0);

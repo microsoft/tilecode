@@ -1,4 +1,3 @@
-
 namespace scene {
 
     export function setTileMap(map: Image, scale = TileScale.Sixteen) {
