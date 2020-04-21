@@ -223,8 +223,6 @@ namespace tileworld {
         let shift = bitIndex - (byteIndex << 3);
         if (shift + bits > 8) {
             // packing error - can't have value that spans byte boundary
-            console.logValue("shift", shift);
-            console.logValue("bits", bits);
             control.assert(false, 44);
         }
         let byte = ruleBuf.getUint8(byteIndex);

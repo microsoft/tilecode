@@ -9,20 +9,16 @@ namespace tileworld {
                 let second = this.col() >= 6 && this.col() <= 7;
                 if ( ( first || second) && (this.row() == 2 || this.row() == 4) ) {
                     let prefix = first ? (this.row() == 2 ? "TW1-" : "TW3-") : (this.row() == 2 ? "TW2-" : "TW4-");
-                    try {
-                        this.p = loadProject(prefix);
-                        this.update();
-                        if (!this.p) {
-                            this.p = emptyProject(prefix);
-                            this.p.saveProject();
-                        }
-                        this.lastDir = -1;
-                        this.lastDir = -1;
-                        game.pushScene();
-                        new GameHome(this.p);
-                    } catch(e) {
-                        screen.print("load-failed", 10, 10);
+                    this.p = loadProject(prefix);
+                    this.update();
+                    if (!this.p) {
+                        this.p = emptyProject(prefix);
+                        this.p.saveProject();
                     }
+                    this.lastDir = -1;
+                    this.lastDir = -1;
+                    game.pushScene();
+                    new GameHome(this.p);
                 } else if (this.col() == 9 && this.row() == 0) {
                     game.pushScene();
                     new ProjectSettings(null);

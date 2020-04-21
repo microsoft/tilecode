@@ -289,8 +289,14 @@ namespace tileworld {
         ruleids.forEach(rid => {
             let key = ruleName+rid.toString();
             let buf = settingsReadBuffer(key, output);
-            let rule = unPackRule(buf, backCnt, spriteCnt);
-            rules.push(new RuleView(p, rid, rule));
+            if (buf) {
+                let rule = unPackRule(buf, backCnt, spriteCnt);
+                rules.push(new RuleView(p, rid, rule));
+            } else {
+                screen.print("Read ("+rid.toString()+") failed", 10, 10);
+                control.assert(false, 42);
+            }
+
         });
         let player = settingsReadNumber(prefix + PlayerIndexKey, output);
         if (output) console.log("}");
