@@ -296,7 +296,6 @@ namespace tileworld {
                 screen.print("Read ("+rid.toString()+") failed", 10, 10);
                 control.assert(false, 42);
             }
-
         });
         let player = settingsReadNumber(prefix + PlayerIndexKey, output);
         if (output) console.log("}");

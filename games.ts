@@ -1,8 +1,8 @@
 // 
-if (!settings.exists("TW3-VersionS"))
-    createBoulderGame();
-if (!settings.exists("TW2-VersionS"))
-    createSnakeGame();
+//if (!settings.exists("TW3-VersionS"))
+//    createBoulderGame();
+//if (!settings.exists("TW2-VersionS"))
+//    createSnakeGame();
 if (!settings.exists("TW1-VersionS"))
     createBejeweledGame();
     
