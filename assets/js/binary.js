@@ -1,4 +1,4 @@
-// meta={"simUrl":"https://trg-arcade.userpxt.io/v0.16.68/---simulator","cdnUrl":"https://pxt.azureedge.net","version":"4.0.19","target":"arcade","targetVersion":"0.16.68","repo":"microsoft/tileworld"}
+// meta={"simUrl":"https://trg-arcade.userpxt.io/v0.16.68/---simulator","cdnUrl":"https://pxt.azureedge.net","version":"4.0.20","target":"arcade","targetVersion":"0.16.68","repo":"microsoft/tileworld"}
 // total=2348647 new=49.04% cached=45.34% other=5.62%
 (function (ectx) {
 'use strict';
@@ -634,7 +634,7 @@ const pxsim_pxtrt = pxsim.pxtrt;
 const pxsim_numops = pxsim.numops;
 
 
-function _main___P186155(s) {
+function _main___P192211(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -1345,7 +1345,7 @@ switch (step) {
     r0 = pxsim_Array__push(s.tmp_0, globals.space___136607);
     r0 = pxsim_Array__push(s.tmp_0, globals.wall___136598);
     globals.galleryTiles___128797 = (s.tmp_0);
-    globals.helpString___136990 = ("00map,10paint,20code,30play,90settings,");
+    globals.helpString___189578 = ("00map,10paint,20code,30play,90settings,");
     r0 = pxsim.settings._exists("TW3-VersionS");
     s.tmp_2 = r0;
     r0 = pxsim_numops_toBoolDecr(s.tmp_2);
@@ -1416,13 +1416,13 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-_main___P186155.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"main.ts","functionName":"<main>","argumentNames":[]}
-_main___P186155.continuations = [  ]
+_main___P192211.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"main.ts","functionName":"<main>","argumentNames":[]}
+_main___P192211.continuations = [  ]
 
-function _main___P186155_mk(s) {
+function _main___P192211_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: _main___P186155, depth: s.depth + 1,
+        parent: s, fn: _main___P192211, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   tmp_1: undefined,
@@ -2514,9 +2514,9 @@ switch (step) {
     s.pc = 37; return s.tmp_0;
   case 37:
     r0 = s.retval;
-    r0 = pxsim_pxtcore_mkClassInstance(tileworld_GameHome__C136992_VT);
+    r0 = pxsim_pxtcore_mkClassInstance(tileworld_GameHome__C189580_VT);
     s.tmp_0 = r0;
-    s.tmp_1 = tileworld_GameHome_constructor__P136996_mk(s);
+    s.tmp_1 = tileworld_GameHome_constructor__P189584_mk(s);
     s.tmp_1.arg0 = s.tmp_0;
     r0 = s.caps[0].fields["p"];
     s.tmp_1.arg1 = r0;
@@ -17521,7 +17521,7 @@ function Sprite_left__P122920_mk(s) {
 
 
 
-function tileworld_GameHome_constructor__P136996(s) {
+function tileworld_GameHome_constructor__P189584(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -17537,7 +17537,7 @@ switch (step) {
       s.lambdaArgs = null;
     }
     r0 = s.arg0;
-    if (!checkSubtype(r0, tileworld_GameHome__C136992_VT)) failedCast(r0);
+    if (!checkSubtype(r0, tileworld_GameHome__C189580_VT)) failedCast(r0);
     s.tmp_0 = tileworld_RuleVisualsBase_constructor__P132265_mk(s);
     s.tmp_0.arg0 = s.arg0;
     s.tmp_0.arg1 = s.arg1;
@@ -17556,7 +17556,7 @@ switch (step) {
     s.pc = 3; return s.tmp_0;
   case 3:
     r0 = s.retval;
-    r0 = pxsim_pxtcore_mkAction(1, inline__P137006);
+    r0 = pxsim_pxtcore_mkAction(1, inline__P189594);
     s.tmp_0 = r0;
     r0 = pxsim_pxtrt_stclo(s.tmp_0, 0, s.arg0);
     s.tmp_1 = controller_Button_onEvent__P122829_mk(s);
@@ -17569,7 +17569,7 @@ switch (step) {
     s.tmp_0 = controller_Button_onEvent__P122829_mk(s);
     s.tmp_0.arg0 = globals.B___122797;
     s.tmp_0.arg1 = 2049;
-    s.tmp_0.arg2 = inline__P137109;
+    s.tmp_0.arg2 = inline__P189697;
     s.pc = 5; return s.tmp_0;
   case 5:
     r0 = s.retval;
@@ -17577,12 +17577,12 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-tileworld_GameHome_constructor__P136996.info = {"start":192,"length":2051,"line":8,"column":8,"endLine":58,"endColumn":9,"fileName":"home.ts","functionName":"inline","argumentNames":["this","p"]}
+tileworld_GameHome_constructor__P189584.info = {"start":175,"length":2051,"line":6,"column":8,"endLine":56,"endColumn":9,"fileName":"home.ts","functionName":"inline","argumentNames":["this","p"]}
 
-function tileworld_GameHome_constructor__P136996_mk(s) {
+function tileworld_GameHome_constructor__P189584_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: tileworld_GameHome_constructor__P136996, depth: s.depth + 1,
+        parent: s, fn: tileworld_GameHome_constructor__P189584, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   tmp_1: undefined,
@@ -17594,7 +17594,7 @@ function tileworld_GameHome_constructor__P136996_mk(s) {
 
 
 
-function inline__P137006(s) {
+function inline__P189594(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -17604,10 +17604,10 @@ if (yieldSteps-- < 0 && maybeYield(s, step, r0)) return null;
 switch (step) {
   case 0:
 
-    s.index___137007 = undefined;
-    s.command___137037 = undefined;
-    s.rules___137044 = undefined;
-    s.g___137052 = undefined;
+    s.index___189595 = undefined;
+    s.command___189625 = undefined;
+    s.rules___189632 = undefined;
+    s.g___189640 = undefined;
     r0 = s.caps[0].fields["dirMap"];
     s.tmp_0 = r0;
     s.tmp_2 = tileworld_RuleVisualsBase_col__P132254_mk(s);
@@ -17625,8 +17625,8 @@ switch (step) {
     r0 = s.retval;
     s.tmp_3 = r0;
     r0 = pxsim_ImageMethods.getPixel(s.tmp_0, s.tmp_1, s.tmp_3);
-    s.index___137007 = (r0);
-    r0 = (s.index___137007 != 15);
+    s.index___189595 = (r0);
+    r0 = (s.index___189595 != 15);
     s.tmp_0 = r0;
     r0 = pxsim_numops_toBoolDecr(s.tmp_0);
     if (!r0) { step = 3; continue; }
@@ -17676,7 +17676,7 @@ switch (step) {
     s.tmp_9.arg0 = s.tmp_0;
     r0 = s.caps[0].fields["p"];
     s.tmp_9.arg1 = r0;
-    s.tmp_9.arg2 = s.index___137007;
+    s.tmp_9.arg2 = s.index___189595;
     s.tmp_9.arg3 = s.tmp_1;
     s.tmp_9.arg4 = s.tmp_8;
     s.pc = 28; return s.tmp_9;
@@ -17708,16 +17708,16 @@ switch (step) {
     r0 = s.retval;
     s.tmp_4 = r0;
     r0 = pxsim_Array__getAt(s.tmp_3, s.tmp_4);
-    s.command___137037 = (r0);
-    r0 = (s.command___137037 == globals.play___128863);
+    s.command___189625 = (r0);
+    r0 = (s.command___189625 == globals.play___128863);
     s.tmp_0 = r0;
     r0 = pxsim_numops_toBoolDecr(s.tmp_0);
     if (!r0) { step = 9; continue; }
     r0 = s.caps[0].fields["p"];
     s.tmp_1 = r0;
     r0 = s.tmp_1.fields["rules"];
-    s.rules___137044 = (r0);
-    r0 = pxsim_Array__length(s.rules___137044);
+    s.rules___189632 = (r0);
+    r0 = pxsim_Array__length(s.rules___189632);
     s.tmp_1 = r0;
     r0 = (s.tmp_1 > 0);
     s.tmp_0 = r0;
@@ -17733,14 +17733,14 @@ switch (step) {
     s.tmp_1.arg0 = s.tmp_0;
     r0 = s.caps[0].fields["p"];
     s.tmp_1.arg1 = r0;
-    s.tmp_1.arg2 = s.rules___137044;
+    s.tmp_1.arg2 = s.rules___189632;
     s.tmp_1.arg3 = false;
     s.pc = 32; return s.tmp_1;
   case 32:
     r0 = s.retval;
-    s.g___137052 = (s.tmp_0);
+    s.g___189640 = (s.tmp_0);
     s.tmp_0 = tileworld_RunGame_setWorld__P130975_mk(s);
-    s.tmp_0.arg0 = s.g___137052;
+    s.tmp_0.arg0 = s.g___189640;
     r0 = s.caps[0].fields["p"];
     s.tmp_1 = r0;
     r0 = s.tmp_1.fields["_backgrounds"];
@@ -17753,7 +17753,7 @@ switch (step) {
   case 33:
     r0 = s.retval;
     s.tmp_0 = tileworld_RunGame_start__P130977_mk(s);
-    s.tmp_0.arg0 = s.g___137052;
+    s.tmp_0.arg0 = s.g___189640;
     s.pc = 34; return s.tmp_0;
   case 34:
     r0 = s.retval;
@@ -17761,7 +17761,7 @@ switch (step) {
   case 8:
     { step = 20; continue; }
   case 9:
-    r0 = (s.command___137037 == globals.map___128860);
+    r0 = (s.command___189625 == globals.map___128860);
     s.tmp_0 = r0;
     r0 = pxsim_numops_toBoolDecr(s.tmp_0);
     if (!r0) { step = 10; continue; }
@@ -17780,7 +17780,7 @@ switch (step) {
     r0 = s.retval;
     { step = 19; continue; }
   case 10:
-    r0 = (s.command___137037 == globals.paint___128872);
+    r0 = (s.command___189625 == globals.paint___128872);
     s.tmp_0 = r0;
     r0 = pxsim_numops_toBoolDecr(s.tmp_0);
     if (!r0) { step = 11; continue; }
@@ -17807,7 +17807,7 @@ switch (step) {
     r0 = s.retval;
     { step = 18; continue; }
   case 11:
-    r0 = (s.command___137037 == globals.code___128869);
+    r0 = (s.command___189625 == globals.code___128869);
     s.tmp_0 = r0;
     r0 = pxsim_numops_toBoolDecr(s.tmp_0);
     if (!r0) { step = 12; continue; }
@@ -17877,12 +17877,12 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-inline__P137006.info = {"start":362,"length":1747,"line":14,"column":64,"endLine":53,"endColumn":13,"fileName":"home.ts","functionName":"inline","argumentNames":[]}
+inline__P189594.info = {"start":345,"length":1747,"line":12,"column":64,"endLine":51,"endColumn":13,"fileName":"home.ts","functionName":"inline","argumentNames":[]}
 
-function inline__P137006_mk(s) {
+function inline__P189594_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: inline__P137006, depth: s.depth + 1,
+        parent: s, fn: inline__P189594, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   tmp_1: undefined,
@@ -17894,17 +17894,17 @@ function inline__P137006_mk(s) {
   tmp_7: undefined,
   tmp_8: undefined,
   tmp_9: undefined,
-  index___137007: undefined,
-  command___137037: undefined,
-  rules___137044: undefined,
-  g___137052: undefined,
+  index___189595: undefined,
+  command___189625: undefined,
+  rules___189632: undefined,
+  g___189640: undefined,
 } }
 
 
 
 
 
-function inline__P137109(s) {
+function inline__P189697(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -17922,12 +17922,12 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-inline__P137109.info = {"start":2177,"length":54,"line":55,"column":64,"endLine":57,"endColumn":13,"fileName":"home.ts","functionName":"inline","argumentNames":[]}
+inline__P189697.info = {"start":2160,"length":54,"line":53,"column":64,"endLine":55,"endColumn":13,"fileName":"home.ts","functionName":"inline","argumentNames":[]}
 
-function inline__P137109_mk(s) {
+function inline__P189697_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: inline__P137109, depth: s.depth + 1,
+        parent: s, fn: inline__P189697, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
 } }
@@ -75017,7 +75017,7 @@ function sprites_BaseSprite___visible__P122770_mk(s) {
 
 
 
-function tileworld_GameHome_update__P136995(s) {
+function tileworld_GameHome_update__P189583(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -75032,7 +75032,7 @@ switch (step) {
       s.lambdaArgs = null;
     }
     r0 = s.arg0;
-    if (!checkSubtype(r0, tileworld_GameHome__C136992_VT)) failedCast(r0);
+    if (!checkSubtype(r0, tileworld_GameHome__C189580_VT)) failedCast(r0);
     r0 = s.arg0.fields["p"];
     r0 = r0.fields["help"];
     s.tmp_2 = r0;
@@ -75058,7 +75058,7 @@ switch (step) {
     r0 = s.arg0.fields["dirMap"];
     s.tmp_0 = r0;
     r0 = pxsim_ImageMethods.fill(s.tmp_0, 15);
-    r0 = pxsim_pxtcore_mkAction(1, inline__P137190);
+    r0 = pxsim_pxtcore_mkAction(1, inline__P189778);
     s.tmp_0 = r0;
     r0 = pxsim_pxtrt_stclo(s.tmp_0, 0, s.arg0);
     s.tmp_1 = helpers_arrayForEach__P122203_mk(s);
@@ -75086,7 +75086,7 @@ switch (step) {
     s.pc = 6; return s.tmp_0;
   case 6:
     r0 = s.retval;
-    r0 = pxsim_pxtcore_mkAction(1, inline__P137212);
+    r0 = pxsim_pxtcore_mkAction(1, inline__P189800);
     s.tmp_0 = r0;
     r0 = pxsim_pxtrt_stclo(s.tmp_0, 0, s.arg0);
     s.tmp_1 = helpers_arrayForEach__P122203_mk(s);
@@ -75109,7 +75109,7 @@ switch (step) {
     s.pc = 8; return s.tmp_0;
   case 8:
     r0 = s.retval;
-    r0 = pxsim_pxtcore_mkAction(1, inline__P137246);
+    r0 = pxsim_pxtcore_mkAction(1, inline__P189834);
     s.tmp_0 = r0;
     r0 = pxsim_pxtrt_stclo(s.tmp_0, 0, s.arg0);
     s.tmp_1 = helpers_arrayForEach__P122203_mk(s);
@@ -75125,12 +75125,12 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-tileworld_GameHome_update__P136995.info = {"start":2969,"length":814,"line":76,"column":8,"endLine":97,"endColumn":9,"fileName":"home.ts","functionName":"update","argumentNames":["this"]}
+tileworld_GameHome_update__P189583.info = {"start":2952,"length":814,"line":74,"column":8,"endLine":95,"endColumn":9,"fileName":"home.ts","functionName":"update","argumentNames":["this"]}
 
-function tileworld_GameHome_update__P136995_mk(s) {
+function tileworld_GameHome_update__P189583_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: tileworld_GameHome_update__P136995, depth: s.depth + 1,
+        parent: s, fn: tileworld_GameHome_update__P189583, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   tmp_1: undefined,
@@ -75143,7 +75143,7 @@ function tileworld_GameHome_update__P136995_mk(s) {
 
 
 
-function inline__P137190(s) {
+function inline__P189778(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -75170,12 +75170,12 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-inline__P137190.info = {"start":3176,"length":69,"line":82,"column":34,"endLine":84,"endColumn":13,"fileName":"home.ts","functionName":"inline","argumentNames":["img","i"]}
+inline__P189778.info = {"start":3159,"length":69,"line":80,"column":34,"endLine":82,"endColumn":13,"fileName":"home.ts","functionName":"inline","argumentNames":["img","i"]}
 
-function inline__P137190_mk(s) {
+function inline__P189778_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: inline__P137190, depth: s.depth + 1,
+        parent: s, fn: inline__P189778, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   arg0: undefined,
@@ -75186,7 +75186,7 @@ function inline__P137190_mk(s) {
 
 
 
-function inline__P137212(s) {
+function inline__P189800(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -75223,12 +75223,12 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-inline__P137212.info = {"start":3403,"length":129,"line":88,"column":46,"endLine":91,"endColumn":13,"fileName":"home.ts","functionName":"inline","argumentNames":["img","i"]}
+inline__P189800.info = {"start":3386,"length":129,"line":86,"column":46,"endLine":89,"endColumn":13,"fileName":"home.ts","functionName":"inline","argumentNames":["img","i"]}
 
-function inline__P137212_mk(s) {
+function inline__P189800_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: inline__P137212, depth: s.depth + 1,
+        parent: s, fn: inline__P189800, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   tmp_1: undefined,
@@ -75241,7 +75241,7 @@ function inline__P137212_mk(s) {
 
 
 
-function inline__P137246(s) {
+function inline__P189834(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -75278,12 +75278,12 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-inline__P137246.info = {"start":3633,"length":138,"line":93,"column":42,"endLine":96,"endColumn":13,"fileName":"home.ts","functionName":"inline","argumentNames":["img","i"]}
+inline__P189834.info = {"start":3616,"length":138,"line":91,"column":42,"endLine":94,"endColumn":13,"fileName":"home.ts","functionName":"inline","argumentNames":["img","i"]}
 
-function inline__P137246_mk(s) {
+function inline__P189834_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: inline__P137246, depth: s.depth + 1,
+        parent: s, fn: inline__P189834, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   tmp_1: undefined,
@@ -75296,7 +75296,7 @@ function inline__P137246_mk(s) {
 
 
 
-function tileworld_GameHome_cursorMove__P136994(s) {
+function tileworld_GameHome_cursorMove__P189582(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -75306,8 +75306,8 @@ if (yieldSteps-- < 0 && maybeYield(s, step, r0)) return null;
 switch (step) {
   case 0:
 
-    s.index___137140 = undefined;
-    s.message___137150 = undefined;
+    s.index___189728 = undefined;
+    s.message___189738 = undefined;
     if (s.lambdaArgs) {
       s.arg0 = (s.lambdaArgs[0]);
       s.arg1 = (s.lambdaArgs[1]);
@@ -75315,7 +75315,7 @@ switch (step) {
       s.lambdaArgs = null;
     }
     r0 = s.arg0;
-    if (!checkSubtype(r0, tileworld_GameHome__C136992_VT)) failedCast(r0);
+    if (!checkSubtype(r0, tileworld_GameHome__C189580_VT)) failedCast(r0);
     r0 = s.arg0.fields["p"];
     r0 = r0.fields["help"];
     s.tmp_0 = r0;
@@ -75392,7 +75392,7 @@ switch (step) {
     r0 = s.retval;
     s.tmp_3 = r0;
     r0 = pxsim_ImageMethods.getPixel(s.tmp_0, s.tmp_1, s.tmp_3);
-    s.index___137140 = (r0);
+    s.index___189728 = (r0);
     s.tmp_2 = tileworld_RuleVisualsBase_row__P132255_mk(s);
     s.tmp_2.arg0 = s.arg0;
     s.tmp_2.arg1 = true;
@@ -75405,7 +75405,7 @@ switch (step) {
     r0 = pxsim_numops_toBoolDecr(s.tmp_0);
     if (!r0) { step = 3; continue; }
     s.tmp_3 = tileworld_getHelp__P125945_mk(s);
-    s.tmp_3.arg0 = globals.helpString___136990;
+    s.tmp_3.arg0 = globals.helpString___189578;
     s.tmp_4 = tileworld_RuleVisualsBase_col__P132254_mk(s);
     s.tmp_4.arg0 = s.arg0;
     s.tmp_4.arg1 = true;
@@ -75423,11 +75423,11 @@ switch (step) {
     s.pc = 18; return s.tmp_3;
   case 18:
     r0 = s.retval;
-    s.message___137150 = (r0);
+    s.message___189738 = (r0);
     s.tmp_0 = Sprite_say__P122932_mk(s);
     r0 = s.arg0.fields["helpCursor"];
     s.tmp_0.arg0 = r0;
-    s.tmp_0.arg1 = s.message___137150;
+    s.tmp_0.arg1 = s.message___189738;
     s.tmp_0.arg2 = undefined;
     s.tmp_0.arg3 = 15;
     s.tmp_0.arg4 = 1;
@@ -75436,7 +75436,7 @@ switch (step) {
     r0 = s.retval;
     { step = 6; continue; }
   case 3:
-    r0 = (s.index___137140 != 15);
+    r0 = (s.index___189728 != 15);
     s.tmp_0 = r0;
     r0 = pxsim_numops_toBoolDecr(s.tmp_0);
     if (!r0) { step = 4; continue; }
@@ -75470,12 +75470,12 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-tileworld_GameHome_cursorMove__P136994.info = {"start":2253,"length":698,"line":60,"column":8,"endLine":74,"endColumn":9,"fileName":"home.ts","functionName":"cursorMove","argumentNames":["this","dir","pressed"]}
+tileworld_GameHome_cursorMove__P189582.info = {"start":2236,"length":698,"line":58,"column":8,"endLine":72,"endColumn":9,"fileName":"home.ts","functionName":"cursorMove","argumentNames":["this","dir","pressed"]}
 
-function tileworld_GameHome_cursorMove__P136994_mk(s) {
+function tileworld_GameHome_cursorMove__P189582_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: tileworld_GameHome_cursorMove__P136994, depth: s.depth + 1,
+        parent: s, fn: tileworld_GameHome_cursorMove__P189582, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   tmp_1: undefined,
@@ -75487,8 +75487,8 @@ function tileworld_GameHome_cursorMove__P136994_mk(s) {
   tmp_7: undefined,
   tmp_8: undefined,
   tmp_9: undefined,
-  index___137140: undefined,
-  message___137150: undefined,
+  index___189728: undefined,
+  message___189738: undefined,
   arg0: undefined,
   arg1: undefined,
   arg2: undefined,
@@ -79308,16 +79308,16 @@ const tileworld_Project__C127884_VT = mkVTable({
     "getRulesForSpriteKind": tileworld_Project_getRulesForSpriteKind__P127902,
   },
 });
-const tileworld_GameHome__C136992_VT = mkVTable({
+const tileworld_GameHome__C189580_VT = mkVTable({
   name: "GameHome",
   numFields: 6,
   classNo: 23,
   lastSubtypeNo: 23,
   maxBgInstances: null,
   methods: {
-    "update": tileworld_GameHome_update__P136995,
+    "update": tileworld_GameHome_update__P189583,
     "okToMove": tileworld_RuleVisualsBase_okToMove__P132250,
-    "cursorMove": tileworld_GameHome_cursorMove__P136994,
+    "cursorMove": tileworld_GameHome_cursorMove__P189582,
     "centerImage": tileworld_RuleVisualsBase_centerImage__P132262,
     "showCollision": tileworld_RuleVisualsBase_showCollision__P132264,
   },
@@ -79334,8 +79334,8 @@ const tileworld_GameHome__C136992_VT = mkVTable({
     "set/dirMap": null,
     "p": null,
     "set/p": null,
-    "cursorMove": tileworld_GameHome_cursorMove__P136994,
-    "update": tileworld_GameHome_update__P136995,
+    "cursorMove": tileworld_GameHome_cursorMove__P189582,
+    "update": tileworld_GameHome_update__P189583,
     "moveInX": tileworld_RuleVisualsBase_moveInX__P132247,
     "moveUp": tileworld_RuleVisualsBase_moveUp__P132248,
     "moveDown": tileworld_RuleVisualsBase_moveDown__P132249,
@@ -81518,7 +81518,7 @@ const tiles_Location__C123178_VT = mkVTable({
   },
 });
 
-const breakpoints = setupDebugger(1, ["zeroCode___125942","player___128778","map___128860","play___128863","debug___128866","code___128869","paint___128872","music___128875","garbageCan___128878","settingsIcon___128881","addRule___128884","emptyTile___128887","emptyDiagTile___128890","cursorIn___128893","cursorOut___128896","collisionSprite___128899","genericSprite___128902","yellowSprite___128905","exclude___128908","include___128911","ok___128914","anyOutline___128917","allFourOutline___128920","restingOutline___128923","downArrowOutline___128926","upArrowOutline___128929","rightArrowOutline___128932","leftArrowOutline___128935","leftButton___128938","rightButton___128941","downButton___128944","upButton___128947","AButton___128950","flipHoriz___128953","flipVert___128956","rotate3way___128959","leftRotate___128962","rightRotate___128965","allFour___128968","downArrow___128971","upArrow___128974","rightArrow___128977","leftArrow___128980","eat___128983","stopSign___128986","uTurn___128989","spawn___128992","smallPaint___128995","teleport___128998","gameIcon___129001","trophyUp___129004","trophyDown___129007","diskIcon___129010","reset___129013","negate___129016","moveImages___129019","movedImages___129027","buttonImages___129038","attrImages___129045","commandImages___129073","gameImages___129079","categoryImages___129085","spriteImages___129096","colorOut___131447","colorIn___131450","paintOut___131453","paintIn___131456","transformImages___133792","paintOut___152535","paintIn___152538","twCursor___136545","apple___136548","snakeHead___136551","snakeBody___136554","ship___128823","alien___136558","missile___136561","cat___136564","fish___136567","dog___136570","chimp___136573","player___136576","diamond___136579","boulder___136582","enemy___136585","brick___128799","grass___136589","water___136592","dirt2___136595","wall___136598","wall2___136601","dirt___136604","space___136607","gallerySprites___128821","galleryTiles___128797","player___138504","diamond___138507","boulder___138510","enemy___138513","wall___138516","wall2___138519","dirt___138522","space___138525","TileWorld___155186","TileWorldVersion___127751","HelpKey___128138","transformMap___133789","RuleKey___128094","bitIndex___182918","ruleBuf___182916","categoryText___129093","moveText___129035","spriteText___129098","gameText___129082","attrValues___129056","attrXoffsets___129063","attrYoffsets___129070","BackImageKey___128462","SpriteImageKey___128464","WorldBackgroundsKey___128113","WorldSpritesKey___128127","VersionKey___128175","BackImgCntKey___128194","SpriteImgCntKey___128203","PlayerIndexKey___128212","toHex___128326","menuHelpString___134642","attrHelpString___134644","helpStringTop___133963","helpStringBot___133965","helpString___136990"])
+const breakpoints = setupDebugger(1, ["zeroCode___125942","player___128778","map___128860","play___128863","debug___128866","code___128869","paint___128872","music___128875","garbageCan___128878","settingsIcon___128881","addRule___128884","emptyTile___128887","emptyDiagTile___128890","cursorIn___128893","cursorOut___128896","collisionSprite___128899","genericSprite___128902","yellowSprite___128905","exclude___128908","include___128911","ok___128914","anyOutline___128917","allFourOutline___128920","restingOutline___128923","downArrowOutline___128926","upArrowOutline___128929","rightArrowOutline___128932","leftArrowOutline___128935","leftButton___128938","rightButton___128941","downButton___128944","upButton___128947","AButton___128950","flipHoriz___128953","flipVert___128956","rotate3way___128959","leftRotate___128962","rightRotate___128965","allFour___128968","downArrow___128971","upArrow___128974","rightArrow___128977","leftArrow___128980","eat___128983","stopSign___128986","uTurn___128989","spawn___128992","smallPaint___128995","teleport___128998","gameIcon___129001","trophyUp___129004","trophyDown___129007","diskIcon___129010","reset___129013","negate___129016","moveImages___129019","movedImages___129027","buttonImages___129038","attrImages___129045","commandImages___129073","gameImages___129079","categoryImages___129085","spriteImages___129096","colorOut___131447","colorIn___131450","paintOut___131453","paintIn___131456","transformImages___133792","paintOut___152535","paintIn___152538","twCursor___136545","apple___136548","snakeHead___136551","snakeBody___136554","ship___128823","alien___136558","missile___136561","cat___136564","fish___136567","dog___136570","chimp___136573","player___136576","diamond___136579","boulder___136582","enemy___136585","brick___128799","grass___136589","water___136592","dirt2___136595","wall___136598","wall2___136601","dirt___136604","space___136607","gallerySprites___128821","galleryTiles___128797","player___138504","diamond___138507","boulder___138510","enemy___138513","wall___138516","wall2___138519","dirt___138522","space___138525","TileWorld___155186","TileWorldVersion___127751","HelpKey___128138","transformMap___133789","RuleKey___128094","bitIndex___182918","ruleBuf___182916","categoryText___129093","moveText___129035","spriteText___129098","gameText___129082","attrValues___129056","attrXoffsets___129063","attrYoffsets___129070","BackImageKey___128462","SpriteImageKey___128464","WorldBackgroundsKey___128113","WorldSpritesKey___128127","VersionKey___128175","BackImgCntKey___128194","SpriteImgCntKey___128203","PlayerIndexKey___128212","toHex___128326","menuHelpString___134642","attrHelpString___134644","helpStringTop___133963","helpStringBot___133965","helpString___189578"])
 
-return _main___P186155
+return _main___P192211
 })
