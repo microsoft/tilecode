@@ -10,6 +10,7 @@ namespace tileworld {
         public lastDir: MoveRest;
         public inst: number;        // the one instruction history to apply to the sprite to 
         public arg: number;         // create the next sprite state
+        // public changed: boolean;
         constructor(img: Image, kind: number, d: boolean = false) {
             super(img);
             const scene = game.currentScene();
@@ -50,6 +51,8 @@ namespace tileworld {
             const t = this.top - oy;
 
             screen.drawTransparentImage(this.image(), l, t);
+            // if (this.changed)
+            //    screen.drawTransparentImage(include, l, t);
             // screen.drawTransparentImage(movedImages[this.dir], l, t);
         }
     }
@@ -193,7 +196,7 @@ namespace tileworld {
             if (this.vm.phase == RuleType.ContextChange) {
                 if (this.vm.queued.length > 0) {
                     let ts = this.vm.queued.pop();
-                    if (ts.dir != Resting || ts.dir != ts.lastDir || this.contextChanged(ts)) {
+                    if (this.contextChanged(ts)) {
                         return this.applyRules(RuleType.ContextChange,  ts);
                     }
                 } else {
@@ -363,13 +366,13 @@ namespace tileworld {
             // update the state of each sprite, based on instructions
             this.allSprites(ts => {
                 ts.update();
-                if (ts.dir != Resting) {
+                if (ts.dir != Resting || ts.dir != ts.lastDir) {
                     // if sprite is moving then dirty its current
                     // location and next location
                     this.vm.changed.setPixel(ts.col(), ts.row(), 1);
                     this.vm.changed.setPixel(ts.col() + moveXdelta(ts.dir),
                                              ts.row() + moveYdelta(ts.dir), 1);
-                }
+                } 
             });
             // update the tile map and set dirty bits in changed map
             this.vm.paintTile.forEach(pt => {
@@ -393,6 +396,10 @@ namespace tileworld {
                     }
                 }
             }
+            // set bit on sprite
+            // this.allSprites(ts => {
+            //     ts.changed = this.contextChanged(ts);
+            // });
         }
 
         // ---------------------------------------------------------------------
