@@ -1,5 +1,3 @@
-// in memory program representation
-
 // enums must fit in 4 bits (16 values maximum)
 
 // the first three rule types should have a self (centered) witness sprite
