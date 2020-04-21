@@ -346,16 +346,17 @@ namespace tileworld {
 
         // ---------------------------------------------------------------------
         // update the world and compute change map
-        // TODO: change optimization still not completely working 
 
         private updateWorld() {
             this.vm.changed.fill(0);
+            // new sprites
             this.vm.spawnedSprites.forEach(ts => {
                 this.vm.sprites[ts.kind()].push(ts);
                 this.vm.changed.setPixel(ts.col(), ts.row(), 1);
                 ts.setFlag(SpriteFlag.Invisible, false);
             });
             this.vm.spawnedSprites = [];
+            // sprites that will die before next round
             this.vm.deadSprites.forEach(ts => {
                 this.vm.changed.setPixel(ts.col(), ts.row(), 1);
             });
@@ -398,15 +399,19 @@ namespace tileworld {
 
         // store the sprite witnesses identified by guards
         private evaluateRule(ts: TileSprite, rv: RuleView) {
+            // console.logValue("rid", rv.getRuleId());
             let witnesses: TileSprite[] = [];
             for(let col = 0; col < 5; col++) {
                 for (let row = 0; row < 5; row++) {
                     if (this.manhattan(col, row) > 2)
                         continue;
-                    if (!this.evaluateWhenDo(ts, rv, col, row, witnesses))
+                    if (!this.evaluateWhenDo(ts, rv, col, row, witnesses)) {
+                        // console.log("failed");
                         return null;
+                    }
                 }
             }
+            // console.log("passed");
             // all the whendos passed and we've collected witnesses (other sprites)
             // so, we will execute the rule on the self sprite ts
             return new RuleClosure(rv, ts, witnesses);
