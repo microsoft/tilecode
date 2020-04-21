@@ -1,9 +1,10 @@
 // see games.ts for built-in games
 
-// let TileWorld = new tileworld.LoadScreen();
+let TileWorld = new tileworld.LoadScreen();
 
 // basic test 
 
+/*
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     settings.clear();
     game.splash("cleared")
@@ -17,4 +18,4 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
         game.splash("buf not found")
     }
 })
-
+*/
