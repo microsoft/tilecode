@@ -1,5 +1,5 @@
-// meta={"simUrl":"https://trg-arcade.userpxt.io/v0.16.69/---simulator","cdnUrl":"https://pxt.azureedge.net","version":"4.0.22","target":"arcade","targetVersion":"0.16.69","repo":"microsoft/tileworld"}
-// total=2342548 new=49.48% cached=44.94% other=5.58%
+// meta={"simUrl":"https://trg-arcade.userpxt.io/v0.16.69/---simulator","cdnUrl":"https://pxt.azureedge.net","version":"4.0.23","target":"arcade","targetVersion":"0.16.69","repo":"microsoft/tileworld"}
+// total=2342564 new=49.48% cached=44.94% other=5.58%
 (function (ectx) {
 'use strict';
 const runtime = ectx.runtime;
@@ -637,7 +637,7 @@ const pxsim_pxtrt = pxsim.pxtrt;
 const pxsim_numops = pxsim.numops;
 
 
-function _main___P802979(s) {
+function _main___P827251(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -1362,7 +1362,7 @@ switch (step) {
     s.tmp_0 = r0;
     r0 = pxsim_numops_toBoolDecr(s.tmp_0);
     if (!r0) { step = 1; continue; }
-    s.tmp_3 = createBoulderGame__P395384_mk(s);
+    s.tmp_3 = createBoulderGame__P823556_mk(s);
     s.pc = 42; return s.tmp_3;
   case 42:
     r0 = s.retval;
@@ -1376,7 +1376,7 @@ switch (step) {
     s.tmp_0 = r0;
     r0 = pxsim_numops_toBoolDecr(s.tmp_0);
     if (!r0) { step = 3; continue; }
-    s.tmp_3 = createSnakeGame__P395390_mk(s);
+    s.tmp_3 = createSnakeGame__P823562_mk(s);
     s.pc = 43; return s.tmp_3;
   case 43:
     r0 = s.retval;
@@ -1390,7 +1390,7 @@ switch (step) {
     s.tmp_0 = r0;
     r0 = pxsim_numops_toBoolDecr(s.tmp_0);
     if (!r0) { step = 5; continue; }
-    s.tmp_3 = createBejeweledGame__P395396_mk(s);
+    s.tmp_3 = createBejeweledGame__P823568_mk(s);
     s.pc = 44; return s.tmp_3;
   case 44:
     r0 = s.retval;
@@ -1404,7 +1404,7 @@ switch (step) {
     s.tmp_0 = r0;
     r0 = pxsim_numops_toBoolDecr(s.tmp_0);
     if (!r0) { step = 7; continue; }
-    s.tmp_3 = createLeftHandWall__P395402_mk(s);
+    s.tmp_3 = createLeftHandWall__P823574_mk(s);
     s.pc = 45; return s.tmp_3;
   case 45:
     r0 = s.retval;
@@ -1422,13 +1422,13 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-_main___P802979.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"main.ts","functionName":"<main>","argumentNames":[]}
-_main___P802979.continuations = [  ]
+_main___P827251.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"main.ts","functionName":"<main>","argumentNames":[]}
+_main___P827251.continuations = [  ]
 
-function _main___P802979_mk(s) {
+function _main___P827251_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: _main___P802979, depth: s.depth + 1,
+        parent: s, fn: _main___P827251, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   tmp_1: undefined,
@@ -57709,7 +57709,7 @@ function tileworld_RuleVisualsBase_moveInX__P10098_mk(s) {
 
 
 
-function createLeftHandWall__P395402(s) {
+function createLeftHandWall__P823574(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -57727,13 +57727,13 @@ switch (step) {
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW4-WBackM";
-    s.tmp_0.arg1 = _hex395619;
+    s.tmp_0.arg1 = _hex823791;
     s.pc = 2; return s.tmp_0;
   case 2:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW4-WSpriteM";
-    s.tmp_0.arg1 = _hex395622;
+    s.tmp_0.arg1 = _hex823794;
     s.pc = 3; return s.tmp_0;
   case 3:
     r0 = s.retval;
@@ -57745,25 +57745,25 @@ switch (step) {
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW4-BackI0";
-    s.tmp_0.arg1 = _hex395626;
+    s.tmp_0.arg1 = _hex823798;
     s.pc = 5; return s.tmp_0;
   case 5:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW4-BackI1";
-    s.tmp_0.arg1 = _hex395629;
+    s.tmp_0.arg1 = _hex823801;
     s.pc = 6; return s.tmp_0;
   case 6:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW4-BackI2";
-    s.tmp_0.arg1 = _hex395632;
+    s.tmp_0.arg1 = _hex823804;
     s.pc = 7; return s.tmp_0;
   case 7:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW4-BackI3";
-    s.tmp_0.arg1 = _hex395635;
+    s.tmp_0.arg1 = _hex823807;
     s.pc = 8; return s.tmp_0;
   case 8:
     r0 = s.retval;
@@ -57775,25 +57775,25 @@ switch (step) {
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW4-SpriteI0";
-    s.tmp_0.arg1 = _hex395639;
+    s.tmp_0.arg1 = _hex823811;
     s.pc = 10; return s.tmp_0;
   case 10:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW4-SpriteI1";
-    s.tmp_0.arg1 = _hex395642;
+    s.tmp_0.arg1 = _hex823814;
     s.pc = 11; return s.tmp_0;
   case 11:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW4-SpriteI2";
-    s.tmp_0.arg1 = _hex395645;
+    s.tmp_0.arg1 = _hex823817;
     s.pc = 12; return s.tmp_0;
   case 12:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW4-SpriteI3";
-    s.tmp_0.arg1 = _hex395648;
+    s.tmp_0.arg1 = _hex823820;
     s.pc = 13; return s.tmp_0;
   case 13:
     r0 = s.retval;
@@ -57805,37 +57805,37 @@ switch (step) {
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW4-RuleB0";
-    s.tmp_0.arg1 = _hex395652;
+    s.tmp_0.arg1 = _hex823824;
     s.pc = 15; return s.tmp_0;
   case 15:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW4-RuleB1";
-    s.tmp_0.arg1 = _hex395655;
+    s.tmp_0.arg1 = _hex823827;
     s.pc = 16; return s.tmp_0;
   case 16:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW4-RuleB2";
-    s.tmp_0.arg1 = _hex395658;
+    s.tmp_0.arg1 = _hex823830;
     s.pc = 17; return s.tmp_0;
   case 17:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW4-RuleB3";
-    s.tmp_0.arg1 = _hex395661;
+    s.tmp_0.arg1 = _hex823833;
     s.pc = 18; return s.tmp_0;
   case 18:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW4-RuleB4";
-    s.tmp_0.arg1 = _hex395664;
+    s.tmp_0.arg1 = _hex823836;
     s.pc = 19; return s.tmp_0;
   case 19:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW4-RuleB5";
-    s.tmp_0.arg1 = _hex395667;
+    s.tmp_0.arg1 = _hex823839;
     s.pc = 20; return s.tmp_0;
   case 20:
     r0 = s.retval;
@@ -57849,37 +57849,37 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-createLeftHandWall__P395402.info = {"start":11994,"length":3541,"line":286,"column":0,"endLine":360,"endColumn":1,"fileName":"games.ts","functionName":"createLeftHandWall","argumentNames":[]}
+createLeftHandWall__P823574.info = {"start":12012,"length":3541,"line":287,"column":0,"endLine":361,"endColumn":1,"fileName":"games.ts","functionName":"createLeftHandWall","argumentNames":[]}
 
-function createLeftHandWall__P395402_mk(s) {
+function createLeftHandWall__P823574_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: createLeftHandWall__P395402, depth: s.depth + 1,
+        parent: s, fn: createLeftHandWall__P823574, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
 } }
 
-const _hex395619 = pxsim.BufferMethods.createBufferFromHex("2018f0a0e1107120116011707120111041101110511071201110112011101150111071201110211011101110113011107120114011104120111071206110112011201110719011201120111071201110711011201110712011401140112011107120411011104120111071201120111011201140111071201120111021101110112011107120112011401110112011107120112041101110411071201120114011401110712011201110911071201120111011701110712011201110211041101110712011201110112011201110111071201170114011107120e11071f020f1f11120f17120f17120f17120f17120f17120f171f0a0")
-const _hex395622 = pxsim.BufferMethods.createBufferFromHex("2018ffff8f10ffffffffffaf11ffffffffffffcf11ffff8f21ffffffaf11ff8f11ff4f11ffffffffffffffdf115f11ffffbf11ffffffffffffffffffffffffffffff8f")
-const _hex395626 = pxsim.BufferMethods.createBufferFromHex("10101b6d1c1b6d1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d7b1d7b6c1b1a6c1b1a1b6d1c1b6d1b1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d7b1d6b7c1b1a6c1b1a")
-const _hex395629 = pxsim.BufferMethods.createBufferFromHex("101015f7f71715471637155715472516e72516b725f725f71725d7251647158715165725d7151715c725167715571516f7f7f75725")
-const _hex395632 = pxsim.BufferMethods.createBufferFromHex("101017f6f61617461836175617462718e62718b627f627f61627d6271846178617185627d6171617c627187617561718f6f6f65627")
-const _hex395635 = pxsim.BufferMethods.createBufferFromHex("10101f6e3f1e2f2e1f2e342e1f5e1f3e544e341e1f2e642e541e1f2e541e743e541e741e1f2e342e742e1f3e1f1e1f1e541e1f1e4f3e1f1e341e1f2e2f2e345e1f1e142e1f1e541e1f1e1f1e341e1f1e542e1f1e441e1f1e641e1f1e443e641e1f2e342e1f1e347e144e1f4e2f1e1f3e")
-const _hex395639 = pxsim.BufferMethods.createBufferFromHex("1010f0802fa05f1e1f101e24403f1e1f3e1f141d14303f1e122f142e3f302f1e122f1b111d1e22144f121e121f1e2f1d1422143f12131e121f1e142d1422151f101f221e121f1e142d1422151f102f121e121f1e2f1d1422142f102f1e122f1b111d1e22142f103f1e122f142e3f402f2e1f3e1f141d14505f1e1f101e24902ff080")
-const _hex395642 = pxsim.BufferMethods.createBufferFromHex("1010f0502839a0384980485960586950587940281928893018391899201839111981201829211971301841196140184119517031194180311931a0211921f080")
-const _hex395645 = pxsim.BufferMethods.createBufferFromHex("1010f0c01c111b605f101f111b1f402f3d1b1c2f211b301f1b313d1b1f111b1f301f411d1b1c112c111f201f612f111d1b1f301f611d211b1f401f611d311b401f612f111b2f401f411d1b1c111d1c111b301f1b313d1b1f111b1f402f3d1b1c2f211b605f101f111b1fc01f1c111bf030")
-const _hex395648 = pxsim.BufferMethods.createBufferFromHex("1010f0f0f0f0f0f0b0153015a01514151015141580151410141514101415701430143014f0f0f0f0f0f0a0")
-const _hex395652 = pxsim.BufferMethods.createBufferFromHex("412022000114120400060001")
-const _hex395655 = pxsim.BufferMethods.createBufferFromHex("41362200011121010006120400060001")
-const _hex395658 = pxsim.BufferMethods.createBufferFromHex("11362200011131010006210400060000")
-const _hex395661 = pxsim.BufferMethods.createBufferFromHex("1146220001111201000621010006230400060002")
-const _hex395664 = pxsim.BufferMethods.createBufferFromHex("1146220001112101000612010006230100060003")
-const _hex395667 = pxsim.BufferMethods.createBufferFromHex("3226220001133200041604020300")
+const _hex823791 = pxsim.BufferMethods.createBufferFromHex("2018f0a0e1107120116011707120111041101110511071201110112011101150111071201110211011101110113011107120114011104120111071206110112011201110719011201120111071201110711011201110712011401140112011107120411011104120111071201120111011201140111071201120111021101110112011107120112011401110112011107120112041101110411071201120114011401110712011201110911071201120111011701110712011201110211041101110712011201110112011201110111071201170114011107120e11071f020f1f11120f17120f17120f17120f17120f17120f171f0a0")
+const _hex823794 = pxsim.BufferMethods.createBufferFromHex("2018ffff8f10ffffffffffaf11ffffffffffffcf11ffff8f21ffffffaf11ff8f11ff4f11ffffffffffffffdf115f11ffffbf11ffffffffffffffffffffffffffffff8f")
+const _hex823798 = pxsim.BufferMethods.createBufferFromHex("10101b6d1c1b6d1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d7b1d7b6c1b1a6c1b1a1b6d1c1b6d1b1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d7b1d6b7c1b1a6c1b1a")
+const _hex823801 = pxsim.BufferMethods.createBufferFromHex("101015f7f71715471637155715472516e72516b725f725f71725d7251647158715165725d7151715c725167715571516f7f7f75725")
+const _hex823804 = pxsim.BufferMethods.createBufferFromHex("101017f6f61617461836175617462718e62718b627f627f61627d6271846178617185627d6171617c627187617561718f6f6f65627")
+const _hex823807 = pxsim.BufferMethods.createBufferFromHex("10101f6e3f1e2f2e1f2e342e1f5e1f3e544e341e1f2e642e541e1f2e541e743e541e741e1f2e342e742e1f3e1f1e1f1e541e1f1e4f3e1f1e341e1f2e2f2e345e1f1e142e1f1e541e1f1e1f1e341e1f1e542e1f1e441e1f1e641e1f1e443e641e1f2e342e1f1e347e144e1f4e2f1e1f3e")
+const _hex823811 = pxsim.BufferMethods.createBufferFromHex("1010f0802fa05f1e1f101e24403f1e1f3e1f141d14303f1e122f142e3f302f1e122f1b111d1e22144f121e121f1e2f1d1422143f12131e121f1e142d1422151f101f221e121f1e142d1422151f102f121e121f1e2f1d1422142f102f1e122f1b111d1e22142f103f1e122f142e3f402f2e1f3e1f141d14505f1e1f101e24902ff080")
+const _hex823814 = pxsim.BufferMethods.createBufferFromHex("1010f0502839a0384980485960586950587940281928893018391899201839111981201829211971301841196140184119517031194180311931a0211921f080")
+const _hex823817 = pxsim.BufferMethods.createBufferFromHex("1010f0c01c111b605f101f111b1f402f3d1b1c2f211b301f1b313d1b1f111b1f301f411d1b1c112c111f201f612f111d1b1f301f611d211b1f401f611d311b401f612f111b2f401f411d1b1c111d1c111b301f1b313d1b1f111b1f402f3d1b1c2f211b605f101f111b1fc01f1c111bf030")
+const _hex823820 = pxsim.BufferMethods.createBufferFromHex("1010f0f0f0f0f0f0b0153015a01514151015141580151410141514101415701430143014f0f0f0f0f0f0a0")
+const _hex823824 = pxsim.BufferMethods.createBufferFromHex("412022000114120400060001")
+const _hex823827 = pxsim.BufferMethods.createBufferFromHex("41362200011121010006120400060001")
+const _hex823830 = pxsim.BufferMethods.createBufferFromHex("11362200011131010006210400060000")
+const _hex823833 = pxsim.BufferMethods.createBufferFromHex("1146220001111201000621010006230400060002")
+const _hex823836 = pxsim.BufferMethods.createBufferFromHex("1146220001112101000612010006230100060003")
+const _hex823839 = pxsim.BufferMethods.createBufferFromHex("3226220001133200041604020300")
 
 
 
 
-function createBejeweledGame__P395396(s) {
+function createBejeweledGame__P823568(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -57897,13 +57897,13 @@ switch (step) {
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-WBackM";
-    s.tmp_0.arg1 = _hex395548;
+    s.tmp_0.arg1 = _hex823720;
     s.pc = 2; return s.tmp_0;
   case 2:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-WSpriteM";
-    s.tmp_0.arg1 = _hex395551;
+    s.tmp_0.arg1 = _hex823723;
     s.pc = 3; return s.tmp_0;
   case 3:
     r0 = s.retval;
@@ -57915,25 +57915,25 @@ switch (step) {
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-BackI0";
-    s.tmp_0.arg1 = _hex395555;
+    s.tmp_0.arg1 = _hex823727;
     s.pc = 5; return s.tmp_0;
   case 5:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-BackI1";
-    s.tmp_0.arg1 = _hex395558;
+    s.tmp_0.arg1 = _hex823730;
     s.pc = 6; return s.tmp_0;
   case 6:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-BackI2";
-    s.tmp_0.arg1 = _hex395561;
+    s.tmp_0.arg1 = _hex823733;
     s.pc = 7; return s.tmp_0;
   case 7:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-BackI3";
-    s.tmp_0.arg1 = _hex395564;
+    s.tmp_0.arg1 = _hex823736;
     s.pc = 8; return s.tmp_0;
   case 8:
     r0 = s.retval;
@@ -57945,25 +57945,25 @@ switch (step) {
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-SpriteI0";
-    s.tmp_0.arg1 = _hex395568;
+    s.tmp_0.arg1 = _hex823740;
     s.pc = 10; return s.tmp_0;
   case 10:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-SpriteI1";
-    s.tmp_0.arg1 = _hex395571;
+    s.tmp_0.arg1 = _hex823743;
     s.pc = 11; return s.tmp_0;
   case 11:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-SpriteI2";
-    s.tmp_0.arg1 = _hex395574;
+    s.tmp_0.arg1 = _hex823746;
     s.pc = 12; return s.tmp_0;
   case 12:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-SpriteI3";
-    s.tmp_0.arg1 = _hex395577;
+    s.tmp_0.arg1 = _hex823749;
     s.pc = 13; return s.tmp_0;
   case 13:
     r0 = s.retval;
@@ -57975,73 +57975,73 @@ switch (step) {
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-RuleB0";
-    s.tmp_0.arg1 = _hex395581;
+    s.tmp_0.arg1 = _hex823753;
     s.pc = 15; return s.tmp_0;
   case 15:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-RuleB1";
-    s.tmp_0.arg1 = _hex395584;
+    s.tmp_0.arg1 = _hex823756;
     s.pc = 16; return s.tmp_0;
   case 16:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-RuleB2";
-    s.tmp_0.arg1 = _hex395587;
+    s.tmp_0.arg1 = _hex823759;
     s.pc = 17; return s.tmp_0;
   case 17:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-RuleB3";
-    s.tmp_0.arg1 = _hex395590;
+    s.tmp_0.arg1 = _hex823762;
     s.pc = 18; return s.tmp_0;
   case 18:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-RuleB5";
-    s.tmp_0.arg1 = _hex395593;
+    s.tmp_0.arg1 = _hex823765;
     s.pc = 19; return s.tmp_0;
   case 19:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-RuleB7";
-    s.tmp_0.arg1 = _hex395596;
+    s.tmp_0.arg1 = _hex823768;
     s.pc = 20; return s.tmp_0;
   case 20:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-RuleB8";
-    s.tmp_0.arg1 = _hex395599;
+    s.tmp_0.arg1 = _hex823771;
     s.pc = 21; return s.tmp_0;
   case 21:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-RuleB4";
-    s.tmp_0.arg1 = _hex395602;
+    s.tmp_0.arg1 = _hex823774;
     s.pc = 22; return s.tmp_0;
   case 22:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-RuleB6";
-    s.tmp_0.arg1 = _hex395605;
+    s.tmp_0.arg1 = _hex823777;
     s.pc = 23; return s.tmp_0;
   case 23:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-RuleB9";
-    s.tmp_0.arg1 = _hex395608;
+    s.tmp_0.arg1 = _hex823780;
     s.pc = 24; return s.tmp_0;
   case 24:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-RuleB11";
-    s.tmp_0.arg1 = _hex395611;
+    s.tmp_0.arg1 = _hex823783;
     s.pc = 25; return s.tmp_0;
   case 25:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW1-RuleB10";
-    s.tmp_0.arg1 = _hex395614;
+    s.tmp_0.arg1 = _hex823786;
     s.pc = 26; return s.tmp_0;
   case 26:
     r0 = s.retval;
@@ -58055,43 +58055,43 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-createBejeweledGame__P395396.info = {"start":8040,"length":3950,"line":195,"column":0,"endLine":284,"endColumn":1,"fileName":"games.ts","functionName":"createBejeweledGame","argumentNames":[]}
+createBejeweledGame__P823568.info = {"start":8044,"length":3962,"line":195,"column":0,"endLine":284,"endColumn":1,"fileName":"games.ts","functionName":"createBejeweledGame","argumentNames":[]}
 
-function createBejeweledGame__P395396_mk(s) {
+function createBejeweledGame__P823568_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: createBejeweledGame__P395396, depth: s.depth + 1,
+        parent: s, fn: createBejeweledGame__P823568, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
 } }
 
-const _hex395548 = pxsim.BufferMethods.createBufferFromHex("201880f111106110f111106110f111106110f111106110f111106110f111106110f111106110f111106110f11180f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f141")
-const _hex395551 = pxsim.BufferMethods.createBufferFromHex("2018ffaf1011122012ff3f12102120ff3f1211201112ff3f111011121011ff3f1112132110ff3f1012112011ff3f1011121122ff3f22201110ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffef")
-const _hex395555 = pxsim.BufferMethods.createBufferFromHex("10101b6d1c1b6d1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d7b1d7b6c1b1a6c1b1a1b6d1c1b6d1b1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d7b1d6b7c1b1a6c1b1a")
-const _hex395558 = pxsim.BufferMethods.createBufferFromHex("1010ff3f3ccf5c4f3c4f6c2f5c4f5c1f7c3f5c1f7c4f3c2f7caf5ccf3c8f3c7f1c4f5c5f3c3f5c4f4c3f6c3f4c3f6c4f3c4f3c7f1cff1f")
-const _hex395561 = pxsim.BufferMethods.createBufferFromHex("10101f6e3f1e2f2e1f2e342e1f5e1f3e544e341e1f2e642e541e1f2e541e743e541e741e1f2e342e742e1f3e1f1e1f1e541e1f1e4f3e1f1e341e1f2e2f2e345e1f1e142e1f1e541e1f1e1f1e341e1f1e542e1f1e441e1f1e641e1f1e443e641e1f2e342e1f1e347e144e1f4e2f1e1f3e")
-const _hex395564 = pxsim.BufferMethods.createBufferFromHex("101017f6f61617461836175617462718e62718b627f627f61627d6271846178617185627d6171617c627187617561718f6f6f65627")
-const _hex395568 = pxsim.BufferMethods.createBufferFromHex("1010506c802c7e12501cae12404e523e12204e821e12203ea21e12104e921e121e4c92141e1c27161c92141e272ea2141e101e121e247214121e101e22251462141e301e121415145214121e301e7224121e502e622e806e50")
-const _hex395571 = pxsim.BufferMethods.createBufferFromHex("1010f0502839a0384980485960586950587940281928893018391899201839111981201829211971301841196140184119517031194180311931a0211921f080")
-const _hex395574 = pxsim.BufferMethods.createBufferFromHex("1010804ca02c1b1c1b2c901c1d2b1c1b2c603c2d1b1c1b2c303c2b1c1b2d4c201c1b2d3b1c2d1b3c201c5d3b1d1b4c101b5d3b1d1b2c1b1c101b5d3b1d2b1c2b1c1b6d2b1d1b1d1c2b1c101b5d2b1d1b1d1c2b1c201b4d1b1d2b1d1c2b1c201b3d2b1d1b1d3b1c407b1d1c2b1c701b3d2c1b1c902b2c2b30")
-const _hex395577 = pxsim.BufferMethods.createBufferFromHex("1010f0f0707f801f751f601f951f501f353f351f501f251f301f251f501f251f301f251f501f251f301f251f501f251f301f251f501f353f351f501f951f601f751f807ff0f060")
-const _hex395581 = pxsim.BufferMethods.createBufferFromHex("6143220001242100012423000124120000160300010103000101030001010603")
-const _hex395584 = pxsim.BufferMethods.createBufferFromHex("6143220010242100102423001024120000160300010103000101030001010603")
-const _hex395587 = pxsim.BufferMethods.createBufferFromHex("61302200151632043f061200001600030603")
-const _hex395590 = pxsim.BufferMethods.createBufferFromHex("6143220004242300042421000424120000160300010103000101030001010603")
-const _hex395593 = pxsim.BufferMethods.createBufferFromHex("401022f340160102")
-const _hex395596 = pxsim.BufferMethods.createBufferFromHex("202622f34016231000060002")
-const _hex395599 = pxsim.BufferMethods.createBufferFromHex("205622004016230400061230000621300006323000060002")
-const _hex395602 = pxsim.BufferMethods.createBufferFromHex("412322cf152421cf15240000010300020103")
-const _hex395605 = pxsim.BufferMethods.createBufferFromHex("401022cf40160101")
-const _hex395608 = pxsim.BufferMethods.createBufferFromHex("402622f34016211000060102")
-const _hex395611 = pxsim.BufferMethods.createBufferFromHex("6123223f1524213f15240000010100020101")
-const _hex395614 = pxsim.BufferMethods.createBufferFromHex("6156223f151621c0000612c0000623c0000632c000060101")
+const _hex823720 = pxsim.BufferMethods.createBufferFromHex("201880f111106110f111106110f111106110f111106110f111106110f111106110f111106110f111106110f11180f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f141")
+const _hex823723 = pxsim.BufferMethods.createBufferFromHex("2018ffaf1011122012ff3f12102120ff3f1211201112ff3f111011121011ff3f1112132110ff3f1012112011ff3f1011121122ff3f22201110ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffef")
+const _hex823727 = pxsim.BufferMethods.createBufferFromHex("10101b6d1c1b6d1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d7b1d7b6c1b1a6c1b1a1b6d1c1b6d1b1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d7b1d6b7c1b1a6c1b1a")
+const _hex823730 = pxsim.BufferMethods.createBufferFromHex("1010ff3f3ccf5c4f3c4f6c2f5c4f5c1f7c3f5c1f7c4f3c2f7caf5ccf3c8f3c7f1c4f5c5f3c3f5c4f4c3f6c3f4c3f6c4f3c4f3c7f1cff1f")
+const _hex823733 = pxsim.BufferMethods.createBufferFromHex("10101f6e3f1e2f2e1f2e342e1f5e1f3e544e341e1f2e642e541e1f2e541e743e541e741e1f2e342e742e1f3e1f1e1f1e541e1f1e4f3e1f1e341e1f2e2f2e345e1f1e142e1f1e541e1f1e1f1e341e1f1e542e1f1e441e1f1e641e1f1e443e641e1f2e342e1f1e347e144e1f4e2f1e1f3e")
+const _hex823736 = pxsim.BufferMethods.createBufferFromHex("101017f6f61617461836175617462718e62718b627f627f61627d6271846178617185627d6171617c627187617561718f6f6f65627")
+const _hex823740 = pxsim.BufferMethods.createBufferFromHex("1010506c802c7e12501cae12404e523e12204e821e12203ea21e12104e921e121e4c92141e1c27161c92141e272ea2141e101e121e247214121e101e22251462141e301e121415145214121e301e7224121e502e622e806e50")
+const _hex823743 = pxsim.BufferMethods.createBufferFromHex("1010f0502839a0384980485960586950587940281928893018391899201839111981201829211971301841196140184119517031194180311931a0211921f080")
+const _hex823746 = pxsim.BufferMethods.createBufferFromHex("1010804ca02c1b1c1b2c901c1d2b1c1b2c603c2d1b1c1b2c303c2b1c1b2d4c201c1b2d3b1c2d1b3c201c5d3b1d1b4c101b5d3b1d1b2c1b1c101b5d3b1d2b1c2b1c1b6d2b1d1b1d1c2b1c101b5d2b1d1b1d1c2b1c201b4d1b1d2b1d1c2b1c201b3d2b1d1b1d3b1c407b1d1c2b1c701b3d2c1b1c902b2c2b30")
+const _hex823749 = pxsim.BufferMethods.createBufferFromHex("1010f0f0707f801f751f601f951f501f353f351f501f251f301f251f501f251f301f251f501f251f301f251f501f251f301f251f501f353f351f501f951f601f751f807ff0f060")
+const _hex823753 = pxsim.BufferMethods.createBufferFromHex("61432200012421000124230001241200002603000101030001010300010106030402")
+const _hex823756 = pxsim.BufferMethods.createBufferFromHex("61432200102421001024230010241200002603000101030001010300010106030402")
+const _hex823759 = pxsim.BufferMethods.createBufferFromHex("61302200151632043f061200001600030603")
+const _hex823762 = pxsim.BufferMethods.createBufferFromHex("61432200042423000424210004241200002603000101030001010300010106030402")
+const _hex823765 = pxsim.BufferMethods.createBufferFromHex("401022f340160102")
+const _hex823768 = pxsim.BufferMethods.createBufferFromHex("202622f34016231000060002")
+const _hex823771 = pxsim.BufferMethods.createBufferFromHex("205622004016230400061230000621300006323000060002")
+const _hex823774 = pxsim.BufferMethods.createBufferFromHex("412322cf152421cf15240000010300020103")
+const _hex823777 = pxsim.BufferMethods.createBufferFromHex("401022cf40160101")
+const _hex823780 = pxsim.BufferMethods.createBufferFromHex("402622f34016211000060102")
+const _hex823783 = pxsim.BufferMethods.createBufferFromHex("6123223f1524213f15240000010100020101")
+const _hex823786 = pxsim.BufferMethods.createBufferFromHex("6156223f151621c0000612c0000623c0000632c000060101")
 
 
 
 
-function createSnakeGame__P395390(s) {
+function createSnakeGame__P823562(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -58109,13 +58109,13 @@ switch (step) {
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW2-WBackM";
-    s.tmp_0.arg1 = _hex395483;
+    s.tmp_0.arg1 = _hex823655;
     s.pc = 2; return s.tmp_0;
   case 2:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW2-WSpriteM";
-    s.tmp_0.arg1 = _hex395486;
+    s.tmp_0.arg1 = _hex823658;
     s.pc = 3; return s.tmp_0;
   case 3:
     r0 = s.retval;
@@ -58127,25 +58127,25 @@ switch (step) {
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW2-BackI0";
-    s.tmp_0.arg1 = _hex395490;
+    s.tmp_0.arg1 = _hex823662;
     s.pc = 5; return s.tmp_0;
   case 5:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW2-BackI1";
-    s.tmp_0.arg1 = _hex395493;
+    s.tmp_0.arg1 = _hex823665;
     s.pc = 6; return s.tmp_0;
   case 6:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW2-BackI2";
-    s.tmp_0.arg1 = _hex395496;
+    s.tmp_0.arg1 = _hex823668;
     s.pc = 7; return s.tmp_0;
   case 7:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW2-BackI3";
-    s.tmp_0.arg1 = _hex395499;
+    s.tmp_0.arg1 = _hex823671;
     s.pc = 8; return s.tmp_0;
   case 8:
     r0 = s.retval;
@@ -58157,25 +58157,25 @@ switch (step) {
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW2-SpriteI0";
-    s.tmp_0.arg1 = _hex395503;
+    s.tmp_0.arg1 = _hex823675;
     s.pc = 10; return s.tmp_0;
   case 10:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW2-SpriteI1";
-    s.tmp_0.arg1 = _hex395506;
+    s.tmp_0.arg1 = _hex823678;
     s.pc = 11; return s.tmp_0;
   case 11:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW2-SpriteI2";
-    s.tmp_0.arg1 = _hex395509;
+    s.tmp_0.arg1 = _hex823681;
     s.pc = 12; return s.tmp_0;
   case 12:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW2-SpriteI3";
-    s.tmp_0.arg1 = _hex395512;
+    s.tmp_0.arg1 = _hex823684;
     s.pc = 13; return s.tmp_0;
   case 13:
     r0 = s.retval;
@@ -58187,61 +58187,61 @@ switch (step) {
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW2-RuleB1";
-    s.tmp_0.arg1 = _hex395516;
+    s.tmp_0.arg1 = _hex823688;
     s.pc = 15; return s.tmp_0;
   case 15:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW2-RuleB2";
-    s.tmp_0.arg1 = _hex395519;
+    s.tmp_0.arg1 = _hex823691;
     s.pc = 16; return s.tmp_0;
   case 16:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW2-RuleB3";
-    s.tmp_0.arg1 = _hex395522;
+    s.tmp_0.arg1 = _hex823694;
     s.pc = 17; return s.tmp_0;
   case 17:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW2-RuleB5";
-    s.tmp_0.arg1 = _hex395525;
+    s.tmp_0.arg1 = _hex823697;
     s.pc = 18; return s.tmp_0;
   case 18:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW2-RuleB7";
-    s.tmp_0.arg1 = _hex395528;
+    s.tmp_0.arg1 = _hex823700;
     s.pc = 19; return s.tmp_0;
   case 19:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW2-RuleB8";
-    s.tmp_0.arg1 = _hex395531;
+    s.tmp_0.arg1 = _hex823703;
     s.pc = 20; return s.tmp_0;
   case 20:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW2-RuleB9";
-    s.tmp_0.arg1 = _hex395534;
+    s.tmp_0.arg1 = _hex823706;
     s.pc = 21; return s.tmp_0;
   case 21:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW2-RuleB0";
-    s.tmp_0.arg1 = _hex395537;
+    s.tmp_0.arg1 = _hex823709;
     s.pc = 22; return s.tmp_0;
   case 22:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW2-RuleB4";
-    s.tmp_0.arg1 = _hex395540;
+    s.tmp_0.arg1 = _hex823712;
     s.pc = 23; return s.tmp_0;
   case 23:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW2-RuleB10";
-    s.tmp_0.arg1 = _hex395543;
+    s.tmp_0.arg1 = _hex823715;
     s.pc = 24; return s.tmp_0;
   case 24:
     r0 = s.retval;
@@ -58255,41 +58255,41 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-createSnakeGame__P395390.info = {"start":4485,"length":3551,"line":112,"column":0,"endLine":193,"endColumn":1,"fileName":"games.ts","functionName":"createSnakeGame","argumentNames":[]}
+createSnakeGame__P823562.info = {"start":4485,"length":3555,"line":112,"column":0,"endLine":193,"endColumn":1,"fileName":"games.ts","functionName":"createSnakeGame","argumentNames":[]}
 
-function createSnakeGame__P395390_mk(s) {
+function createSnakeGame__P823562_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: createSnakeGame__P395390, depth: s.depth + 1,
+        parent: s, fn: createSnakeGame__P823562, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
 } }
 
-const _hex395483 = pxsim.BufferMethods.createBufferFromHex("2018f0a0f17120f17120f17120f17120f17120f17120f17120f17120f17120a122a120914291208152912081529120815291209132a120f17120f17120f17120f17120f171204122f111203142f1203142f1203132f111204122f11120f17120f17120f17120f17120f171f0a0")
-const _hex395486 = pxsim.BufferMethods.createBufferFromHex("2018ffffffffff1f11ff8f11ff8f116f12ff1f11ff8f11ff8f11ff8f10ffffffffff9f12ff2f12ffffffff3f12ffffffffffffffff7f12ffffffffffffffff4f12ffffffff12ffffffff6f")
-const _hex395490 = pxsim.BufferMethods.createBufferFromHex("10101b6d1c1b6d1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d7b1d7b6c1b1a6c1b1a1b6d1c1b6d1b1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d7b1d6b7c1b1a6c1b1a")
-const _hex395493 = pxsim.BufferMethods.createBufferFromHex("1010ff3f3ccf5c4f3c4f6c2f5c4f5c1f7c3f5c1f7c4f3c2f7caf5ccf3c8f3c7f1c4f5c5f3c3f5c4f4c3f6c3f4c3f6c4f3c4f3c7f1cff1f")
-const _hex395496 = pxsim.BufferMethods.createBufferFromHex("101017f6f61617461836175617462718e62718b627f627f61627d6271846178617185627d6171617c627187617561718f6f6f65627")
-const _hex395499 = pxsim.BufferMethods.createBufferFromHex("10101f6e3f1e2f2e1f2e342e1f5e1f3e544e341e1f2e642e541e1f2e541e743e541e741e1f2e342e742e1f3e1f1e1f1e541e1f1e4f3e1f1e341e1f2e2f2e345e1f1e142e1f1e541e1f1e1f1e341e1f1e542e1f1e441e1f1e641e1f1e443e641e1f2e342e1f1e347e144e1f4e2f1e1f3e")
-const _hex395503 = pxsim.BufferMethods.createBufferFromHex("1010b01c2f502c2f301c21161f301c16371f101c1731161c101c271c16271f27412c1627161f271c22412c3726271c37312c3726271c2726212c37161f17161c171c1f26112c371c16171c17161f2c16112c16773c361c101c67161f561c201c1637161f27461f302c3f37261c1f801c27161c2fa01c171ce02c50")
-const _hex395506 = pxsim.BufferMethods.createBufferFromHex("1010a02c2fb01c16372c801c272c16111c701c1627161c1f2c701c37361f1c701c37361f1c701c37161c1f111c701c372c162c404c16671c302c361c57161c301c27262c16371f1c201c37462c2f161c201c273c761c201c171c201c661c301c161c302c461c302c505c20")
-const _hex395509 = pxsim.BufferMethods.createBufferFromHex("1010f0502c6e70ae603e523e403e821e402ea21e303e921e303c92142027161c921420172ea21430121e247214123022251462141e401214151452141260622412701e621ef050")
-const _hex395512 = pxsim.BufferMethods.createBufferFromHex("1010f0f0f0f0f0801e8012602e7012602c12601260161c828072901452f0f0f0f0f0a0")
-const _hex395516 = pxsim.BufferMethods.createBufferFromHex("212622000412230005020002")
-const _hex395519 = pxsim.BufferMethods.createBufferFromHex("212622000412120005010001")
-const _hex395522 = pxsim.BufferMethods.createBufferFromHex("212622000412320005030003")
-const _hex395525 = pxsim.BufferMethods.createBufferFromHex("2016220001160002")
-const _hex395528 = pxsim.BufferMethods.createBufferFromHex("222622000112230004060401")
-const _hex395531 = pxsim.BufferMethods.createBufferFromHex("211622cc01120401")
-const _hex395534 = pxsim.BufferMethods.createBufferFromHex("21262200040221004c36030002010002")
-const _hex395537 = pxsim.BufferMethods.createBufferFromHex("4110220005140002")
-const _hex395540 = pxsim.BufferMethods.createBufferFromHex("4116220001120002")
-const _hex395543 = pxsim.BufferMethods.createBufferFromHex("222622000122230010260501020203000203")
+const _hex823655 = pxsim.BufferMethods.createBufferFromHex("2018f0a0f17120f17120f17120f17120f17120f17120f17120f17120f17120a122a120914291208152912081529120815291209132a120f17120f17120f17120f17120f171204122f111203142f1203142f1203132f111204122f11120f17120f17120f17120f17120f171f0a0")
+const _hex823658 = pxsim.BufferMethods.createBufferFromHex("2018ffffffffff1f11ff8f11ff8f116f12ff1f11ff8f11ff8f11ff8f10ffffffffff9f12ff2f12ffffffff3f12ffffffffffffffff7f12ffffffffffffffff4f12ffffffff12ffffffff6f")
+const _hex823662 = pxsim.BufferMethods.createBufferFromHex("10101b6d1c1b6d1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d7b1d7b6c1b1a6c1b1a1b6d1c1b6d1b1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d7b1d6b7c1b1a6c1b1a")
+const _hex823665 = pxsim.BufferMethods.createBufferFromHex("1010ff3f3ccf5c4f3c4f6c2f5c4f5c1f7c3f5c1f7c4f3c2f7caf5ccf3c8f3c7f1c4f5c5f3c3f5c4f4c3f6c3f4c3f6c4f3c4f3c7f1cff1f")
+const _hex823668 = pxsim.BufferMethods.createBufferFromHex("101017f6f61617461836175617462718e62718b627f627f61627d6271846178617185627d6171617c627187617561718f6f6f65627")
+const _hex823671 = pxsim.BufferMethods.createBufferFromHex("10101f6e3f1e2f2e1f2e342e1f5e1f3e544e341e1f2e642e541e1f2e541e743e541e741e1f2e342e742e1f3e1f1e1f1e541e1f1e4f3e1f1e341e1f2e2f2e345e1f1e142e1f1e541e1f1e1f1e341e1f1e542e1f1e441e1f1e641e1f1e443e641e1f2e342e1f1e347e144e1f4e2f1e1f3e")
+const _hex823675 = pxsim.BufferMethods.createBufferFromHex("1010b01c2f502c2f301c21161f301c16371f101c1731161c101c271c16271f27412c1627161f271c22412c3726271c37312c3726271c2726212c37161f17161c171c1f26112c371c16171c17161f2c16112c16773c361c101c67161f561c201c1637161f27461f302c3f37261c1f801c27161c2fa01c171ce02c50")
+const _hex823678 = pxsim.BufferMethods.createBufferFromHex("1010a02c2fb01c16372c801c272c16111c701c1627161c1f2c701c37361f1c701c37361f1c701c37161c1f111c701c372c162c404c16671c302c361c57161c301c27262c16371f1c201c37462c2f161c201c273c761c201c171c201c661c301c161c302c461c302c505c20")
+const _hex823681 = pxsim.BufferMethods.createBufferFromHex("1010f0502c6e70ae603e523e403e821e402ea21e303e921e303c92142027161c921420172ea21430121e247214123022251462141e401214151452141260622412701e621ef050")
+const _hex823684 = pxsim.BufferMethods.createBufferFromHex("1010f0f0f0f0f0801e8012602e7012602c12601260161c828072901452f0f0f0f0f0a0")
+const _hex823688 = pxsim.BufferMethods.createBufferFromHex("212622000412230005020002")
+const _hex823691 = pxsim.BufferMethods.createBufferFromHex("212622000412120005010001")
+const _hex823694 = pxsim.BufferMethods.createBufferFromHex("212622000412320005030003")
+const _hex823697 = pxsim.BufferMethods.createBufferFromHex("2016220001160002")
+const _hex823700 = pxsim.BufferMethods.createBufferFromHex("222622000112230004060401")
+const _hex823703 = pxsim.BufferMethods.createBufferFromHex("211622cc01120401")
+const _hex823706 = pxsim.BufferMethods.createBufferFromHex("21262200040221004c36030002010002")
+const _hex823709 = pxsim.BufferMethods.createBufferFromHex("4110220005140002")
+const _hex823712 = pxsim.BufferMethods.createBufferFromHex("4116220001120002")
+const _hex823715 = pxsim.BufferMethods.createBufferFromHex("2226220001322300102605010202040203000203")
 
 
 
 
-function createBoulderGame__P395384(s) {
+function createBoulderGame__P823556(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -58307,13 +58307,13 @@ switch (step) {
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-WBackM";
-    s.tmp_0.arg1 = _hex395406;
+    s.tmp_0.arg1 = _hex823578;
     s.pc = 2; return s.tmp_0;
   case 2:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-WSpriteM";
-    s.tmp_0.arg1 = _hex395409;
+    s.tmp_0.arg1 = _hex823581;
     s.pc = 3; return s.tmp_0;
   case 3:
     r0 = s.retval;
@@ -58325,25 +58325,25 @@ switch (step) {
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-BackI0";
-    s.tmp_0.arg1 = _hex395413;
+    s.tmp_0.arg1 = _hex823585;
     s.pc = 5; return s.tmp_0;
   case 5:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-BackI1";
-    s.tmp_0.arg1 = _hex395416;
+    s.tmp_0.arg1 = _hex823588;
     s.pc = 6; return s.tmp_0;
   case 6:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-BackI2";
-    s.tmp_0.arg1 = _hex395419;
+    s.tmp_0.arg1 = _hex823591;
     s.pc = 7; return s.tmp_0;
   case 7:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-BackI3";
-    s.tmp_0.arg1 = _hex395422;
+    s.tmp_0.arg1 = _hex823594;
     s.pc = 8; return s.tmp_0;
   case 8:
     r0 = s.retval;
@@ -58355,25 +58355,25 @@ switch (step) {
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-SpriteI0";
-    s.tmp_0.arg1 = _hex395426;
+    s.tmp_0.arg1 = _hex823598;
     s.pc = 10; return s.tmp_0;
   case 10:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-SpriteI1";
-    s.tmp_0.arg1 = _hex395429;
+    s.tmp_0.arg1 = _hex823601;
     s.pc = 11; return s.tmp_0;
   case 11:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-SpriteI2";
-    s.tmp_0.arg1 = _hex395432;
+    s.tmp_0.arg1 = _hex823604;
     s.pc = 12; return s.tmp_0;
   case 12:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-SpriteI3";
-    s.tmp_0.arg1 = _hex395435;
+    s.tmp_0.arg1 = _hex823607;
     s.pc = 13; return s.tmp_0;
   case 13:
     r0 = s.retval;
@@ -58385,85 +58385,85 @@ switch (step) {
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-RuleB0";
-    s.tmp_0.arg1 = _hex395439;
+    s.tmp_0.arg1 = _hex823611;
     s.pc = 15; return s.tmp_0;
   case 15:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-RuleB3";
-    s.tmp_0.arg1 = _hex395442;
+    s.tmp_0.arg1 = _hex823614;
     s.pc = 16; return s.tmp_0;
   case 16:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-RuleB4";
-    s.tmp_0.arg1 = _hex395445;
+    s.tmp_0.arg1 = _hex823617;
     s.pc = 17; return s.tmp_0;
   case 17:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-RuleB5";
-    s.tmp_0.arg1 = _hex395448;
+    s.tmp_0.arg1 = _hex823620;
     s.pc = 18; return s.tmp_0;
   case 18:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-RuleB7";
-    s.tmp_0.arg1 = _hex395451;
+    s.tmp_0.arg1 = _hex823623;
     s.pc = 19; return s.tmp_0;
   case 19:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-RuleB8";
-    s.tmp_0.arg1 = _hex395454;
+    s.tmp_0.arg1 = _hex823626;
     s.pc = 20; return s.tmp_0;
   case 20:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-RuleB9";
-    s.tmp_0.arg1 = _hex395457;
+    s.tmp_0.arg1 = _hex823629;
     s.pc = 21; return s.tmp_0;
   case 21:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-RuleB2";
-    s.tmp_0.arg1 = _hex395460;
+    s.tmp_0.arg1 = _hex823632;
     s.pc = 22; return s.tmp_0;
   case 22:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-RuleB6";
-    s.tmp_0.arg1 = _hex395463;
+    s.tmp_0.arg1 = _hex823635;
     s.pc = 23; return s.tmp_0;
   case 23:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-RuleB10";
-    s.tmp_0.arg1 = _hex395466;
+    s.tmp_0.arg1 = _hex823638;
     s.pc = 24; return s.tmp_0;
   case 24:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-RuleB11";
-    s.tmp_0.arg1 = _hex395469;
+    s.tmp_0.arg1 = _hex823641;
     s.pc = 25; return s.tmp_0;
   case 25:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-RuleB13";
-    s.tmp_0.arg1 = _hex395472;
+    s.tmp_0.arg1 = _hex823644;
     s.pc = 26; return s.tmp_0;
   case 26:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-RuleB1";
-    s.tmp_0.arg1 = _hex395475;
+    s.tmp_0.arg1 = _hex823647;
     s.pc = 27; return s.tmp_0;
   case 27:
     r0 = s.retval;
     s.tmp_0 = settings_writeBuffer__P597_mk(s);
     s.tmp_0.arg0 = "TW3-RuleB12";
-    s.tmp_0.arg1 = _hex395478;
+    s.tmp_0.arg1 = _hex823650;
     s.pc = 28; return s.tmp_0;
   case 28:
     r0 = s.retval;
@@ -58477,40 +58477,40 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-createBoulderGame__P395384.info = {"start":311,"length":4170,"line":14,"column":0,"endLine":110,"endColumn":1,"fileName":"games.ts","functionName":"createBoulderGame","argumentNames":[]}
+createBoulderGame__P823556.info = {"start":311,"length":4170,"line":14,"column":0,"endLine":110,"endColumn":1,"fileName":"games.ts","functionName":"createBoulderGame","argumentNames":[]}
 
-function createBoulderGame__P395384_mk(s) {
+function createBoulderGame__P823556_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: createBoulderGame__P395384, depth: s.depth + 1,
+        parent: s, fn: createBoulderGame__P823556, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
 } }
 
-const _hex395406 = pxsim.BufferMethods.createBufferFromHex("2018f0a0f17120f17120f171204112f12120f17120f17120f171203122f121205132e1201132f13120f171203132f11120f17120f171205132e120322132e1205132e120f17120f17120f17120f17120f17120f17120f17120f17120f17120f17120f17120f17120f171f0a0")
-const _hex395409 = pxsim.BufferMethods.createBufferFromHex("2018ffffffffffffbf10ffffffffffff4f21ff9f2112ff2f1221ffffff2f2112ffffffffbf31ff1f21122f111211ff6f31ffffffffffffffffffffffffffffffffffffffffffffff6f")
-const _hex395413 = pxsim.BufferMethods.createBufferFromHex("1010fd181d363826181618161816181d2618361816181618161816181d1618163826181618161816181d1816281d28561816181d1816183d1876181d1816281d2876181d1618163886181d2618361866281d26181618164826381d2618161816181628261816181d2618161816182618261816181d2618161816182618261816181d261816181618162826381d48163866f828")
-const _hex395416 = pxsim.BufferMethods.createBufferFromHex("10101f6e3f1e2f2e1f2e342e1f5e1f3e544e341e1f2e642e541e1f2e541e743e541e741e1f2e342e742e1f3e1f1e1f1e541e1f1e4f3e1f1e341e1f2e2f2e345e1f1e142e1f1e541e1f1e1f1e341e1f1e542e1f1e441e1f1e641e1f1e443e641e1f2e342e1f1e347e144e1f4e2f1e1f3e")
-const _hex395419 = pxsim.BufferMethods.createBufferFromHex("1010ff3f3ccf5c4f3c4f6c2f5c4f5c1f7c3f5c1f7c4f3c2f7caf5ccf3c8f3c7f1c4f5c5f3c3f5c4f4c3f6c3f4c3f6c4f3c4f3c7f1cff1f")
-const _hex395422 = pxsim.BufferMethods.createBufferFromHex("1010bd21ed217d1bcd21ed21fd6d1bfd5d11fdfd8d2bed2bfdfd8d1b4d1bfded1bfd1d")
-const _hex395426 = pxsim.BufferMethods.createBufferFromHex("1010f0802fa05f1e1f101e24403f1e1f3e1f141d14303f1e122f142e3f302f1e122f271d1e22144f121e121f1e271d1422143f12131e121f1e142d1422151f101f221e121f1e142d1422151f102f121e121f1e271d1422142f102f1e122f271d1e22142f103f1e122f142e3f402f2e1f3e1f141d14505f1e1f101e24902ff080")
-const _hex395429 = pxsim.BufferMethods.createBufferFromHex("1010804ca02c1b1c1b2c901c1d2b1c1b2c603c2d1b1c1b2c303c2b1c1b2d4c201c1b2d3b1c2d1b3c201c5d3b1d1b4c101b5d3b1d1b2c1b1c101b5d3b1d2b1c2b1c1b6d2b1d1b1d1c2b1c101b5d2b1d1b1d1c2b1c201b4d1b1d2b1d1c2b1c201b3d2b1d1b1d3b1c407b1d1c2b1c701b3d2c1b1c902b2c2b30")
-const _hex395432 = pxsim.BufferMethods.createBufferFromHex("1010f0502839a0384980485960586950587940281928893018391899201839111981201829211971301841196140184119517031194180311931a0211921f080")
-const _hex395435 = pxsim.BufferMethods.createBufferFromHex("10106057a01730373fb0271c111d1f408f1b1c1f302f5d1b1c1f211d1f101f1b513d1f1b1c1f201f611d1b1c1b1c111d2f812f1d3f101f811d111b3f101f811d213f101f812f1b3f201f611d1b1c1d3f201f1b513d3f402f5d1b1c1f807f1cc01f1c1b1f40")
-const _hex395439 = pxsim.BufferMethods.createBufferFromHex("20262200011623030c060002")
-const _hex395442 = pxsim.BufferMethods.createBufferFromHex("4120220014143210ff060003")
-const _hex395445 = pxsim.BufferMethods.createBufferFromHex("41202200141332103c060003")
-const _hex395448 = pxsim.BufferMethods.createBufferFromHex("222622000102230010160300")
-const _hex395451 = pxsim.BufferMethods.createBufferFromHex("414122001416320014042110ff063110ff060000")
-const _hex395454 = pxsim.BufferMethods.createBufferFromHex("322022001403320001160401")
-const _hex395457 = pxsim.BufferMethods.createBufferFromHex("6310220010160400")
-const _hex395460 = pxsim.BufferMethods.createBufferFromHex("21212200141232103c060003")
-const _hex395463 = pxsim.BufferMethods.createBufferFromHex("2041220001162300041624103c063305140600020002")
-const _hex395466 = pxsim.BufferMethods.createBufferFromHex("2016220001160102")
-const _hex395469 = pxsim.BufferMethods.createBufferFromHex("111022001001")
-const _hex395472 = pxsim.BufferMethods.createBufferFromHex("2211220014120004")
-const _hex395475 = pxsim.BufferMethods.createBufferFromHex("2031220001162300041633103c0600020003")
-const _hex395478 = pxsim.BufferMethods.createBufferFromHex("6110220001160102")
+const _hex823578 = pxsim.BufferMethods.createBufferFromHex("2018f0a0f17120f17120f171204112f12120f17120f17120f171203122f121205132e1201132f13120f171203132f11120f17120f171205132e120322132e1205132e120f17120f17120f17120f17120f17120f17120f17120f17120f17120f17120f17120f17120f171f0a0")
+const _hex823581 = pxsim.BufferMethods.createBufferFromHex("2018ffffffffffffbf10ffffffffffff4f21ff9f2112ff2f1221ffffff2f2112ffffffffbf31ff1f21122f111211ff6f31ffffffffffffffffffffffffffffffffffffffffffffff6f")
+const _hex823585 = pxsim.BufferMethods.createBufferFromHex("1010fd181d363826181618161816181d2618361816181618161816181d1618163826181618161816181d1816281d28561816181d1816183d1876181d1816281d2876181d1618163886181d2618361866281d26181618164826381d2618161816181628261816181d2618161816182618261816181d2618161816182618261816181d261816181618162826381d48163866f828")
+const _hex823588 = pxsim.BufferMethods.createBufferFromHex("10101f6e3f1e2f2e1f2e342e1f5e1f3e544e341e1f2e642e541e1f2e541e743e541e741e1f2e342e742e1f3e1f1e1f1e541e1f1e4f3e1f1e341e1f2e2f2e345e1f1e142e1f1e541e1f1e1f1e341e1f1e542e1f1e441e1f1e641e1f1e443e641e1f2e342e1f1e347e144e1f4e2f1e1f3e")
+const _hex823591 = pxsim.BufferMethods.createBufferFromHex("1010ff3f3ccf5c4f3c4f6c2f5c4f5c1f7c3f5c1f7c4f3c2f7caf5ccf3c8f3c7f1c4f5c5f3c3f5c4f4c3f6c3f4c3f6c4f3c4f3c7f1cff1f")
+const _hex823594 = pxsim.BufferMethods.createBufferFromHex("1010bd21ed217d1bcd21ed21fd6d1bfd5d11fdfd8d2bed2bfdfd8d1b4d1bfded1bfd1d")
+const _hex823598 = pxsim.BufferMethods.createBufferFromHex("1010f0802fa05f1e1f101e24403f1e1f3e1f141d14303f1e122f142e3f302f1e122f271d1e22144f121e121f1e271d1422143f12131e121f1e142d1422151f101f221e121f1e142d1422151f102f121e121f1e271d1422142f102f1e122f271d1e22142f103f1e122f142e3f402f2e1f3e1f141d14505f1e1f101e24902ff080")
+const _hex823601 = pxsim.BufferMethods.createBufferFromHex("1010804ca02c1b1c1b2c901c1d2b1c1b2c603c2d1b1c1b2c303c2b1c1b2d4c201c1b2d3b1c2d1b3c201c5d3b1d1b4c101b5d3b1d1b2c1b1c101b5d3b1d2b1c2b1c1b6d2b1d1b1d1c2b1c101b5d2b1d1b1d1c2b1c201b4d1b1d2b1d1c2b1c201b3d2b1d1b1d3b1c407b1d1c2b1c701b3d2c1b1c902b2c2b30")
+const _hex823604 = pxsim.BufferMethods.createBufferFromHex("1010f0502839a0384980485960586950587940281928893018391899201839111981201829211971301841196140184119517031194180311931a0211921f080")
+const _hex823607 = pxsim.BufferMethods.createBufferFromHex("10106057a01730373fb0271c111d1f408f1b1c1f302f5d1b1c1f211d1f101f1b513d1f1b1c1f201f611d1b1c1b1c111d2f812f1d3f101f811d111b3f101f811d213f101f812f1b3f201f611d1b1c1d3f201f1b513d3f402f5d1b1c1f807f1cc01f1c1b1f40")
+const _hex823611 = pxsim.BufferMethods.createBufferFromHex("20262200011623030c060002")
+const _hex823614 = pxsim.BufferMethods.createBufferFromHex("4120220014143210ff060003")
+const _hex823617 = pxsim.BufferMethods.createBufferFromHex("41202200141332103c060003")
+const _hex823620 = pxsim.BufferMethods.createBufferFromHex("222622000102230010160300")
+const _hex823623 = pxsim.BufferMethods.createBufferFromHex("414122001416320014042110ff063110ff060000")
+const _hex823626 = pxsim.BufferMethods.createBufferFromHex("322022001403320001160401")
+const _hex823629 = pxsim.BufferMethods.createBufferFromHex("6310220010160400")
+const _hex823632 = pxsim.BufferMethods.createBufferFromHex("21212200141232103c060003")
+const _hex823635 = pxsim.BufferMethods.createBufferFromHex("2041220001162300041624103c063305140600020002")
+const _hex823638 = pxsim.BufferMethods.createBufferFromHex("2016220001160102")
+const _hex823641 = pxsim.BufferMethods.createBufferFromHex("111022001001")
+const _hex823644 = pxsim.BufferMethods.createBufferFromHex("2211220014120004")
+const _hex823647 = pxsim.BufferMethods.createBufferFromHex("2031220001162300041633103c0600020003")
+const _hex823650 = pxsim.BufferMethods.createBufferFromHex("6110220001160102")
 
 
 
@@ -81999,5 +81999,5 @@ const tiles_Location__C1034_VT = mkVTable({
 
 const breakpoints = setupDebugger(1, ["zeroCode___60379","player___711063","map___151531","play___151534","debug___151537","code___151540","paint___151543","music___151546","garbageCan___151549","settingsIcon___151552","addRule___151555","emptyTile___151558","emptyDiagTile___151561","cursorIn___151564","cursorOut___151567","collisionSprite___151570","genericSprite___151573","yellowSprite___151576","exclude___151579","include___151582","ok___151585","anyOutline___151588","allFourOutline___151591","restingOutline___151594","downArrowOutline___151597","upArrowOutline___151600","rightArrowOutline___151603","leftArrowOutline___151606","leftButton___151609","rightButton___151612","downButton___151615","upButton___151618","AButton___151621","flipHoriz___151624","flipVert___151627","rotate3way___151630","leftRotate___151633","rightRotate___151636","allFour___151639","downArrow___151642","upArrow___151645","rightArrow___151648","leftArrow___151651","eat___151654","stopSign___151657","uTurn___151660","spawn___151663","smallPaint___151666","teleport___151669","gameIcon___151672","trophyUp___151675","trophyDown___151678","scoreUp10___151681","diskIcon___151684","reset___151687","negate___151690","moveImages___151693","movedImages___151701","buttonImages___151712","attrImages___151719","commandImages___151745","gameImages___151751","categoryImages___151758","spriteImages___151769","colorOut___81781","colorIn___81784","paintOut___81787","paintIn___81790","transformImages___35314","paintOut___13793","paintIn___13796","twCursor___14396","apple___14399","snakeHead___14402","snakeBody___14405","ship___6679","alien___14409","missile___14412","cat___14415","fish___14418","dog___14421","chimp___14424","player___14427","diamond___14430","boulder___14433","enemy___14436","brick___6655","grass___14440","water___14443","dirt2___14446","wall___14449","wall2___14452","dirt___14455","space___14458","gallerySprites___6677","galleryTiles___6653","TileWorld___16379","TileWorldVersion___710010","HelpKey___710397","transformMap___35311","RuleKey___710354","bitIndex___163512","ruleBuf___163510","categoryText___151766","moveText___151709","spriteText___151771","gameText___151755","attrValues___151728","attrXoffsets___151735","attrYoffsets___151742","BackImageKey___710734","SpriteImageKey___710736","WorldBackgroundsKey___710372","WorldSpritesKey___710386","HighScoreKey___710413","VersionKey___710449","BackImgCntKey___710468","SpriteImgCntKey___710477","PlayerIndexKey___710486","toHex___710598","menuHelpString___156888","attrHelpString___156890","helpStringTop___11814","helpStringBot___11816","helpString___78841"])
 
-return _main___P802979
+return _main___P827251
 })
