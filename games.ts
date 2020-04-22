@@ -114,10 +114,10 @@ settings.writeBuffer("TW2-WBackM", hex`
 2018f0a0f17120f17120f17120f17120f17120f17120f17120f17120f17120a122a1209142912081
 52912081529120815291209132a120f17120f17120f17120f17120f171204122f111203142f12031
 42f1203132f111204122f11120f17120f17120f17120f17120f171f0a0`);
-// buffer length = 66
+// buffer length = 75
 settings.writeBuffer("TW2-WSpriteM", hex`
-2018ffffffffff1f11ff8f11ff6f121f11ff8f11ff8f11ff8f11ff8f10ffffffffffffffffffffff
-ffffffffffffffffffffffffffffffffffffffffffffffffff7f`);
+2018ffffffffff1f11ff8f11ff8f116f12ff1f11ff8f11ff8f11ff8f10ffffffffff9f12ff2f12ff
+ffffff3f12ffffffffffffffff7f12ffffffffffffffff4f12ffffffff12ffffffff6f`);
 settings.writeNumber("TW2-BackN",4);
 // buffer length = 94
 settings.writeBuffer("TW2-BackI0", hex`
