@@ -401,8 +401,6 @@ namespace tileworld {
                 this.drawOutline(i, 0);
             });
             this.all.getImages().forEach((image, i ) => {
-                if (i < this.p.backCnt() && this.getType() == RuleType.Collision)
-                    return;
                 let a = this.all.getSetAttr(this.rule, whenDo, i);
                 this.drawImage(i, 1, image);
                 this.drawImage(i, 1, attrImages[attrValues.indexOf(a)]);
@@ -432,8 +430,6 @@ namespace tileworld {
             }
             let m = this.row() == 1 ? this.col() : -1; 
             if (m != -1 && m < this.p.allCnt()) { 
-                if (m < this.p.backCnt() && this.getType() == RuleType.Collision)
-                    return;
                 let val = attrValues[this.attrSelected];
                 this.setAttr(m, val, true);
             }
