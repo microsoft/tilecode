@@ -155,6 +155,11 @@ namespace tileworld {
             settings.writeNumber(this.prefix+HelpKey, this.help ? 1 : 0);
         }
 
+        public newHighScore(newScore: number) {
+            this.highScore = newScore;
+            settings.writeNumber(this.prefix+HighScoreKey, newScore);
+        }
+
         private storeRule(prefix: string, rid: number, rule: Rule) {
             let buf = packRule(rule, this.backCnt(), this.spriteCnt());
             settings.writeBuffer(prefix + RuleKey + rid.toString(), buf);
@@ -247,6 +252,7 @@ namespace tileworld {
     const BackImageKey = "BackI";
     const SpriteImageKey = "SpriteI";
     const RuleKey = "RuleB";
+    const HighScoreKey = "HighN";
 
     function readImages(cnt: number, prefix: string, output: boolean) {
         let images: Image[] = []
@@ -281,6 +287,8 @@ namespace tileworld {
         let spriteImages = readImages(spriteCnt, prefix + SpriteImageKey, output);
         let helpNum = settingsReadNumber(prefix + HelpKey, output);
         let help = helpNum ? true: false;
+        let highScore = settingsReadNumber(prefix + HighScoreKey, output);
+        highScore = highScore == undefined ? 0 : highScore;
         // start project
         let p = new Project(prefix, backImages, spriteImages);
         // get the rules, at least
@@ -306,6 +314,7 @@ namespace tileworld {
         p.setPlayer(player);
         p.help = help;
         p.version = version;
+        p.highScore = highScore;
         return p;
     }
 

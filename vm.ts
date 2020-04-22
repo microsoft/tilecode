@@ -68,6 +68,7 @@ namespace tileworld {
     // the interpreter state
     class VMState {
         // core state
+        public highScore: number;
         public score: number; 
         public game: GameState;             // see type   
         public sprites: TileSprite[][];     // the sprites, sorted by kind
@@ -394,6 +395,8 @@ namespace tileworld {
                             this.vm.game = arg == GameArg.Win ? GameState.Won : GameState.Lost;
                         } else if (arg == GameArg.ScoreUp10) {
                             this.vm.score += 10;
+                            if (this.vm.score > this.vm.highScore)
+                                this.vm.highScore = this.vm.score;
                         }
                         break;
                     }
@@ -662,6 +665,7 @@ namespace tileworld {
             this.state = new VMState();
             this.state.game = GameState.InPlay;
             this.state.score = 0;
+            this.state.highScore = this.p.highScore;
             this.state.sprites = [];
             const currScene = game.currentScene();
             currScene.tileMap = new tiles.legacy.LegacyTilemap(TileScale.Sixteen, this.debug ? 2 : 0);
@@ -731,8 +735,12 @@ namespace tileworld {
                 if (this.signal.x >= 23) {
                     if (this.state.game != GameState.InPlay) {
                         this.running = false;
-                        let win = this.state.game == GameState.Won;
-                        game.showDialog("Game Over", " you " + (win ? "won" : "lost"));
+                        let message = this.state.game == GameState.Won ? "You won!" : "";
+                        if (this.state.highScore > this.p.highScore) {
+                            this.p.newHighScore(this.state.highScore);
+                            message += " New High = "+this.state.highScore.toString();
+                        }
+                        game.showDialog("Game Over", message);
                         pause(500);
                         game.waitAnyButton();
                         return;
@@ -754,6 +762,7 @@ namespace tileworld {
             
             game.onShade(() => {
                 screen.print("Score: "+this.state.score.toString(), 0, 0);
+                screen.print("High:"+this.state.highScore.toString(), 80, 0);
             })
 
             game.onPaint(() => {
@@ -810,6 +819,9 @@ namespace tileworld {
             });
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
                 // TODO: debugger
+                if (this.state.highScore > this.p.highScore) {
+                    this.p.newHighScore(this.state.highScore);
+                }
                 controller.setRepeatDefault(500, 80);
                 game.popScene();
             })
