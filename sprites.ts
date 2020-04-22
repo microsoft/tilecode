@@ -899,6 +899,24 @@ export const trophyDown = img`
     . . . . . . . . . . . . . . . .
     . . . . . . . . . . . . . . . .
 `;
+export const scoreUp10 = img`
+    . . f f f . . . . . . . . . . .
+    . . f 9 f . . . . . . . . . . .
+    f f f 9 f f f . . . . . . . . .
+    f 9 9 9 9 9 f . . . . . . . . .
+    f f f 9 f f f . . . . . . . . .
+    . . f 9 f . . . . . . . . . . .
+    . . f f f . . . . . . . . . . .
+    . . 1 1 1 1 1 1 1 1 1 1 1 1 1 .
+    . . 1 1 1 f 1 1 1 1 f f 1 1 1 .
+    . . 1 1 f f 1 1 1 f 1 1 f 1 1 .
+    . . 1 1 1 f 1 1 1 f 1 1 f 1 1 .
+    . . 1 1 1 f 1 1 1 f 1 1 f 1 1 .
+    . . 1 1 1 f 1 1 1 f 1 1 f 1 1 .
+    . . 1 1 f f f 1 1 1 f f 1 1 1 .
+    . . 1 1 1 1 1 1 1 1 1 1 1 1 1 .
+    . . . . . . . . . . . . . . . .
+`;
 
 // misc
 export const diskIcon = img`
@@ -969,8 +987,8 @@ export const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, Attr
 export const attrXoffsets = [-8, 0, 0, 0];
 export const attrYoffsets = [0, 0, -8, 0];
 export const commandImages = [map, paint, code, play];
-export const gameImages = [ trophyUp, trophyDown ];
-export const gameText = [ "win", "lose"];
+export const gameImages = [ trophyUp, trophyDown, scoreUp10 ];
+export const gameText = [ "win", "lose", "score+10" ];
 export const categoryImages = [allFour, paint, spawn, genericSprite, gameIcon, teleport, exclude ];
 export const categoryText = ["move sprite", "paint tile", "spawn", "sprite",  "game", "teleport", "block"];
 export const spriteImages = [eat];

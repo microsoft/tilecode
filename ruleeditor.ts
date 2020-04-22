@@ -314,7 +314,7 @@ namespace tileworld {
                 case CommandType.Move: return this.getType() != RuleType.Collision ? 4 : 2;
                 case CommandType.Paint: return 4;
                 case CommandType.Sprite: return 1;
-                case CommandType.Game: return 2;
+                case CommandType.Game: return 3;
                 case CommandType.Spawn:
                 case CommandType.BlockSpriteRules: return this.p.spriteCnt();
                 case CommandType.Teleport: return this.p.backCnt();

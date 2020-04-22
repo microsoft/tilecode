@@ -42,6 +42,7 @@ namespace tileworld {
         private _player: number = -1;
         private _backgrounds: Image = null;
         private _sprites: Image = null;
+        public highScore: number = 0;           // TODO
         public debug: boolean = false;
         public help: boolean = true;
         public version: string;
