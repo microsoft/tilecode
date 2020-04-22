@@ -270,7 +270,7 @@ namespace tileworld {
                 let done: AttrType[] = [];
                 project.forEach(a => {
                     let i = attrValues.indexOf(a);
-                    screen.drawTransparentImage(attrImages[i], (col << 4) + 8 + attrXoffsets[i], ((row + editorRow) << 4) + 8 + yoff + attrYoffsets[i]);
+                    screen.drawTransparentImage(attrImages[i], (col << 4) + 8, ((row + editorRow) << 4) + 8 + yoff);
                 });
                 // show direction 
                 if (this.getType() != RuleType.Collision && this.rule.findWitnessColRow(col, row) != -1) {

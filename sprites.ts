@@ -318,6 +318,16 @@ export const include = img`
     . f 7 7 7 f . .
     . . f 7 f . . .
 `;
+export const include2 = img`
+    . . . . . . f 5
+    . . . . . f 5 5
+    f . . . . f 5 f
+    5 f . . f 5 5 f
+    5 5 f . f 5 f .
+    f 5 5 f 5 5 f .
+    . f 5 5 5 f . .
+    . . f 5 f . . .
+`;
 export const ok = img`
     . . . . . . . .
     . . . . . . . .
@@ -982,10 +992,8 @@ export const moveImages = [leftArrow, upArrow, rightArrow, downArrow, stopSign, 
 export const movedImages = [leftArrowOutline, upArrowOutline, rightArrowOutline, downArrowOutline, restingOutline, allFourOutline, anyOutline];
 export const moveText = ["left", "up", "right", "down", "stop", "u-turn"];
 export const buttonImages = [leftButton, upButton, rightButton, downButton, AButton];
-export const attrImages = [include, exclude, ok, include];
-export const attrValues = [AttrType.Include, AttrType.Exclude, AttrType.OK, AttrType.Include2];
-export const attrXoffsets = [-8, 0, 0, 0];
-export const attrYoffsets = [0, 0, -8, 0];
+export const attrImages = [include, include2, exclude, ok ];
+export const attrValues = [AttrType.Include,  AttrType.Include2, AttrType.Exclude, AttrType.OK ];
 export const commandImages = [map, paint, code, play];
 export const gameImages = [ trophyUp, trophyDown, scoreUp10 ];
 export const gameText = [ "win", "lose", "score+10" ];

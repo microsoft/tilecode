@@ -395,7 +395,7 @@ namespace tileworld {
                 whenDo = this.rule.makeWhenDo(col, row);
             // for all user-defined sprites
             attrImages.forEach((img, i) => {
-                if (i >= 2) return;  // no oneof
+                if (i >= 3) return;  // no oneof
                 // draw 8x8 sprites centered
                 screen.drawTransparentImage(img, (i << 4) + 4, yoff + 4);
                 this.drawOutline(i, 0);
@@ -427,7 +427,7 @@ namespace tileworld {
                 }
                 return;
             }
-            if (a != -1 && a < 2) { 
+            if (a != -1 && a < 3) { 
                 this.selectAttr(a); return; 
             }
             let m = this.row() == 1 ? this.col() : -1; 

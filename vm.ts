@@ -457,6 +457,8 @@ namespace tileworld {
             let hasInclude: boolean = false;
             let includePassed: boolean = false;
             let includeWitness: TileSprite = null;
+            let hasInclude2: boolean = false;
+            let include2Passed: boolean = false;
             // check backgrounds
             for(let kind = 0; kind < this.p.backCnt(); kind++) {
                 const tm = game.currentScene().tileMap;
@@ -467,6 +469,9 @@ namespace tileworld {
                 } else if (attr == AttrType.Include) {
                     hasInclude = true;
                     if (hasKind) includePassed = true;
+                } else if (attr == AttrType.Include2) {
+                    hasInclude2 = true;
+                    if (hasKind) include2Passed = true;
                 }
             }
             // check sprites
@@ -490,6 +495,11 @@ namespace tileworld {
                         if (adjacent && !includeWitness)
                             includeWitness = witness;
                     }
+                } else if (attr == AttrType.Include2) {
+                    hasInclude2 = true;
+                    if (witness) {
+                        include2Passed = true;
+                    }
                 }
             }
             let ret = !hasInclude || includePassed;
@@ -499,7 +509,7 @@ namespace tileworld {
                     return false;
                 witnesses.push(includeWitness);
             }
-            return ret;
+            return ret && (!hasInclude2 || include2Passed);
         }
 
         private manhattan(col: number, row: number) {
