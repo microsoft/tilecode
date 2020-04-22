@@ -187,9 +187,9 @@ settings.writeBuffer("TW2-RuleB0", hex`
 // buffer length = 8
 settings.writeBuffer("TW2-RuleB4", hex`
 4116220001120002`);
-// buffer length = 18
+// buffer length = 20
 settings.writeBuffer("TW2-RuleB10", hex`
-222622000122230010260501020203000203`);
+2226220001322300102605010202040203000203`);
 settings.writeNumber("TW2-PlayerN",0);
 }
 
@@ -245,18 +245,18 @@ settings.writeBuffer("TW1-SpriteI3", hex`
 1010f0f0707f801f751f601f951f501f353f351f501f251f301f251f501f251f301f251f501f251f
 301f251f501f251f301f251f501f353f351f501f951f601f751f807ff0f060`);
 settings.writeNumber("TW1-HelpN",0);
-// buffer length = 32
+// buffer length = 34
 settings.writeBuffer("TW1-RuleB0", hex`
-6143220001242100012423000124120000160300010103000101030001010603`);
-// buffer length = 32
+61432200012421000124230001241200002603000101030001010300010106030402`);
+// buffer length = 34
 settings.writeBuffer("TW1-RuleB1", hex`
-6143220010242100102423001024120000160300010103000101030001010603`);
+61432200102421001024230010241200002603000101030001010300010106030402`);
 // buffer length = 18
 settings.writeBuffer("TW1-RuleB2", hex`
 61302200151632043f061200001600030603`);
-// buffer length = 32
+// buffer length = 34
 settings.writeBuffer("TW1-RuleB3", hex`
-6143220004242300042421000424120000160300010103000101030001010603`);
+61432200042423000424210004241200002603000101030001010300010106030402`);
 // buffer length = 8
 settings.writeBuffer("TW1-RuleB5", hex`
 401022f340160102`);
@@ -283,6 +283,7 @@ settings.writeBuffer("TW1-RuleB10", hex`
 6156223f151621c0000612c0000623c0000632c000060101`);
 settings.writeNumber("TW1-PlayerN",0);
 }
+
 
 function createLeftHandWall() {
 settings.writeString("TW4-VersionS","4.0.0");
