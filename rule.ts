@@ -64,7 +64,7 @@ enum SpriteArg {
 // only Win, Lose implemented so far
 enum GameArg {
     Win, Lose, 
-    ScoreUp,
+    ScoreUp10,
     NextLevel
 }
 

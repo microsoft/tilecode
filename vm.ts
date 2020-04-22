@@ -68,6 +68,7 @@ namespace tileworld {
     // the interpreter state
     class VMState {
         // core state
+        public score: number; 
         public game: GameState;             // see type   
         public sprites: TileSprite[][];     // the sprites, sorted by kind
         public blockedSpriteKinds: number[];
@@ -391,6 +392,8 @@ namespace tileworld {
                     case CommandType.Game: {
                         if (arg == GameArg.Win || arg == GameArg.Lose) {
                             this.vm.game = arg == GameArg.Win ? GameState.Won : GameState.Lost;
+                        } else if (arg == GameArg.ScoreUp10) {
+                            this.vm.score += 10;
                         }
                         break;
                     }
@@ -658,6 +661,7 @@ namespace tileworld {
             this.signal = null;
             this.state = new VMState();
             this.state.game = GameState.InPlay;
+            this.state.score = 0;
             this.state.sprites = [];
             const currScene = game.currentScene();
             currScene.tileMap = new tiles.legacy.LegacyTilemap(TileScale.Sixteen, this.debug ? 2 : 0);
@@ -747,8 +751,13 @@ namespace tileworld {
                     halfway = true;
                 }
             });
+            
+            game.onShade(() => {
+                screen.print("Score: "+this.state.score.toString(), 0, 0);
+            })
 
             game.onPaint(() => {
+                
                 // debugger here
                 if (this.debug) {
                     screen.drawImage(debug, 0, 0)
