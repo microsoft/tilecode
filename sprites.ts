@@ -988,22 +988,6 @@ export const negate = img`
 
 // lists that parameterize (mainly) the rule editor
 
-// IMPORTANT: the order of direction-oriented images matches directions from rule.ts
-export const moveImages = [leftArrow, upArrow, rightArrow, downArrow, stopSign, uTurn];
-export const movedImages = [leftArrowOutline, upArrowOutline, rightArrowOutline, downArrowOutline, restingOutline, allFourOutline, anyOutline];
-export const moveText = ["left", "up", "right", "down", "stop", "u-turn"];
-export const buttonImages = [leftButton, upButton, rightButton, downButton, AButton];
 
-// this mapping has a level of indirection, allowing reorganization of the UI
-export const attrValues = [AttrType.Include,  AttrType.Include2, AttrType.Exclude, AttrType.OK ];
-export const attrImages = [include, include2, exclude, ok ];
-
-// top-level command categories (instructions)
-export const categoryImages = [allFour, paint, spawn, eat, gameIcon, teleport, exclude ];
-export const categoryText = ["move", "paint", "spawn", "destroy",  "game", "portal", "block"];
-
-// arguments to instructions here
-export const gameImages = [ trophyUp, trophyDown, scoreUp10 ];
-export const gameText = [ "win", "lose", "score+10" ];
 
 }

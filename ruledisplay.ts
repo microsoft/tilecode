@@ -1,4 +1,18 @@
-namespace tileworld {
+namespace tileworld.ruleediting {
+
+    // IMPORTANT: the order of direction-oriented images matches directions from rule.ts
+    export const moveImages = [leftArrow, upArrow, rightArrow, downArrow, stopSign, uTurn];
+    export const movedImages = [leftArrowOutline, upArrowOutline, rightArrowOutline, downArrowOutline, restingOutline, allFourOutline, anyOutline];
+    export const moveText = ["left", "up", "right", "down", "stop", "u-turn"];
+    export const buttonImages = [leftButton, upButton, rightButton, downButton, AButton];
+
+    // this mapping has a level of indirection, allowing reorganization of the UI
+    export const attrValues = [AttrType.Include,  AttrType.Include2, AttrType.Exclude, AttrType.OK ];
+    export const attrImages = [include, include2, exclude, ok ];
+
+    // arguments to instructions here
+    export const gameImages = [ trophyUp, trophyDown, scoreUp10 ];
+    export const gameText = [ "win", "lose", "score+10" ];
 
     export const editorRow = 2;
     
@@ -60,13 +74,29 @@ namespace tileworld {
 
         protected collideCol: number;
         protected collideRow: number;
-
         protected showCollision(col: number, row: number, dir: MoveDirection, arrowImg: Image, rt: RuleType) {
-            super.showCollision(col, row, dir, arrowImg, rt);
             this.collideCol = col;
             this.collideRow = row - editorRow;
+            this.drawImage(col, row, collisionSprite);
+            let x = (dir == MoveDirection.Left) ? 7 : (dir == MoveDirection.Right) ? -7 : 0;
+            let y = (dir == MoveDirection.Up) ? 7 : (dir == MoveDirection.Down) ? -7 : 0;
+            this.drawImageAbs((col << 4) + x, (row << 4) + yoff + y, arrowImg);
         }
 
+        protected showRuleType(rt: RuleType, rd: MoveRest, x: number, y: number, center: boolean = true) {
+            let selCol = 11;
+            if (center) this.drawImage(x, y, this.centerImage());
+            if (rt == RuleType.ContextChange) {
+                this.drawImage(x, y, movedImages[rd])
+            } else if (rt == RuleType.Collision) {
+                let ax = rd == MoveDirection.Left ? 1 : (rd == MoveDirection.Right ? -1 : 0)
+                let ay = rd == MoveDirection.Down ? -1 : (rd == MoveDirection.Up ? 1 : 0)
+                this.showCollision(x - ax, y - ay, rd, moveImages[rd], rt);
+            } else if (rt == RuleType.NegationCheck) {
+                this.drawImage(x, y, negate);
+            }
+        }
+        
         protected update() {
             this.collideCol = this.collideRow = -1;
             screen.fill(0);

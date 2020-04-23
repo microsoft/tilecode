@@ -1,10 +1,14 @@
-namespace tileworld {
+namespace tileworld.ruleediting {
 
     // ------------------------------------------------------------------------------------
     // the rule editor
 
     enum RuleEditorMenus { MainMenu, AttrTypeMenu, DirExprMenu, CommandMenu };
     enum CommandTokens { Delete = 100 };
+
+    // top-level command categories (instructions)
+    const categoryImages = [allFour, paint, spawn, eat, gameIcon, teleport, exclude ];
+    const categoryText = ["move", "paint", "spawn", "destroy",  "game", "portal", "block"];
 
     const menuHelpString = "10map,20play,30debug,50generalize rule,60delete rule,80add rule,90next rule,70previous rule,";
     const attrHelpString = "00include,10exclude,90reset,";

@@ -38,7 +38,7 @@ namespace tileworld {
                     new ImageEditor(new AllExport(this.p));
                 } else if (command == code) {
                     game.pushScene();
-                    new RuleRoom(this.p);
+                    new ruleediting.RuleRoom(this.p);
                 } else if (this.col() == 9 && this.row() == 0) {
                     game.pushScene();
                     new ProjectSettings(this.p);
