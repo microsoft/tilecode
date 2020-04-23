@@ -262,18 +262,18 @@ namespace tileworld {
             // remember where we are
             this.setTileSaved();
             this.currentCommand = cmd;
-            // creat the menu
+            // create the menu
             if (this.rule.getCmdInst(this.whenDo, cmd) == 0xff) {
                 this.showCommandsAt(row, newCol, newRow, false);
-                this.makeCommandMenu(0xff,0xff);
+                this.makeCommandMenu(this.tokens.length > 0 ? this.tokens[0] : 0xff,0xff,true);
             } else {
                 this.tokens = [];
-                this.modifyCommandMenu();
+                this.modifyCommandMenu(true);
             }
             return true;
         }
 
-        private makeCommandMenu(inst: number, arg: number) {
+        private makeCommandMenu(inst: number, arg: number, inEdit: boolean = false) {
             let col = 3;
             let row = 0;
             // show the categories
@@ -281,12 +281,29 @@ namespace tileworld {
             this.tokens.forEach(ct => {
                 this.drawImage(col, row, ct < CommandType.Last ? categoryImages[ct] : garbageCan);
                 this.drawOutline(col, row);
-                if (inst == ct) this.drawImage(col, row, cursorOut);
+                if (inst == ct) { 
+                    this.drawImage(col, row, cursorOut);
+                    if (inEdit) {
+                        this.setCol(col);
+                        this.setRow(row);
+                    }
+                }
                 this.ruleTypeMap.setPixel(col, row, ct);
                 col++;
             });
             if (inst != 0xff) {
-                this.makeArgMenu(inst, arg);
+                this.makeArgMenu(inst, arg, inEdit);
+            }
+        }
+
+        private modifyCommandMenu(inEdit: boolean = false) {
+            let inst = this.rule.getCmdInst(this.whenDo, this.currentCommand);
+            let arg = this.rule.getCmdArg(this.whenDo, this.currentCommand);
+            if (this.tokens.length > 0) {
+                this.makeCommandMenu(inst, arg, inEdit);
+            } else if (inst != 0xff) {
+                this.tokens = [inst, CommandTokens.Delete ];
+                this.makeCommandMenu(inst, arg, inEdit);
             }
         }
 
@@ -321,7 +338,7 @@ namespace tileworld {
             return 0;
         }
 
-        private makeArgMenu(inst: number, arg: number) {
+        private makeArgMenu(inst: number, arg: number, inEdit: boolean) {
             let col = 4;
             let row = 1;
             this.dirMap.fill(0xf);
@@ -329,20 +346,15 @@ namespace tileworld {
             for (let i = this.instToStartArg(inst); i < last; i++) {
                 this.drawImage(col, row, this.instToImage(inst, i));
                 this.drawOutline(col, row);
-                if (arg == i) this.drawImage(col, row, cursorOut);
+                if (arg == i) { 
+                    this.drawImage(col, row, cursorOut);
+                    if (inEdit) {
+                        this.setCol(col);
+                        this.setRow(row);
+                    }
+                }
                 this.dirMap.setPixel(col, row, i);
                 col++;
-            }
-        }
-
-        private modifyCommandMenu() {
-            let inst = this.rule.getCmdInst(this.whenDo, this.currentCommand);
-            let arg = this.rule.getCmdArg(this.whenDo, this.currentCommand);
-            if (this.tokens.length > 0) {
-                this.makeCommandMenu(inst, arg);
-            } else if (inst != 0xff) {
-                this.tokens = [inst, CommandTokens.Delete ];
-                this.makeCommandMenu(inst, arg);
             }
         }
 
@@ -366,6 +378,7 @@ namespace tileworld {
                             this.setCommand(tok, this.instToStartArg(tok));
                         else
                             this.setCommand(tok, 0xff);
+                        // TODO: smarter placement of cursor
                         this.cursor.y += 16;
                         this.helpCursor.say(null);
                     }
