@@ -2,7 +2,7 @@ namespace tileworld {
 
     const transformMap = [ RuleTransforms.None, RuleTransforms.HorzMirror, RuleTransforms.VertMirror, 
                            RuleTransforms.LeftRotate, RuleTransforms.RightRotate, RuleTransforms.Rotate3Way];
-    const transformImages = [ yellowSprite, flipHoriz, flipVert, leftRotate, rightRotate, rotate3way];
+    const transformImages = [ transformedRule, flipHoriz, flipVert, leftRotate, rightRotate, rotate3way];
 
     export class RuleViewDisplay extends RuleDisplay {
         private ruleViews: RuleView[];
@@ -56,7 +56,7 @@ namespace tileworld {
             // resulting rules
             let col = index+1;        
             this.ruleViews.forEach((rv, index) => {
-                this.drawImage(col+index, 1, yellowSprite);
+                this.drawImage(col+index, 1, transformedRule);
             });
         }
     }
