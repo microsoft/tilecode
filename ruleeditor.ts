@@ -374,12 +374,9 @@ namespace tileworld {
                     if (this.p.help) this.helpCursor.say(categoryText[tok]);
                 } else {
                     if (tok != inst) {
-                        if (this.instToNumArgs(tok) == 0)
-                            this.setCommand(tok, this.instToStartArg(tok));
-                        else
-                            this.setCommand(tok, 0xff);
-                        // TODO: smarter placement of cursor
-                        this.cursor.y += 16;
+                        this.setCommand(tok, this.instToStartArg(tok));
+                        this.setCol(4);
+                        this.setRow(1);
                         this.helpCursor.say(null);
                     }
                 }
