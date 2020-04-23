@@ -1,121 +1,120 @@
-// enums must fit in 4 bits (16 values maximum)
-
-// the first three rule types should have a self (centered) witness sprite
-// that is moving in a direction from MoveDirection
-
-// the collision rule has two identified sprites (self, other)
-// the self sprite has a direction in MoveDirection 
-// other other sprite is either Resting, Moving, or AnyDir
-
-enum RuleType {
-    ButtonPress,    // user button press
-    ContextChange,  // neighborhood changed
-    Collision,      // sprite collision
-    NegationCheck,  // check spec
-    FirstRule = ButtonPress,
-    LastRule = NegationCheck
-};
-
-// directions are 0-3 and move clockwise
-enum MoveDirection {
-    Left, Up, Right, Down
-}
-
-const Resting = 4;
-const Moving = 5;
-const AnyDir = 6;
-
-type Resting = 4;
-type Moving = 5;
-type AnyDir = 6;
-
-type MoveRest = MoveDirection | Resting
-
-type MoveExpr = MoveRest | Moving | AnyDir;
-
-enum ButtonArg {
-    Left, Up, Right, Down, A, B
-}
-
-type RuleArg = number | ButtonArg;
-
-enum CommandType {
-    Move,           // sprite move in (MoveDirection) + Stop, UTurn
-    Paint,          // paint a tile with a background
-    Spawn,          // spawn a sprite at a tile going in a direction (requires 4-bits for sprite and 4-bits for direction)
-    Sprite,         // various commands for sprites
-    Game,           // various top-level game commands
-    Teleport,       // change location to a tile of particular background (random)
-    BlockSpriteRules, // in the next round, don't allow rules on sprite kind
-    Last,
-}
-
-// arguments to Move command (the last two are only used in Colliding rules)
-enum MoveArg {
-    Left, Up, Right, Down,
-    Stop, UTurn,
-}
-
-// arguments to affect the state of the sprite (other than movement)
-enum SpriteArg {
-    Remove,         // self sprite eats the other sprite
-}
-
-// only Win, Lose implemented so far
-enum GameArg {
-    Win, Lose, 
-    ScoreUp10,
-    NextLevel
-}
-
-enum AttrType {
-    OK,        // don't care
-    Include,   // tile must contain one from this
-    Include2,  // second include set
-    Exclude,   // tile cannot contain this
-}
-
-class Command {
-    constructor(
-        public inst: CommandType,                           // one byte
-        public arg: MoveArg | SpriteArg | GameArg | number  // one byte
-    ) { }
-}
-
-const MaxCommands = 4;
-
-// a tile "predicate" at (col,row), where (2,2) is center and associated commands
-// ties together coordinate, predicate, and actions. It's useful to pair the first
-// two since we don't expect many predicates 
-class WhenDo {
-    constructor(
-        public col: number,             // the guards and commands associated with a tile in the neighborhood
-        public row: number,             // (2,2) is the center of neighborhood, graphics coordinate system
-        public bgPred: Buffer = null,   // predicate on background (2 bits per background)
-        public spPred: Buffer = null,   // predicate on sprites (2 bits for sprite)
-        public dir: MoveDirection = 0, // direction to match against (for movable sprite)
-        public commands: Buffer = null, // the commands that execute if the guard succeeds (2 bytes per command)
-        public commandsLen: number = 0
-    ) { 
-        this.dir = AnyDir;   // because we can't put AnyDir as default
-    }
-}
-
-// Rotate3Way = {LeftRotate, RightRotate, DoubleRotate}
-enum RuleTransforms { Begin=0, None=0, HorzMirror, VertMirror, LeftRotate, DoubleRotate, RightRotate, Rotate3Way, End=Rotate3Way };
-
-class Rule {
-    constructor( 
-        public ruleType: RuleType,  // the type of rule
-        public ruleArg: number,     // rule argument
-        public whenDo: WhenDo[],    // guarded commands
-        public transforms: RuleTransforms = RuleTransforms.None
-    ) { }
-}
-
-// transform: FlipRotate of rule with different id
-
 namespace tileworld {
+    // enums must fit in 4 bits (16 values maximum)
+
+    // the first three rule types should have a self (centered) witness sprite
+    // that is moving in a direction from MoveDirection
+
+    // the collision rule has two identified sprites (self, other)
+    // the self sprite has a direction in MoveDirection 
+    // other other sprite is either Resting, Moving, or AnyDir
+
+    export enum RuleType {
+        ButtonPress,    // user button press
+        ContextChange,  // neighborhood changed
+        Collision,      // sprite collision
+        NegationCheck,  // check spec
+        FirstRule = ButtonPress,
+        LastRule = NegationCheck
+    };
+
+    // directions are 0-3 and move clockwise
+    export enum MoveDirection {
+        Left, Up, Right, Down
+    }
+
+    export const Resting = 4;
+    export const Moving = 5;
+    export const AnyDir = 6;
+
+    export type Resting = 4;
+    export type Moving = 5;
+    export type AnyDir = 6;
+
+    export type MoveRest = MoveDirection | Resting
+
+    export type MoveExpr = MoveRest | Moving | AnyDir;
+
+    export enum ButtonArg {
+        Left, Up, Right, Down, A, B
+    }
+
+    export type RuleArg = number | ButtonArg;
+
+    export enum CommandType {
+        Move,           // sprite move in (MoveDirection) + Stop, UTurn
+        Paint,          // paint a tile with a background
+        Spawn,          // spawn a sprite at a tile going in a direction (requires 4-bits for sprite and 4-bits for direction)
+        Sprite,         // various commands for sprites
+        Game,           // various top-level game commands
+        Teleport,       // change location to a tile of particular background (random)
+        BlockSpriteRules, // in the next round, don't allow rules on sprite kind
+        Last,
+    }
+
+    // arguments to Move command (the last two are only used in Colliding rules)
+    export enum MoveArg {
+        Left, Up, Right, Down,
+        Stop, UTurn,
+    }
+
+    // arguments to affect the state of the sprite (other than movement)
+    export enum SpriteArg {
+        Remove,         // self sprite eats the other sprite
+    }
+
+    // only Win, Lose implemented so far
+    export enum GameArg {
+        Win, Lose, 
+        ScoreUp10,
+        NextLevel
+    }
+
+    export enum AttrType {
+        OK,        // don't care
+        Include,   // tile must contain one from this
+        Include2,  // second include set
+        Exclude,   // tile cannot contain this
+    }
+
+    export class Command {
+        constructor(
+            public inst: CommandType,                           // one byte
+            public arg: MoveArg | SpriteArg | GameArg | number  // one byte
+        ) { }
+    }
+
+    export const MaxCommands = 4;
+
+    // a tile "predicate" at (col,row), where (2,2) is center and associated commands
+    // ties together coordinate, predicate, and actions. It's useful to pair the first
+    // two since we don't expect many predicates 
+    export class WhenDo {
+        constructor(
+            public col: number,             // the guards and commands associated with a tile in the neighborhood
+            public row: number,             // (2,2) is the center of neighborhood, graphics coordinate system
+            public bgPred: Buffer = null,   // predicate on background (2 bits per background)
+            public spPred: Buffer = null,   // predicate on sprites (2 bits for sprite)
+            public dir: MoveDirection = 0, // direction to match against (for movable sprite)
+            public commands: Buffer = null, // the commands that execute if the guard succeeds (2 bytes per command)
+            public commandsLen: number = 0
+        ) { 
+            this.dir = AnyDir;   // because we can't put AnyDir as default
+        }
+    }
+
+    // Rotate3Way = {LeftRotate, RightRotate, DoubleRotate}
+    export enum RuleTransforms { Begin=0, None=0, HorzMirror, VertMirror, LeftRotate, DoubleRotate, RightRotate, Rotate3Way, End=Rotate3Way };
+
+    export class Rule {
+        constructor( 
+            public ruleType: RuleType,  // the type of rule
+            public ruleArg: number,     // rule argument
+            public whenDo: WhenDo[],    // guarded commands
+            public transforms: RuleTransforms = RuleTransforms.None
+        ) { }
+    }
+
+    // transform: FlipRotate of rule with different id
 
     export function makeNewRule(rt: RuleType, ra: RuleArg): Rule {
         return new Rule(rt, ra, []);
