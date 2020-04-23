@@ -542,6 +542,7 @@ export const AButton = img`
 `
 
 // rule transforms
+
 export const flipHoriz = img`
     . . . . . . . . . . . . . . . .
     . . . . . b b . . 9 9 . . . . .
@@ -985,9 +986,4 @@ export const negate = img`
     . . . . . 2 2 2 2 2 2 2 . . . .
     . . . . . . . . . . . . . . . .
 `;
-
-// lists that parameterize (mainly) the rule editor
-
-
-
 }
