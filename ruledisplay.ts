@@ -58,12 +58,14 @@ namespace tileworld.ruleediting {
 
         private otherCursorMove() {
             if (this.col() >= 5 && this.row() >= editorRow) {
+                // map from Do section to When section
                 let row = this.row() - editorRow;
                 this.otherCursor.setFlag(SpriteFlag.Invisible, false);
                 // compute mapping from right to left hand side
                 this.otherCursor.x = this.rowToColCoord(row) * 16 + 8;
                 this.otherCursor.y = this.rowToRowCoord(row) * 16 + 8 + yoff + (editorRow *16);
             } else {
+                // TOD: map from When section to Do section
                 this.otherCursor.setFlag(SpriteFlag.Invisible, true);
             }
         }

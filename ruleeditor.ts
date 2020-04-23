@@ -14,34 +14,29 @@ namespace tileworld.ruleediting {
     const attrHelpString = "00include,10exclude,90reset,";
 
     export class RuleEditor extends RuleDisplay {
-
         // in-world menus
         private menu: RuleEditorMenus;  // which menu is active?
         // whendo state
         private attrSelected: number;
-
+        // command editing
         private whenDo: number;         // which WhenDo is being edited
         private currentCommand: number; // the current command (potentially null)
+        // hack: modal for deletion
         private askDeleteRule: boolean;
+        // views of base rule
+        private baseRule: RuleView;
+        private ruleViews: RuleView[];
         
         constructor(p: Project, rule: RuleView, private kind: number) {
             // kind optimization
             // - don't allow the kind to be removed from (2,2)
             // - make sure the kind is shown as witness for (2,2)
             super(p, rule);
-
+            this.baseRule = this.rule;
+            this.ruleViews = this.baseRule.getDerivedRules();
             this.setCol(0); this.setRow(0);
-
             this.askDeleteRule = false;
-
-            // attribute menu view
-            this.attrSelected = -1;
-
-            // Control
-            this.menu = RuleEditorMenus.MainMenu;
-
-            // refresh display
-            this.update();
+            this.mainMenu();
 
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 this.helpCursor.say(null);
@@ -53,7 +48,7 @@ namespace tileworld.ruleediting {
                         game.popScene();
                         return;
                     } else {
-                        this.rule = index < rules.length ? rules[index] : rules[index-1];
+                        this.resetRule(index < rules.length ? rules[index] : rules[index-1]);
                     }
                     this.askDeleteRule = false;
                 } else if (this.manhattanDistance2() <= 2) {
@@ -62,7 +57,7 @@ namespace tileworld.ruleediting {
                             this.menu = RuleEditorMenus.AttrTypeMenu;
                             this.setTileSaved();
                         } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
-                            this.noMenu();
+                            this.mainMenu();
                         }
                     }
                 } else if (this.menu == RuleEditorMenus.AttrTypeMenu && this.row() < 2) {
@@ -103,6 +98,7 @@ namespace tileworld.ruleediting {
                             this.p.saveRule(this.rule);
                             game.pushScene();
                             new RuleViewDisplay(this.p, this.rule);
+                            // TODO: on pop of above, need to refresh rules
                             return;
                         }
                     } else if (this.row() >= editorRow) {
@@ -126,7 +122,7 @@ namespace tileworld.ruleediting {
                 if (this.askDeleteRule) {
                     this.askDeleteRule = false;
                 } else if (this.menu != RuleEditorMenus.MainMenu) {
-                    this.noMenu();
+                    this.mainMenu();
                 } else {
                     this.saveAndPop();
                     return;
@@ -135,7 +131,7 @@ namespace tileworld.ruleediting {
             });
         }
 
-        private noMenu() {
+        private mainMenu() {
             if (this.menu == RuleEditorMenus.CommandMenu) {
                 // this should be encapsulated elsewhere
                 if (this.currentCommand < this.rule.getCmdsLen(this.whenDo) &&
@@ -157,7 +153,13 @@ namespace tileworld.ruleediting {
 
         private changeRule(rv: RuleView) {
             this.p.saveRule(this.rule);
+            this.resetRule(rv);
+        }
+
+        private resetRule(rv: RuleView) {
             this.rule = rv;
+            this.baseRule = rv;
+            this.ruleViews = this.baseRule.getDerivedRules();         
         }
 
         private saveAndPop() {
@@ -166,13 +168,18 @@ namespace tileworld.ruleediting {
         }
 
         protected currentRules() {
-            // we should sort this by ruletype and direction
+            // TODO: we should sort this by ruletype and direction
             return this.p.getRulesForSpriteKind(this.kind);
         }
 
         protected cursorMove(dir: MoveDirection, pressed: boolean) {
             if (this.menu == RuleEditorMenus.MainMenu) {
                 super.cursorMove(dir, pressed);
+                if (this.ruleViews.length > 0 && this.row() == 1 && this.col() >= 5 && this.col() < 5 + this.ruleViews.length) {
+                    this.rule = this.ruleViews[this.col() - 5];
+                } else {
+                    this.rule = this.baseRule;
+                }
             } 
             if (this.p.help) {
                 this.helpCursor.x = this.col() < 6 ? this.cursor.x + 16 : this.cursor.x - 16;
@@ -241,6 +248,11 @@ namespace tileworld.ruleediting {
             this.drawImage(9, 0, index < rules.length -1 ? rightArrow : greyImage(rightArrow));
             this.drawImage(8, 0, this.getType() != -1 ? addRule : greyImage(addRule));
             this.drawImage(7, 0, index > 0 ? leftArrow : greyImage(leftArrow));
+            if (this.ruleViews.length > 0) {
+                this.ruleViews.forEach((rv,i) => {
+                    this.drawImage(5+i, 1, code);
+                });
+            }
         }
 
         private tryEditCommand() {
@@ -371,7 +383,7 @@ namespace tileworld.ruleediting {
                     if (this.p.help) this.helpCursor.say("delete command");
                 } else {
                     let len = this.rule.removeCommand(this.whenDo, this.currentCommand);
-                    this.noMenu();
+                    this.mainMenu();
                 }
             } else if (this.row() == 0 && tok != 0xf) {
                 if (hover) {
@@ -391,7 +403,7 @@ namespace tileworld.ruleediting {
                     this.rule.setCmdArg(this.whenDo, this.currentCommand, arg);
                 }
             } else if (!hover && this.row() > 1) {
-                this.noMenu();
+                this.mainMenu();
             }
         }
 
