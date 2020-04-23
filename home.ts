@@ -1,7 +1,8 @@
 namespace tileworld {
 
     const helpString = "00map,10paint,20code,30play,90settings,";  // 40debug,50music
-    
+    const commandImages = [map, paint, code, play];
+
     export class GameHome extends RuleVisualsBase {
         constructor(p: Project) {
             super(p);
