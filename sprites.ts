@@ -997,10 +997,8 @@ export const attrValues = [AttrType.Include,  AttrType.Include2, AttrType.Exclud
 export const commandImages = [map, paint, code, play];
 export const gameImages = [ trophyUp, trophyDown, scoreUp10 ];
 export const gameText = [ "win", "lose", "score+10" ];
-export const categoryImages = [allFour, paint, spawn, genericSprite, gameIcon, teleport, exclude ];
-export const categoryText = ["move sprite", "paint tile", "spawn", "sprite",  "game", "teleport", "block"];
-export const spriteImages = [eat];
-export const spriteText = ["remove"];
+export const categoryImages = [allFour, paint, spawn, eat, gameIcon, teleport, exclude ];
+export const categoryText = ["move", "paint", "spawn", "destroy",  "game", "portal", "block"];
 
 
 }

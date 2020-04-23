@@ -304,7 +304,32 @@ namespace tileworld {
             let wcol = ts.col() + moveXdelta(ts.arg);
             let wrow = ts.row() + moveYdelta(ts.arg);
             this.collidingRules(ts, (rv) => {
+                /*
+                // to be consistent, we must check predicate at (3,2)
+                // but existence of sprite requires more collision checking simply
+                // looking for sprite at (3,2)
+
+                // TODO: (1) check for background at(wcol, wrow)
+                // TODO: (2) do the following code only if the rule has a possible sprite witness
+                // TODO: (3) no Exclude, Include2 in (3,2)
                 // T = (wcol, wrow)
+                let wd = rv.getWhenDo(2,3);
+                let processBg = false;
+                for(let i =0;i<this.p.backCnt();i++) {
+                    if (rv.getSetBgAttr(wd,i) != AttrType.OK) {
+                        processBg = true;
+                        break;
+                    }
+                }
+                if (processBg) {
+                    // check predicate and don't look for witness??
+                }
+                // kinds of sprites in (2,3)
+*/
+                // if there is no include on sprite then don't do following check
+                // TODO: this is inefficient, what we really need is a way to look
+                // TODO: up sprites at (2,3), (3,3), (1,3), and (2,4)
+                // TODO: but we have no indices.
                 this.allSprites(os => {
                     if (os == ts) return;
                     // (a) os in square T, resting or moving towards ts, or
@@ -344,6 +369,7 @@ namespace tileworld {
             let wrow = ts.row() + moveYdelta(ts.arg);
             // we already have the witness
             let witnesses: TileSprite[] = [ os ];
+            // TODO: no need to do this evaluation 
             if (this.evaluateWhenDo(ts, rv, 2+moveXdelta(ts.arg), 2+moveYdelta(ts.arg), witnesses)) {
                 rcs.push(new RuleClosure(rv, ts, witnesses));
             }

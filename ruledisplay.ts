@@ -140,7 +140,7 @@ namespace tileworld {
                     ret.drawTransparentImage(smallPaint, 0, 0);
                     return ret;
                 }
-                case CommandType.Sprite: return spriteImages[arg];
+                case CommandType.Sprite: return eat;
                 case CommandType.Game: return gameImages[arg];
                 case CommandType.Spawn: 
                 case CommandType.BlockSpriteRules:

@@ -224,6 +224,7 @@ namespace tileworld {
             let ret: number[] = [];
             for(let i=0; i < this.p.spriteCnt(); i++) {
                 let at = this.getSetSpAttr(wd, i);
+                // TODO: Include vs. Include2?
                 if (at == AttrType.Include || at == AttrType.Include2)
                     ret.push(i);
             }
@@ -232,6 +233,7 @@ namespace tileworld {
 
         public hasSpriteKind(kind: number) {
             let wd = this.getWhenDo(2, 2);
+            // TODO: Include vs. Include2?
             return wd == -1 ?  false : this.getSetSpAttr(wd, kind) == AttrType.Include
         }
 

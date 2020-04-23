@@ -302,7 +302,6 @@ namespace tileworld {
         private instToArgText(inst: number): string[] {
             switch (inst) {
                 case CommandType.Move: return moveText;
-                case CommandType.Sprite: return spriteText;
                 case CommandType.Game: return gameText;
                 default: break;
             }
@@ -313,7 +312,7 @@ namespace tileworld {
             switch (inst) {
                 case CommandType.Move: return this.getType() != RuleType.Collision ? 4 : 2;
                 case CommandType.Paint: return 4;
-                case CommandType.Sprite: return 1;
+                case CommandType.Sprite: return 0;
                 case CommandType.Game: return 3;
                 case CommandType.Spawn:
                 case CommandType.BlockSpriteRules: return this.p.spriteCnt();
@@ -363,7 +362,10 @@ namespace tileworld {
                     if (this.p.help) this.helpCursor.say(categoryText[tok]);
                 } else {
                     if (tok != inst) {
-                        this.setCommand(tok, 0xff); // this.instToStartArg(tok));
+                        if (this.instToNumArgs(tok) == 0)
+                            this.setCommand(tok, this.instToStartArg(tok));
+                        else
+                            this.setCommand(tok, 0xff);
                         this.cursor.y += 16;
                         this.helpCursor.say(null);
                     }
@@ -383,6 +385,8 @@ namespace tileworld {
             this.rule.setCmdInst(this.whenDo, this.currentCommand, inst);
             this.rule.setCmdArg(this.whenDo, this.currentCommand, arg);
         }
+
+        // -----------------------------------------------------------------
 
         protected showAttributes(col: number, row: number, show: boolean) {
             super.showAttributes(col, row, this.menu == RuleEditorMenus.MainMenu);
@@ -441,6 +445,8 @@ namespace tileworld {
                 val = AttrType.OK;
             this.all.getSetAttr(this.rule, whenDo, m, val)
         }
+
+        // -------------------------------------------------------------------
 
         private dirExprMenu() {
             movedImages.forEach((img, i) => {
