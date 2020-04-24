@@ -115,7 +115,6 @@ namespace tileworld.ruleediting {
                         }
                     }
                 }
-                this.update();
             })
 
             controller.B.onEvent(ControllerButtonEvent.Pressed, () => {
@@ -128,6 +127,10 @@ namespace tileworld.ruleediting {
                     return;
                 }
                 this.update();
+            });
+
+            game.addScenePopHandler(function (oldScene: scene.Scene) {
+                this.ruleViews = this.baseRule.getDerivedRules();
             });
         }
 
