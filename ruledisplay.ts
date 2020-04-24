@@ -153,12 +153,8 @@ namespace tileworld.ruleediting {
             for (let lr = 0; lr < 5; lr++) {
                 let col = this.rowToColCoord(lr);
                 let row = this.rowToRowCoord(lr);
-                if (this.active(col, row)) {
-                    let len = this.showCommandsAt(lr, col, row);
-                    this.commandLengths.push(len);
-                } else {
-                    this.commandLengths.push(-1);
-                }
+                let len = this.active(col, row) ? this.showCommandsAt(lr, col, row) : -1;
+                this.commandLengths.push(len);
             }
         }
 
@@ -192,19 +188,23 @@ namespace tileworld.ruleediting {
 
         protected tokens: number[];
         protected showCommandsAt(crow: number, wcol: number, wrow: number, draw: boolean = true) {
+            // TODO: need to special case on rule type
+            // TODO: - collision (no direction expression on central sprite)
+            // TODO: - negation (no witness)
             if (draw) {
-                // TODO: fix this up
+                // draw the sprite witness, if any
                 let kind = this.rule.findWitnessColRow(wcol, wrow);
-                let img1 = this.collideCol == wcol && this.collideRow == wrow ? collisionSprite : genericSprite;
-                let img2 = kind == -1 ? img1 : this.getWhenDoImage(wcol, wrow);
-                this.drawImage(5, crow + editorRow, img2);
+                let img = kind == -1 ? genericSprite : this.getWhenDoImage(wcol, wrow);
+                this.drawImage(5, crow + editorRow, img);
+                // overlay the direction
                 if (kind != -1 && this.getType() != RuleType.Collision) {
                     let whendo = this.rule.getWhenDo(wcol, wrow);
                     this.drawImage(5, crow + editorRow, movedImages[this.rule.getWitnessDirection(whendo)])
                 } 
                 if (this.p.help) {
+                    // print the rows numbers in the Do section
                     screen.print((crow +1).toString(), (5 << 4) + 10, ((editorRow + crow) << 4)+13);
-                    // do it in the when-do as well
+                    // where they lie in the When section
                     screen.print((crow + 1).toString(), (wcol << 4) + 10, ((editorRow + wrow) << 4) + 13);
                 }
             }
@@ -246,14 +246,13 @@ namespace tileworld.ruleediting {
         private startTokens(col: number, row: number) {
             let tokens: number[] = [];
             if (this.rule.findWitnessColRow(col, row) != -1) {
-                tokens.push(CommandType.Move);
-                tokens.push(CommandType.Sprite);
+                tokens = [CommandType.Move, CommandType.Sprite];
             }
-            tokens.push(CommandType.Paint);
-            tokens.push(CommandType.Spawn);
-            tokens.push(CommandType.BlockSpriteRules);
-            tokens.push(CommandType.Teleport);
-            tokens.push(CommandType.Game);
+            tokens = tokens.concat([
+                CommandType.Paint, CommandType.Spawn, 
+                CommandType.BlockSpriteRules, CommandType.Teleport,
+                CommandType.Game
+            ]);
             return tokens;
         }
 
@@ -274,13 +273,14 @@ namespace tileworld.ruleediting {
             let whenDo = this.rule.getWhenDo(col, row);
             if (whenDo == -1)
                 return ok;
-            // if there is an include or single oneOf, show it.
+            // look up includes and excludes
             let include = this.attrIndex(whenDo, AttrType.Include);
             let include2 = include == -1 ? -1 : this.attrIndex(whenDo, AttrType.Include, include + 1);
             let exclude = this.attrIndex(whenDo, AttrType.Exclude);
             let exclude2 = exclude == -1 ? -1 : this.attrIndex(whenDo, AttrType.Exclude, exclude + 1);
+            // favor includes over excludes
             let index = include == -1 ? exclude : include;
-            // and skip to the other (if it exists)
+            // do split images when there are multiple includes/excludes 
             if (include != -1 && include2 != -1)
                 return splitImage(this.all.getImage(include), this.all.getImage(include2));
             else if (include == -1 && exclude != -1 && exclude2 != -1)
@@ -308,7 +308,7 @@ namespace tileworld.ruleediting {
                 if (this.getType() != RuleType.Collision && this.rule.findWitnessColRow(col, row) != -1) {
                     this.drawImage(col, row + editorRow, movedImages[this.rule.getWitnessDirection(whenDo)])
                 }
-                // peek into attributions
+                // ginve a peek into attributions under the main menu
                 if (show && this.col() == col && this.row() - editorRow == row) {
                     let x = 0;
                     screen.fillRect(0, 16 + yoff, 160, 16, 0);

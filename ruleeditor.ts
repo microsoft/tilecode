@@ -417,6 +417,9 @@ namespace tileworld.ruleediting {
 
         // -----------------------------------------------------------------
 
+        // TODO:
+        // - for collision rule, only Include
+
         protected showAttributes(col: number, row: number, show: boolean) {
             super.showAttributes(col, row, this.menu == RuleEditorMenus.MainMenu);
         }
