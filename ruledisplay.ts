@@ -197,7 +197,7 @@ namespace tileworld.ruleediting {
                 let img = kind == -1 ? genericSprite : this.getWhenDoImage(wcol, wrow);
                 this.drawImage(5, crow + editorRow, img);
                 // overlay the direction
-                if (kind != -1 && this.getType() != RuleType.Collision) {
+                if (kind != -1 && (this.getType() != RuleType.Collision || wcol != 2 || wrow != 2)) {
                     let whendo = this.rule.getWhenDo(wcol, wrow);
                     this.drawImage(5, crow + editorRow, movedImages[this.rule.getWitnessDirection(whendo)])
                 } 
