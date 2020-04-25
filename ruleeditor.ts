@@ -93,7 +93,6 @@ namespace tileworld.ruleediting {
                             this.p.saveRule(this.rule);
                             game.pushScene();
                             new RuleViewDisplay(this.p, this.rule);
-                            // TODO: on pop of above, need to refresh rules
                             return;
                         }
                     } else if (this.row() >= editorRow) {
@@ -102,7 +101,9 @@ namespace tileworld.ruleediting {
                         } else if (this.col() == 5 && this.row() < editorRow + 5) {
                             let col = this.rowToColCoord(this.row() - editorRow);
                             let row = this.rowToRowCoord(this.row() - editorRow);
-                            if (this.rule.findWitnessColRow(col, row) != -1) {
+                            if (this.rule.findWitnessColRow(col, row) != -1 &&
+                                // don't allow direction change on central sprite in collision rule
+                                (this.rule.getRuleType() != RuleType.Collision || col != 2 || row != 2 )) { 
                                 this.menu = RuleEditorMenus.DirExprMenu;
                                 this.whenDo = this.rule.getWhenDo(col, row);
                                 this.setTileSaved();

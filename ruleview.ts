@@ -43,11 +43,6 @@ namespace tileworld {
             return -1;
         }
 
-        private rawView() {
-             return this.view == RuleTransforms.LeftRotate ? RuleTransforms.RightRotate : 
-                   (this.view == RuleTransforms.RightRotate ? RuleTransforms.LeftRotate: this.view);
-        }
-
         public getTransforms() {
             return this.r.transforms;
         }
@@ -88,6 +83,11 @@ namespace tileworld {
             return AnyDir;
         }
         
+        private rawView() {
+             return this.view == RuleTransforms.LeftRotate ? RuleTransforms.RightRotate : 
+                   (this.view == RuleTransforms.RightRotate ? RuleTransforms.LeftRotate: this.view);
+        }
+
         public getWhenDo(col: number, row: number) {
             if (this.rid == -1) {
                 let ncol = transformCol(col, row, this.rawView());
