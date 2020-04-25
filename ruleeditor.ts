@@ -412,18 +412,26 @@ namespace tileworld.ruleediting {
             let whenDo = this.rule.getWhenDo(col, row);
             if (whenDo == -1)
                 whenDo = this.rule.makeWhenDo(col, row);
+            this.whenDo = whenDo;
+            let collision22 = this.rule.getRuleType() == RuleType.Collision && col == 2 && row == 2;
             // for all user-defined sprites
             attrImages.forEach((img, i) => {
-                if (i >= 3) return;  // no oneof
+                if (this.rule.getRuleType() == RuleType.Collision && i > 0)
+                    return;
+                if (i >= 3) 
+                    return;  // no OK sprite
                 // draw 8x8 sprites centered
                 screen.drawTransparentImage(img, (i << 4) + 4, yoff + 4);
                 this.drawOutline(i, 0);
             });
+            let aCol = 0;
             this.all.getImages().forEach((image, i ) => {
+                if (collision22 && i<this.p.backCnt())
+                    return;
                 let a = this.all.getSetAttr(this.rule, whenDo, i);
-                this.drawImage(i, 1, image);
-                this.drawImage(i, 1, attrImages[attrValues.indexOf(a)]);
-                this.dirMap.setPixel(i, 1, a);
+                this.drawImage(aCol, 1, image);
+                this.drawImage(aCol, 1, attrImages[attrValues.indexOf(a)]);
+                aCol++;
             });
             if (this.attrSelected == -1)
                 this.selectAttr(0);
@@ -436,6 +444,9 @@ namespace tileworld.ruleediting {
         }
 
         private attrUpdate() {
+            let collision22 = this.rule.getRuleType() == RuleType.Collision 
+                && this.rule.getWhenDoCol(this.whenDo) == 2
+                && this.rule.getWhenDoRow(this.whenDo) == 2;
             let a = this.row() == 0 ? this.col() : -1
             if (a == 9) {
                 // reset attributes
@@ -444,13 +455,13 @@ namespace tileworld.ruleediting {
                 }
                 return;
             }
-            if (a != -1 && a < 3) { 
+            if (a != -1 && a < 3 && this.rule.getRuleType() != RuleType.Collision) { 
                 this.selectAttr(a); return; 
             }
             let m = this.row() == 1 ? this.col() : -1; 
-            if (m != -1 && m < this.p.allCnt()) { 
+            if (m != -1 && (!collision22 && m< this.p.allCnt() || collision22 && m<this.p.backCnt())) { 
                 let val = attrValues[this.attrSelected];
-                this.setAttr(m, val, true);
+                this.setAttr(!collision22 ? m : m+this.p.backCnt(), val, true);
             }
         }
 

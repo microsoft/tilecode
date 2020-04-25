@@ -112,6 +112,14 @@ namespace tileworld {
             return this.r.whenDo.length - 1;
         }
 
+        public getWhenDoCol(whendo: number) {
+            return this.r.whenDo[whendo].col;
+        }
+
+        public getWhenDoRow(whendo: number) {
+            return this.r.whenDo[whendo].row;
+        }
+
         private getSetBuffAttr(buf: Buffer, index: number, val: number) {
             let byteIndex = index >> 2;
             let byte = buf.getUint8(byteIndex);
