@@ -177,9 +177,9 @@ namespace tileworld.ruleediting {
                     ret.drawTransparentImage(inst == CommandType.Spawn ? spawn : exclude, 0, 0);
                     return ret;
                 }
-                case CommandType.Teleport: {
+                case CommandType.Portal: {
                     let ret = this.p.backgroundImages()[arg].clone();
-                    ret.drawTransparentImage(teleport, 0, 0);
+                    ret.drawTransparentImage(portal, 0, 0);
                     return ret;
                 }
             }
@@ -250,7 +250,7 @@ namespace tileworld.ruleediting {
             }
             tokens = tokens.concat([
                 CommandType.Paint, CommandType.Spawn, 
-                CommandType.BlockSpriteRules, CommandType.Teleport,
+                CommandType.BlockSpriteRules, CommandType.Portal,
                 CommandType.Game
             ]);
             return tokens;

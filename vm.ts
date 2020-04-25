@@ -303,60 +303,59 @@ namespace tileworld {
             if (!this.moving(ts)) return rcs;
             let wcol = ts.col() + moveXdelta(ts.arg);
             let wrow = ts.row() + moveYdelta(ts.arg);
+            if (!this.inBounds(wcol, wrow))
+                return rcs;
+            const tm = game.currentScene().tileMap;
             this.collidingRules(ts, (rv) => {
-                /*
-                // to be consistent, we must check predicate at (3,2)
-                // but existence of sprite requires more collision checking simply
-                // looking for sprite at (3,2)
-
-                // TODO: (1) check for background at(wcol, wrow)
-                // TODO: (2) do the following code only if the rule has a possible sprite witness
-                // TODO: (3) no Exclude, Include2 in (3,2)
-                // T = (wcol, wrow)
-                let wd = rv.getWhenDo(2,3);
-                let processBg = false;
-                for(let i =0;i<this.p.backCnt();i++) {
-                    if (rv.getSetBgAttr(wd,i) != AttrType.OK) {
-                        processBg = true;
-                        break;
+                // special case here because just one cell to check
+                // background on and only for Include
+                let wd = rv.getWhenDo(2+moveXdelta(ts.arg), 2+moveYdelta(ts.arg));
+                let includePassed: boolean = false;
+                for(let kind = 0; kind < this.p.backCnt(); kind++) {
+                    if (rv.getSetBgAttr(wd, kind) == AttrType.Include) {
+                        if (tm.getTileIndex(wcol, wrow) == kind) {
+                            rcs.push(new RuleClosure(rv, ts, [ ]));  
+                            return;
+                        }
                     }
                 }
-                if (processBg) {
-                    // check predicate and don't look for witness??
+                // check for include on sprite
+                let hasInclude: boolean = false;
+                for(let kind = 0; kind < this.p.spriteCnt(); kind++) {
+                    if (rv.getSetSpAttr(wd, kind) == AttrType.Include)
+                        hasInclude = true;
                 }
-                // kinds of sprites in (2,3)
-*/
-                // if there is no include on sprite then don't do following check
+                if (!hasInclude)
+                    return;
                 // TODO: this is inefficient, what we really need is a way to look
-                // TODO: up sprites at (2,3), (3,3), (1,3), and (2,4)
-                // TODO: but we have no indices.
+                // TODO: up sprites at particular world locations
                 this.allSprites(os => {
-                    if (os == ts) return;
+                    if (os == ts || rv.getSetSpAttr(wd, os.kind()) != AttrType.Include)
+                        return;
                     // (a) os in square T, resting or moving towards ts, or
                     if (os.col() == wcol && os.row() == wrow) {
                         if (!this.moving(os) || oppDir(ts.arg,os.arg)) {
                             this.collide(rv, ts, os, rcs);
                         }
-                    } else if (this.moving(os)) {
+                    }
+                    // (b) os moving into T
+                    if (this.moving(os)) {
                         let leftRotate = flipRotateDir(ts.arg, RuleTransforms.LeftRotate);
                         let osCol = wcol + moveXdelta(leftRotate);
                         let osRow = wrow + moveYdelta(leftRotate);
                         if (os.col() == osCol && os.row() == osRow && oppDir(leftRotate,os.arg)) {
                             this.collide(rv, ts, os, rcs);
-                            return;
                         } 
                         let rightRotate = flipRotateDir(ts.arg, RuleTransforms.RightRotate);
                         osCol = wcol + moveXdelta(rightRotate);
                         osRow = wrow + moveYdelta(rightRotate);
                         if (os.col() == osCol && os.row() == osRow && oppDir(rightRotate, os.arg)) {
                             this.collide(rv, ts, os, rcs);
-                            return;
                         }
                         osCol = wcol + moveXdelta(ts.arg);
                         osRow = wrow + moveYdelta(ts.arg);
                         if (os.col() == osCol && os.row() == osRow && oppDir(ts.arg, os.arg)) {
                             this.collide(rv, ts, os, rcs);
-                            return;
                         }
                     }
                 });
@@ -365,14 +364,7 @@ namespace tileworld {
         }
 
         private collide(rv: RuleView, ts: TileSprite, os: TileSprite, rcs: RuleClosure[]) {
-            let wcol = ts.col() + moveXdelta(ts.arg);
-            let wrow = ts.row() + moveYdelta(ts.arg);
-            // we already have the witness
-            let witnesses: TileSprite[] = [ os ];
-            // TODO: no need to do this evaluation 
-            if (this.evaluateWhenDo(ts, rv, 2+moveXdelta(ts.arg), 2+moveYdelta(ts.arg), witnesses)) {
-                rcs.push(new RuleClosure(rv, ts, witnesses));
-            }
+            rcs.push(new RuleClosure(rv, ts, [ os ]));  
         }
 
         // ---------------------------------------------------------------------
@@ -478,16 +470,16 @@ namespace tileworld {
             let wcol = ts.col() + (col - 2);
             let wrow = ts.row() + (row - 2);
             if (!this.inBounds(wcol, wrow))
-                return false;
+                return false;                   // TODO: or should this be true???
 
             let hasInclude: boolean = false;
             let includePassed: boolean = false;
             let includeWitness: TileSprite = null;
             let hasInclude2: boolean = false;
             let include2Passed: boolean = false;
+            const tm = game.currentScene().tileMap;
             // check backgrounds
             for(let kind = 0; kind < this.p.backCnt(); kind++) {
-                const tm = game.currentScene().tileMap;
                 let hasKind = tm.getTileIndex(wcol, wrow) == kind;
                 let attr = rv.getSetBgAttr(whendo, kind);
                 if (attr == AttrType.Exclude && hasKind) {
@@ -506,10 +498,6 @@ namespace tileworld {
                 let attr = rv.getSetSpAttr(whendo, kind);
                 // TODO: there could be multiple matching witnesses (cross product)
                 let witness = this.getWitness(kind, wcol, wrow);
-                // special case for collisions
-                if (rv.getRuleType() == RuleType.Collision) {
-                    witness = (witnesses[0].kind() == kind) ? witnesses[0] : null;
-                }
                 if (attr == AttrType.Exclude && witness) {
                     return false;
                 } else if (attr == AttrType.Include) {
@@ -529,7 +517,7 @@ namespace tileworld {
                 }
             }
             let ret = !hasInclude || includePassed;
-            if (ret && includeWitness && rv.getRuleType() != RuleType.Collision) {
+            if (ret && includeWitness) {
                 // need to check direction of sprite against witness.dir
                 if (!this.exprMatchesDirection(rv.getWitnessDirection(whendo), includeWitness.dir))
                     return false;
@@ -559,14 +547,14 @@ namespace tileworld {
             let wcol = rc.self ? rc.self.col() + (col - 2) : -1;
             let wrow = rc.self ? rc.self.row() + (row - 2) : -1;
             let spawned: TileSprite = null;
-            let teleport: Tile = null;
+            let portal: Tile = null;
             let ok = true;
             for (let cid = 0; cid < rc.rv.getCmdsLen(wid); cid++) {
                 if (!ok)
                     break;
-                if (teleport) {
-                    wcol = teleport.col;
-                    wrow = teleport.row;
+                if (portal) {
+                    wcol = portal.col;
+                    wrow = portal.row;
                 }
                 let inst = rc.rv.getCmdInst(wid, cid);
                 if (inst == -1) break;
@@ -626,7 +614,7 @@ namespace tileworld {
                             this.vm.nextBlockedSprites.push(arg);
                         break;
                     }
-                    case CommandType.Teleport: {
+                    case CommandType.Portal: {
                         // find a tile in the map with given background kind
                         // that has no sprite on it.
                         let tm = game.currentScene().tileMap;
@@ -639,7 +627,7 @@ namespace tileworld {
                         this.vm.spawnedSprites.forEach(ts => {
                              copy.setPixel(ts.col(), ts.row(), 1);
                         });
-                        // how many candidates to teleport to are there?
+                        // how many candidates to portal to are there?
                         let kindCnt = 0;
                         let x = 0, y = 0;
                         for(; x<copy.width(); x++) {
@@ -659,17 +647,17 @@ namespace tileworld {
                                 for(; y<copy.height(); y++) {
                                     if (copy.getPixel(x,y) == 0 && tm.getTileIndex(x,y) == arg) {
                                         if (kindCnt == index) {
-                                            teleport = new Tile(x, y, 0);
+                                            portal = new Tile(x, y, 0);
                                             break;
                                         }
                                         kindCnt++;
                                     }
                                 }
-                                if (teleport)
+                                if (portal)
                                     break;                 
                             }
                         } else {
-                            // teleport failed, so stop execution
+                            // portal failed, so stop execution
                             ok = false;
                         }
 

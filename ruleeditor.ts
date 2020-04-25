@@ -7,7 +7,7 @@ namespace tileworld.ruleediting {
     enum CommandTokens { Delete = 100 };
 
     // top-level command categories (instructions)
-    const categoryImages = [allFour, paint, spawn, eat, gameIcon, teleport, exclude ];
+    const categoryImages = [allFour, paint, spawn, eat, gameIcon, portal, exclude ];
     const categoryText = ["move", "paint", "spawn", "destroy",  "game", "portal", "block"];
 
     const menuHelpString = "10map,20play,30debug,50generalize rule,60delete rule,80add rule,90next rule,70previous rule,";
@@ -335,7 +335,7 @@ namespace tileworld.ruleediting {
                 case CommandType.Game: return 3;
                 case CommandType.Spawn:
                 case CommandType.BlockSpriteRules: return this.p.spriteCnt();
-                case CommandType.Teleport: return this.p.backCnt();
+                case CommandType.Portal: return this.p.backCnt();
             }
             return 0;
         }

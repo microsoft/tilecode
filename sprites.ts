@@ -818,7 +818,7 @@ namespace tileworld {
         . . . . . . . . . . . . . . . .
         . . . . . . . . . . . . . . . .
     `;
-    export const teleport = img`
+    export const portal = img`
         . . f f f f f . . . . . . . . .
         . f 5 5 5 5 5 f . . . . . . . .
         f 5 f f f f f 5 f . . . . . . .
