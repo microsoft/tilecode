@@ -23,17 +23,12 @@ namespace tileworld.ruleediting {
         private currentCommand: number; // the current command (potentially null)
         // hack: modal for deletion
         private askDeleteRule: boolean;
-        // views of base rule
-        private baseRule: RuleView;
-        private ruleViews: RuleView[];
         
         constructor(p: Project, rule: RuleView, private kind: number) {
             // kind optimization
             // - don't allow the kind to be removed from (2,2)
             // - make sure the kind is shown as witness for (2,2)
             super(p, rule);
-            this.baseRule = this.rule;
-            this.ruleViews = this.baseRule.getDerivedRules();
             this.setCol(0); this.setRow(0);
             this.askDeleteRule = false;
             this.mainMenu();
@@ -128,10 +123,6 @@ namespace tileworld.ruleediting {
                 }
                 this.update();
             });
-
-            game.addScenePopHandler(function (oldScene: scene.Scene) {
-                this.ruleViews = this.baseRule.getDerivedRules();
-            });
         }
 
         private mainMenu() {
@@ -160,9 +151,7 @@ namespace tileworld.ruleediting {
         }
 
         private resetRule(rv: RuleView) {
-            this.rule = rv;
-            this.baseRule = rv;
-            this.ruleViews = this.baseRule.getDerivedRules();         
+            this.rule = rv;       
         }
 
         private saveAndPop() {
@@ -178,11 +167,6 @@ namespace tileworld.ruleediting {
         protected cursorMove(dir: MoveDirection, pressed: boolean) {
             if (this.menu == RuleEditorMenus.MainMenu) {
                 super.cursorMove(dir, pressed);
-                if (this.ruleViews.length > 0 && this.row() == 1 && this.col() >= 5 && this.col() < 5 + this.ruleViews.length) {
-                    this.rule = this.ruleViews[this.col() - 5];
-                } else {
-                    this.rule = this.baseRule;
-                }
             } 
             if (this.p.help) {
                 this.helpCursor.x = this.col() < 6 ? this.cursor.x + 16 : this.cursor.x - 16;
@@ -245,17 +229,15 @@ namespace tileworld.ruleediting {
             // no debugger for paper
             // this.drawImage(3, 0, debug);
             this.drawImage(5, 0, flipHoriz);
+            if (this.rule.getTransforms() != RuleTransforms.None) {
+                this.drawImage(5, 0, include2);
+            }
             this.drawImage(6, 0, garbageCan);
             let rules = this.currentRules();
             let index = rules.indexOf(this.rule);
             this.drawImage(9, 0, index < rules.length -1 ? rightArrow : greyImage(rightArrow));
             this.drawImage(8, 0, this.getType() != -1 ? addRule : greyImage(addRule));
             this.drawImage(7, 0, index > 0 ? leftArrow : greyImage(leftArrow));
-            if (this.ruleViews.length > 0) {
-                this.ruleViews.forEach((rv,i) => {
-                    this.drawImage(5+i, 1, code);
-                });
-            }
         }
 
         private tryEditCommand() {
