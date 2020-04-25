@@ -476,6 +476,8 @@ namespace tileworld.ruleediting {
 
         private dirExprMenu() {
             movedImages.forEach((img, i) => {
+                if (this.rule.getRuleType() == RuleType.Collision && i<4)
+                    return;
                 this.drawImage(i, 0, img);
             });
             this.drawImage(this.rule.getWitnessDirection(this.whenDo), 0, cursorOut);
@@ -484,6 +486,8 @@ namespace tileworld.ruleediting {
         private dirExprUpdate() {
             if (this.row() != 0 || this.col() > 6)
                 return;
+            if (this.rule.getRuleType() == RuleType.Collision && this.col()<4)
+                return;            
             this.rule.setWitnessDirection(this.whenDo, this.col());
         }
 
