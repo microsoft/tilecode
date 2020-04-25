@@ -149,6 +149,8 @@ namespace tileworld {
         }
 
         public findWitnessColRow(col: number, row: number): number {
+            if (this.getRuleType() == RuleType.NegationCheck)
+                return -1;
             let whendo = this.getWhenDo(col, row);
             if (whendo == -1)
                 return -1;
