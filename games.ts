@@ -1,18 +1,18 @@
 // add games in if the slots are empty
 
 if (!settings.exists("TW3-VersionS"))
-    createBoulderGame();
+    createTW3();
 
 if (!settings.exists("TW2-VersionS"))
-    createSnakeGame();
+    createTW2();
 
 if (!settings.exists("TW1-VersionS"))
-    createBejeweledGame();
+    createTW1();
 
 if (!settings.exists("TW4-VersionS"))
-    createLeftHandWall();
+    createTW4();
 
-function createBoulderGame() {
+function createTW3() {
 settings.writeString("TW3-VersionS","4.0.0");
 // buffer length = 108
 settings.writeBuffer("TW3-WBackM", hex`
@@ -43,12 +43,12 @@ settings.writeBuffer("TW3-BackI2", hex`
 settings.writeBuffer("TW3-BackI3", hex`
 1010bd21ed217d1bcd21ed21fd6d1bfd5d11fdfd8d2bed2bfdfd8d1b4d1bfded1bfd1d`);
 settings.writeNumber("TW3-SpriteN",4);
-// buffer length = 128
+// buffer length = 130
 settings.writeBuffer("TW3-SpriteI0", hex`
-1010f0802fa05f1e1f101e24403f1e1f3e1f141d14303f1e122f142e3f302f1e122f271d1e22144f
-121e121f1e271d1422143f12131e121f1e142d1422151f101f221e121f1e142d1422151f102f121e
-121f1e271d1422142f102f1e122f271d1e22142f103f1e122f142e3f402f2e1f3e1f141d14505f1e
-1f101e24902ff080`);
+1010f0802fa05f1e1f101e24403f1e1f3e1f141d14303f1e122f142e3f302f1e122f1b111d1e2214
+4f121e121f1e2f1d1422143f12131e121f1e142d1422151f101f221e121f1e142d1422151f102f12
+1e121f1e2f1d1422142f102f1e122f1b111d1e22142f103f1e122f142e3f402f2e1f3e1f141d1450
+5f1e1f101e24902ff080`);
 // buffer length = 120
 settings.writeBuffer("TW3-SpriteI1", hex`
 1010804ca02c1b1c1b2c901c1d2b1c1b2c603c2d1b1c1b2c303c2b1c1b2d4c201c1b2d3b1c2d1b3c
@@ -59,12 +59,13 @@ settings.writeBuffer("TW3-SpriteI1", hex`
 settings.writeBuffer("TW3-SpriteI2", hex`
 1010f0502839a0384980485960586950587940281928893018391899201839111981201829211971
 301841196140184119517031194180311931a0211921f080`);
-// buffer length = 101 
+// buffer length = 101
 settings.writeBuffer("TW3-SpriteI3", hex`
 10106057a01730373fb0271c111d1f408f1b1c1f302f5d1b1c1f211d1f101f1b513d1f1b1c1f201f
 611d1b1c1b1c111d2f812f1d3f101f811d111b3f101f811d213f101f812f1b3f201f611d1b1c1d3f
 201f1b513d3f402f5d1b1c1f807f1cc01f1c1b1f40`);
 settings.writeNumber("TW3-HelpN",0);
+settings.writeNumber("TW3-HighN",undefined);
 // buffer length = 12
 settings.writeBuffer("TW3-RuleB0", hex`
 20262200011623030c060002`);
@@ -76,7 +77,7 @@ settings.writeBuffer("TW3-RuleB4", hex`
 41202200141332103c060003`);
 // buffer length = 12
 settings.writeBuffer("TW3-RuleB5", hex`
-222622000102230010160300`);
+222622000102230010140300`);
 // buffer length = 20
 settings.writeBuffer("TW3-RuleB7", hex`
 414122001416320014042110ff063110ff060000`);
@@ -110,17 +111,19 @@ settings.writeBuffer("TW3-RuleB12", hex`
 settings.writeNumber("TW3-PlayerN",0);
 }
 
-function createSnakeGame() {
+
+// snake game in slot 2
+function createTW2() {
 settings.writeString("TW2-VersionS","4.0.0");
 // buffer length = 109
 settings.writeBuffer("TW2-WBackM", hex`
 2018f0a0f17120f17120f17120f17120f17120f17120f17120f17120f17120a122a1209142912081
 52912081529120815291209132a120f17120f17120f17120f17120f171204122f111203142f12031
 42f1203132f111204122f11120f17120f17120f17120f17120f171f0a0`);
-// buffer length = 75
+// buffer length = 77
 settings.writeBuffer("TW2-WSpriteM", hex`
-2018ffffffffff1f11ff8f11ff8f116f12ff1f11ff8f11ff8f11ff8f10ffffffffff9f12ff2f12ff
-ffffff3f12ffffffffffffffff7f12ffffffffffffffff4f12ffffffff12ffffffff6f`);
+2018ffffffffff1f11ff8f11ff8f116f12ff1f11ff8f11ff8f11ff8f10ffbf12ffffffcf12ff2f12
+ffffffff3f12ffffffffffffaf12ffbf12ffffffffffffffff4f12ffffffff12ffffffff6f`);
 settings.writeNumber("TW2-BackN",4);
 // buffer length = 94
 settings.writeBuffer("TW2-BackI0", hex`
@@ -160,6 +163,7 @@ settings.writeBuffer("TW2-SpriteI2", hex`
 settings.writeBuffer("TW2-SpriteI3", hex`
 1010f0f0f0f0f0801e8012602e7012602c12601260161c828072901452f0f0f0f0f0a0`);
 settings.writeNumber("TW2-HelpN",0);
+settings.writeNumber("TW2-HighN",430);
 // buffer length = 12
 settings.writeBuffer("TW2-RuleB1", hex`
 212622000412230005020002`);
@@ -174,10 +178,7 @@ settings.writeBuffer("TW2-RuleB5", hex`
 2016220001160002`);
 // buffer length = 12
 settings.writeBuffer("TW2-RuleB7", hex`
-222622000112230004060401`);
-// buffer length = 8
-settings.writeBuffer("TW2-RuleB8", hex`
-211622cc01120401`);
+222622000112231104060401`);
 // buffer length = 16
 settings.writeBuffer("TW2-RuleB9", hex`
 21262200040221004c36030002010002`);
@@ -193,7 +194,7 @@ settings.writeBuffer("TW2-RuleB10", hex`
 settings.writeNumber("TW2-PlayerN",0);
 }
 
-function createBejeweledGame() {
+function createTW1() {
 settings.writeString("TW1-VersionS","4.0.0");
 // buffer length = 83
 settings.writeBuffer("TW1-WBackM", hex`
@@ -245,9 +246,10 @@ settings.writeBuffer("TW1-SpriteI3", hex`
 1010f0f0707f801f751f601f951f501f353f351f501f251f301f251f501f251f301f251f501f251f
 301f251f501f251f301f251f501f353f351f501f951f601f751f807ff0f060`);
 settings.writeNumber("TW1-HelpN",0);
-// buffer length = 34
+settings.writeNumber("TW1-HighN",110);
+// buffer length = 32
 settings.writeBuffer("TW1-RuleB0", hex`
-61432200012421000124230001241200002603000101030001010300010106030402`);
+6143220001242100011423000124120000260300010103000300010106030402`);
 // buffer length = 34
 settings.writeBuffer("TW1-RuleB1", hex`
 61432200102421001024230010241200002603000101030001010300010106030402`);
@@ -257,35 +259,31 @@ settings.writeBuffer("TW1-RuleB2", hex`
 // buffer length = 34
 settings.writeBuffer("TW1-RuleB3", hex`
 61432200042423000424210004241200002603000101030001010300010106030402`);
-// buffer length = 8
-settings.writeBuffer("TW1-RuleB5", hex`
-401022f340160102`);
 // buffer length = 12
 settings.writeBuffer("TW1-RuleB7", hex`
-202622f34016231000060002`);
+202622084016231000060002`);
 // buffer length = 24
 settings.writeBuffer("TW1-RuleB8", hex`
 205622004016230400061230000621300006323000060002`);
 // buffer length = 18
 settings.writeBuffer("TW1-RuleB4", hex`
-412322cf152421cf15240000010300020103`);
+412322201524212015240000010300020103`);
 // buffer length = 8
 settings.writeBuffer("TW1-RuleB6", hex`
-401022cf40160101`);
-// buffer length = 12
+4010222040160101`);
+// buffer length = 8
 settings.writeBuffer("TW1-RuleB9", hex`
-402622f34016211000060102`);
+4016220840160102`);
 // buffer length = 18
 settings.writeBuffer("TW1-RuleB11", hex`
-6123223f1524213f15240000010100020101`);
+612322801524218015240000010100020101`);
 // buffer length = 24
 settings.writeBuffer("TW1-RuleB10", hex`
-6156223f151621c0000612c0000623c0000632c000060101`);
+61502280151621c0000612c0000623c0000632c000060101`);
 settings.writeNumber("TW1-PlayerN",0);
 }
 
-
-function createLeftHandWall() {
+function createTW4() {
 settings.writeString("TW4-VersionS","4.0.0");
 // buffer length = 246
 settings.writeBuffer("TW4-WBackM", hex`
@@ -340,6 +338,7 @@ settings.writeBuffer("TW4-SpriteI3", hex`
 1010f0f0f0f0f0f0b0153015a01514151015141580151410141514101415701430143014f0f0f0f0
 f0f0a0`);
 settings.writeNumber("TW4-HelpN",0);
+settings.writeNumber("TW4-HighN",30);
 // buffer length = 12
 settings.writeBuffer("TW4-RuleB0", hex`
 412022000114120400060001`);
@@ -354,7 +353,7 @@ settings.writeBuffer("TW4-RuleB3", hex`
 1146220001111201000621010006230400060002`);
 // buffer length = 20
 settings.writeBuffer("TW4-RuleB4", hex`
-1146220001112101000612010006230100060003`);
+1140220001112101000612010006230100060003`);
 // buffer length = 14
 settings.writeBuffer("TW4-RuleB5", hex`
 3226220001133200041604020300`);
