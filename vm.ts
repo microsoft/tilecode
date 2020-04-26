@@ -310,6 +310,8 @@ namespace tileworld {
                 // special case here because just one cell to check
                 // background on and only for Include
                 let wd = rv.getWhenDo(2+moveXdelta(ts.arg), 2+moveYdelta(ts.arg));
+                if (wd == -1)
+                    return;
                 let includePassed: boolean = false;
                 for(let kind = 0; kind < this.p.backCnt(); kind++) {
                     if (rv.getSetBgAttr(wd, kind) == AttrType.Include) {
