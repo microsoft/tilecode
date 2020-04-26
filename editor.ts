@@ -174,11 +174,6 @@ namespace tileworld {
                     // change user sprite
                     this.userSpriteIndex = this.col()-1;
                     this.updateSelection();
-                } else if (this.col() == 9) {
-                    // disabled feature
-                    // this.userSpriteIndex = 0xf;
-                    // this.paintHome();
-                    // this.setCursor(CursorType.Map);
                 }
             }
             this.update();
