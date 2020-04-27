@@ -1,14 +1,18 @@
 // add games in if the slots are empty
 
+// boulder dash
 if (!settings.exists("TW3-VersionS"))
     createTW3();
 
+// snake
 if (!settings.exists("TW2-VersionS"))
     createTW2();
 
+// bejeweled
 if (!settings.exists("TW1-VersionS"))
     createTW1();
 
+// left-hand rule
 if (!settings.exists("TW4-VersionS"))
     createTW4();
 
@@ -353,7 +357,7 @@ settings.writeBuffer("TW4-RuleB3", hex`
 1146220001111201000621010006230400060002`);
 // buffer length = 20
 settings.writeBuffer("TW4-RuleB4", hex`
-1140220001112101000612010006230100060003`);
+1146220001112101000612010006230100060003`);
 // buffer length = 14
 settings.writeBuffer("TW4-RuleB5", hex`
 3226220001133200041604020300`);
