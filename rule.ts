@@ -205,6 +205,23 @@ namespace tileworld {
         return true;
     }
 
+    export function ruleStats(r: Rule) {
+        let wdCnt = 0;
+        let cmdCnt = 0;
+        for (let col = 0; col < 5; col++) {
+            for (let row = 0; row < 5; row++) {
+                if (Math.abs(2 - col) + Math.abs(2 - row) > 2) {
+                    let whendo = r.whenDo.find((wd) => wd.col == col && wd.row == row); 
+                    if (whendo) {
+                        wdCnt++;
+                        cmdCnt += whendo.commandsLen;
+                    }
+                }
+            }
+        }
+        return [wdCnt, cmdCnt];
+    }
+
     // ---------------------------------------------------------------------------
     // binary read/write of a rule
 

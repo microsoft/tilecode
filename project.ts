@@ -266,6 +266,9 @@ namespace tileworld {
         return images;
     }
 
+
+    // overloaded to also print out the game as a JavaScript
+    // function and compute metrics
     export function loadProject(prefix: string, output: boolean = false) {
         let names = settings.list(prefix);
         if (names.length == 0)
@@ -295,12 +298,22 @@ namespace tileworld {
         let ruleName = prefix + RuleKey;
         let ruleids = names.filter(s => s.indexOf(ruleName) == 0).map(s => parseInt(s.substr(ruleName.length())));
         let rules: RuleView[] = [];
+        let derivedRules = 0;
+        let whenDoCount = 0;
+        let commandCount = 0;
         ruleids.forEach(rid => {
             let key = ruleName+rid.toString();
             let buf = settingsReadBuffer(key, output);
             if (buf) {
                 let rule = unPackRule(buf, backCnt, spriteCnt);
-                rules.push(new RuleView(p, rid, rule));
+                let rv = new RuleView(p, rid, rule)
+                rules.push(rv);
+                if (output) {
+                    derivedRules += rv.getDerivedRules().length;
+                    let res = ruleStats(rule);
+                    whenDoCount += res[0];
+                    commandCount += res[1];
+                }
             } else {
                 screen.print("Read ("+rid.toString()+") failed", 10, 10);
                 control.assert(false, 42);
@@ -308,6 +321,12 @@ namespace tileworld {
         });
         let player = settingsReadNumber(prefix + PlayerIndexKey, output);
         if (output) console.log("}");
+        if (output) {
+            console.log("// base rules: "+ruleids.length);
+            console.log("// derived rules: "+derivedRules);
+            console.log("// whendos: "+whenDoCount);
+            console.log("// commands: "+commandCount);
+        }
         p.setRules(rules);
         p.setWorldBackgrounds(world);
         p.setWorldSprites(sprites);
