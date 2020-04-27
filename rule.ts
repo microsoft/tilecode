@@ -195,7 +195,7 @@ namespace tileworld {
     export function isRuleTrue(r: Rule) {
         for (let col = 0; col < 5; col++) {
             for (let row = 0; row < 5; row++) {
-                if (Math.abs(2 - col) + Math.abs(2 - row) > 2) {
+                if (Math.abs(2 - col) + Math.abs(2 - row) <= 2) {
                     let whendo = r.whenDo.find((wd) => wd.col == col && wd.row == row); 
                     if (whendo && !isWhenDoTrue(whendo))
                         return false;
@@ -210,7 +210,7 @@ namespace tileworld {
         let cmdCnt = 0;
         for (let col = 0; col < 5; col++) {
             for (let row = 0; row < 5; row++) {
-                if (Math.abs(2 - col) + Math.abs(2 - row) > 2) {
+                if (Math.abs(2 - col) + Math.abs(2 - row) <= 2) {
                     let whendo = r.whenDo.find((wd) => wd.col == col && wd.row == row); 
                     if (whendo) {
                         wdCnt++;
