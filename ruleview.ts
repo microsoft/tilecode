@@ -140,6 +140,19 @@ namespace tileworld {
             return this.getSetBuffAttr(this.r.whenDo[wdid].spPred, index, val);
         }
 
+        public attrCnt(whendo: number) {
+            let cnt = 0;
+            for (let i = 0; i < this.p.backCnt(); i++) {
+                if (this.getSetBgAttr(whendo, i) != AttrType.OK)
+                    cnt++;
+            }
+            for (let i = 0; i < this.p.spriteCnt(); i++) {
+                if (this.getSetSpAttr(whendo, i) != AttrType.OK)
+                    cnt++;
+            }
+            return cnt;
+        }
+
         private attrBgIndex(whendo: number, a: AttrType) {
             for (let i = 0; i < this.p.backCnt(); i++) {
                 if (this.getSetBgAttr(whendo, i) == a)

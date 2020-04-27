@@ -4,6 +4,12 @@
 if (!settings.exists("TW3-VersionS"))
     createTW3();
 
+// base rules: 13
+// derived rules: 14
+// whendos: 28
+// attrs: 60
+// commands: 15
+
 // snake
 if (!settings.exists("TW2-VersionS"))
     createTW2();
@@ -100,12 +106,9 @@ settings.writeBuffer("TW3-RuleB6", hex`
 // buffer length = 8
 settings.writeBuffer("TW3-RuleB10", hex`
 2016220001160102`);
-// buffer length = 6
-settings.writeBuffer("TW3-RuleB11", hex`
-111022001001`);
-// buffer length = 8
+// buffer length = 12
 settings.writeBuffer("TW3-RuleB13", hex`
-2211220014120004`);
+222122001412230014060004`);
 // buffer length = 18
 settings.writeBuffer("TW3-RuleB1", hex`
 2031220001162300041633103c0600020003`);
@@ -114,7 +117,6 @@ settings.writeBuffer("TW3-RuleB12", hex`
 6110220001160102`);
 settings.writeNumber("TW3-PlayerN",0);
 }
-
 
 // snake game in slot 2
 function createTW2() {

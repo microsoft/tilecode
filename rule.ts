@@ -205,21 +205,23 @@ namespace tileworld {
         return true;
     }
 
-    export function ruleStats(r: Rule) {
+    export function ruleStats(rv: RuleView) {
         let wdCnt = 0;
         let cmdCnt = 0;
+        let attrCnt = 0;
         for (let col = 0; col < 5; col++) {
             for (let row = 0; row < 5; row++) {
                 if (Math.abs(2 - col) + Math.abs(2 - row) <= 2) {
-                    let whendo = r.whenDo.find((wd) => wd.col == col && wd.row == row); 
-                    if (whendo) {
+                    let whendo = rv.getWhenDo(col, row)
+                    if (whendo != -1) {
                         wdCnt++;
-                        cmdCnt += whendo.commandsLen;
+                        cmdCnt += rv.getCmdsLen(whendo);
+                        attrCnt += rv.attrCnt(whendo);
                     }
                 }
             }
         }
-        return [wdCnt, cmdCnt];
+        return [wdCnt, cmdCnt, attrCnt];
     }
 
     // ---------------------------------------------------------------------------

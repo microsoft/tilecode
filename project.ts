@@ -301,6 +301,7 @@ namespace tileworld {
         let derivedRules = 0;
         let whenDoCount = 0;
         let commandCount = 0;
+        let attrCount = 0;
         ruleids.forEach(rid => {
             let key = ruleName+rid.toString();
             let buf = settingsReadBuffer(key, output);
@@ -310,9 +311,10 @@ namespace tileworld {
                 rules.push(rv);
                 if (output) {
                     derivedRules += rv.getDerivedRules().length;
-                    let res = ruleStats(rule);
-                    whenDoCount += res[0];
-                    commandCount += res[1];
+                    let [wdCnt, cmdCnt, attrCnt] = ruleStats(rv);
+                    whenDoCount += wdCnt;
+                    commandCount += cmdCnt;
+                    attrCount += attrCnt;
                 }
             } else {
                 screen.print("Read ("+rid.toString()+") failed", 10, 10);
@@ -325,6 +327,7 @@ namespace tileworld {
             console.log("// base rules: "+ruleids.length);
             console.log("// derived rules: "+derivedRules);
             console.log("// whendos: "+whenDoCount);
+            console.log("// attrs: "+attrCount);
             console.log("// commands: "+commandCount);
         }
         p.setRules(rules);
