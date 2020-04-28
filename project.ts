@@ -325,10 +325,10 @@ namespace tileworld {
         if (output) console.log("}");
         if (output) {
             console.log("// base rules: "+ruleids.length);
-            console.log("// derived rules: "+derivedRules);
-            console.log("// whendos: "+whenDoCount);
-            console.log("// attrs: "+attrCount);
-            console.log("// commands: "+commandCount);
+            console.log("// derived rules: "+derivedRules + " (" + (derivedRules/ruleids.length) + ")");
+            console.log("// whendos: "+whenDoCount + " (" + (whenDoCount/ruleids.length) + ")");
+            console.log("// commands: "+commandCount + " (" + (commandCount/ruleids.length) + ")");
+            console.log("// attrs: "+attrCount + " (" + (attrCount/whenDoCount) + ")");
         }
         p.setRules(rules);
         p.setWorldBackgrounds(world);

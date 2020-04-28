@@ -14,9 +14,21 @@ if (!settings.exists("TW3-VersionS"))
 if (!settings.exists("TW2-VersionS"))
     createTW2();
 
+// base rules: 9
+// derived rules: 24
+// whendos: 15
+// attrs: 22
+// commands: 15
+
 // bejeweled
 if (!settings.exists("TW1-VersionS"))
     createTW1();
+
+// base rules: 11
+// derived rules: 14
+// whendos: 33
+// attrs: 52
+// commands: 38
 
 // left-hand rule
 if (!settings.exists("TW4-VersionS"))
@@ -119,6 +131,7 @@ settings.writeNumber("TW3-PlayerN",0);
 }
 
 // snake game in slot 2
+
 function createTW2() {
 settings.writeString("TW2-VersionS","4.0.0");
 // buffer length = 109
@@ -252,7 +265,7 @@ settings.writeBuffer("TW1-SpriteI3", hex`
 1010f0f0707f801f751f601f951f501f353f351f501f251f301f251f501f251f301f251f501f251f
 301f251f501f251f301f251f501f353f351f501f951f601f751f807ff0f060`);
 settings.writeNumber("TW1-HelpN",0);
-settings.writeNumber("TW1-HighN",110);
+settings.writeNumber("TW1-HighN",120);
 // buffer length = 32
 settings.writeBuffer("TW1-RuleB0", hex`
 6143220001242100011423000124120000260300010103000300010106030402`);
@@ -288,6 +301,7 @@ settings.writeBuffer("TW1-RuleB10", hex`
 61502280151621c0000612c0000623c0000632c000060101`);
 settings.writeNumber("TW1-PlayerN",0);
 }
+
 
 function createTW4() {
 settings.writeString("TW4-VersionS","4.0.0");
