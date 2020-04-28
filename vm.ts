@@ -167,7 +167,7 @@ namespace tileworld {
                 this.ruleIndex[RuleType.NegationCheck].forEach(rv => {
                     // for now, we will deal only with rules that have witness in (2,2)
                     // TODO: generalize this rule
-                    let kind = rv.findWitnessColRow(2, 2);
+                    let kind = rv.findWitnessColRow(2, 2, false);
                     if (kind == -1)
                         return;
                     let witnesses = this.vm.sprites[kind];
