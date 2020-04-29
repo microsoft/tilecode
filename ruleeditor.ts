@@ -51,6 +51,9 @@ namespace tileworld.ruleediting {
                         if (this.menu == RuleEditorMenus.MainMenu) {
                             this.menu = RuleEditorMenus.AttrTypeMenu;
                             this.setTileSaved();
+                            // move cursor up to row of backgrounds/tiles
+                            this.setCol(0);
+                            this.setRow(1);
                         } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                             this.mainMenu();
                         }
@@ -107,6 +110,9 @@ namespace tileworld.ruleediting {
                                 this.menu = RuleEditorMenus.DirExprMenu;
                                 this.whenDo = this.rule.getWhenDo(col, row);
                                 this.setTileSaved();
+                                // move cursor to currently selected direction expression
+                                this.setCol(this.rule.getWitnessDirection(this.whenDo));
+                                this.setRow(0);
                             }
                         }
                     }
@@ -135,10 +141,16 @@ namespace tileworld.ruleediting {
                         this.rule.removeCommand(this.whenDo, this.currentCommand)
                 }
             }
+            // reset state 
             this.whenDo = -1;
             this.currentCommand = -1;
             this.attrSelected = -1;
             this.menu = RuleEditorMenus.MainMenu;
+            // move the cursor back to the saved position
+            if (!(this.tileSaved.flags & SpriteFlag.Invisible)) {
+                this.setCol(this.tileSaved.x >> 4);
+                this.setRow(this.tileSaved.y >> 4);
+            }
             this.tileSaved.setFlag(SpriteFlag.Invisible, true);
         }
 
