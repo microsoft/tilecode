@@ -12,6 +12,8 @@ namespace tileworld {
                     if (this.p) {
                         let keys = settings.list(this.p.prefix);
                         keys.forEach(k => { settings.remove(k)});
+                        // need an extra pop scene to return to load screen
+                        game.popScene();
                     } else {
                         settings.clear();
                     }
