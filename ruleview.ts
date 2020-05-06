@@ -268,5 +268,52 @@ namespace tileworld {
         public isRuleTrue() {
             return isRuleTrue(this.r);
         }
+
+        // printing out a rule
+        private ruleTypeToString() {
+            switch(this.getRuleType()) {
+                case RuleType.ContextChange: return "change";
+                case RuleType.ButtonPress: return "button";
+                case RuleType.Collision: return "collide";
+                case RuleType.NegationCheck: return "negate";
+            }
+            return "error";
+        }
+
+        private ruleArgToString() {
+            if (this.getRuleType() != RuleType.ButtonPress)
+                return "none"
+            switch(this.getRuleArg()) {
+                case ButtonArg.Left: return "left";
+                case ButtonArg.Right: return "right";
+                case ButtonArg.Down: return "down";
+                case ButtonArg.Up: return "up";
+                case ButtonArg.A: return "A";
+            }
+            return "error";
+        }
+
+        private whenDoAttrs(wd: number, a: AttrType) {
+            let ret: string[] = [];
+            for(let bg = 0; bg < 0; bg++) {
+            }
+        }
+
+        public printRule() {
+            // rule header
+            console.log("rule:"+this.ruleTypeToString()+":"+this.ruleArgToString());
+            // rule body
+            this.getBaseRule().whenDo.forEach((wd,idx) => { 
+                console.log("tile:"+wd.col.toString()+":"+wd.row.toString());
+                // output attributes
+                console.log("include:");
+                console.log("include2:");
+                console.log("exclude:");
+                // output commands
+                for(let i=0; i<wd.commandsLen; i++) {
+
+                }
+            });
+        }
     }
 }

@@ -319,40 +319,6 @@ namespace tileworld {
         return ruleBuf;
     }
 
-    function ruleTypeToString(r: Rule) {
-        switch(r.ruleType) {
-            case RuleType.ContextChange: return "change";
-            case RuleType.ButtonPress: return "button";
-            case RuleType.Collision: return "collide";
-            case RuleType.NegationCheck: return "negate";
-        }
-        return "error";
-    }
-
-    function ruleArgToString(r: Rule) {
-        if (r.ruleType != RuleType.ButtonPress)
-            return "none"
-        switch(r.ruleArg) {
-            case ButtonArg.Left: return "left";
-            case ButtonArg.Right: return "right";
-            case ButtonArg.Down: return "down";
-            case ButtonArg.Up: return "up";
-            case ButtonArg.A: return "A";
-        }
-        return "error";
-    }
-
-    export function printRule(rule: Rule) {
-        // rule header
-        console.log("rule:"+ruleTypeToString(rule)+":"+ruleArgToString(rule));
-        // rule body
-        rule.whenDo.forEach(wd => { 
-            console.log("tile:"+wd.col.toString()+":"+wd.row.toString());
-            // output attributes
-            // output commands
-        });
-    }
-
     export function unPackRule(buf: Buffer, bgLen: number, spLen: number) {
         ruleBuf = buf;
         bitIndex = 0;
