@@ -295,8 +295,15 @@ namespace tileworld {
 
         private whenDoAttrs(wd: number, a: AttrType) {
             let ret: string[] = [];
-            for(let bg = 0; bg < 0; bg++) {
+            for(let i = 0; i < this.p.backCnt(); i++) {
+                if (this.getSetBgAttr(wd, i) == a)
+                    ret.push("b"+i.toString())
             }
+            for(let i = 0; i < this.p.spriteCnt(); i++) {
+                if (this.getSetSpAttr(wd, i) == a)
+                    ret.push("s"+i.toString())
+            }
+            return ret;
         }
 
         public printRule() {
@@ -306,9 +313,9 @@ namespace tileworld {
             this.getBaseRule().whenDo.forEach((wd,idx) => { 
                 console.log("tile:"+wd.col.toString()+":"+wd.row.toString());
                 // output attributes
-                console.log("include:");
-                console.log("include2:");
-                console.log("exclude:");
+                console.log("include:"+this.whenDoAttrs(idx,AttrType.Include).join(":"));
+                console.log("include2:"+this.whenDoAttrs(idx,AttrType.Include2).join(":"));
+                console.log("exclude:"+this.whenDoAttrs(idx,AttrType.Exclude).join(":"));
                 // output commands
                 for(let i=0; i<wd.commandsLen; i++) {
 
