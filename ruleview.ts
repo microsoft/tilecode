@@ -292,14 +292,17 @@ namespace tileworld {
 
         private commandArgToString(inst: number, arg: number) {
             if (inst == CommandType.Move) 
-                return cmdInstToString[arg];
+                return moveArgToString[arg];
+            if (inst == CommandType.Game)
+                return gameArgToString[arg];            
             if (inst == CommandType.Paint || inst == CommandType.Spawn || inst == CommandType.Portal)
                 return arg.toString();
-            return "none"
+            return "none";
         }
 
         public printRule() {
             // rule header
+            console.log("id:"+this.getRuleId().toString());
             console.log("rule:"+ruleToString[this.getRuleType()]+":"+this.ruleArgToString());
             // rule body
             this.getBaseRule().whenDo.forEach((wd,wdi) => { 
@@ -312,9 +315,10 @@ namespace tileworld {
                 for(let i=0; i<wd.commandsLen; i++) {
                     let inst = this.getCmdInst(wdi, i);
                     let arg = this.getCmdArg(wdi, i)
-                    console.log("cmd:"+cmdInstToString(inst)+":"+this.commandArgToString(inst, arg))
+                    console.log("cmd:"+cmdInstToString[inst]+":"+this.commandArgToString(inst, arg))
                 }
             });
+            console.log("\n");
         }
     }
 }

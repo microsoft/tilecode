@@ -188,6 +188,12 @@ namespace tileworld {
             });
         }
 
+        public printRules() {
+            this.getRules().forEach(rv => {
+                rv.printRule();
+            });
+        }
+
         private wrapRule(r: Rule) {
             // find a new id that is not in rule list
             let rids = this.rules.map(r => r.getRuleId()).sort((a,b) => a - b );

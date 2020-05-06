@@ -63,6 +63,8 @@ namespace tileworld {
         Stop, UTurn,
     }
 
+    export const moveArgToString = [ "left", "up", "right", "down", "stop", "u-turn" ]
+
     // arguments to affect the state of the sprite (other than movement)
     export enum SpriteArg {
         Remove,         // self sprite eats the other sprite
@@ -74,6 +76,8 @@ namespace tileworld {
         ScoreUp10,
         NextLevel
     }
+
+    export const gameArgToString = ["win", "lose", "score10"]
 
     export enum AttrType {
         OK,        // don't care
