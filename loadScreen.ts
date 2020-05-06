@@ -37,7 +37,7 @@ namespace tileworld {
             let projectAvailable = settings.list(prefix).length > 0;
             this.drawImage(col-1, row, diskIcon);
             this.fillTile(col, row, (this.col() == col || this.col() == col -1) && this.row() == row ? 7 : 
-                    (projectAvailable ? 11 : 12));
+                    (projectAvailable ? 6 : 12));
             screen.print(id, (col << 4) + 6, (row << 4) + 4 + yoff);
         }
 

@@ -267,10 +267,10 @@ namespace tileworld {
         . . . . . . . . . . . . . . . .
         . . . . . . f f f f . . . . . .
         . . . . . f b b b b f . . . . .
-        . . . . f b b b b b b f . . . .
-        . . . . f b b b b b b f . . . .
-        . . . . f b b b b b b f . . . .
-        . . . . f b b b b b b f . . . .
+        . . . . f b f f f f b f . . . .
+        . . . . f b f f f f b f . . . .
+        . . . . f b f f f f b f . . . .
+        . . . . f b f f f f b f . . . .
         . . . . . f b b b b f . . . . .
         . . . . . . f f f f . . . . . .
         . . . . . . . . . . . . . . . .
