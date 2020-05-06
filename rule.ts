@@ -17,6 +17,8 @@ namespace tileworld {
         LastRule = NegationCheck
     };
 
+    export const ruleToString = ["press", "change", "collide", "negate"]
+
     // directions are 0-3 and move clockwise
     export enum MoveDirection {
         Left, Up, Right, Down
@@ -38,6 +40,8 @@ namespace tileworld {
         Left, Up, Right, Down, A, B
     }
 
+    export const buttonArgToString = ["left", "up", "right", "down", "A"]
+
     export type RuleArg = number | ButtonArg;
 
     export enum CommandType {
@@ -50,6 +54,8 @@ namespace tileworld {
         BlockSpriteRules, // in the next round, don't allow rules on sprite kind
         Last,
     }
+
+    export const cmdInstToString = ["move", "paint", "spawn", "destroy", "game", "portal", "block"]
 
     // arguments to Move command (the last two are only used in Colliding rules)
     export enum MoveArg {

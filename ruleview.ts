@@ -270,28 +270,6 @@ namespace tileworld {
         }
 
         // printing out a rule
-        private ruleTypeToString() {
-            switch(this.getRuleType()) {
-                case RuleType.ContextChange: return "change";
-                case RuleType.ButtonPress: return "button";
-                case RuleType.Collision: return "collide";
-                case RuleType.NegationCheck: return "negate";
-            }
-            return "error";
-        }
-
-        private ruleArgToString() {
-            if (this.getRuleType() != RuleType.ButtonPress)
-                return "none"
-            switch(this.getRuleArg()) {
-                case ButtonArg.Left: return "left";
-                case ButtonArg.Right: return "right";
-                case ButtonArg.Down: return "down";
-                case ButtonArg.Up: return "up";
-                case ButtonArg.A: return "A";
-            }
-            return "error";
-        }
 
         private whenDoAttrs(wd: number, a: AttrType) {
             let ret: string[] = [];
@@ -306,19 +284,35 @@ namespace tileworld {
             return ret;
         }
 
+		private ruleArgToString() {
+            if (this.getRuleType() != RuleType.ButtonPress)
+                return "none"
+            return buttonArgToString[this.getRuleArg()];
+        }
+
+        private commandArgToString(inst: number, arg: number) {
+            if (inst == CommandType.Move) 
+                return cmdInstToString[arg];
+            if (inst == CommandType.Paint || inst == CommandType.Spawn || inst == CommandType.Portal)
+                return arg.toString();
+            return "none"
+        }
+
         public printRule() {
             // rule header
-            console.log("rule:"+this.ruleTypeToString()+":"+this.ruleArgToString());
+            console.log("rule:"+ruleToString[this.getRuleType()]+":"+this.ruleArgToString());
             // rule body
-            this.getBaseRule().whenDo.forEach((wd,idx) => { 
+            this.getBaseRule().whenDo.forEach((wd,wdi) => { 
                 console.log("tile:"+wd.col.toString()+":"+wd.row.toString());
                 // output attributes
-                console.log("include:"+this.whenDoAttrs(idx,AttrType.Include).join(":"));
-                console.log("include2:"+this.whenDoAttrs(idx,AttrType.Include2).join(":"));
-                console.log("exclude:"+this.whenDoAttrs(idx,AttrType.Exclude).join(":"));
+                console.log("include:"+this.whenDoAttrs(wdi,AttrType.Include).join(":"));
+                console.log("include2:"+this.whenDoAttrs(wdi,AttrType.Include2).join(":"));
+                console.log("exclude:"+this.whenDoAttrs(wdi,AttrType.Exclude).join(":"));
                 // output commands
                 for(let i=0; i<wd.commandsLen; i++) {
-
+                    let inst = this.getCmdInst(wdi, i);
+                    let arg = this.getCmdArg(wdi, i)
+                    console.log("cmd:"+cmdInstToString(inst)+":"+this.commandArgToString(inst, arg))
                 }
             });
         }
