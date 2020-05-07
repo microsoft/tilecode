@@ -124,6 +124,12 @@ namespace tileworld.ruleediting {
                     this.askDeleteRule = false;
                 } else if (this.menu != RuleEditorMenus.MainMenu) {
                     this.mainMenu();
+                } else if (this.row() >= 2) {
+                    // save cursor position and
+                    this.setTileSaved();
+                    // go to play button of main menu
+                    this.setCol(2);
+                    this.setRow(0);
                 } else {
                     this.saveAndPop();
                     return;
@@ -147,15 +153,19 @@ namespace tileworld.ruleediting {
             this.attrSelected = -1;
             this.menu = RuleEditorMenus.MainMenu;
             // move the cursor back to the saved position
-            if (!(this.tileSaved.flags & SpriteFlag.Invisible)) {
-                this.setCol(this.tileSaved.x >> 4);
-                this.setRow(this.tileSaved.y >> 4);
-            }
-            this.tileSaved.setFlag(SpriteFlag.Invisible, true);
+            this.restoreCursor();
         }
-
+        
         protected okToMove() {
             return !this.askDeleteRule;
+        }
+
+        private restoreCursor() {
+            if (this.isTileSaved()) {
+                this.setCol(this.tileSaved.x >> 4);
+                this.setRow(this.tileSaved.y >> 4);
+                this.tileSaved.setFlag(SpriteFlag.Invisible, true);
+            }
         }
 
         private changeRule(rv: RuleView) {
@@ -180,6 +190,9 @@ namespace tileworld.ruleediting {
         protected cursorMove(dir: MoveDirection, pressed: boolean) {
             if (this.menu == RuleEditorMenus.MainMenu) {
                 super.cursorMove(dir, pressed);
+                if (this.row() >= 2) {
+                    this.restoreCursor();
+                }
             } 
             if (this.p.help) {
                 this.helpCursor.x = this.col() < 6 ? this.cursor.x + 16 : this.cursor.x - 16;

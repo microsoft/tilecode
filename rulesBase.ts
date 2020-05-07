@@ -133,6 +133,10 @@ namespace tileworld {
             this.tileSaved.setFlag(SpriteFlag.Invisible, false);
         }
 
+        protected isTileSaved() {
+            return !(this.tileSaved.flags & SpriteFlag.Invisible);
+        }
+
         protected cursorMove(dir: MoveDirection, pressed: boolean = true) { }
     }
 }
