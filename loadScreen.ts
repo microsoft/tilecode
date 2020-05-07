@@ -1,5 +1,7 @@
 namespace tileworld {
 
+    const loadLeft = 3;
+    const loadTop = 1;
     const numRows = 4;
 
     export class LoadScreen extends RuleVisualsBase {
@@ -9,8 +11,8 @@ namespace tileworld {
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 let first = this.col() >= 4 && this.col() <= 5;
                 let second = this.col() >= 6 && this.col() <= 7;
-                if ( ( first || second) && (this.row() >= 2 && this.row() < 2+numRows) ) {
-                    let slot = 1 + (this.row()-2) + (first ? 0 : numRows);
+                if ( ( first || second) && (this.row() > loadTop && this.row() <= loadTop+numRows) ) {
+                    let slot = (this.row()-loadTop) + (first ? 0 : numRows);
                     let prefix = "TW"+slot.toString()+"-";
                     this.p = loadProject(prefix);
                     this.update();
@@ -38,10 +40,10 @@ namespace tileworld {
         private makeIt(col: number, row: number, id: string) {
             let prefix = "TW" + id + "-";
             let projectAvailable = settings.list(prefix).length > 0;
-            this.drawImage(col-1, row, diskIcon);
-            this.fillTile(col, row, (this.col() == col || this.col() == col -1) && this.row() == row ? 7 : 
+            this.drawImage(col, row, diskIcon);
+            this.fillTile(col+1, row, (this.col() == col || this.col() == col + 1) && this.row() == row ? 7 : 
                     (projectAvailable ? 6 : 12));
-            screen.print(id, (col << 4) + 6, (row << 4) + 4 + yoff);
+            screen.print(id, ((col+1) << 4) + 6, (row << 4) + 4 + yoff);
         }
 
         protected update() {
@@ -66,14 +68,14 @@ namespace tileworld {
             this.drawImage(2, 5, this.lastDir == MoveDirection.Right ? rightButton : greyImage(rightButton));
 
             screen.print("TileWorld", 6, yoff + 4);
-            this.fillTile(2,2,12); this.fillTile(3,2,12);
-            screen.print("Load", (2 << 4) + 4, (2 << 4) + 4 + yoff);
-            this.fillTile(2, 3, 12); this.fillTile(3, 3, 12);
-            screen.print("Game", (2 << 4) + 4, (3 << 4) + 4 + yoff);
+            this.fillTile(loadLeft,loadTop,12); this.fillTile(loadLeft+1,loadTop,12);
+            screen.print("Load", (loadLeft << 4) + 4, (loadTop << 4) + 4 + yoff);
+            this.fillTile(loadLeft+2, loadTop, 12); this.fillTile(loadLeft+3, loadTop, 12);
+            screen.print("Game", ((loadLeft +2) << 4) + 4, (loadTop << 4) + 4 + yoff);
 
             for(let r = 0; r<numRows; r++) {
-                this.makeIt(5, 2+r, (r + 1).toString());
-                this.makeIt(7, 2+r, (r + 1 + numRows).toString());
+                this.makeIt(loadLeft, 2+r, (r + loadTop).toString());
+                this.makeIt(loadLeft+2, 2+r, (r + loadTop + numRows).toString());
             }
 
             this.drawImage(9, 0, settingsIcon);
