@@ -10,7 +10,7 @@ namespace tileworld {
                 let first = this.col() >= 4 && this.col() <= 5;
                 let second = this.col() >= 6 && this.col() <= 7;
                 if ( ( first || second) && (this.row() >= 2 && this.row() < 2+numRows) ) {
-                    let slot = 1 + ((this.row()-2) << 1) + (first ? 0 : 1);
+                    let slot = 1 + (this.row()-2) + (first ? 0 : numRows);
                     let prefix = "TW"+slot.toString()+"-";
                     this.p = loadProject(prefix);
                     this.update();
@@ -72,8 +72,8 @@ namespace tileworld {
             screen.print("Game", (2 << 4) + 4, (3 << 4) + 4 + yoff);
 
             for(let r = 0; r<numRows; r++) {
-                this.makeIt(5, 2+r, ((r << 1) + 1).toString());
-                this.makeIt(7, 2+r, ((r << 1) + 2).toString());
+                this.makeIt(5, 2+r, (r + 1).toString());
+                this.makeIt(7, 2+r, (r + 1 + numRows).toString());
             }
 
             this.drawImage(9, 0, settingsIcon);
