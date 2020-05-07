@@ -12,7 +12,7 @@ namespace tileworld.ruleediting {
             this.kind = 0;
             // set cursor
             this.setCol(0);
-            this.setRow(this.kind + 1);
+            this.setRow(1 + this.kind);
             this.setTileSaved();
             this.setRow(0);
             this.moreHelp = sprites.create(cursorIn);
@@ -64,10 +64,10 @@ namespace tileworld.ruleediting {
             screen.fill(15);
             screen.fillRect(0, yoff, 16, 16, 11);
             screen.drawTransparentImage(code, 0, yoff)
-            this.p.spriteImages().forEach((img,i) => {
-                this.drawImage(0, i+1, img);
-            })
             this.showRuleMenu(1, 0);
+            this.p.spriteImages().forEach((img,i) => {
+                this.drawImage(0, 1+i, img);
+            })
         }
 
         protected centerImage() {
@@ -110,34 +110,46 @@ namespace tileworld.ruleediting {
                 this.showRuleType(rt, rd, col, row, center);
         }
 
+        private stringColumn(s: string, col: number, row: number) {
+            for(let i = 0; i<s.length; i++) {
+                screen.print(s[i], (col << 4) - 8, (row << 4) + (i << 3) + yoff);
+            }
+        }
+
         private showRuleMenu(x: number, y: number) {
             this.rules = this.p.getRulesForSpriteKind(this.kind);
             
-            this.make3by3(x + 2, y + 1)
-            this.doBoth(RuleType.ContextChange, AnyDir, x + 2, y + 1);
-            this.doBoth(RuleType.ContextChange, MoveDirection.Right, x + 3, y + 1);
-            this.doBoth(RuleType.ContextChange, MoveDirection.Left, x + 1, y + 1);
-            this.doBoth(RuleType.ContextChange, MoveDirection.Up, x + 2, y);
-            this.doBoth(RuleType.ContextChange, MoveDirection.Down, x+2, y+2);
-            this.doBoth(RuleType.ContextChange, Resting, x+1, y+2, false);
-            this.doBoth(RuleType.ContextChange, Moving, x+3, y+2, false);
+            const left1 = 3;
+            this.make3by3(x + left1, y + 1)
+            this.doBoth(RuleType.ContextChange, AnyDir, x + left1, y + 1);
+            this.doBoth(RuleType.ContextChange, MoveDirection.Right, x + left1 + 1, y + 1);
+            this.doBoth(RuleType.ContextChange, MoveDirection.Left, x + left1 - 1, y + 1);
+            this.doBoth(RuleType.ContextChange, MoveDirection.Up, x + left1, y);
+            this.doBoth(RuleType.ContextChange, MoveDirection.Down, x + left1, y+2);
+            this.doBoth(RuleType.ContextChange, Resting, x+left1-1, y+2, false);
+            this.doBoth(RuleType.ContextChange, Moving, x+left1+1, y+2, false);
+            this.stringColumn("match", left1, 0);
 
-            this.make3by3(x + 6, y + 1)
-            this.doBoth(RuleType.ButtonPress, ButtonArg.Right, x + 8, y + 1, false);
-            this.doBoth(RuleType.ButtonPress, ButtonArg.Left, x + 4, y + 1, false);
-            this.doBoth(RuleType.ButtonPress, ButtonArg.Down, x + 6, y + 3, false);
-            this.doBoth(RuleType.ButtonPress, ButtonArg.Up, x + 6, y - 1, false);
-            this.doBoth(RuleType.ButtonPress, ButtonArg.A, x + 6, y + 1, false); 
+            this.make3by3(x + left1, y + 5);
+            this.doBoth(RuleType.Collision, MoveDirection.Right, x + left1, y + 5, false);
+            this.doBoth(RuleType.Collision, MoveDirection.Left, x + left1, y + 5, false);
+            this.doBoth(RuleType.Collision, MoveDirection.Up, x + left1, y + 5, false);
+            this.doBoth(RuleType.Collision, MoveDirection.Down, x + left1, y + 5, false);
+            this.drawImage(x + left1, y + 5, this.centerImage());
+            this.stringColumn("smash", left1, 4);
 
-            this.make3by3(x + 2, y + 5);
-            this.doBoth(RuleType.Collision, MoveDirection.Right, x + 2, y + 5, false);
-            this.doBoth(RuleType.Collision, MoveDirection.Left, x + 2, y + 5, false);
-            this.doBoth(RuleType.Collision, MoveDirection.Up, x + 2, y + 5, false);
-            this.doBoth(RuleType.Collision, MoveDirection.Down, x + 2, y + 5, false);
-            this.drawImage(x + 2, y + 5, this.centerImage());
+            const left2 = 7;
+            this.make3by3(x + left2, y + 1)
+            this.doBoth(RuleType.ButtonPress, ButtonArg.Right, x + left2 + 2, y + 1, false);
+            this.doBoth(RuleType.ButtonPress, ButtonArg.Left, x + left2 - 2, y + 1, false);
+            this.doBoth(RuleType.ButtonPress, ButtonArg.Down, x + left2, y + 3, false);
+            this.doBoth(RuleType.ButtonPress, ButtonArg.Up, x + left2, y - 1, false);
+            this.doBoth(RuleType.ButtonPress, ButtonArg.A, x + left2, y + 1, false); 
+            this.stringColumn("press", left2, 0);
 
-            this.make3by3(x + 6, y + 5);
-            this.doBoth(RuleType.NegationCheck, AnyDir, x + 5, y + 4, false);
+            this.make3by3(x + left2, y + 5);
+            this.doBoth(RuleType.NegationCheck, AnyDir, x + left2 - 1, y + 4, false);
+            this.stringColumn("misc", left2, 4);
         }
     }
 }
