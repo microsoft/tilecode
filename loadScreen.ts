@@ -1,5 +1,7 @@
 namespace tileworld {
 
+    const numRows = 4;
+
     export class LoadScreen extends RuleVisualsBase {
         constructor() {
             super(null);
@@ -7,8 +9,9 @@ namespace tileworld {
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 let first = this.col() >= 4 && this.col() <= 5;
                 let second = this.col() >= 6 && this.col() <= 7;
-                if ( ( first || second) && (this.row() == 2 || this.row() == 4) ) {
-                    let prefix = first ? (this.row() == 2 ? "TW1-" : "TW3-") : (this.row() == 2 ? "TW2-" : "TW4-");
+                if ( ( first || second) && (this.row() >= 2 && this.row() < 2+numRows) ) {
+                    let slot = 1 + ((this.row()-2) << 1) + (first ? 0 : 1);
+                    let prefix = "TW"+slot.toString()+"-";
                     this.p = loadProject(prefix);
                     this.update();
                     if (!this.p) {
@@ -68,10 +71,10 @@ namespace tileworld {
             this.fillTile(2, 3, 12); this.fillTile(3, 3, 12);
             screen.print("Game", (2 << 4) + 4, (3 << 4) + 4 + yoff);
 
-            this.makeIt(5, 2, "1");
-            this.makeIt(7, 2, "2");
-            this.makeIt(5, 4, "3");
-            this.makeIt(7, 4, "4");
+            for(let r = 0; r<numRows; r++) {
+                this.makeIt(5, 2+r, ((r << 1) + 1).toString());
+                this.makeIt(7, 2+r, ((r << 1) + 2).toString());
+            }
 
             this.drawImage(9, 0, settingsIcon);
         }

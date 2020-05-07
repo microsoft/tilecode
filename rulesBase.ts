@@ -123,7 +123,7 @@ namespace tileworld {
         }
 
         protected fillTile(c: number, r: number, col: color) {
-            screen.fillRect(c << 4, yoff + (r << 4), 16, 16, col);
+            screen.fillRect((c << 4)+1, yoff + (r << 4) +1, 15, 15, col);
         }
 
         protected setTileSaved() {
