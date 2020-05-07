@@ -79,7 +79,8 @@ namespace tileworld {
             screen.fill(0);
             this.dirMap.fill(0xf);
             commandImages.forEach((img,i) => {
-                this.drawImage(i, 0, img);
+                let img2 = img == play ? (this.p.getRules().length > 0 ? img : greyImage(img)) : img;
+                this.drawImage(i, 0, img2);
             });
             this.drawImage(9, 0, settingsIcon);
 
