@@ -9,8 +9,8 @@ namespace tileworld {
             super(null);
             controller.setRepeatDefault(500, 80);
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                let first = this.col() >= 4 && this.col() <= 5;
-                let second = this.col() >= 6 && this.col() <= 7;
+                let first = this.col() >= loadLeft && this.col() <= loadLeft+1;
+                let second = this.col() >= loadLeft+2 && this.col() <= loadLeft+3;
                 if ( ( first || second) && (this.row() > loadTop && this.row() <= loadTop+numRows) ) {
                     let slot = (this.row()-loadTop) + (first ? 0 : numRows);
                     let prefix = "TW"+slot.toString()+"-";
@@ -77,6 +77,11 @@ namespace tileworld {
                 this.makeIt(loadLeft, 2+r, (r + loadTop).toString());
                 this.makeIt(loadLeft+2, 2+r, (r + loadTop + numRows).toString());
             }
+
+            this.drawImage(8, 4, player);
+            this.drawImage(8, 6, dog);
+            this.drawImage(7, 5, snakeHead);
+            this.drawImage(9, 5, enemy);
 
             this.drawImage(9, 0, settingsIcon);
         }

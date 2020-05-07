@@ -1007,7 +1007,7 @@ namespace tileworld {
         . . . 2 2 e e 4 4 4 2 e e . . .
         . . . . . 2 2 e e e e . . . . .
     `;
-    const snakeHead = img`
+    export const snakeHead = img`
         . . . . c c c c c c . . . . . .
         . . . c 6 7 7 7 7 6 c . . . . .
         . . c 7 7 7 7 7 7 7 7 c . . . .
@@ -1133,7 +1133,7 @@ namespace tileworld {
         . . . . . . f f f f d d d c . .
         . . . . . . . . . . c c c . . .
     `;
-    const dog = img`
+    export const dog = img`
         . . . . . . . . . . . . . . . .
         . . 4 4 4 . . . . 4 4 4 . . . .
         . 4 5 5 5 e . . e 5 5 5 4 . . .
@@ -1169,7 +1169,7 @@ namespace tileworld {
         . . . f d d c d d b b d f . . .
         . . . . f f f f f f f f f . . .
     `;
-    const player = img`
+    export const player = img`
         . . . . . . f f f f . . . . . .
         . . . . f f f 2 2 f f f . . . .
         . . . f f f 2 3 2 2 f f f . . .
@@ -1223,7 +1223,7 @@ namespace tileworld {
         . . . . . . c c b b b b c c . .
         . . . . . . . . c c c c . . . .
     `;
-    const enemy = img`
+    export const enemy = img`
         . . . . . . . f f f f . . . . .
         . . . . . f f 1 1 1 1 f f . . .
         . . . . f b 1 1 1 1 1 1 b f . .
