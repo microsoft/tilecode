@@ -434,10 +434,8 @@ namespace tileworld {
         private evaluateRule(ts: TileSprite, rv: RuleView) {
             // console.logValue("rid", rv.getRuleId());
             let witnesses: TileSprite[] = [];
-            for(let col = 0; col < 5; col++) {
-                for (let row = 0; row < 5; row++) {
-                    if (this.manhattan(col, row) > 2)
-                        continue;
+            for(let col = 1; col <= 3; col++) {
+                for (let row = 1; row <= 3; row++) {
                     if (!this.evaluateWhenDo(ts, rv, col, row, witnesses)) {
                         // console.log("failed");
                         return null;
@@ -533,10 +531,8 @@ namespace tileworld {
         }
     
         private evaluateRuleClosure(rc: RuleClosure) {
-            for (let col = 0; col < 5; col++) {
-                for (let row = 0; row < 5; row++) {
-                    if (this.manhattan(col, row) > 2)
-                        continue;
+            for (let col = 1; col <= 3; col++) {
+                for (let row = 1; row <= 3; row++) {
                     this.evaluateWhenDoCommands(rc, col, row);
                 }
             }

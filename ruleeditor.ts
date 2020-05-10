@@ -46,7 +46,7 @@ namespace tileworld.ruleediting {
                         this.resetRule(index < rules.length ? rules[index] : rules[index-1]);
                     }
                     this.askDeleteRule = false;
-                } else if (this.manhattanDistance2() <= 2) {
+                } else if (this.inWhenPredicate()) {
                     if (this.active(this.col(), this.row() - editorRow)) {
                         if (this.menu == RuleEditorMenus.MainMenu) {
                             this.menu = RuleEditorMenus.AttrTypeMenu;
@@ -201,7 +201,7 @@ namespace tileworld.ruleediting {
                 if (this.menu == RuleEditorMenus.MainMenu) {
                     if (this.row() == 0 || this.row() == 6) {
                         this.helpCursor.say(getHelp(menuHelpString, this.col(), this.row()));
-                    } else if (this.manhattanDistance2() <= 2) {
+                    } else if (this.inWhenPredicate()) {
                         this.helpCursor.say("A: predicate");
                     } 
                 } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
@@ -216,8 +216,9 @@ namespace tileworld.ruleediting {
             }
         }
 
-        private manhattanDistance2() {
-            return (Math.abs(2 - this.col()) + Math.abs(2 - (this.row() - editorRow)));
+        private inWhenPredicate() {
+            return 1 <= this.col() && this.col() <=3 &&
+                   1 <= (this.row() - editorRow) && (this.row() - editorRow) <= 3;
         }
 
         protected update() {

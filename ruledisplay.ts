@@ -124,10 +124,9 @@ namespace tileworld.ruleediting {
         }
 
         private makeContext() {
-            for (let i = 0; i <= 4; i++) {
-                for (let j = 0; j <= 4; j++) {
-                    let dist = Math.abs(2 - j) + Math.abs(2 - i);
-                    if (dist <= 2 && this.active(i, j)) {
+            for (let i = 1; i <= 3; i++) {
+                for (let j = 1; j <= 3; j++) {
+                    if (this.active(i, j)) {
                         this.drawImage(i, j + editorRow, emptyTile);
                         this.showAttributes(i, j);
                     }

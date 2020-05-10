@@ -203,13 +203,11 @@ namespace tileworld {
     }
 
     export function isRuleTrue(r: Rule) {
-        for (let col = 0; col < 5; col++) {
-            for (let row = 0; row < 5; row++) {
-                if (Math.abs(2 - col) + Math.abs(2 - row) <= 2) {
-                    let whendo = r.whenDo.find((wd) => wd.col == col && wd.row == row); 
-                    if (whendo && !isWhenDoTrue(whendo))
-                        return false;
-                }
+        for (let col = 1; col <= 3; col++) {
+            for (let row = 1; row <= 3; row++) {
+                let whendo = r.whenDo.find((wd) => wd.col == col && wd.row == row); 
+                if (whendo && !isWhenDoTrue(whendo))
+                    return false;
             }
         }
         return true;
@@ -219,15 +217,13 @@ namespace tileworld {
         let wdCnt = 0;
         let cmdCnt = 0;
         let attrCnt = 0;
-        for (let col = 0; col < 5; col++) {
-            for (let row = 0; row < 5; row++) {
-                if (Math.abs(2 - col) + Math.abs(2 - row) <= 2) {
-                    let whendo = rv.getWhenDo(col, row)
-                    if (whendo != -1) {
-                        wdCnt++;
-                        cmdCnt += rv.getCmdsLen(whendo);
-                        attrCnt += rv.attrCnt(whendo);
-                    }
+        for (let col = 1; col <= 3; col++) {
+            for (let row = 1; row <= 3; row++) {
+                let whendo = rv.getWhenDo(col, row)
+                if (whendo != -1) {
+                    wdCnt++;
+                    cmdCnt += rv.getCmdsLen(whendo);
+                    attrCnt += rv.attrCnt(whendo);
                 }
             }
         }
