@@ -30,7 +30,8 @@
         "main.ts",
         "games.ts",
         "mytilemap.ts",
-        "ruleTransform.ts"
+        "ruleTransform.ts",
+        "when.ts"
     ],
     "testFiles": [
         "test.ts"
