@@ -1,12 +1,16 @@
 namespace tileworld {
 
     export class TileWidget {
+        private parent: TileWidget;
+        private children: TileWidget[];
         // has an absolute coordinate in parent space
-        // occupies some contiguous area (usually, a rectangle)
-        // has a parent that will pass down cursor information and button press information
+        // occupies a rectangle
+        // has parent that will pass down cursor information and button press information
         // has its own saved cursor position
+        // has its own update logic
         // can be active/inactive, visible/invisible
-        // model/view separation???
+        // callbacks
+        // - onTileSelected()
     }
 
     // widget for when section (3x3 pattern)
