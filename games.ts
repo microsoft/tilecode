@@ -386,3 +386,106 @@ settings.writeBuffer("TW4-RuleB5", hex`
 3226220001133200041604020300`);
 settings.writeNumber("TW4-PlayerN",0);
 }
+
+function createTW8() {
+
+    settings.writeString("TW8-VersionS","4.0.0");
+    
+    // buffer length = 140
+    
+    settings.writeBuffer("TW8-WBackM", hex`
+    2018f0a071101110c12071101110c12071101110c120511011101110c120311031101110c1101311
+    10311011101110c120311031101110c120511011101110c12071101110c12071101110c120711011
+    10c1c0c120f17120f17120f17120f17120f17120f17120f17120f17120f17120f17120f17120f171
+    20f17120f17120f17120f17120f17120f171f0a0`);
+    
+    // buffer length = 55
+    
+    settings.writeBuffer("TW8-WSpriteM", hex`
+    2018ffffffffffffffffff9f13ffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    ffffffffffffffffffffffffffff8f`);
+    
+    settings.writeNumber("TW8-BackN",4);
+    
+    // buffer length = 94
+    
+    settings.writeBuffer("TW8-BackI0", hex`
+    10101b6d1c1b6d1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d7b
+    1d7b6c1b1a6c1b1a1b6d1c1b6d1b1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b
+    1c1d6b1c1d7b1d6b7c1b1a6c1b1a`);
+    
+    // buffer length = 53
+    
+    settings.writeBuffer("TW8-BackI1", hex`
+    101015f7f71715471637155715472516e72516b725f725f71725d7251647158715165725d7151715
+    c725167715571516f7f7f75725`);
+    
+    // buffer length = 53
+    
+    settings.writeBuffer("TW8-BackI2", hex`
+    101017f6f61617461836175617462718e62718b627f627f61627d6271846178617185627d6171617
+    c627187617561718f6f6f65627`);
+    
+    // buffer length = 112
+    
+    settings.writeBuffer("TW8-BackI3", hex`
+    10101f6e3f1e2f2e1f2e342e1f5e1f3e544e341e1f2e642e541e1f2e541e743e541e741e1f2e342e
+    742e1f3e1f1e1f1e541e1f1e4f3e1f1e341e1f2e2f2e345e1f1e142e1f1e541e1f1e1f1e341e1f1e
+    542e1f1e441e1f1e641e1f1e443e641e1f2e342e1f1e347e144e1f4e2f1e1f3e`);
+    
+    settings.writeNumber("TW8-SpriteN",4);
+    
+    // buffer length = 130
+    
+    settings.writeBuffer("TW8-SpriteI0", hex`
+    1010f0802fa05f1e1f101e24403f1e1f3e1f141d14303f1e122f142e3f302f1e122f1b111d1e2214
+    4f121e121f1e2f1d1422143f12131e121f1e142d1422151f101f221e121f1e142d1422151f102f12
+    1e121f1e2f1d1422142f102f1e122f1b111d1e22142f103f1e122f142e3f402f2e1f3e1f141d1450
+    5f1e1f101e24902ff080`);
+    
+    // buffer length = 68
+    
+    settings.writeBuffer("TW8-SpriteI1", hex`
+    1010c02cd03cc04cc01f3cb01e1f3ca01c1e1f1e2c802e1c121c3e702e121c121c122e7012241e12
+    1e32803e141e32a02e1f32b01e1f2412c01e2214c02e22d03ee02e20`);
+    
+    // buffer length = 123
+    
+    settings.writeBuffer("TW8-SpriteI2", hex`
+    1010b01c2f502c2f301c21161f301c16371f101c1731161c101c271c16271f27412c1627161f271c
+    22412c3726271c37312c3726271c2726212c37161f17161c171c1f26112c371c16171c17161f2c16
+    112c16773c361c101c67161f561c201c1637161f27461f302c3f37261c1f801c27161c2fa01c171c
+    e02c50`);
+    
+    // buffer length = 64
+    
+    settings.writeBuffer("TW8-SpriteI3", hex`
+    1010f0502839a0384980485960586950587940281928893018391899201839111981201829211971
+    301841196140184119517031194180311931a0211921f080`);
+    
+    settings.writeNumber("TW8-HelpN",1);
+    
+    settings.writeNumber("TW8-HighN",undefined);
+    
+    // buffer length = 12
+    
+    settings.writeBuffer("TW8-RuleB0", hex`
+    412022004014320400060003`);
+    
+    // buffer length = 20
+    
+    settings.writeBuffer("TW8-RuleB1", hex`
+    4140220040133201000633040006310400060002`);
+    
+    // buffer length = 20
+    settings.writeBuffer("TW8-RuleB2", hex`
+    3140220040133201000633040006310400060000`);
+    
+    // buffer length = 22
+    
+    settings.writeBuffer("TW8-RuleB3", hex`
+    31402200402331010006320100063301000605030203`);
+    
+    settings.writeNumber("TW8-PlayerN",0);
+    
+}

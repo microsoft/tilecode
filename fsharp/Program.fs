@@ -15,16 +15,35 @@ type Command =
    | Paint of TileKind
    | Portal of TileKind
    | Destroy
-   | Game of GameArg 
+   | Game of GameArg
    | Block of SpriteKind
 type Guard =
-   | TilePredicate of (string list) * (string list) * (string list)
+   | TilePredicate of (string list) * (string list) * (string list)                                                 
 type GuardedCommand =
    | WhenDo of int * int * Guard * DirectionPredicate * Command list
 type OneRule =
    | Rule of RuleKind * GuardedCommand list
 type OneProgram = 
    | Program of (int * OneRule) list
+
+// ------------------------------------------------------------------------
+// TW state
+                                                                                                                                                                                                                                                                       
+// tile map
+// sprite
+
+// ------------------------------------------------------------------------
+// virtual machine 
+// - change semantics (guard changes from iteration i to i+1)
+
+// - match guard against map
+// - sprite witnesses identification
+// - direction predicate match
+
+// - phases
+// - 0. global check
+// - 1. button -shadows- change
+// - 2. collision
 
 // ------------------------------------------------------------------------
 // unparser

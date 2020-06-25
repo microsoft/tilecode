@@ -21,9 +21,13 @@ Copy this [UF2 file](https://github.com/microsoft/tileworld/releases/download/v3
 * [Sharing TileWorld Games](#sharing)
 * [Having Problems?](#issues)
 
-## Tour of TileWorld {#tour}
+# Tour of TileWorld {#tour}
 
-Let's take a quick tour through the various screens of TileWorld. The load screen of TileWorld lets you select one of four games to program and play.  All editing takes place via the tile paradigm: move the square-shaped cursor between adjacent tiles using the direction pad (dpad); select a tile using the **A** button to perform an action; the **B** button takes you back (to the menu of the current screen or to the previous screen).
+Let's take a quick tour through the various screens of TileWorld.  All editing takes place via the tile paradigm: move the square-shaped cursor between adjacent tiles using the direction pad (dpad); select a tile using the **A** button to perform an action; the **B** button takes you back (to the menu of the current screen or to the previous screen).
+
+## Load Screen
+
+The load screen of TileWorld lets you select one of eight games to program and play (slots colored blue already have game assets). 
 
 ![load screen](pics/loadScreen.gif)
 
@@ -31,32 +35,28 @@ Let's take a quick tour through the various screens of TileWorld. The load scree
 
 ## Game Home Screen
 
-We load the game from slot #1, which takes us to the game's home screen, as shown below:
+The game's home screen displays after a game slot has been selected:
 
 ![home page](pics/homePage1.gif)
 
-Move the cursor around the screen to get help about all the features available. Each TileWorld game has four kinds of map tiles and four kinds of sprites to work with. Let's visit the art gallery to change the art associated with the fourth sprite (the skull).
+Each TileWorld game has four kinds of map tiles and four kinds of sprites to work with, as shown on the screen.  You can visit the art gallery to change the art of a tile or sprite by selecting the tile/sprite. 
 
 ![help cursor](pics/helpGallery.gif)
 
 ## Gallery
 
+In the gallery, simply move to the artwork you wish and select it with the **A** button. Use the **B** button to return to the game home screen.
 We move the cursor to the puppy dog and select it (**A** button) 
 
 ![gallery](pics/galleryPuppy.gif)
 
-Now, when we return to the game home screen, we can see the skull has been replaced by the puppy:
-
-![updated with puppy](pics/homePage2.gif)
-
 ## Menu bar
 
-The menu bar of the game screen has four main commands in addition to the gear wheel (for game settings): world map editor, paint tile/sprite art, code editor, and play game.
+The menu bar of the game home screen has four main commands in addition to the gear wheel (for game settings): world map editor, paint tile/sprite art, code editor, and play game.
 
 ![menu bar](pics/menuOptions.png)
 
-
-## Map
+## Map Editor
 
 The map editor lets you paint the game world's tiles and place sprites on tiles. Select one of the four tiles and move your cursor down to the map. Press **A** to color a tile. Press **B** to return to the menu bar and select another tile. After selecting a sprite, the **A** button will place the sprite on a tile, replacing the sprite that is there (or removing it if it is the same as the selected sprite). 
 
@@ -66,13 +66,11 @@ You can color tiles quickly by holding down the **A** button while moving the cu
 
 ## Paint
 
-The paint editor lets you change the art associated with a tile or sprite. As with the map editor, select the tile/sprite whose art you want to change. Here we have selected the puppy dog:
-
-![paint art](pics/paintPuppy1.gif)
-
-Move your cursor down to edit the bitmap (using the **A** button to apply the currently selected color).  Press **B** to move from the bitmap pane to the color selector. Selecting a color will send the cursor back to the bitmap pane so you can quickly resume coloring where you left off. We have colored the puppy's eyes red:
+The paint editor lets you change the art associated with a tile or sprite.
 
 ![paint art](pics/paintPuppy2.gif)
+
+ As with the map editor, select the tile/sprite whose art you want to change. Move your cursor down to edit the bitmap (using the **A** button to apply the currently selected color).  Press **B** to move from the bitmap pane to the color selector. Selecting a color will send the cursor back to the bitmap pane so you can quickly resume coloring where you left off. We have colored the puppy's eyes red:
 
 ## Code
 
@@ -97,8 +95,6 @@ The play button runs the game in full screen mode. Press **B** to exit the game.
 Once you get used to the features available in TileWorld, you can turn off the help suggestions via the gear wheel, which takes you to the settings screen. 
 
 ![game settings](pics/gameSettings.gif)
-
-
 
 # Coding in TileWorld {#coding}
 
