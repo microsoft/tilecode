@@ -161,8 +161,8 @@ namespace tileworld {
             if (rc.rv.getRuleType() == RuleType.ButtonPress) {
                 if (this.vm.buttonMatch.indexOf(rc.self) == -1)
                     this.vm.buttonMatch.push(rc.self);
-            } else if (rc.rv.getRuleType() == RuleType.ButtonPress) {
-                // if a colliding sprite in motion transitions to
+            } else if (false) { // rc.rv.getRuleType() == RuleType.Collision) {
+                // TODO: if a colliding sprite in motion transitions to
                 // resting (via stop or uturn command) then we
                 // may have more collisions to process
                 if (rc.self.movedToStopped) {
@@ -607,7 +607,7 @@ namespace tileworld {
                         let witness = rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow);
                         // except in the case of collisions with moving sprites
                         if (rc.rv.getRuleType() == RuleType.Collision) {
-                            witness = rc.witnesses[0];
+                            witness = (col == 2 && row == 2) ? rc.self : rc.witnesses[0];
                         }
                         if (arg == SpriteArg.Remove && witness) {
                             witness.state = SpriteState.Dead;
@@ -761,7 +761,7 @@ namespace tileworld {
  
             let playerId = this.p.getPlayer();
             if (playerId != -1 && this.state.sprites[playerId]) {
-                //scene.cameraFollowSprite(this.state.sprites[playerId][0]);
+                scene.cameraFollowSprite(this.state.sprites[playerId][0]);
             }
 
             this.vm.setState(this.state);
