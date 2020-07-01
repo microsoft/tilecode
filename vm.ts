@@ -10,6 +10,7 @@ namespace tileworld {
         public lastDir: MoveRest;
         public inst: number;        // the one instruction history to apply to the sprite to 
         public arg: number;         // create the next sprite state
+        public movedToStopped: boolean;   // did the sprite get a move command, and then a stop command?
         // public changed: boolean;
         constructor(img: Image, kind: number, d: boolean = false) {
             super(img);
@@ -72,16 +73,17 @@ namespace tileworld {
         public score: number; 
         public game: GameState;             // see type   
         public sprites: TileSprite[][];     // the sprites, sorted by kind
-        public blockedSpriteKinds: number[];
+        public blockedSpriteKinds: number[];// rules won't get applied to these sprites in this round
         // during evaluating
         public phase: RuleType;
         public queued: TileSprite[];
-        public buttonMatch: TileSprite[];   // which sprites had a button event rule (external influence)
+        public buttonMatch: TileSprite[];       // which sprites had a button event rule (external influence)
+        public movingToResting: TileSprite[];   // sprites that transitioned to resting due to collision
         // affects of commands (before being committed)
-        public paintTile: Tile[];           // log of paint commands
-        public deadSprites: TileSprite[];   // the sprites removed this round
+        public paintTile: Tile[];            // log of paint commands
+        public deadSprites: TileSprite[];    // the sprites removed this round
         public spawnedSprites: TileSprite[]; // the sprites spawned this round
-        public nextBlockedSprites: number[];
+        public nextBlockedSprites: number[]; // the sprites that will not have rules applied in next round
         // 
         public changed: Image;              // what changed in last round
         constructor() {
@@ -141,6 +143,7 @@ namespace tileworld {
             this.vm.paintTile = [];
             this.vm.buttonMatch = [];
             this.vm.nextBlockedSprites = [];
+            this.vm.movingToResting = [];
             this.vm.queued = [];
             this.vm.phase = RuleType.NegationCheck;
 
@@ -148,6 +151,7 @@ namespace tileworld {
                 ts.x = ((ts.x >> 4) << 4) + 8;      // make sure sprite is centered
                 ts.y = ((ts.y >> 4) << 4) + 8;      // on its tile
                 ts.inst = -1;                       // reset instruction
+                ts.movedToStopped = false;
                 this.vm.queued.push(ts);
             });
         }
@@ -157,6 +161,17 @@ namespace tileworld {
             if (rc.rv.getRuleType() == RuleType.ButtonPress) {
                 if (this.vm.buttonMatch.indexOf(rc.self) == -1)
                     this.vm.buttonMatch.push(rc.self);
+            } else if (rc.rv.getRuleType() == RuleType.ButtonPress) {
+                // if a colliding sprite in motion transitions to
+                // resting (via stop or uturn command) then we
+                // may have more collisions to process
+                if (rc.self.movedToStopped) {
+                    if (this.vm.movingToResting.indexOf(rc.self) == -1)
+                        this.vm.movingToResting.push(rc.self);  
+                } else if (rc.witnesses[0].movedToStopped) {
+                    if (this.vm.movingToResting.indexOf(rc.witnesses[0]) == -1)
+                        this.vm.movingToResting.push(rc.witnesses[0]);
+                }
             }
         }
 
@@ -189,6 +204,7 @@ namespace tileworld {
                 } else {
                     this.vm.phase = RuleType.ContextChange;
                     this.allSprites(ts => { 
+                        // ButtonPress on sprite shadows ContextChange
                         if (this.vm.buttonMatch.indexOf(ts) == -1) 
                             this.vm.queued.push(ts);
                     });
@@ -210,15 +226,12 @@ namespace tileworld {
             if (this.vm.phase == RuleType.Collision) {
                 if (this.vm.queued.length > 0) {
                     let ts = this.vm.queued.pop();                           
-                    // now, look for collisions
-                    // TODO: need a fix point around this, as new collisions may occur
-                    // TODO: as moving sprites transition to resting sprites
-                    // a collision can only take place between two sprites if one of
-                    // them is going to move in the next round, against is initially
-                    // all sprites and will dimish over time 
                     return this.collisionDetection( ts );
                 } else {
-                    this.vm.phase = -1;
+                    if (this.vm.movingToResting.length > 0) {
+                        // TODO: need a special mode for this?
+                    } else
+                        this.vm.phase = -1;
                 }
             }
             // finally, update the rules
@@ -234,11 +247,7 @@ namespace tileworld {
             });
         }
 
-        // optimization:
-        // use the changed map to determine if a resting sprite
-        // needs to have its resting rules applied. If no space
-        // in the neighborhood around the tile changed in the last
-        // round, then there is no need to apply the resting rules.
+        // use the changed map to determine if a sprite's context has changed
         private contextChanged(ts: TileSprite) {
             // check neighborhood
             for(let i = -2; i <= 2; i++) {
@@ -297,7 +306,7 @@ namespace tileworld {
         // for each sprite ts that is will move (into T):
         // - look for colliding sprite os != ts, as defined
         //   (a) os in square T, resting or moving towards ts, or
-        //   (b) os moving into T
+        //   (b) os moving into T    
         private collisionDetection(ts: TileSprite) {
             let rcs: RuleClosure[] = [];
             if (!this.moving(ts)) return rcs;
@@ -363,6 +372,10 @@ namespace tileworld {
                 });
             });
             return rcs;
+        }
+
+        private collideIntoResting(ts: TileSprite) {
+
         }
 
         private collide(rv: RuleView, ts: TileSprite, os: TileSprite, rcs: RuleClosure[]) {
@@ -576,6 +589,12 @@ namespace tileworld {
                             (colliding ? rc.witnesses[0]
                                        : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow));
                         if (witness && (witness.inst == -1 || Math.randomRange(0,1) < 0.5 || colliding || button)) {
+                            // TODO: this is where we can determine if a colliding witness
+                            // TODO: is transition from a moving state to a resting state
+                            if (colliding && !self && witness.inst == CommandType.Move && witness.arg < MoveArg.Stop) {
+                                if (arg == MoveArg.Stop || arg == MoveArg.UTurn)
+                                    witness.movedToStopped = true;
+                            }
                             witness.inst = inst;
                             witness.arg = arg;
                         }
@@ -742,7 +761,7 @@ namespace tileworld {
  
             let playerId = this.p.getPlayer();
             if (playerId != -1 && this.state.sprites[playerId]) {
-                scene.cameraFollowSprite(this.state.sprites[playerId][0]);
+                //scene.cameraFollowSprite(this.state.sprites[playerId][0]);
             }
 
             this.vm.setState(this.state);

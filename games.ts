@@ -2,7 +2,7 @@
 
 // boulder dash
 if (!settings.exists("TW3-VersionS"))
-    createTW3();
+    createTW3(); 
 
 // base rules: 13
 // derived rules: 14
@@ -10,6 +10,7 @@ if (!settings.exists("TW3-VersionS"))
 // attrs: 60
 // commands: 15
 
+ 
 // snake
 if (!settings.exists("TW2-VersionS"))
     createTW2();
@@ -387,6 +388,9 @@ settings.writeBuffer("TW4-RuleB5", hex`
 settings.writeNumber("TW4-PlayerN",0);
 }
 
+if (!settings.exists("TW8-VersionS"))
+    createTW8();
+    
 function createTW8() {
 
     settings.writeString("TW8-VersionS","4.0.0");
@@ -488,4 +492,105 @@ function createTW8() {
     
     settings.writeNumber("TW8-PlayerN",0);
     
+}
+
+
+function createTW5() {
+settings.writeString("TW5-VersionS","4.0.0");
+// buffer length = 246
+settings.writeBuffer("TW5-WBackM", hex`
+201880111012b0211061101110111011103110311021101120111011101110111011101110311011
+10211011201110113011301130111011102110f13110111021101120115011301110113011102110
+11203110711031101110211041103110131011103110311021401130113311301130111021104110
+3110131011103110311021101120311071103110111021101120115011301110113011102110f131
+10111021101120111011301130113011101110211011201110111011101110111011103110111021
+106110111011101110311031102180111012101190f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1
+f1f1f1f1f121`);
+// buffer length = 185
+settings.writeBuffer("TW5-WSpriteM", hex`
+2018ffaf613f113f311f314f112f111f113f113f111f311f114f112f111f113f113f113f111f114f
+f1311f114f112f115f113f111f113f114f112f316f211f311f114f411f212f123f311f317f114f12
+1f124f103f114f411f212f123f311f314f112f316f211f311f114f112f115f113f111f113f114ff1
+311f114f112f111f113f113f113f111f114f112f111f113f113f111f311f114f613f113f311f31ff
+ffffffffffffffffffffffffffffffffffffffffffffffffcf`);
+settings.writeNumber("TW5-BackN",4);
+// buffer length = 93
+settings.writeBuffer("TW5-BackI0", hex`
+1010ff4fa85f18af183f183f683f182f182f186f182f182f181f188f181f182f181f188f181f182f
+181f188f181f182f181f188f181f182f181f188f181f182f181f188f181f182f182f186f182f182f
+183f683f183f18af185fa8ff4f`);
+// buffer length = 20
+settings.writeBuffer("TW5-BackI1", hex`
+1010ffffffffffffffffffffffffffffffffff1f`);
+// buffer length = 53
+settings.writeBuffer("TW5-BackI2", hex`
+101017f6f61617461836175617462718e62718b627f627f61627d6271846178617185627d6171617
+c627187617561718f6f6f65627`);
+// buffer length = 112
+settings.writeBuffer("TW5-BackI3", hex`
+10101f6e3f1e2f2e1f2e342e1f5e1f3e544e341e1f2e642e541e1f2e541e743e541e741e1f2e342e
+742e1f3e1f1e1f1e541e1f1e4f3e1f1e341e1f2e2f2e345e1f1e142e1f1e541e1f1e1f1e341e1f1e
+542e1f1e441e1f1e641e1f1e443e641e1f2e342e1f1e347e144e1f4e2f1e1f3e`);
+settings.writeNumber("TW5-SpriteN",4);
+// buffer length = 130
+settings.writeBuffer("TW5-SpriteI0", hex`
+1010f0802fa05f1e1f101e24403f1e1f3e1f141d14303f1e152f142e3f302f1e152f251d1e151214
+4f121e151f1e251d141512143f12131e151f1e142d14351f101f221e151f1e142d14351f102f121e
+151f1e251d141512142f102f1e152f251d1e1512142f103f1e152f142e3f402f2e1f3e1f141d1450
+5f1e1f101e24902ff080`);
+// buffer length = 23
+settings.writeBuffer("TW5-SpriteI1", hex`
+1010f0f0f0f0f0f0d025d045c045d025f0f0f0f0f0f0d0`);
+// buffer length = 123
+settings.writeBuffer("TW5-SpriteI2", hex`
+1010b01c2f502c2f301c21161f301c16371f101c1731161c101c271c16271f27412c1627161f271c
+22412c3726271c37312c3726271c2726212c37161f17161c171c1f26112c371c16171c17161f2c16
+112c16773c361c101c67161f561c201c1637161f27461f302c3f37261c1f801c27161c2fa01c171c
+e02c50`);
+// buffer length = 64
+settings.writeBuffer("TW5-SpriteI3", hex`
+1010f0502839a0384980485960586950587940281928893018391899201839111981201829211971
+301841196140184119517031194180311931a0211921f080`);
+settings.writeNumber("TW5-HelpN",0);
+settings.writeNumber("TW5-HighN",1540);
+// buffer length = 8
+settings.writeBuffer("TW5-RuleB0", hex`
+2016220801160002`);
+// buffer length = 12
+settings.writeBuffer("TW5-RuleB1", hex`
+222622000112234100060004`);
+// buffer length = 14
+settings.writeBuffer("TW5-RuleB2", hex`
+2226220001022300042603000402`);
+// buffer length = 18
+settings.writeBuffer("TW5-RuleB3", hex`
+202022200146210400060300050202000002`);
+// buffer length = 18
+settings.writeBuffer("TW5-RuleB4", hex`
+002022200146230400060300050202000000`);
+// buffer length = 12
+settings.writeBuffer("TW5-RuleB5", hex`
+002022200116210400060000`);
+// buffer length = 20
+settings.writeBuffer("TW5-RuleB6", hex`
+2146220010121201000623040006320100060002`);
+// buffer length = 20
+settings.writeBuffer("TW5-RuleB7", hex`
+2146220010122301000612010006320400060003`);
+// buffer length = 12
+settings.writeBuffer("TW5-RuleB8", hex`
+212622001014120400060001`);
+// buffer length = 20
+settings.writeBuffer("TW5-RuleB9", hex`
+2146220010123201000623010006120400060001`);
+// buffer length = 16
+settings.writeBuffer("TW5-RuleB10", hex`
+21362200101223040006320400060002`);
+// buffer length = 16
+settings.writeBuffer("TW5-RuleB11", hex`
+21362200101223040006320400060003`);
+// buffer length = 12
+settings.writeBuffer("TW5-RuleB12", hex`
+222622001012230001060401`);
+settings.writeNumber("TW5-PlayerN",0);
 }

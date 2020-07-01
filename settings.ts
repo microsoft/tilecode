@@ -23,7 +23,7 @@ namespace tileworld {
                         this.p.help = !this.p.help;
                         this.p.saveHelp();
                     } else if (this.col() == 4 && this.row() ==5) {
-                        //this.p.printRules();
+                        // this.p.printRules();
                         loadProject(this.p.prefix, true);
                     } if (this.col() == 4 && this.row() ==6) {
                         this.askDeleteRule = true;
