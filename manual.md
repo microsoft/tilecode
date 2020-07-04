@@ -1,33 +1,28 @@
----
-# this is an empty front matter
----
-
-
-[![tile world](pics/loadScreen.gif)](https://microsoft.github.io/tileworld/)
+[![TileCode](pics/loadScreen.gif)](https://microsoft.github.io/tilecode/)
 
 # Introduction
 
-TileWorld is a game creation app that allows you to design and play games directly on MakeCode Arcade devices. TileWorld games are based on the familiar paradigm of a gameboard with pieces that can move from one tile of the board to an adjacent tile. You can run TileWorld: 
-* in a [web browser](https://microsoft.github.io/tileworld/), or 
+TileCode is a game creation app that allows you to design and play games directly on MakeCode Arcade devices. TileCode games are based on the familiar paradigm of a gameboard with pieces that can move from one tile of the board to an adjacent tile. You can run TileCode: 
+* in a [web browser](https://microsoft.github.io/tilecode/), or 
 * on any [MakeCode Arcade device](https://arcade.makecode.com/hardware).
 
-Copy this [UF2 file](https://github.com/microsoft/tileworld/releases/download/v3.5.5/arcade-all.uf2) to your device to get started (works for all MakeCode Arcade devices).
+Copy this [UF2 file](https://github.com/microsoft/tilecode/releases/download/v3.5.5/arcade-all.uf2) to your device to get started (works for all MakeCode Arcade devices).
 
 # Overview 
 
-* [Tour of TileWorld](#tour)
-* [Coding in TileWorld](#coding)
+* [Tour of TileCode](#tour)
+* [Coding in TileCode](#coding)
 * [Your First Game](#firstgame)
-* [Sharing TileWorld Games](#sharing)
+* [Sharing TileCode Games](#sharing)
 * [Having Problems?](#issues)
 
-# Tour of TileWorld {#tour}
+# Tour of TileCode {#tour}
 
-Let's take a quick tour through the various screens of TileWorld.  All editing takes place via the tile paradigm: move the square-shaped cursor between adjacent tiles using the direction pad (dpad); select a tile using the **A** button to perform an action; the **B** button takes you back (to the menu of the current screen or to the previous screen).
+Let's take a quick tour through the various screens of TileCode.  All editing takes place via the tile paradigm: move the square-shaped cursor between adjacent tiles using the direction pad (dpad); select a tile using the **A** button to perform an action; the **B** button takes you back (to the menu of the current screen or to the previous screen).
 
 ## Load Screen
 
-The load screen of TileWorld lets you select one of eight games to program and play (slots colored blue already have game assets). 
+The load screen of TileCode lets you select one of eight games to program and play (slots colored blue already have game assets). 
 
 ![load screen](pics/loadScreen.gif)
 
@@ -39,7 +34,7 @@ The game's home screen displays after a game slot has been selected:
 
 ![home page](pics/homePage1.gif)
 
-Each TileWorld game has four kinds of map tiles and four kinds of sprites to work with, as shown on the screen.  You can visit the art gallery to change the art of a tile or sprite by selecting the tile/sprite. 
+Each TileCode game has four kinds of map tiles and four kinds of sprites to work with, as shown on the screen.  You can visit the art gallery to change the art of a tile or sprite by selecting the tile/sprite. 
 
 ![help cursor](pics/helpGallery.gif)
 
@@ -92,11 +87,11 @@ The play button runs the game in full screen mode. Press **B** to exit the game.
 
 ## Settings
 
-Once you get used to the features available in TileWorld, you can turn off the help suggestions via the gear wheel, which takes you to the settings screen. 
+Once you get used to the features available in TileCode, you can turn off the help suggestions via the gear wheel, which takes you to the settings screen. 
 
 ![game settings](pics/gameSettings.gif)
 
-# Coding in TileWorld {#coding}
+# Coding in TileCode {#coding}
 
 Each sprite's behavior is governed by a set of rules that you can program. Let's start with a fresh game. Go to the load screen and select game slot #2. If you play the game, you'll see that you can move the player sprite around with the direction pad. Let's look at the rules for the player sprite:
 
@@ -243,10 +238,10 @@ Whenever the fish and the player occupy the same space then a left dpad button p
 
 With these rules in place, you should be able to transport fish from the pond on the right to the pond on the left.
 
-# Sharing Your TileWorld Games {#sharing}
+# Sharing Your TileCode Games {#sharing}
 
-The easiest way to share a TileWorld game you have created on an Arcade device is to copy the UF2 file from your device and share it with your friend. The UF2 file includes the flash settings in which your games are stored. When your friend copies this UF2 file to their Arcade device, they will get the games you created. Keep in mind that if your friend's Arcade device is not the same as yours, this may not work.
+The easiest way to share a TileCode game you have created on an Arcade device is to copy the UF2 file from your device and share it with your friend. The UF2 file includes the flash settings in which your games are stored. When your friend copies this UF2 file to their Arcade device, they will get the games you created. Keep in mind that if your friend's Arcade device is not the same as yours, this may not work.
 
 # Having Problems? {#issues}
 
-Please file a [GitHub issue](https://github.com/microsoft/tileworld/issues) if you encounter a problem with TileWorld.
+Please file a [GitHub issue](https://github.com/microsoft/tilecode/issues) if you encounter a problem with TileCode.
