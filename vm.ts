@@ -761,7 +761,7 @@ namespace tileworld {
  
             let playerId = this.p.getPlayer();
             if (playerId != -1 && this.state.sprites[playerId]) {
-                // scene.cameraFollowSprite(this.state.sprites[playerId][0]);
+                scene.cameraFollowSprite(this.state.sprites[playerId][0]);
             }
 
             this.vm.setState(this.state);
