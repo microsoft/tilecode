@@ -67,7 +67,7 @@ namespace tileworld {
             this.drawImage(0, 5, this.lastDir == MoveDirection.Left ? leftButton : greyImage(leftButton));
             this.drawImage(2, 5, this.lastDir == MoveDirection.Right ? rightButton : greyImage(rightButton));
 
-            screen.print("TileWorld", 6, yoff + 4);
+            screen.print("TileCode", 6, yoff + 4);
             this.fillTile(loadLeft,loadTop,12); this.fillTile(loadLeft+1,loadTop,12);
             screen.print("Load", (loadLeft << 4) + 4, (loadTop << 4) + 4 + yoff);
             this.fillTile(loadLeft+2, loadTop, 12); this.fillTile(loadLeft+3, loadTop, 12);
