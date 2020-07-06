@@ -28,13 +28,11 @@ Let's take a quick tour through the various screens of TileCode.  All editing ta
 
 ## Load Screen
 
-The load screen of TileCode lets you select one of eight games to program and play (slots colored blue already have game assets). 
+The load screen of TileCode lets you select one of eight games to program and play (slots colored blue already have game assets):
 
 ![load screen](pics/loadScreen.gif)
 
- All game assets (gameboard, images and code) are stored in the flash memory of your Arcade device, 
- so your changes will remain even if you power the device off. 
- Assets are saved to flash whenever you transition between screens.
+ All game assets (gameboard, images and code) are stored in the flash memory of your Arcade device, so your changes will remain even if you power the device off. Assets are saved to flash whenever you transition between screens.
 
 ## Game Home Screen
 
@@ -42,15 +40,17 @@ The game's home screen displays after a game slot has been selected:
 
 ![home page](pics/homePage1.gif)
 
-Each TileCode game has four kinds of tile backgrounds and four kinds of sprites to work with, as shown on the screen.  
-You can visit the art gallery to change the background art or sprite art by selecting the backgroun/sprite. 
+Each TileCode game has four kinds of tile backgrounds and four kinds of sprites to work with, as shown on the screen.  You can visit the art gallery to change the background art or sprite art by selecting the background/sprite. 
 
 ![help cursor](pics/helpGallery.gif)
 
 ## Gallery
 
-In the gallery, simply move to the artwork you wish and select it with the **A** button. 
-Use the **B** button to return to the game home screen.
+In the gallery, simply move to the artwork you wish and select it with the **A** button:
+
+![gallery](pics/gallery.gif)
+
+As usual, use the **B** button to return to the game home screen.
 
 ## Menu bar
 
