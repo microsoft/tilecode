@@ -95,11 +95,8 @@ types of rules available (**match, press, smash, miscellaneous**).  A tile is hi
 if there is a rule of that type present. Select a tile to create a new rule or visit an
 already present rule. 
 
-![rule selector](pics/boulderRules.gif)
 
 ## Rule Editor
-
-![rule editor](pics/boulderRestingRule.gif)
 
 A rule takes the form of a **When-Do** guarded command. The **When** guard is a predicate/pattern
 over the 3x3 local neighborhood around the central sprite. When the guard matches on
