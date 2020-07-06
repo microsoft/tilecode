@@ -2,11 +2,14 @@
 
 # Introduction
 
-TileCode is a game creation app that allows you to design and play games directly on MakeCode Arcade devices. TileCode games are based on the familiar paradigm of a gameboard with pieces that can move from one tile of the board to an adjacent tile. You can run TileCode: 
+TileCode is a game creation app that allows you to design and play games directly on MakeCode Arcade devices. 
+TileCode games are based on the familiar paradigm of a gameboard with pieces that can move from one tile of 
+the board to an adjacent tile. You can run TileCode: 
 * in a [web browser](https://microsoft.github.io/tilecode/), or 
 * on any [MakeCode Arcade device](https://arcade.makecode.com/hardware).
 
-Copy this [UF2 file](https://github.com/microsoft/tilecode/releases/download/v3.5.5/arcade-all.uf2) to your device to get started (works for all MakeCode Arcade devices).
+Copy this [UF2 file](https://github.com/microsoft/tilecode/releases/download/v3.5.5/arcade-all.uf2) to your 
+device to get started (works for all MakeCode Arcade devices).
 
 # Overview 
 
@@ -18,7 +21,10 @@ Copy this [UF2 file](https://github.com/microsoft/tilecode/releases/download/v3.
 
 # Tour of TileCode {#tour}
 
-Let's take a quick tour through the various screens of TileCode.  All editing takes place via the tile paradigm: move the square-shaped cursor between adjacent tiles using the direction pad (dpad); select a tile using the **A** button to perform an action; the **B** button takes you back (to the menu of the current screen or to the previous screen).
+Let's take a quick tour through the various screens of TileCode.  All editing takes place via the tile paradigm: 
+* move the square-shaped cursor between adjacent tiles using the direction pad (dpad); 
+* select a tile using the **A** button to perform an action; 
+* press the **B** button to take you back to the menu of the current screen or to the previous screen
 
 ## Load Screen
 
@@ -26,7 +32,9 @@ The load screen of TileCode lets you select one of eight games to program and pl
 
 ![load screen](pics/loadScreen.gif)
 
- All game assets (gameboard, images and code) are stored in the flash memory of your Arcade device, so your changes will remain even if you power the device off. Assets are saved to flash whenever you transition between screens.
+ All game assets (gameboard, images and code) are stored in the flash memory of your Arcade device, 
+ so your changes will remain even if you power the device off. 
+ Assets are saved to flash whenever you transition between screens.
 
 ## Game Home Screen
 
@@ -34,66 +42,88 @@ The game's home screen displays after a game slot has been selected:
 
 ![home page](pics/homePage1.gif)
 
-Each TileCode game has four kinds of map tiles and four kinds of sprites to work with, as shown on the screen.  You can visit the art gallery to change the art of a tile or sprite by selecting the tile/sprite. 
+Each TileCode game has four kinds of tile backgrounds and four kinds of sprites to work with, as shown on the screen.  
+You can visit the art gallery to change the background art or sprite art by selecting the backgroun/sprite. 
 
 ![help cursor](pics/helpGallery.gif)
 
 ## Gallery
 
-In the gallery, simply move to the artwork you wish and select it with the **A** button. Use the **B** button to return to the game home screen.
-We move the cursor to the puppy dog and select it (**A** button) 
-
-![gallery](pics/galleryPuppy.gif)
+In the gallery, simply move to the artwork you wish and select it with the **A** button. 
+Use the **B** button to return to the game home screen.
 
 ## Menu bar
 
-The menu bar of the game home screen has four main commands in addition to the gear wheel (for game settings): world map editor, paint tile/sprite art, code editor, and play game.
+The menu bar of the game home screen has four main commands in addition to the gear wheel (for game settings): 
+* tile map editor
+* sprite editor 
+* rule selector
+* play game
 
 ![menu bar](pics/menuOptions.png)
 
-## Map Editor
+## Tile Map Editor
 
-The map editor lets you paint the game world's tiles and place sprites on tiles. Select one of the four tiles and move your cursor down to the map. Press **A** to color a tile. Press **B** to return to the menu bar and select another tile. After selecting a sprite, the **A** button will place the sprite on a tile, replacing the sprite that is there (or removing it if it is the same as the selected sprite). 
+The tile map editor lets you paint the game world's tiles and place sprites on tiles. 
+Select one of the four backgrounds and move the cursor down to the map. 
+Press **A** to paint a tile with the current background. 
+Press **B** to return to the menu bar and select another background or sprite. 
+After selecting a sprite, the **A** button will place the sprite on a tile, 
+replacing the sprite that is there (or removing it if it is the same as the selected sprite). 
 
-![world map editor](pics/map.gif)
+![tile map editor](pics/map.gif)
 
-You can color tiles quickly by holding down the **A** button while moving the cursor. The reset button (upper right) resets the camera to the upper left of the map. To return to the game screen, press the **B** button (**B** always takes you back).
+You can paint tiles quickly by holding down the **A** button while moving the cursor. 
+The reset button (upper right) resets the camera to the upper left of the map. 
+To return to the game screen, press the **B** button.
 
-## Paint
+## Paint Editor
 
 The paint editor lets you change the art associated with a tile or sprite.
 
 ![paint art](pics/paintPuppy2.gif)
 
- As with the map editor, select the tile/sprite whose art you want to change. Move your cursor down to edit the bitmap (using the **A** button to apply the currently selected color).  Press **B** to move from the bitmap pane to the color selector. Selecting a color will send the cursor back to the bitmap pane so you can quickly resume coloring where you left off. We have colored the puppy's eyes red:
+ As with the map editor, select the tile/sprite whose art you want to change. 
+ Move the cursor down to edit the bitmap (using the **A** button to apply the currently selected color).  
+ Press **B** to move from the bitmap pane to the color selector (pressing **B** again will take you back to the top menu).
+ Selecting a color will send the cursor back to the bitmap pane so you can resume painting where you left off. 
 
-## Code
+## Rule Selector
 
-The coding page shows the four kinds of sprites on the left and the different types of rules available. We have selected the boulder sprite - the highlighted squares represent the rules we have coded to give the boulder its behavior (note that there are no rules highlighted for the direction pad in the upper right).
+The rule selector screen shows the four kinds of sprites on the left and the different 
+types of rules available (**match, press, smash, miscellaneous**).  A tile is highlighted
+if there is a rule of that type present. Select a tile to create a new rule or visit an
+already present rule. 
 
-![paint art](pics/boulderRules.gif)
+![rule selector](pics/boulderRules.gif)
 
-Selecting the boulder in the middle of the upper left quadrant brings up the rule editor:
+## Rule Editor
 
-![paint art](pics/boulderRestingRule.gif)
+![rule editor](pics/boulderRestingRule.gif)
 
-This rule applies to a boulder "at rest" and starts the boulder moving down when there is a space below the boulder. More details about programming rules are given below.
+A rule takes the form of a **When-Do** guarded command. The **When** guard is a predicate/pattern
+over the 3x3 local neighborhood around the central sprite. When the guard matches on
+the tile map, the commands in the **Do** section execute. More details about programming rules are given below.
 
 ## Play
 
-The play button runs the game in full screen mode. Press **B** to exit the game. Try to collect all the diamonds without having a boulder fall on you or getting caught by the skull/puppy
+The play button runs the game in full screen mode. Press **B** to exit the game. 
 
 ![play game](pics/playGame.gif)
 
 ## Settings
 
-Once you get used to the features available in TileCode, you can turn off the help suggestions via the gear wheel, which takes you to the settings screen. 
+Once you get used to the features available in TileCode, 
+you can turn off the help suggestions via the gear wheel, 
+which takes you to the settings screen. 
 
 ![game settings](pics/gameSettings.gif)
 
 # Coding in TileCode {#coding}
 
-Each sprite's behavior is governed by a set of rules that you can program. Let's start with a fresh game. Go to the load screen and select game slot #2. If you play the game, you'll see that you can move the player sprite around with the direction pad. Let's look at the rules for the player sprite:
+Each sprite's behavior is governed by a set of rules that you can program. Let's start with a fresh game. 
+Go to the load screen and select game slot #2. If you play the game, you'll see that you can move the 
+player sprite around with the direction pad. Let's look at the rules for the player sprite:
 
 ![player sprite rules](pics/playerRules.gif)
 
