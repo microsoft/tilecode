@@ -1,4 +1,4 @@
-[![TileCode](pics/loadScreen.gif)](https://microsoft.github.io/tilecode/)
+[![TileCode](pics/meowbit.jpg)](https://microsoft.github.io/tilecode/)
 
 # Introduction
 
@@ -188,85 +188,6 @@ To delete the current rule, navigate to the garbage can and press **A**.
 To make a rule of a different type, press the **B** button to return to the code screen and select a different rule type. If you want to see all the rules for a sprite, select the sprite from the left column of the code screen and then select the code icon in the upper left.
 
 ![player sprite rules](pics/playerRules.gif)
-
-# Your First Game {#firstgame}
-
-Now that you've seen the basics of the code screen and the rule editor, let's create a game. We'll create game where the goal is for the player to help fish move from a small pond to a bigger pond.  Make two ponds, as shown below and put a few fish in the smaller pond:
-
-![two ponds](pics/fishPonds.gif)
-
-## The Player Can't Swim
-
-In this game the player can't swim, so we'll create a rule that ends the game if the player enters the water. From the code screen, select the player sprite and move to the resting rule type, as shown below:
-
-![player resting](pics/restingPlayer.gif)
-
-Select the space that the player is on and then select the water tile, which will apply a green check mark to that tile, as shown below.
-
-![water under player](pics/waterUnderPlayer.gif)
-
-Now press the **B** button to exit the predicate menu. If you move the cursor over the player sprite, you will see the predicate for that space under the menu bar:
-
-![water under player visible](pics/hoverAttr.gif)
-
-Now move to space to the right of the player spriter in the *Do* section:
-
-![command menu](pics/addCommandPlayer.gif)
-
-Press the A button to bring up the *Command* menu, as shown below:
-
-![command menu](pics/commandMenu.gif)
-
-Now move the cursor the green **G** in the upper right of the menu:
-
-![command game](pics/commandGame.gif)
-
-Press the **A** button to list the set of game commands and move the cursor to the lose command (upside down trophy):
-
-![game menu](pics/gameMenu.gif)
-
-Press the **A** button to select this command and then press **B** to exit the command menu:
-
-![lose game](pics/loseGameCommand.gif)
-
-Now, go back to the game screen and play the game. See what happens if you move the player onto a water tile.
-
-## Fish Swim Left to Right (and back again)
-
-Now, let's make the fish swim in their pond. Initially, the fish are at rest (as are all sprites). So let's make a resting rule for the fish sprite that moves it left when there is water to its left:
-
-![fish moves left](pics/fishMoveLeft.gif)
-
-Now, if the fish moved left in the previous round and is now next to the grass, let's have it move right. Exit the rule editor (button **B**) and select the "moved left" rule:
-
-![moved left rule](pics/movedLeft.gif)
-
-Now, make the following rule (make sure to require that there is water under the fish):
-
-![fish bounce left](pics/fishBounceLeft.gif)
-
-As long as there is water to the right of the (right moving fish), let's keep it moving to the right:
-
-![keep moving right](pics/keepMovingRight.gif)
-
-Finally, we need a rule for the fish to turn when there is grass to its right:
-
-![fish bounce right](pics/fishBounceRight.gif)
-
-With these four rules, your fish should be swimming back and forth in their pond!
-
-## Picking Up and Transporting Fish
-
-To transport a fish from right to left, 
-the fish will move onto the player when the player is next to it:
-
-![capture fish](pics/jumpToPlayer.gif) 
-
-Whenever the fish and the player occupy the same space then a left dpad button press will move the fish to the left
-
-![fish and player move together](pics/fishAndPlayerLeft.gif)
-
-With these rules in place, you should be able to transport fish from the pond on the right to the pond on the left.
 
 # Sharing Your TileCode Games {#sharing}
 
