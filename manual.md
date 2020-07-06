@@ -1,4 +1,4 @@
-[![TileCode](pics/meowbit.jpg)](https://microsoft.github.io/tilecode/)
+[![TileCode](pics/meowbit.gif)](https://microsoft.github.io/tilecode/)
 
 # Introduction
 
@@ -77,11 +77,11 @@ You can paint tiles quickly by holding down the **A** button while moving the cu
 The reset button (upper right) resets the camera to the upper left of the map. 
 To return to the game screen, press the **B** button.
 
-## Paint Editor
+## Bitmap Editor
 
-The paint editor lets you change the art associated with a tile or sprite.
+The bitmap editor lets you change the art associated with a tile or sprite.
 
-![paint art](pics/paintPuppy2.gif)
+![paint art](pics/paintPuppy1.gif)
 
  As with the map editor, select the tile/sprite whose art you want to change. 
  Move the cursor down to edit the bitmap (using the **A** button to apply the currently selected color).  
