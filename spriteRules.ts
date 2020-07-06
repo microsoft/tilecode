@@ -128,7 +128,7 @@ namespace tileworld.ruleediting {
             this.doBoth(RuleType.ContextChange, MoveDirection.Down, x + left1, y+2);
             this.doBoth(RuleType.ContextChange, Resting, x+left1-1, y+2, false);
             this.doBoth(RuleType.ContextChange, Moving, x+left1+1, y+2, false);
-            this.stringColumn("match", left1, 0);
+            this.stringColumn("change", left1, 0);
 
             this.make3by3(x + left1, y + 5);
             this.doBoth(RuleType.Collision, MoveDirection.Right, x + left1, y + 5, false);

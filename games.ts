@@ -685,6 +685,8 @@ settings.writeBuffer("TW6-RuleB10", hex`
 settings.writeNumber("TW6-PlayerN",0);
 }
 
+if (!settings.exists("TW7-VersionS"))
+    sokoban();
 
 function sokoban() {
 settings.writeString("TW7-VersionS","4.0.0");

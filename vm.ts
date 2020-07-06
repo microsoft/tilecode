@@ -190,7 +190,7 @@ namespace tileworld {
                         // SUCCESS!
                         ruleClosures.push(new RuleClosure(rv, null, []));
                     } else {
-
+                        // check predicate for each witness
                     }
                 });
                 this.vm.phase = RuleType.ButtonPress;

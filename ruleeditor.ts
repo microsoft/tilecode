@@ -355,7 +355,7 @@ namespace tileworld.ruleediting {
 
         private instToNumArgs(inst: number) {
             switch (inst) {
-                case CommandType.Move: return this.getType() != RuleType.Collision ? 4 : 2;
+                case CommandType.Move: return this.getType() != RuleType.Collision ? 4 : 1;
                 case CommandType.Paint: return 4;
                 case CommandType.Sprite: return 0;
                 case CommandType.Game: return 3;
