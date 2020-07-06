@@ -81,7 +81,7 @@ To return to the game screen, press the **B** button.
 
 The bitmap editor lets you change the art associated with a tile or sprite.
 
-![paint art](pics/paintPuppy1.gif)
+![paint art](pics/paintSnake.gif)
 
  As with the map editor, select the tile/sprite whose art you want to change. 
  Move the cursor down to edit the bitmap (using the **A** button to apply the currently selected color).  
