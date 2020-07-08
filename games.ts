@@ -1,41 +1,29 @@
 // add games in if the slots are empty
 
-// boulder dash
-if (!settings.exists("TW3-VersionS"))
-    createTW3(); 
-
-// base rules: 13
-// derived rules: 14
-// whendos: 28
-// attrs: 60
-// commands: 15
-
- 
-// snake
-if (!settings.exists("TW2-VersionS"))
-    createTW2();
-
-// base rules: 9
-// derived rules: 24
-// whendos: 15
-// attrs: 22
-// commands: 15
-
-// bejeweled
 if (!settings.exists("TW1-VersionS"))
-    createTW1();
+    createBejeweled();
 
-// base rules: 11
-// derived rules: 14
-// whendos: 33
-// attrs: 52
-// commands: 38
+if (!settings.exists("TW2-VersionS"))
+    createSnake();
 
-// left-hand rule
+if (!settings.exists("TW3-VersionS"))
+    createBoulderDash(); 
+
 if (!settings.exists("TW4-VersionS"))
-    createTW4();
+    createLeftHandRule();
 
-function createTW3() {
+if (!settings.exists("TW6-VersionS"))
+    createSpaceInvaders();
+
+if (!settings.exists("TW7-VersionS"))
+    createSokoban();
+
+if (!settings.exists("TW8-VersionS"))
+    createSortingDiamonds();
+
+// --------------------------------------    
+
+function createBoulderDash() {
     settings.writeString("TW3-VersionS", "4.0.0");
     // buffer length = 114
     settings.writeBuffer("TW3-WBackM", hex`
@@ -140,7 +128,7 @@ ffffffbf31ff1f21122f111211ff6f31ffffffffffffffffffffffffffffffffffffffffffffff6f
 
 // snake game in slot 2
 
-function createTW2() {
+function createSnake() {
 settings.writeString("TW2-VersionS","4.0.0");
 // buffer length = 109
 settings.writeBuffer("TW2-WBackM", hex`
@@ -221,7 +209,7 @@ settings.writeBuffer("TW2-RuleB10", hex`
 settings.writeNumber("TW2-PlayerN",0);
 }
 
-function createTW1() {
+function createBejeweled() {
 settings.writeString("TW1-VersionS","4.0.0");
 // buffer length = 83
 settings.writeBuffer("TW1-WBackM", hex`
@@ -311,7 +299,7 @@ settings.writeNumber("TW1-PlayerN",0);
 }
 
 
-function createTW4() {
+function createLeftHandRule() {
 settings.writeString("TW4-VersionS","4.0.0");
 // buffer length = 246
 settings.writeBuffer("TW4-WBackM", hex`
@@ -388,10 +376,7 @@ settings.writeBuffer("TW4-RuleB5", hex`
 settings.writeNumber("TW4-PlayerN",0);
 }
 
-if (!settings.exists("TW8-VersionS"))
-    createTW8();
-    
-function createTW8() {
+function createSortingDiamonds() {
 
     settings.writeString("TW8-VersionS","4.0.0");
     
@@ -595,11 +580,8 @@ settings.writeBuffer("TW5-RuleB12", hex`
 settings.writeNumber("TW5-PlayerN",0);
 }
 
-if (!settings.exists("TW6-VersionS"))
-    createTW6();
-
 // space invaders
-function createTW6() {
+function createSpaceInvaders() {
 settings.writeString("TW6-VersionS","4.0.0");
 // buffer length = 93
 settings.writeBuffer("TW6-WBackM", hex`
@@ -685,10 +667,7 @@ settings.writeBuffer("TW6-RuleB10", hex`
 settings.writeNumber("TW6-PlayerN",0);
 }
 
-if (!settings.exists("TW7-VersionS"))
-    sokoban();
-
-function sokoban() {
+function createSokoban() {
 settings.writeString("TW7-VersionS","4.0.0");
 // buffer length = 121
 settings.writeBuffer("TW7-WBackM", hex`

@@ -54,7 +54,7 @@ namespace tileworld {
             screen.drawTransparentImage(this.image(), l, t);
             // if (this.changed)
             //    screen.drawTransparentImage(include, l, t);
-            // screen.drawTransparentImage(movedImages[this.dir], l, t);
+            screen.drawTransparentImage(ruleediting.movedImages[this.dir], l, t);
         }
     }
 
