@@ -215,10 +215,10 @@ namespace tileworld {
 
     const toHex = "0123456789abcdef";
 
-    function outputKeyBuffer(key: string, val: Buffer) {
+    function outputKeyBuffer(prefix:string, key: string, val: Buffer) {
         // create hex literal from buffer
         console.log("// buffer length = "+val.length.toString());
-        console.log("settings.writeBuffer(\""+key+"\", hex`");
+        console.log("settings.writeBuffer(prefix+\""+key+"\", hex`");
         let chunk = 40;
         let str = "";
         for(let i=0;i<val.length;i++) {
@@ -230,21 +230,21 @@ namespace tileworld {
         console.log(str+"`);")
     }
 
-    function settingsReadNumber(key: string, output: boolean) {
-        let val = settings.readNumber(key);
-        if (output) console.log("settings.writeNumber(\""+key+"\","+val.toString()+");");
+    function settingsReadNumber(prefix: string, key: string, output: boolean) {
+        let val = settings.readNumber(prefix+key);
+        if (output) console.log("settings.writeNumber(prefix+\""+key+"\","+val.toString()+");");
         return val;
     }
 
-    function settingsReadString(key: string, output: boolean) {
-        let val = settings.readString(key);
-        if (output) console.log("settings.writeString(\"" + key + "\",\"" + val + "\");");
+    function settingsReadString(prefix:string, key: string, output: boolean) {
+        let val = settings.readString(prefix+key);
+        if (output) console.log("settings.writeString(prefix+\"" + key + "\",\"" + val + "\");");
         return val;
     }
 
-    function settingsReadBuffer(key: string, output: boolean) {
-        let buf = settings.readBuffer(key);
-        if (output) outputKeyBuffer(key, buf);
+    function settingsReadBuffer(prefix: string, key: string, output: boolean) {
+        let buf = settings.readBuffer(prefix+key);
+        if (output) outputKeyBuffer(prefix, key, buf);
         return buf;
     }
 
@@ -260,11 +260,10 @@ namespace tileworld {
     const RuleKey = "RuleB";
     const HighScoreKey = "HighN";
 
-    function readImages(cnt: number, prefix: string, output: boolean) {
+    function readImages(cnt: number, prefix: string, key: string, output: boolean) {
         let images: Image[] = []
         for (let i = 0; i < cnt; i++) {
-            let key = prefix + i.toString();
-            let buf = settingsReadBuffer(key, output);
+            let buf = settingsReadBuffer(prefix, key+i.toString(), output);
             let img = buf && buf.length > 0 ? bufferToImage(buf) : null;
             if (!img) { img = image.create(16, 16); img.fill(1 + i); }
             images.push(img);
@@ -279,24 +278,25 @@ namespace tileworld {
         let names = settings.list(prefix);
         if (names.length == 0)
             return null;
-        if (output) console.log("function create"+prefix.slice(0,-1)+"() {");
-        let version = settingsReadString(prefix + VersionKey, output);
+        if (output) console.log("function createNAME(prefix: string) {");
+        if (output) console.log("if (settings.exists(prefix+\"-VersionS\")) return;");
+        let version = settingsReadString(prefix, VersionKey, output);
         // get the tile map, handling errors
-        let buf = settingsReadBuffer(prefix + WorldBackgroundsKey, output);
+        let buf = settingsReadBuffer(prefix, WorldBackgroundsKey, output);
         let world = buf && buf.length > 0 ? bufferToImage(buf) : null;
         world = world ? world : image.create(32, 24);
         // sprite map
-        buf = settingsReadBuffer(prefix + WorldSpritesKey, output);
+        buf = settingsReadBuffer(prefix, WorldSpritesKey, output);
         let sprites = buf && buf.length > 0 ? bufferToImage(buf) : null;
         sprites = sprites ? sprites : image.create(32, 24);
         // background images and sprite images
-        let backCnt = settingsReadNumber(prefix + BackImgCntKey, output);
-        let backImages = readImages(backCnt, prefix+BackImageKey, output);
-        let spriteCnt = settingsReadNumber(prefix + SpriteImgCntKey, output);
-        let spriteImages = readImages(spriteCnt, prefix + SpriteImageKey, output);
-        let helpNum = settingsReadNumber(prefix + HelpKey, output);
+        let backCnt = settingsReadNumber(prefix, BackImgCntKey, output);
+        let backImages = readImages(backCnt, prefix, BackImageKey, output);
+        let spriteCnt = settingsReadNumber(prefix, SpriteImgCntKey, output);
+        let spriteImages = readImages(spriteCnt, prefix, SpriteImageKey, output);
+        let helpNum = settingsReadNumber(prefix, HelpKey, output);
         let help = helpNum ? true: false;
-        let highScore = settingsReadNumber(prefix + HighScoreKey, output);
+        let highScore = settingsReadNumber(prefix, HighScoreKey, output);
         highScore = highScore == undefined ? 0 : highScore;
         // start project
         let p = new Project(prefix, backImages, spriteImages);
@@ -309,8 +309,7 @@ namespace tileworld {
         let commandCount = 0;
         let attrCount = 0;
         ruleids.forEach(rid => {
-            let key = ruleName+rid.toString();
-            let buf = settingsReadBuffer(key, output);
+            let buf = settingsReadBuffer(prefix, RuleKey + rid.toString(), output);
             if (buf) {
                 let rule = unPackRule(buf, backCnt, spriteCnt);
                 let rv = new RuleView(p, rid, rule)
@@ -327,7 +326,7 @@ namespace tileworld {
                 control.assert(false, 42);
             }
         });
-        let player = settingsReadNumber(prefix + PlayerIndexKey, output);
+        let player = settingsReadNumber(prefix, PlayerIndexKey, output);
         if (output) console.log("}");
         if (output) {
             console.log("// base rules: "+ruleids.length);
