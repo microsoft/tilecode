@@ -3,13 +3,13 @@
 createBejeweled("TW1-");
 createSnake("TW2-");
 createBoulderDash("TW3-"); 
-// createLeftHandRule("TW4-");
+createLeftHandRule("TW4-");
 createHelloWorld("TW5-");
 createSpaceInvaders("TW6-");
 createSokoban("TW7-");
 // createSortingDiamonds("TW8-");
-// createPacMan("TW8-");
-createPaint("TW8-");
+createPacMan("TW8-");
+// createPaint("TW8-");
 
 // --------------------------------------    
 
