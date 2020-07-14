@@ -4,12 +4,12 @@
 
 TileCode is a game creation app that allows you to design and play games directly on MakeCode Arcade devices. 
 TileCode games are based on the familiar paradigm of a gameboard with pieces that can move from one tile of 
-the board to an adjacent tile. You can run TileCode: 
+the board to an nearby tile. You can run TileCode: 
 * in a [web browser](https://microsoft.github.io/tilecode/), or 
 * on any [MakeCode Arcade device](https://arcade.makecode.com/hardware).
 
 Copy this [UF2 file](https://github.com/microsoft/tilecode/releases/download/v3.5.5/arcade-all.uf2) to your 
-device to get started (works for all MakeCode Arcade devices).
+device to get started (works for all MakeCode Arcade devices)after you connected your device to the computer via an USB cable.
 
 # Overview 
 
@@ -22,7 +22,7 @@ device to get started (works for all MakeCode Arcade devices).
 # Tour of TileCode {#tour}
 
 Let's take a quick tour through the various screens of TileCode.  All editing takes place via the tile paradigm: 
-* move the square-shaped cursor between adjacent tiles using the direction pad (dpad); 
+* move the square-shaped cursor between nearby tiles using the direction pad (dpad); 
 * select a tile using the **A** button to perform an action; 
 * press the **B** button to take you back to the menu of the current screen or to the previous screen
 
@@ -32,7 +32,7 @@ The load screen of TileCode lets you select one of eight games to program and pl
 
 ![load screen](pics/loadScreen.gif)
 
- All game assets (gameboard, images and code) are stored in the flash memory of your Arcade device, so your changes will remain even if you power the device off. Assets are saved to flash whenever you transition between screens.
+All game assets (gameboard, images and code) are stored in the flash memory of your Arcade device, so your changes will remain even if you power the device off. Assets are saved to flash whenever you transition between screens.
 
 ## Game Home Screen
 
@@ -40,7 +40,7 @@ The game's home screen displays after a game slot has been selected:
 
 ![home page](pics/homePage1.gif)
 
-Each TileCode game has four kinds of tile backgrounds and four kinds of sprites to work with, as shown on the screen.  You can visit the art gallery to change the background art or sprite art by selecting the background/sprite. 
+Each TileCode game has four kinds of tile backgrounds and four kinds of sprites to work with, as shown on the screen. You can visit the art gallery to change the background art or sprite art by selecting the background/sprite. 
 
 ![help cursor](pics/helpGallery.gif)
 
@@ -50,7 +50,7 @@ In the gallery, simply move to the artwork you wish and select it with the **A**
 
 ![gallery](pics/gallery.gif)
 
-As usual, use the **B** button to return to the game home screen.
+When you are done, use the **B** button to return to the game home screen.
 
 ## Menu bar
 
@@ -192,4 +192,4 @@ The easiest way to share a TileCode game you have created on an Arcade device is
 
 # Having Problems? {#issues}
 
-Please file a [GitHub issue](https://github.com/microsoft/tilecode/issues) if you encounter a problem with TileCode.
+Please file a [GitHub issue](https://github.com/microsoft/tilecode/issues) if you encounter a problem with TileCode. You can also help us by choosing the most appropriate tag for your issue. 
