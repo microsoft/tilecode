@@ -393,6 +393,8 @@ namespace tileworld {
                 this.vm.sprites[ts.kind()].push(ts);
                 this.vm.changed.setPixel(ts.col(), ts.row(), 1);
                 ts.setFlag(SpriteFlag.Invisible, false);
+                if (ts.kind() == 0)
+                    scene.cameraFollowSprite(ts);
             });
             this.vm.spawnedSprites = [];
             // sprites that will die before next round
