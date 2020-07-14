@@ -22,6 +22,7 @@ namespace tileworld {
             this.lastDir = Resting;
             this.inst = -1;
             this.state = SpriteState.Alive;
+            this.z = kind;
         }
 
         public col() { return this.x >> 4; }    // the position of sprite in tile world
