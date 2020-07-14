@@ -90,7 +90,7 @@ The bitmap editor lets you change the art associated with a tile or sprite.
 ## Rule Selector
 
 The rule selector screen shows the four kinds of sprites on the left and the different 
-types of rules available (**match, press, smash, miscellaneous**).  A tile is highlighted
+types of rules available (**change, press, smash, miscellaneous**).  A tile is highlighted
 if there is a rule of that type present. Select a tile to create a new rule or visit an
 already present rule. 
 
