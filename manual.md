@@ -105,8 +105,6 @@ the tile map, the commands in the **Do** section execute. More details about pro
 
 The play button runs the game in full screen mode. Press **B** to exit the game. 
 
-![play game](pics/playGame.gif)
-
 ## Settings
 
 Once you get used to the features available in TileCode, 
