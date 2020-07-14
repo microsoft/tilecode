@@ -62,9 +62,9 @@ The menu bar of the game home screen has four main commands in addition to the g
 
 ![menu bar](pics/menuOptions.png)
 
-## Tile Map Editor
+## Map Editor
 
-The tile map editor lets you paint the game world's tiles and place sprites on tiles. 
+The map editor lets you paint the game world's tiles and place sprites on tiles. 
 Select one of the four backgrounds and move the cursor down to the map. 
 Press **A** to paint a tile with the current background. 
 Press **B** to return to the menu bar and select another background or sprite. 
@@ -77,9 +77,9 @@ You can paint tiles quickly by holding down the **A** button while moving the cu
 The reset button (upper right) resets the camera to the upper left of the map. 
 To return to the game screen, press the **B** button.
 
-## Bitmap Editor
+## Paint Editor
 
-The bitmap editor lets you change the art associated with a tile or sprite.
+The paint editor lets you change the art associated with a tile or sprite.
 
 ![paint art](pics/paintSnake.gif)
 
