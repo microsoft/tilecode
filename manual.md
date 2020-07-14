@@ -95,11 +95,16 @@ if there is a rule of that type present. Select a tile to create a new rule or v
 already present rule. 
 
 
+![rule selector](pics/ruleSelector.gif)
+
 ## Rule Editor
 
 A rule takes the form of a **When-Do** guarded command. The **When** guard is a predicate/pattern
 over the 3x3 local neighborhood around the central sprite. When the guard matches on
 the tile map, the commands in the **Do** section execute. More details about programming rules are given below.
+
+![rule selector](pics/ruleEditor.gif)
+
 
 ## Play
 
