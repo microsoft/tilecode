@@ -149,10 +149,11 @@ Let’s learn how we can create this game step by step.
 ![hello_grass_motion_rule](pics/helloMotionGrass.png)
 ![hello_wall_motion_rule](pics/helloBounceWall.png)
 
-* Step 6: Eat the apples 
+* Step 6: Eat the apples. In order for our player to be able to eat the apples we need to create a collision rule. From the rule gallery we will select a smash rule. For **When** we will then select the red dot tile and add an apple sprite to show we want to create a rule for when the player is smashing with the apple. For **Do** we will not have any action for the player, for the apple we will have a destroy action (yellow pacman) and adding 10 points action so the player gets more points with more apples. 
+
 ![hello_collision_apple_rule](pics/collisionAppleRule.png)
 
-* Step 7: Avoid the snakes 
+* Step 7: Avoid the snakes.  
 ![hello_collision_snake_rule](pics/helloLooseGame.png)
 
 # Sharing Your TileCode Games {#sharing}
