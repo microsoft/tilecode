@@ -123,6 +123,9 @@ which takes you to the settings screen.
 
 Coding in TileCode is done by creating a set of rules to determine the sprite’s behavior. Let’s start with a fresh game example. Go to the load screen and select game slot #1 which will open "Hello World" game. If you play the game, you’ll see that you can move the player sprite around with the direction pad. The player goal is to eat as many apple as possible while avoiding the snakes. 
 
+Demo "Hello World" Game 
+![demo_helloworld](pics/helloWorldDemo.gif)
+
 In order to edit a new game either pick an empty game slot (purple color) or delete an existing game to make space for a new one. To delete a game go to one of the existing slots, click on the settings wheel and then select "delete" button and press **A** to confirm. 
 
 ![select_gear_example](pics/menuGearSelection.png)
