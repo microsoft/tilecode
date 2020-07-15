@@ -6,3 +6,8 @@ theme: jekyll-theme-slate
 include: 
   - assets
   - README.md
+defaults:
+  - scope:
+      path: "pics"
+    values:
+      image: true
