@@ -5,6 +5,7 @@ makecode:
 theme: jekyll-theme-slate
 include: 
   - assets
+  - pics
   - README.md
 defaults:
   - scope:
