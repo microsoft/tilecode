@@ -127,8 +127,8 @@ Let’s learn how we can create this game step by step.
 
 * Step 1: Delete an existing game to make space for this game. Go to one of the existing slots and then click on the settings wheel and select "delete" button. 
 
-![select_gear_example](pics/menuGearSelection.png)
 ![delete_game_example](pics/deleteGame.png)
+![select_gear_example](pics/menuGearSelection.png)
 
 
 
