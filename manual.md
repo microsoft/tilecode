@@ -47,7 +47,7 @@ Each TileCode game has four kinds of tile backgrounds and four kinds of sprites 
 
 In the gallery, simply move to the artwork you wish and select it with the **A** button:
 
-![gallery](pics/gallery.gif)
+![gallery](pics/gallery.GIF)
 
 As usual, use the **B** button to return to the game home screen.
 
@@ -70,7 +70,7 @@ Press **B** to return to the menu bar and select another background or sprite.
 After selecting a sprite, the **A** button will place the sprite on a tile, 
 replacing the sprite that is there (or removing it if it is the same as the selected sprite). 
 
-![tile map editor](pics/map.GIF)
+![tile map editor](pics/map.gif)
 
 You can paint tiles quickly by holding down the **A** button while moving the cursor. 
 The reset button (upper right) resets the camera to the upper left of the map. 
@@ -80,7 +80,7 @@ To return to the game screen, press the **B** button.
 
 The bitmap editor lets you change the art associated with a tile or sprite.
 
-![paint art](pics/paintSnake.gif)
+![paint art](pics/paintSnake.GIF)
 
  As with the map editor, select the tile/sprite whose art you want to change. 
  Move the cursor down to edit the bitmap (using the **A** button to apply the currently selected color).  
@@ -104,8 +104,6 @@ the tile map, the commands in the **Do** section execute. More details about pro
 ## Play
 
 The play button runs the game in full screen mode. Press **B** to exit the game. 
-
-![play game](pics/playGame.gif)
 
 ## Settings
 
