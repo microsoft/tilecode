@@ -127,8 +127,17 @@ Let’s learn how we can create this game step by step.
 
 * Step 1: Delete an existing game to make space for this game. Go to one of the existing slots and then click on the settings wheel and select "delete" button. 
 
-![delete_game_example](pics/deleteGame.png)
 ![select_gear_example](pics/menuGearSelection.png)
+![delete_game_example](pics/deleteGame.png)
+
+* Step 2: Select the player, the apple and the snake from the gallery for your game. Pick any tiles you like for the terrain. 
+
+![hello_game_sprites](pics/helloGameSprites.png)
+
+* Step 3: Build your game map. For this you will need to go to the map editor. Here you can select any tile you prefer and got and paint it on the board (see example of apple paint below). In the case of our "Hello Apple" game we want our player to avoid the walls, walk on grass, pick apples and avoid snakes so we will build our game board to support that game play scenario. 
+
+![hello_map_edit](pics/helloMapEditing.png)
+![hello_map_apple_edit](pics/helloMapAppleEdit.png)
 
 
 
