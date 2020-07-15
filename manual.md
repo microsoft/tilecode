@@ -139,7 +139,21 @@ Let’s learn how we can create this game step by step.
 ![hello_map_edit](pics/helloMapEditing.png)
 ![hello_map_apple_edit](pics/helloMapAppleEdit.png)
 
+* Step 4: Make the player move. Now let's create our first game rule and bring our player to life. To do so we will select the **right arrow** buttton from the **press** rules. Initially we will only allow our player to move to right. 
 
+![hello_rules_gallery](pics/helloRulesAll.png)
+![hello_motion_simple](pics/helloMotionSimple.png)
+
+* Step 5: Make the player react to the game board. In order for our player to respect the boundaries of our game board we now need to create 2 more rules: make him walk on grass but not be able to walk on walls. 
+
+![hello_grass_motion_rule](pics/helloMotionGrass.png)
+![hello_wall_motion_rule](pics/helloBounceWall.png)
+
+* Step 6: Eat the apples 
+![hello_collision_apple_rule](pics/collisionAppleRule.png)
+
+* Step 7: Avoid the snakes 
+![hello_collision_snake_rule](pics/helloLooseGame.png)
 
 # Sharing Your TileCode Games {#sharing}
 
