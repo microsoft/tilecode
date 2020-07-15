@@ -4,12 +4,12 @@
 
 TileCode is a game creation app that allows you to design and play games directly on MakeCode Arcade devices. 
 TileCode games are based on the familiar paradigm of a gameboard with pieces that can move from one tile of 
-the board to an adjacent tile. You can run TileCode: 
+the board to an nearby tile. You can run TileCode: 
 * in a [web browser](https://microsoft.github.io/tilecode/), or 
 * on any [MakeCode Arcade device](https://arcade.makecode.com/hardware).
 
 Copy this [UF2 file](https://github.com/microsoft/tilecode/releases/download/v3.5.5/arcade-all.uf2) to your 
-device to get started (works for all MakeCode Arcade devices).
+device to get started (works for all MakeCode Arcade devices)after you connected your device to the computer via an USB cable.
 
 # Overview 
 
@@ -21,7 +21,7 @@ device to get started (works for all MakeCode Arcade devices).
 # Tour of TileCode {#tour}
 
 Let's take a quick tour through the various screens of TileCode.  All editing takes place via the tile paradigm: 
-* move the square-shaped cursor between adjacent tiles using the direction pad (dpad); 
+* move the square-shaped cursor between nearby tiles using the direction pad (dpad); 
 * select a tile using the **A** button to perform an action; 
 * press the **B** button to take you back to the menu of the current screen or to the previous screen
 
@@ -31,7 +31,7 @@ The load screen of TileCode lets you select one of eight games to program and pl
 
 ![load screen](pics/loadScreen.gif)
 
- All game assets (gameboard, images and code) are stored in the flash memory of your Arcade device, so your changes will remain even if you power the device off. Assets are saved to flash whenever you transition between screens.
+All game assets (gameboard, images and code) are stored in the flash memory of your Arcade device, so your changes will remain even if you power the device off. Assets are saved to flash whenever you transition between screens.
 
 ## Game Home Screen
 
@@ -39,7 +39,7 @@ The game's home screen displays after a game slot has been selected:
 
 ![home page](pics/homePage1.gif)
 
-Each TileCode game has four kinds of tile backgrounds and four kinds of sprites to work with, as shown on the screen.  You can visit the art gallery to change the background art or sprite art by selecting the background/sprite. 
+Each TileCode game has four kinds of tile backgrounds and four kinds of sprites to work with, as shown on the screen. You can visit the art gallery to change the background art or sprite art by selecting the background/sprite. 
 
 ![help cursor](pics/helpGallery.gif)
 
@@ -49,7 +49,7 @@ In the gallery, simply move to the artwork you wish and select it with the **A**
 
 ![gallery](pics/gallery.GIF)
 
-As usual, use the **B** button to return to the game home screen.
+When you are done, use the **B** button to return to the game home screen.
 
 ## Menu bar
 
@@ -61,9 +61,9 @@ The menu bar of the game home screen has four main commands in addition to the g
 
 ![menu bar](pics/menuOptions.png)
 
-## Tile Map Editor
+## Map Editor
 
-The tile map editor lets you paint the game world's tiles and place sprites on tiles. 
+The map editor lets you paint the game world's tiles and place sprites on tiles. 
 Select one of the four backgrounds and move the cursor down to the map. 
 Press **A** to paint a tile with the current background. 
 Press **B** to return to the menu bar and select another background or sprite. 
@@ -76,9 +76,9 @@ You can paint tiles quickly by holding down the **A** button while moving the cu
 The reset button (upper right) resets the camera to the upper left of the map. 
 To return to the game screen, press the **B** button.
 
-## Bitmap Editor
+## Paint Editor
 
-The bitmap editor lets you change the art associated with a tile or sprite.
+The paint editor lets you change the art associated with a tile or sprite.
 
 ![paint art](pics/paintSnake.GIF)
 
@@ -96,13 +96,20 @@ already present rule.
 
 ![rule selector](pics/ruleSelector.gif)
 
+![rule selector](pics/ruleSelector.gif)
+
 ## Rule Editor
 
 A rule takes the form of a **When-Do** guarded command. The **When** guard is a predicate/pattern
 over the 3x3 local neighborhood around the central sprite. When the guard matches on
 the tile map, the commands in the **Do** section execute. More details about programming rules are given below.
 
+<<<<<<< HEAD
 ![rule editor](pics/ruleEditor.gif)
+=======
+![rule selector](pics/ruleEditor.gif)
+
+>>>>>>> origin/Manual_Stef
 
 ## Play
 
@@ -118,6 +125,7 @@ which takes you to the settings screen.
 
 # Coding in TileCode {#coding}
 
+<<<<<<< HEAD
 Coding in TileCode is done by creating a set of rules to determine the sprite’s behavior. Let’s start with a fresh game example. Go to the load screen and select game slot #1 which will open "Hello Apple" game. If you play the game, you’ll see that you can move the player sprite around with the direction pad. The player goal is to eat as many apple as possible while avoiding the snakes. 
 
 Let’s learn how we can create this game step by step. 
@@ -127,6 +135,9 @@ Let’s learn how we can create this game step by step.
 
 
 
+=======
+TBD
+>>>>>>> origin/Manual_Stef
 
 # Sharing Your TileCode Games {#sharing}
 
@@ -134,4 +145,4 @@ The easiest way to share a TileCode game you have created on an Arcade device is
 
 # Having Problems? {#issues}
 
-Please file a [GitHub issue](https://github.com/microsoft/tilecode/issues) if you encounter a problem with TileCode.
+Please file a [GitHub issue](https://github.com/microsoft/tilecode/issues) if you encounter a problem with TileCode. You can also help us by choosing the most appropriate tag for your issue. 
