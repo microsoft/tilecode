@@ -1,4 +1,4 @@
-[![TileCode](pics/meowbit.GIF)](https://microsoft.github.io/tilecode/)
+[![TileCode](pics/meowbit.gif)](https://microsoft.github.io/tilecode/)
 
 # Introduction
 
@@ -29,7 +29,7 @@ Let's take a quick tour through the various screens of TileCode.  All editing ta
 
 The load screen of TileCode lets you select one of eight games to program and play (slots colored blue already have game assets):
 
-![load screen](pics/loadScreen.GIF)
+![load screen](pics/loadScreen.gif)
 
  All game assets (gameboard, images and code) are stored in the flash memory of your Arcade device, so your changes will remain even if you power the device off. Assets are saved to flash whenever you transition between screens.
 
@@ -37,17 +37,17 @@ The load screen of TileCode lets you select one of eight games to program and pl
 
 The game's home screen displays after a game slot has been selected:
 
-![home page](pics/homePage1.GIF)
+![home page](pics/homePage1.gif)
 
 Each TileCode game has four kinds of tile backgrounds and four kinds of sprites to work with, as shown on the screen.  You can visit the art gallery to change the background art or sprite art by selecting the background/sprite. 
 
-![help cursor](pics/helpGallery.GIF)
+![help cursor](pics/helpGallery.gif)
 
 ## Gallery
 
 In the gallery, simply move to the artwork you wish and select it with the **A** button:
 
-![gallery](pics/gallery.GIF)
+![gallery](pics/gallery.gif)
 
 As usual, use the **B** button to return to the game home screen.
 
@@ -80,7 +80,7 @@ To return to the game screen, press the **B** button.
 
 The bitmap editor lets you change the art associated with a tile or sprite.
 
-![paint art](pics/paintSnake.GIF)
+![paint art](pics/paintSnake.gif)
 
  As with the map editor, select the tile/sprite whose art you want to change. 
  Move the cursor down to edit the bitmap (using the **A** button to apply the currently selected color).  
@@ -105,7 +105,7 @@ the tile map, the commands in the **Do** section execute. More details about pro
 
 The play button runs the game in full screen mode. Press **B** to exit the game. 
 
-![play game](pics/playGame.GIF)
+![play game](pics/playGame.gif)
 
 ## Settings
 
@@ -113,7 +113,7 @@ Once you get used to the features available in TileCode,
 you can turn off the help suggestions via the gear wheel, 
 which takes you to the settings screen. 
 
-![game settings](pics/gameSettings.GIF)
+![game settings](pics/gameSettings.gif)
 
 # Coding in TileCode {#coding}
 

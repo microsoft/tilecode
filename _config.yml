@@ -7,8 +7,3 @@ include:
   - assets
   - pics
   - README.md
-defaults:
-  - scope:
-      path: "pics"
-    values:
-      image: true
