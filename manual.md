@@ -104,12 +104,8 @@ A rule takes the form of a **When-Do** guarded command. The **When** guard is a 
 over the 3x3 local neighborhood around the central sprite. When the guard matches on
 the tile map, the commands in the **Do** section execute. More details about programming rules are given below.
 
-<<<<<<< HEAD
-![rule editor](pics/ruleEditor.gif)
-=======
 ![rule selector](pics/ruleEditor.gif)
 
->>>>>>> origin/Manual_Stef
 
 ## Play
 
@@ -125,19 +121,15 @@ which takes you to the settings screen.
 
 # Coding in TileCode {#coding}
 
-<<<<<<< HEAD
 Coding in TileCode is done by creating a set of rules to determine the sprite’s behavior. Let’s start with a fresh game example. Go to the load screen and select game slot #1 which will open "Hello Apple" game. If you play the game, you’ll see that you can move the player sprite around with the direction pad. The player goal is to eat as many apple as possible while avoiding the snakes. 
 
 Let’s learn how we can create this game step by step. 
 
 * Step 1: Delete an existing game to make space for this game. Go to one of the existing slots and then click on the settings wheel and select "delete" button. 
 
+![delete_game_example](pics/deleteGame.png)
 
 
-
-=======
-TBD
->>>>>>> origin/Manual_Stef
 
 # Sharing Your TileCode Games {#sharing}
 
