@@ -90,16 +90,19 @@ The bitmap editor lets you change the art associated with a tile or sprite.
 ## Rule Selector
 
 The rule selector screen shows the four kinds of sprites on the left and the different 
-types of rules available (**match, press, smash, miscellaneous**).  A tile is highlighted
+types of rules available (**change, press, smash, miscellaneous**).  A tile is highlighted
 if there is a rule of that type present. Select a tile to create a new rule or visit an
 already present rule. 
 
+![rule selector](pics/ruleSelector.gif)
 
 ## Rule Editor
 
 A rule takes the form of a **When-Do** guarded command. The **When** guard is a predicate/pattern
 over the 3x3 local neighborhood around the central sprite. When the guard matches on
 the tile map, the commands in the **Do** section execute. More details about programming rules are given below.
+
+![rule editor](pics/ruleEditor.gif)
 
 ## Play
 
@@ -119,7 +122,7 @@ Coding in TileCode is done by creating a set of rules to determine the sprite’
 
 Let’s learn how we can create this game step by step. 
 
-* Step 1: Delete and existing game to make space for this game. Go to one of the existing slots and then click on the settings wheel and select "delete" button. 
+* Step 1: Delete an existing game to make space for this game. Go to one of the existing slots and then click on the settings wheel and select "delete" button. 
 
 
 
