@@ -124,7 +124,7 @@ Make sure to place a player sprite on the map as well.
 
 ## Step 3: Make the player move. 
 
-Now let's create our first game rule and bring the player sprite to life. Navigate to the rule selector screen. Select the **right arrow** button from the **press** rules, which will bring up the rule editor for the player sprite on right-arrow button press. For the **Do** action we will add a move right command.
+Now let's create our first game rule and bring the player sprite to life. Navigate to the rule selector screen. Select the **dpad right** button from the **press** rules, which will bring up the rule editor for the player sprite on the dpad-right press. For the **Do** action we will add a move right command.
 
 ![hello_rules_gallery](pics/helloRulesAll.png)
 ![hello_motion_simple](pics/helloMotionSimple.png)
