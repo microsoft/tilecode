@@ -2,14 +2,11 @@
 
 # Introduction
 
-TileCode is a game creation app that allows you to design and play games directly on MakeCode Arcade devices. 
-TileCode games are based on board games with pieces that can move from one tile of the board to an nearby tile. 
-You can run TileCode: 
+TileCode is a game creation app that allows you to design and play games directly on MakeCode Arcade devices. TileCode games are similar to board games with pieces that can move from one tile of the board to a nearby tile. You can run TileCode: 
 * in a [web browser](https://microsoft.github.io/tilecode/), or 
 * on any [MakeCode Arcade device](https://arcade.makecode.com/hardware).
 
-Copy this [UF2 file](https://github.com/microsoft/tilecode/releases/download/v3.5.5/arcade-all.uf2) to your 
-device to get started (works for all MakeCode Arcade devices) after you connected your device to the computer via an USB cable.
+Copy this [UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.2.2/arcade-all.uf2) to your device to get started (works for all MakeCode Arcade devices) after you connected your device to the computer via an USB cable.
 
 # Overview 
 
@@ -20,18 +17,18 @@ device to get started (works for all MakeCode Arcade devices) after you connecte
 
 # Tour of TileCode {#tour}
 
-Let's take a quick tour through the various screens of TileCode.  All editing takes place via the tile paradigm: 
+Let's take a quick tour through the various screens of TileCode. All editing takes place via the tile paradigm: 
 * move the square-shaped cursor between nearby tiles using the direction pad (dpad); 
 * select a tile using the **A** button to perform an action; 
 * press the **B** button to take you back to the menu of the current screen or to the previous screen
 
 ## Load Screen
 
-The load screen of TileCode lets you select one of eight games to program and play (slots colored blue already have game assets):
+The TileCode load screen lets you select one of eight games to program and play (slots colored blue already have game assets):
 
 ![load screen](pics/loadScreen.gif)
 
-All game assets (gameboard, images and code) are stored in the flash memory of your Arcade device, so your changes will remain even if you power the device off. Assets are saved to flash whenever you transition between screens.
+All game assets (gameboard, images and code) are stored in the flash memory of your Arcade device, so your changes will remain even if you power the device off. Assets are saved to flash whenever you transition between screens. If you copy a UF2 file off your device, the game assets will be stored in the file.
 
 ## Game Home Screen
 
@@ -55,7 +52,7 @@ When you are done, use the **B** button to return to the game home screen.
 
 The menu bar of the game home screen has four main commands in addition to the gear wheel (for game settings): 
 * tile map editor (red map icon)
-* bitmap editor (paint brush icon) 
+* paint (bitmap) editor (paint brush icon) 
 * rule selector (</> icon)
 * play game (green play icon)
 
@@ -63,49 +60,32 @@ The menu bar of the game home screen has four main commands in addition to the g
 
 ## Map Editor
 
-The map editor lets you paint the game world's tiles and place sprites on tiles. 
-Select one of the four backgrounds and move the cursor down to the map. 
-Press **A** to paint a tile with the current background. 
-Press **B** to return to the menu bar and select another background or sprite. 
-After selecting a sprite, the **A** button will place the sprite on a tile, 
-replacing the sprite that is there (or removing it if it is the same as the selected sprite). 
+The map editor lets you design your game level, by painting with tile backgrounds, and place sprites on tiles.  Select one of the four backgrounds and move the cursor down to the map. Press **A** to paint a tile with the current background. Press **B** to return to the menu bar and select another background or sprite. After selecting a sprite, the **A** button will place the sprite on a tile, replacing the sprite that is there (or removing it if it is the same as the selected sprite). 
 
 ![tile map editor](pics/map.gif)
 
-You can paint tiles quickly by holding down the **A** button while moving the cursor. 
-The reset button (upper right) resets the camera to the upper left of the map. 
-To return to the game screen, press the **B** button.
+You can paint tiles quickly by holding down the **A** button while moving the cursor. The reset button (upper right) resets the camera to the upper left of the map.  To return to the game screen, press the **B** button.
 
 ## Paint Editor
 
-The paint editor lets you change the art associated with a tile or sprite.
+The paint editor lets you change the art associated with a tile background or sprite.
 
 ![paint art](pics/paintSnake.GIF)
 
- As with the map editor, select the tile/sprite whose art you want to change. 
- Move the cursor down to edit the bitmap (using the **A** button to apply the currently selected color).  
- Press **B** to move from the bitmap pane to the color selector (pressing **B** again will take you back to the top menu).
- Selecting a color will send the cursor back to the bitmap pane so you can resume painting where you left off. 
+ As with the map editor, select the tile/sprite whose art you want to change. Move the cursor down to edit the bitmap (using the **A** button to apply the currently selected color). Press **B** to move from the bitmap pane to the color selector (pressing **B** again will take you back to the top menu).  Selecting a color will send the cursor back to the bitmap pane so you can resume painting where you left off. 
 
 ## Rule Selector
 
-The rule selector screen shows the four kinds of sprites on the left and the different 
-types of rules available (**change, press, smash, miscellaneous**).  A tile is highlighted
-if there is a rule of that type present. Select a tile to create a new rule or visit an
-already present rule. 
-
-![rule selector](pics/ruleSelector.gif)
+The rule selector screen shows the four kinds of sprites on the left and the different types of rules available (**change, press, smash, miscellaneous**).  A tile is highlighted if there is a rule of that type present. Select a tile to create a new rule or visit an already present rule. 
 
 ![rule selector](pics/ruleSelector.gif)
 
 ## Rule Editor
 
 A rule takes the form of a **When-Do** guarded command. The **When** guard is a predicate/pattern
-over the 3x3 local neighborhood around the central sprite. When the guard matches on
-the tile map, the commands in the **Do** section execute. More details about programming rules are given below.
+over the 3x3 local neighborhood around the central sprite. When the guard matches on the tile map, the commands in the **Do** section execute. More details about programming rules are given below.
 
 ![rule selector](pics/ruleEditor.gif)
-
 
 ## Play
 
@@ -113,9 +93,7 @@ The play button runs the game in full screen mode. Press **B** to exit the game.
 
 ## Settings
 
-Once you get used to the features available in TileCode, 
-you can turn off the help suggestions via the gear wheel, 
-which takes you to the settings screen. 
+Once you get used to the features available in TileCode, you can turn off the help suggestions via the gear wheel on the game home screen, which takes you to the settings screen.
 
 ![game settings](pics/gameSettings.gif)
 
