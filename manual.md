@@ -144,7 +144,12 @@ This will allow you to see the effect of the rule you just created - you can mov
 
 ## Step 4: React to the board
 
-Press the **B** button to return to the rule editor.We will now modify the rule so that the player only walks on grass tiles. In the **When** section, select the tile next to the player and add the grass tile (green check mark). Press the **B** button to exit the menu. 
+Press the **B** button to return to the rule editor. We will now modify the rule so that the player only walks on grass tiles. In the **When** section, select the tile next to the player and add the grass tile (green check mark). 
+
+![hello_grass_predicate](pics/helloGrass.png)
+
+
+Press the **B** button to exit the menu. 
 
 ![hello_grass_motion_rule](pics/helloMotionGrass.png)
 
