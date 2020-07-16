@@ -168,13 +168,13 @@ For the **Do** section we will not have any action for the player; for the apple
 
 ![hello_collision_apple_rule](pics/collisionAppleRule.png)
 
-## Step 6: Avoid the snakes. 
+## Step 6: Don't step on a snake! 
 
-Our player needs to avoid snakes so we need to create a new smash rule. A new smash rule can be done created directly from the rule editor by selecting the the **+** tile in the upper right:
+We need to create a new smash rule for the case when a player steps on a snake. A new smash rule can be created directly from the rule editor for the smash-into-apple rule by selecting the the **+** tile in the upper right:
 
 ![add_rule](pics/addRule.png)
 
-For **When** we will then select the red dot tile and add an snake sprite to show we want to create a rule for when the player is meeting with the snake. For **Do** we will not have any action for the player, for the snake we will have a lose game action (yellow upside-down trophy) which will trigger a **game over** event. 
+For the **When** section, select the red dot tile and add a snake sprite to show that the player is colliding into the snake. For **Do** we will not have any action for the player. For the snake we will have a game-lost action (yellow upside-down trophy) which will trigger a **game over** event. 
 
 ![hello_collision_snake_rule](pics/helloGameOver.png)
 
