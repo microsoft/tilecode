@@ -1,8 +1,8 @@
 namespace tileworld.ruleediting {
 
     const yoff = 6;
-    const helpStringTop = "31any,21moved left,41moved right,30moved up,32moved down,22rested,42moved,61dpad left,81dpad right,70dpad up,72dpad down,71A button,";
-    const helpStringBot = "25collide left,34collide up,36collide down,45collide right,64never,";
+    const helpStringTop = "41any,31moved left,51moved right,40moved up,42moved down,32rested,52moved,71dpad left,91dpad right,80dpad up,82dpad down,81A button,";
+    const helpStringBot = "35smash left,44smash up,46smash down,55smash right,74never,";
 
     export class RuleRoom extends RuleDisplay {
         private kind: number;
