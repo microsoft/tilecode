@@ -103,12 +103,9 @@ TileCode programming takes place by creating a set of rules that describe sprite
 
 ![demo_helloworld](pics/helloWorldDemo.gif)
 
-In order to edit a new game either pick an empty game slot (purple color) or delete an existing game to make space for a new one. To delete a game, first go to one of the existing slots and select it to go to the game's home screen; then select the settings wheel and select the "delete" button. Press **A** to confirm that you want to delete the game.
+## Creating the "Hello World" game
 
-![select_gear_example](pics/menuGearSelection.png)
-![delete_game_example](pics/deleteGame.png)
-
-Let’s learn how we can create this game, step by step. 
+Let’s learn how we can create this game, step by step. Back up to the load screen. Game slot #2 should be available (purple color), so select that one to create a new game. (If there is no available slot, you will need to delete an existing game to make space for a new one. To delete a game, first go to one of the existing slots and select it to go to the game's home screen; then select the settings wheel and select the "delete" button. Press **A** to confirm that you want to delete the game). 
 
 ## Step 1: Pick your game characters (sprites)
 
@@ -152,7 +149,7 @@ In order for the player to be able to eat the apples we need to create a smash r
 
 Our player needs to avoid snakes so we need to create a new smash rule. A new smash rule can be done created directly from the rule editor by selecting the the **+** tile in the upper right.
 
-For **When** we will then select the red dot tile and add an snake sprite to show we want to create a rule for when the player is meeting with the snake. For **Do** we will not have any action for the player, for the snake we will have a lose game action (yellow trophe upside down) which will trigger a **game over** event. 
+For **When** we will then select the red dot tile and add an snake sprite to show we want to create a rule for when the player is meeting with the snake. For **Do** we will not have any action for the player, for the snake we will have a lose game action (yellow upside-down trophy) which will trigger a **game over** event. 
 
 ![hello_collision_snake_rule](pics/helloLooseGame.png)
 
