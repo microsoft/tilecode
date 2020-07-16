@@ -132,13 +132,13 @@ Now let's create our first game rule and bring the player sprite to life. Naviga
 
 ![hello_rules_gallery](pics/helloRulesAll.png)
 
-This will bring up the rule editor for the player sprite on the dpad-right press, as shown below in the **When** section on the left. For the **Do** action add a move right command by selecting the tile to the right of the player sprite in the **Do** section:
+This will bring up the rule editor for the player sprite on the dpad-right press, as shown below in the **When** section. For the **Do** action add a move right command by selecting the tile to the right of the player sprite in the **Do** section. This will bring up the command menu (shown at the top). Navigate to select the blue right arrow and then press **B** to dismiss the command menu.
 
 ![hello_motion_simple](pics/helloMotionSimple.png)
 
 After dismissing the command menu, select the play button as shown below:
 
-![hello_play](pics/helloPlay.png)
+![hello_play](pics/helloPlay.PNG)
 
 This will allow you to see the effect of the rule you just created - you can move the player sprite anywhere on the board (for the player sprite, TileCode automatically generalizes a rule to all four directions).
 
