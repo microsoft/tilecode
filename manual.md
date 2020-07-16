@@ -11,7 +11,7 @@ Copy this [UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.
 # Overview 
 
 * [Tour of TileCode](#tour)
-* [Coding in TileCode](#coding)
+* [Programming in TileCode](#programming)
 * [Sharing TileCode Games](#sharing)
 * [Having Problems?](#issues)
 
@@ -97,49 +97,62 @@ Once you get used to the features available in TileCode, you can turn off the he
 
 ![game settings](pics/gameSettings.gif)
 
-# Coding in TileCode {#coding}
+# Programming in TileCode {#programming}
 
-Coding in TileCode is done by creating a set of rules to determine the sprite’s behavior. Let’s start with a fresh game example. Go to the load screen and select game slot #1 which will open "Hello World" game. If you play the game, you’ll see that you can move the player sprite around with the direction pad. The player goal is to eat as many apple as possible while avoiding the snakes. 
+TileCode programming takes place by creating a set of rules that describe sprite behavior. Let’s start with a fresh game example. Go to the load screen and select game slot #1 which will open the "Hello World" game. If you play the game, you’ll see that you can move the player sprite around with the direction pad. The goal is to eat as many apple as possible while avoiding the snakes. 
 
 ![demo_helloworld](pics/helloWorldDemo.gif)
 
-In order to edit a new game either pick an empty game slot (purple color) or delete an existing game to make space for a new one. To delete a game go to one of the existing slots, click on the settings wheel and then select "delete" button and press **A** to confirm. 
+In order to edit a new game either pick an empty game slot (purple color) or delete an existing game to make space for a new one. To delete a game, first go to one of the existing slots and select it to go to the game's home screen; then select the settings wheel and select the "delete" button. Press **A** to confirm that you want to delete the game.
 
 ![select_gear_example](pics/menuGearSelection.png)
 ![delete_game_example](pics/deleteGame.png)
 
+Let’s learn how we can create this game, step by step. 
 
-Let’s learn how we can create this game step by step. 
+## Step 1: Pick your game characters (sprites)
 
-### Step 1: Pick your game characters(sprites)
 Select the player, the apple and the snake from the gallery for your game. Pick any tiles you like for the terrain. 
 
 ![hello_game_sprites](pics/helloGameSprites.png)
 
-### Step 2: Build your game map. 
-For this step you will need to go to the map editor. Here you can select any tile you prefer and place it on the board (see example of apple placing below). In the case of our "Hello World" game we want our player to avoid the walls, walk on grass, pick apples and avoid snakes so we will build our game board to support that game-play scenario. 
+## Step 2: Build your game level/map
+
+For this step you will need to go to the map editor. Here you can select any tile background or sprite you prefer and place it on the board (see example of placing an apple below). In the case of our "Hello World" game we want the player sprite to avoid the walls, walk on grass, pick apples and avoid snakes so we will build our game board to support that scenario. 
 
 ![hello_map_edit](pics/helloMapEditing.png)
 ![hello_map_apple_edit](pics/helloMapAppleEdit.png)
 
-### Step 3: Make the player move. 
-Now let's create our first game rule and bring our player to life. For **When** we will select the **right arrow** buttton from the **press** rules. For the **Do** action we will just add a motion right command. This rule will only allow our player to move to the right. 
+Make sure to place a player sprite on the map as well.
+
+## Step 3: Make the player move. 
+
+Now let's create our first game rule and bring the player sprite to life. Navigate to the rule selector screen. Select the **right arrow** button from the **press** rules, which will bring up the rule editor for the player sprite on right-arrow button press. For the **Do** action we will add a move right command.
 
 ![hello_rules_gallery](pics/helloRulesAll.png)
 ![hello_motion_simple](pics/helloMotionSimple.png)
 
-### Step 4: React to the board
-To make our player react to the game board we will create a rule for him to only walk on grass tiles.  For **When** we will select the **right arrow** buttton from the **press** rules and in the tile next to the player we will add the grass tile. For the **Do** action we will just add a motion right command. This rule will only allow our player to move to the right only on grass. 
+Select the play button to see the effect of the rule - you can move the player sprite anywhere on the board (for the player sprite, TileCode automatically generalizes a rule to all four directions).
+
+## Step 4: React to the board
+
+Press the **B** button to return to the rule editor.We will now modify the rule so that the player only walks on grass tiles. In the **When** section, select the tile next to the player and add the grass tile (green check mark). Press the **B** button to exit the menu. 
 
 ![hello_grass_motion_rule](pics/helloMotionGrass.png)
 
-### Step 5: Let's eat the apples.
-In order for our player to be able to eat the apples we need to create a smash rule. For **When** we will then select the red dot tile and add an apple sprite to show we want to create a rule for when the player is meeting with the apple. For **Do** we will not have any action for the player, for the apple we will have a destroy action (yellow pacman) and adding 10 points action so the player gets more points with more apples. 
+Again, select the play button to see the effect of the change to the rule. 
+
+## Step 5: Let's eat the apples.
+
+In order for the player to be able to eat the apples we need to create a smash rule. Return to the rule selector screen and choose one of the red dot tiles in the **smash** section. For **When** we will then select the red dot tile and add an apple sprite to show we want to create a rule for when the player is meeting with (smashing into) the apple. For the **Do** section we will not have any action for the player; for the apple we will have a destroy action (yellow pacman) and adding 10 points action so the player gets more points with more apples. 
 
 ![hello_collision_apple_rule](pics/collisionAppleRule.png)
 
-### Step 6: Avoid the snakes. 
-Our player needs to avoid snakes so we need to create a new smash rule. For **When** we will then select the red dot tile and add an snake sprite to show we want to create a rule for when the player is meeting with the snake. For **Do** we will not have any action for the player, for the snake we will have a loose game action (yellow trophe upside down) which will trigger a **game over** event. 
+## Step 6: Avoid the snakes. 
+
+Our player needs to avoid snakes so we need to create a new smash rule. A new smash rule can be done created directly from the rule editor by selecting the the **+** tile in the upper right.
+
+For **When** we will then select the red dot tile and add an snake sprite to show we want to create a rule for when the player is meeting with the snake. For **Do** we will not have any action for the player, for the snake we will have a lose game action (yellow trophe upside down) which will trigger a **game over** event. 
 
 ![hello_collision_snake_rule](pics/helloLooseGame.png)
 
