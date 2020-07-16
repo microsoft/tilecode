@@ -160,7 +160,9 @@ In order for the player to be able to eat the apples we need to create a smash r
 
 ![hello_rules_smash](pics/helloRulesSmash.png)
 
-In the rule editor, select the red dot tile in the **When** section and add an apple sprite to show we want to create a rule for when the player is meeting with (smashing into) the apple. 
+In the rule editor, select the red dot tile in the **When** section and add an apple sprite to show we want to create a rule for when the player is meeting with (smashing into) the apple:
+
+![hello_collision_apple_select](pics/collisionAppleSelect.png)
 
 For the **Do** section we will not have any action for the player; for the apple we will have a destroy action (yellow pacman) and adding 10 points action so the player gets more points with more apples. 
 
