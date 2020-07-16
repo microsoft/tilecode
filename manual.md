@@ -115,12 +115,15 @@ Select the player, the apple and the snake from the gallery for your game. Pick 
 
 ## Step 2: Build your game level/map
 
-For this step you will need to go to the map editor. Here you can select any tile background or sprite you prefer and place it on the board (see example of placing an apple below). In the case of our "Hello World" game we want the player sprite to avoid the walls, walk on grass, pick apples and avoid snakes so we will build our game board to support that scenario. 
+For this step you will need to go to the map editor. Here you can select any tile background or sprite you prefer and place it on the board. In the case of our "Hello World" game we want the player sprite to avoid the walls, walk on grass, pick apples and avoid snakes so we will build our game board to support that scenario. 
 
 ![hello_map_edit](pics/helloMapEditing.png)
+
+Here we have selected the apple sprite and place a few more apple sprites on the map:
+
 ![hello_map_apple_edit](pics/helloMapAppleEdit.png)
 
-Make sure to place a player sprite on the map as well.
+Make sure to place a player sprite on the map as well (see it in the upper left of the tile map above).
 
 ## Step 3: Make the player move. 
 
