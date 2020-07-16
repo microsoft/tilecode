@@ -144,12 +144,11 @@ This will allow you to see the effect of the rule you just created - you can mov
 
 ## Step 4: React to the board
 
-Press the **B** button to return to the rule editor. We will now modify the rule so that the player only walks on grass tiles. In the **When** section, select the tile next to the player and add the grass tile (green check mark). 
+Press the **B** button to return to the rule editor. We will now modify the rule so that the player only walks on grass tiles. In the **When** section, select the tile to the right of the player sprite and add the grass tile by putting a green check mark on the grass background, as shown below:
 
 ![hello_grass_predicate](pics/helloGrass.png)
 
-
-Press the **B** button to exit the menu. 
+Press the **B** button to exit the menu:
 
 ![hello_grass_motion_rule](pics/helloMotionGrass.png)
 
@@ -157,7 +156,13 @@ Again, select the play button to see the effect of the change to the rule.
 
 ## Step 5: Let's eat the apples.
 
-In order for the player to be able to eat the apples we need to create a smash rule. Return to the rule selector screen and choose one of the red dot tiles in the **smash** section. For **When** we will then select the red dot tile and add an apple sprite to show we want to create a rule for when the player is meeting with (smashing into) the apple. For the **Do** section we will not have any action for the player; for the apple we will have a destroy action (yellow pacman) and adding 10 points action so the player gets more points with more apples. 
+In order for the player to be able to eat the apples we need to create a smash rule. Return to the rule selector screen and choose one of the red dot tiles in the **smash** section, as shown below:
+
+![hello_rules_smash](pics/helloRulesSmash.png)
+
+In the rule editor, select the red dot tile in the **When** section and add an apple sprite to show we want to create a rule for when the player is meeting with (smashing into) the apple. 
+
+For the **Do** section we will not have any action for the player; for the apple we will have a destroy action (yellow pacman) and adding 10 points action so the player gets more points with more apples. 
 
 ![hello_collision_apple_rule](pics/collisionAppleRule.png)
 
