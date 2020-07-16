@@ -10,7 +10,7 @@ namespace tileworld.ruleediting {
     const categoryImages = [allFour, paint, spawn, eat, gameIcon, portal, exclude ];
     const categoryText = ["move", "paint", "spawn", "destroy",  "game", "portal", "block"];
 
-    const menuHelpString = "10map,20play,30debug,50generalize rule,60delete rule,80add rule,90next rule,70previous rule,";
+    const menuHelpString = "10map,20play,50generalize rule,60delete rule,80add rule,90next rule,70previous rule,";
     const attrHelpString = "00include,10exclude,90reset,";
 
     export class RuleEditor extends RuleDisplay {
@@ -82,7 +82,7 @@ namespace tileworld.ruleediting {
                             game.pushScene();
                             new MapEditor(this.p);
                             return; 
-                        } else if (this.col() == 2 || this.col() == 3) {
+                        } else if (this.col() == 2) { // no debugger for now || this.col() == 3) {
                             this.p.saveRule(this.rule);
                             game.pushScene();
                             let rules = this.p.getRules();
