@@ -206,14 +206,15 @@ if (settings.exists(prefix+"-VersionS")) return;
 settings.writeString(prefix+"VersionS","4.0.0");
 // buffer length = 83
 settings.writeBuffer(prefix+"WBackM", hex`
-201880f111106110f111106110f111106110f111106110f111106110f111106110f111106110f111
-106110f11180f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1
-f1f141`);
-// buffer length = 96
+2018b0d1109110d1109110d1109110d1109110d1109110d1109110d1109110d1109110d1109110d1
+109110d1109110d1109110d1b0f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1
+f1f1a1`);
+// buffer length = 138
 settings.writeBuffer(prefix+"WSpriteM", hex`
-2018ffaf1311122312ff3f12132123ff3f1211231112ff3f111311121311ff3f1112132113ff3f13
-1211101311ff3f1311121122ff3f22231113ffffffffffffffffffffffffffffffffffffffffffff
-ffffffffffffffffffffffffffffffef`);
+2018ffaf13111223121122ff1213211311131112ff1211231112111211ff1113111213111223ff10
+12132113121112ff131211121311131211ff13111211221123ff222311231211ff221311232112ff
+1113111213112213ff2213111213111213ff1113121112231112ffffffffffffffffffffffffffff
+ffffffffffffffffffffffffffffffffff5f`);
 settings.writeNumber(prefix+"BackN",4);
 // buffer length = 94
 settings.writeBuffer(prefix+"BackI0", hex`
