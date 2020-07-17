@@ -19,16 +19,15 @@ function createBoulderDash(prefix: string) {
         return;
 
     settings.writeString(prefix+"VersionS", "4.0.0");
-    // buffer length = 114
-    settings.writeBuffer(prefix+"WBackM", hex`
-2018f0a022f1512032f1412032f14120321112f1212032f1412032f14120f171203122f121205132
-e1201132f13120f171203132f11120f17120f171205132e120322132e1205132e120f17120f17120
-f17120f17120f17120f17120f17120f17120f17120f17120f17120f17120f171f0a0`);
-    // buffer length = 80
-    settings.writeBuffer(prefix+"WSpriteM", hex`
-2018ffaf11ff8f11ff8f11ff8f212f10ff4f11ffffffffef21ff9f2112ff2f1221ffffff2f2112ff
-ffffffbf31ff1f21122f111211ff6f31ffffffffffffffffffffffffffffffffffffffffffffff6f
-`);
+// buffer length = 108
+settings.writeBuffer(prefix+"WBackM", hex`
+2018f0a0f17120f17120f171204112f12120f17120f17120f171203122f121205132e1201132f131
+20f171203132f11120f17120f171205132e120322132e1205132e120f17120f17120f17120f17120
+f17120f17120f17120f17120f17120f17120f17120f17120f171f0a0`);
+// buffer length = 73
+settings.writeBuffer(prefix+"WSpriteM", hex`
+2018ffffffffffffbf10ffffffffffff4f21ff9f2112ff2f1221ffffff2f2112ffffffffbf31ff1f
+21122f111211ff6f31ffffffffffffffffffffffffffffffffffffffffffffff6f`);
     settings.writeNumber(prefix+"BackN", 4);
     // buffer length = 147
     settings.writeBuffer(prefix+"BackI0", hex`
