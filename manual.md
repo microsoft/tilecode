@@ -52,14 +52,16 @@ When you are done, use the **B** button to return to the game home screen.
 
 ## Menu bar
 
-The menu bar of the game home screen has four main commands in addition to the gear wheel (for game settings):
+The menu bar of the game home screen has four main items in addition to the gear wheel (for game settings): 
+
+![menu bar](pics/menuOptions.png)
+
+The four menu items are:
 
 * tile map editor (red map icon)
 * paint (bitmap) editor (paint brush icon) 
 * rule selector (</> icon)
 * play game (green play icon)
-
-![menu bar](pics/menuOptions.png)
 
 ## Map Editor
 
