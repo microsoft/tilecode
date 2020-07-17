@@ -24,7 +24,7 @@ Let's take a quick tour through the various screens of TileCode. All editing tak
 
 ## Load Screen
 
-The TileCode load screen lets you select one of eight games to program and play (slots colored blue already have game assets):
+The TileCode load screen lets you select one of eight games to program and play with (slots colored blue already have game assets):
 
 ![load screen](pics/loadScreen.gif)
 
@@ -36,7 +36,7 @@ The game's home screen displays after a game slot has been selected:
 
 ![home page](pics/homePage1.gif)
 
-Each TileCode game has four kinds of tile backgrounds and four kinds of sprites to work with, as shown on the screen. You can visit the art gallery to change the background art or sprite art by selecting the background/sprite. 
+Each TileCode game has four kinds of tile backgrounds and four kinds of game characters to work with, as shown on the screen. We call these game characters sprites. You can visit the art gallery to change the background art or sprite art by selecting the background/sprite. 
 
 ![help cursor](pics/helpGallery.gif)
 
@@ -140,11 +140,11 @@ After dismissing the command menu, select the play button as shown below:
 
 ![hello_play](pics/helloPlay.PNG)
 
-This will allow you to see the effect of the rule you just created - you can move the player sprite anywhere on the board (for the player sprite, TileCode automatically generalizes a rule to all four directions).
+This will allow you to see the effect of the rule you just created - you can move the player sprite anywhere on the board (for the player sprite, TileCode will automatically generalize the rule to all four directions).
 
 ## Step 4: React to the board
 
-Press the **B** button to return to the rule editor. We will now modify the rule so that the player only walks on grass tiles. In the **When** section, select the tile to the right of the player sprite and add the grass tile by putting a green check mark on the grass background, as shown below:
+Press the **B** button to return to the rule editor. We will now modify the rule so that the player could only walk on grass tiles. In the **When** section, select the tile to the right of the player sprite and add the grass tile by putting a green check mark on the grass background, as shown below. The **Do** section will not change.
 
 ![hello_grass_predicate](pics/helloGrass.png)
 
@@ -164,7 +164,7 @@ In the rule editor, select the red dot tile in the **When** section and add an a
 
 ![hello_collision_apple_select](pics/collisionAppleSelect.png)
 
-For the **Do** section we will not have any action for the player; for the apple we will have a destroy action (yellow pacman) and adding 10 points action so the player gets more points with more apples. 
+For the **Do** section we will not have any action for the player; for the apple we will have a destroy action (yellow pacman) and  add a 10 points action so the player gets more points with more apples. 
 
 ![hello_collision_apple_rule](pics/collisionAppleRule.png)
 
