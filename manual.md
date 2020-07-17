@@ -2,13 +2,14 @@
 
 # Introduction
 
-TileCode is a game creation app that allows you to design and play games directly on MakeCode Arcade devices. TileCode games are similar to board games with pieces that can move from one tile of the board to a nearby tile. You can run TileCode: 
+TileCode is a game creation app that allows you to design and play games directly on MakeCode Arcade devices. TileCode games are similar to board games with pieces that can move from one tile of the board to a nearby tile. You can run TileCode:
+
 * in a [web browser](https://microsoft.github.io/tilecode/), or 
 * on any [MakeCode Arcade device](https://arcade.makecode.com/hardware).
 
-Copy this [UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.2.2/arcade-all.uf2) to your device to get started (works for all MakeCode Arcade devices) after you connected your device to the computer via an USB cable.
+Copy this [UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.2.2/arcade-all.uf2) to your device to get started. This works for all MakeCode Arcade devices. Connect your device to the computer via a USB cable first, then copy the file.
 
-# Overview 
+# Overview
 
 * [Tour of TileCode](#tour)
 * [Programming in TileCode](#programming)
@@ -17,7 +18,8 @@ Copy this [UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.
 
 # Tour of TileCode {#tour}
 
-Let's take a quick tour through the various screens of TileCode. All editing takes place via the tile paradigm: 
+Let's take a quick tour through the various screens of TileCode. All editing takes place via the tile paradigm:
+
 * move the square-shaped cursor between nearby tiles using the direction pad (dpad); 
 * select a tile using the **A** button to perform an action; 
 * press the **B** button to take you back to the menu of the current screen or to the previous screen
@@ -50,7 +52,8 @@ When you are done, use the **B** button to return to the game home screen.
 
 ## Menu bar
 
-The menu bar of the game home screen has four main commands in addition to the gear wheel (for game settings): 
+The menu bar of the game home screen has four main commands in addition to the gear wheel (for game settings):
+
 * tile map editor (red map icon)
 * paint (bitmap) editor (paint brush icon) 
 * rule selector (</> icon)
@@ -72,11 +75,11 @@ The paint editor lets you change the art associated with a tile background or sp
 
 ![paint art](pics/paintSnake.GIF)
 
- As with the map editor, select the tile/sprite whose art you want to change. Move the cursor down to edit the bitmap (using the **A** button to apply the currently selected color). Press **B** to move from the bitmap pane to the color selector (pressing **B** again will take you back to the top menu).  Selecting a color will send the cursor back to the bitmap pane so you can resume painting where you left off. 
+As with the map editor, select the tile/sprite whose art you want to change. Move the cursor down to edit the bitmap (using the **A** button to apply the currently selected color). Press **B** to move from the bitmap pane to the color selector (pressing **B** again will take you back to the top menu). Selecting a color will send the cursor back to the bitmap pane so you can resume painting where you left off. 
 
 ## Rule Selector
 
-The rule selector screen shows the four kinds of sprites on the left and the different types of rules available (**change, press, smash, miscellaneous**).  A tile is highlighted if there is a rule of that type present. Select a tile to create a new rule or visit an already present rule. 
+The rule selector screen shows the four kinds of sprites on the left and the different types of rules available (**change, press, smash, miscellaneous**). A tile is highlighted if there is a rule of that type present. Select a tile to create a new rule or visit an already present rule. 
 
 ![rule selector](pics/ruleSelector.gif)
 
@@ -99,27 +102,27 @@ Once you get used to the features available in TileCode, you can turn off the he
 
 # Programming in TileCode {#programming}
 
-TileCode programming takes place by creating a set of rules that describe sprite behavior. Let’s start with a fresh game example. Go to the load screen and select game slot #1 which will open the "Hello World" game. If you play the game, you’ll see that you can move the player sprite around with the direction pad. The goal is to eat as many apple as possible while avoiding the snakes. 
+TileCode programming takes place by creating a set of rules that describe sprite behavior. Let’s start with a fresh game example. Go to the load screen and select game slot #1 which will open the "Hello World" game. If you play the game, you’ll see that you can move the player sprite around with the direction pad. The goal is to eat as many apples as possible while avoiding the snakes. 
 
 ![demo_helloworld](pics/helloWorldDemo.gif)
 
 ## Creating the "Hello World" game
 
-Let’s learn how we can create this game, step by step. Back up to the load screen. Game slot #2 should be available (purple color), so select that one to create a new game. (If there is no available slot, you will need to delete an existing game to make space for a new one. To delete a game, first go to one of the existing slots and select it to go to the game's home screen; then select the settings wheel and select the "delete" button. Press **A** to confirm that you want to delete the game). 
+Let’s learn how to create the game, step by step. Back up to the load screen. Game slot #2 should be available (purple color), so select that one to create a new game. (If there is no available slot, you will need to delete an existing game to make space for a new one. To delete a game, first go to one of the existing slots and select it to go to the game's home screen; then select the settings wheel and select the "delete" button. Press **A** to confirm that you want to delete the game). 
 
 ## Step 1: Pick your game characters (sprites)
 
-Select the player, the apple and the snake from the gallery for your game. Pick any tiles you like for the terrain. 
+Select the player, the apple, and the snake from the gallery for your game. Pick any tiles you like for the terrain. 
 
 ![hello_game_sprites](pics/helloGameSprites.png)
 
 ## Step 2: Build your game level/map
 
-For this step you will need to go to the map editor. Here you can select any tile background or sprite you prefer and place it on the board. In the case of our "Hello World" game we want the player sprite to avoid the walls, walk on grass, pick apples and avoid snakes so we will build our game board to support that scenario. 
+For this step you will need to go to the map editor. Here you can select any tile background or sprite you prefer and place it on the board. In the case of our "Hello World" game, we want the player sprite to avoid the walls, walk on grass, pick apples, and avoid snakes, so we will build our game board to support that scenario. 
 
 ![hello_map_edit](pics/helloMapEditing.png)
 
-Here we have selected the apple sprite and place a few more apple sprites on the map:
+Here we have selected the apple sprite and we place a few more apple sprites on the map:
 
 ![hello_map_apple_edit](pics/helloMapAppleEdit.png)
 
@@ -129,10 +132,9 @@ Make sure to place a player sprite on the map as well (see it in the upper left 
 
 Now let's create our first game rule and bring the player sprite to life. Navigate to the rule selector screen. Select the **dpad right** button from the **press** rules, as shown below:
 
-
 ![hello_rules_gallery](pics/helloRulesAll.png)
 
-This will bring up the rule editor for the player sprite on the dpad-right press, as shown below in the **When** section. For the **Do** action add a move right command by selecting the tile to the right of the player sprite in the **Do** section. This will bring up the command menu (shown at the top). Navigate to select the blue right arrow and then press **B** to dismiss the command menu.
+This will bring up the rule editor for the player sprite on the dpad-right press, as shown below in the **When** section. For the **Do** action, add a move right command by selecting the tile to the right of the player sprite in the **Do** section. This will bring up the command menu (shown at the top). Navigate to select the blue right arrow and then press **B** to dismiss the command menu.
 
 ![hello_motion_simple](pics/helloMotionSimple.png)
 
@@ -144,7 +146,7 @@ This will allow you to see the effect of the rule you just created - you can mov
 
 ## Step 4: React to the board
 
-Press the **B** button to return to the rule editor. We will now modify the rule so that the player could only walk on grass tiles. In the **When** section, select the tile to the right of the player sprite and add the grass tile by putting a green check mark on the grass background, as shown below. The **Do** section will not change.
+Press the **B** button to return to the rule editor. We will now modify the rule so that the player can only walk on grass tiles. In the **When** section, select the tile to the right of the player sprite and add the grass tile by putting a green check mark on the grass background, as shown below. The **Do** section will not change.
 
 ![hello_grass_predicate](pics/helloGrass.png)
 
@@ -160,11 +162,11 @@ In order for the player to be able to eat the apples we need to create a smash r
 
 ![hello_rules_smash](pics/helloRulesSmash.png)
 
-In the rule editor, select the red dot tile in the **When** section and add an apple sprite to show we want to create a rule for when the player is meeting with (smashing into) the apple:
+In the rule editor, select the red dot tile in the **When** section and add an apple sprite to show that we want to create a rule for when the player meets with (smashes into) the apple:
 
 ![hello_collision_apple_select](pics/collisionAppleSelect.png)
 
-For the **Do** section we will not have any action for the player; for the apple we will have a destroy action (yellow pacman) and  add a 10 points action so the player gets more points with more apples. 
+For the **Do** section we will not have any action for the player; for the apple we will have a destroy action (yellow pacman) and add a 10 points action so the player gets more points with more apples. 
 
 ![hello_collision_apple_rule](pics/collisionAppleRule.png)
 
@@ -180,7 +182,7 @@ For the **When** section, select the red dot tile and add a snake sprite to show
 
 # Sharing Your TileCode Games {#sharing}
 
-The easiest way to share a TileCode game you have created on an Arcade device is to copy the UF2 file from your device and share it with your friend. The UF2 file includes the flash settings in which your games are stored. When your friend copies this UF2 file to their Arcade device, they will get the games you created. Keep in mind that if your friend's Arcade device is not the same as yours, this may not work.
+The easiest way to share a TileCode game you have created on an Arcade device is to copy the UF2 file from your device and share it with your friend. The UF2 file includes the flash settings in which your games are stored. When your friend copies this UF2 file to their Arcade device, they will get the games you created. Please be aware that if your friend's Arcade device is not the same as yours, this may not work.
 
 # Having Problems? {#issues}
 
