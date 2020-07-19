@@ -131,6 +131,10 @@ namespace tileworld {
                 if (rt == RuleType.ContextChange || rt == RuleType.Collision) {
                     rv.setWitnessDirection(wd, ra);
                 }
+                if (kind == 0) {
+                    // default to 4 way
+                    rv.setTransforms(RuleTransforms.Rotate3Way)
+                }
             }
             this.saveRule(rv);
             return rv;
