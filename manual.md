@@ -102,7 +102,7 @@ Once you get used to the features available in TileCode, you can turn off the he
 
 # Programming in TileCode {#programming}
 
-TileCode programming takes place by creating a set of rules that describe sprite behavior. Let’s start with a fresh game example. Go to the load screen and select game slot #1 which will open the "Hello World" game. If you play the game, you’ll see that you can move the player sprite around with the direction pad. The goal is to eat as many apple as possible while avoiding the snakes. 
+TileCode programming takes place by creating a set of rules that describe sprite behavior. Let’s start with a fresh game example. Go to the load screen and select game slot #1 which will open the "Hello World" game. If you play the game, you’ll see that you can move the player sprite around with the direction pad. The goal is to eat as many apples as possible while avoiding the snakes. 
 
 ![demo_helloworld](pics/helloWorldDemo.gif)
 
@@ -147,7 +147,7 @@ This will allow you to see the effect of the rule you just created - you can mov
 
 ## Step 4: React to the board
 
-Press the **B** button to return to the rule editor. We will now modify the rule so that the player could only walk on grass tiles. In the **When** section, select the tile to the right of the player sprite and add the grass tile by putting a green check mark on the grass background, as shown below. The **Do** section will not change.
+Press the **B** button to return to the rule editor. We will now modify the rule so that the player can only walk on grass tiles. In the **When** section, select the tile to the right of the player sprite and add the grass tile by putting a green check mark on the grass background, as shown below. The **Do** section will not change.
 
 ![hello_grass_predicate](pics/helloGrass.png)
 
@@ -177,7 +177,7 @@ We need to create a new smash rule for the case when a player steps on a snake. 
 
 ![add_rule](pics/addRule.png)
 
-For the **When** section, select the red dot tile and add a snake sprite to show that the player is colliding into the snake. For **Do** we will not have any action for the player. For the snake we will have a game-lost action (yellow upside-down trophy) which will trigger a **game over** event. 
+For the **When** section, select the red dot tile and add a snake sprite to show that the player is colliding into the snake. We will not have any action for the player. For the snake we will have a game-lost action (yellow upside-down trophy) which will trigger a **game over** event. 
 
 ![hello_collision_snake_rule](pics/helloGameOver.png)
 
