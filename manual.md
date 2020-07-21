@@ -15,12 +15,18 @@ Copy this [UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.
 * [Sharing TileCode Games](#sharing)
 * [Having Problems?](#issues)
 
-# Tour of TileCode {#tour}
-
-Let's take a quick tour through the various screens of TileCode. All editing takes place via the tile paradigm: 
+# Cursor/Screen Navigation and Editing in TileCode
+ 
+All navigation and editing in the TileCode app takes place as follows:
 * move the square-shaped cursor between nearby tiles using the direction pad (dpad); 
 * select a tile using the **A** button to perform an action; 
 * press the **B** button to take you back to the menu of the current screen or to the previous screen
+When you are working with TileCode game simulator in the web browser, you can use keyboard shortcuts:
+* the **arrow keys** (left, right, up, down) replace the direction pad
+* the **space bar** replaces the A button
+* the **enter key** replaces the B button
+
+# Tour of TileCode {#tour}
 
 ## Load Screen
 
