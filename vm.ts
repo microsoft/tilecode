@@ -52,7 +52,7 @@ namespace tileworld {
             const l = this.left - ox + (this.debug ? 32 : 0);
             const t = this.top - oy;
 
-            screen.drawTransparentImage(this.image(), l, t);
+            screen.drawTransparentImage(this.image, l, t);
             // if (this.changed)
             //    screen.drawTransparentImage(include, l, t);
             // screen.drawTransparentImage(ruleediting.movedImages[this.dir], l, t);
@@ -650,9 +650,9 @@ namespace tileworld {
                         // how many candidates to portal to are there?
                         let kindCnt = 0;
                         let x = 0, y = 0;
-                        for(; x<copy.width(); x++) {
+                        for(; x<copy.width; x++) {
                             y = 0;
-                            for(; y<copy.height(); y++) {
+                            for(; y<copy.height; y++) {
                                 if (copy.getPixel(x,y) == 0 && tm.getTileIndex(x,y) == arg)
                                     kindCnt++;
                             }                            
@@ -662,9 +662,9 @@ namespace tileworld {
                             let index = Math.randomRange(0,kindCnt-1);
                             kindCnt = 0;
                             x = 0;
-                            for(; x<copy.width(); x++) {
+                            for(; x<copy.width; x++) {
                                 y = 0;
-                                for(; y<copy.height(); y++) {
+                                for(; y<copy.height; y++) {
                                     if (copy.getPixel(x,y) == 0 && tm.getTileIndex(x,y) == arg) {
                                         if (kindCnt == index) {
                                             portal = new Tile(x, y, 0);
