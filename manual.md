@@ -10,12 +10,13 @@ Copy this [UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.
 
 # Overview 
 
+* [Navigation and Editing](#navigate)
 * [Tour of TileCode](#tour)
 * [Programming in TileCode](#programming)
 * [Sharing TileCode Games](#sharing)
 * [Having Problems?](#issues)
 
-# Cursor/Screen Navigation and Editing in TileCode
+# Navigation and Editing {#navigation}
  
 All navigation and editing in the TileCode app takes place as follows:
 * move the square-shaped cursor between nearby tiles using the direction pad (dpad); 
