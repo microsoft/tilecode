@@ -9,6 +9,7 @@
     "files": [
         "README.md",
         "manual.md",
+        "board.md",
         "utilities.ts",
         "rule.ts",
         "ruleview.ts",
