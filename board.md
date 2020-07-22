@@ -4,7 +4,7 @@ Board games like checkers (also known as draughts) have been played for thousand
 
 ![eight by eight board](pics/board8by8.png)
  
-Game **pieces** are placed in their initial **positions** on the squares of the board and game play begins, such as in chess:
+Game **pieces** are placed in their initial **positions** on the squares of the board and game play begins, such as in checkers:
 
 ![initial board](pics/initialBoard.png)
 
@@ -15,7 +15,9 @@ Each player takes a **turn**, which consists of moving a single piece on the boa
 
 ## Tile Maps (Boards)
 
-TileCode video games are similar to board games. A TileCode game takes place on a **tile map**, which is similar to the board in a board game. Like the squares of a board, the **tiles** of a tile map are arranged in a grid. The main differences are:
+TileCode video games are similar to board games. 
+A TileCode game takes place on a **tile map**, which is similar to the board in a board game. Like the squares of a board, the **tiles** of a tile map are arranged in a grid. 
+The main differences are:
 - a tile map can be much larger than a chess or checker board, and does not need to be square
 - each tile can be ``painted’’ with **background** art, chosen from a gallery of artwork
 
