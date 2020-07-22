@@ -8,9 +8,13 @@ TileCode is a game creation app that allows you to design and play games directl
 
 Copy this [UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.2.2/arcade.uf2) to your device to get started (works for all MakeCode Arcade devices) after you connect your device to a computer via an USB cable.
 
-# Overview 
+# Background Reading
 
 * [From Board Games to TileCode Games](board)
+* [Game Mechanics](mechanics)
+
+# TileCode Overview 
+
 * [Navigation and Editing](#navigate)
 * [Tour of TileCode](#tour)
 * [Programming in TileCode](#programming)
