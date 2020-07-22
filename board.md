@@ -1,4 +1,4 @@
-# From Board Games to TileCode Video Games
+# From Board Games to TileCode Games
 
 Board games like checkers (also known as draughts) have been played for thousands of years of human history. Checkers and chess are both played on a **board** with 64 **squares** arranged in an 8x8 **grid**. The squares are alternating colored in each row and column, created a checkered pattern.  
 
@@ -8,11 +8,11 @@ The rules of the game (checkers, chess, etc.) define the **legal moves** that a 
 
 ## Tile Maps (Boards)
 
-TileCode video games are similar to board games. The game takes place on a **tile map**, which is similar to the board in a board game. Like the squares of a board, the **tiles** of a tile map are arranged in a grid. The main differences are:
+TileCode video games are similar to board games. A TileCode game takes place on a **tile map**, which is similar to the board in a board game. Like the squares of a board, the **tiles** of a tile map are arranged in a grid. The main differences are:
 - a tile map can be much larger than a chess or checker board, and does not need to be square
 - each tile can be ``painted’’ with **background** art, chosen from a gallery of artwork. 
 
-A tile map visually represent a scene in which the action of the game takes place.  The tile backgrounds may represent entities such as barriers (walls), pathways, etc. A tile's art can be change during the game. 
+A tile map visually represent a scene in which the action of the game takes place. The tile backgrounds may represent entities such as barriers (walls), pathways, etc. A tile's art can be changed during the game. 
 
 It’s easy to create your own physical tile map using construction paper (of assorted colors) and scissors, or with color pencils/marks and paper. A large set of paper tiles of various colors will allow for a lot of 2D creativity on a table and topic for discussion and collaboration.
 
