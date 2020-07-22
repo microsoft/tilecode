@@ -6,10 +6,11 @@ TileCode is a game creation app that allows you to design and play games directl
 * in a [web browser](https://microsoft.github.io/tilecode/), or 
 * on any [MakeCode Arcade device](https://arcade.makecode.com/hardware).
 
-Copy this [UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.2.2/arcade.uf2) to your device to get started (works for all MakeCode Arcade devices) after you connected your device to the computer via an USB cable.
+Copy this [UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.2.2/arcade.uf2) to your device to get started (works for all MakeCode Arcade devices) after you connect your device to a computer via an USB cable.
 
 # Overview 
 
+* [From Board Games to TileCode Games](board.td)
 * [Navigation and Editing](#navigate)
 * [Tour of TileCode](#tour)
 * [Programming in TileCode](#programming)
@@ -18,13 +19,13 @@ Copy this [UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.
 
 # Navigation and Editing {#navigation}
  
-All navigation and editing in the TileCode app takes place as follows:
+On an Arcade device, navigation and editing takes place as follows:
 * move the square-shaped cursor between nearby tiles using the direction pad (dpad); 
 * select a tile using the **A** button to perform an action; 
 * press the **B** button to take you back to the menu of the current screen or to the previous screen
 
 When you are working with TileCode game simulator in the web browser, you can use keyboard shortcuts:
-* the **arrow keys** (left, right, up, down) replace the direction pad
+* the **arrow keys** (left, right, up, down) replace the direction pad (alteranatively, you can use the 'A', 'D, 'W', and 'S' keys)
 * the **space bar** replaces the A button
 * the **enter key** replaces the B button
 
@@ -36,7 +37,7 @@ The TileCode load screen lets you select one of eight games to program and play 
 
 ![load screen](pics/loadScreen.gif)
 
-All game assets (gameboard, images and code) are stored in the flash memory of your Arcade device, so your changes will remain even if you power the device off. Assets are saved to flash whenever you transition between screens. If you copy a UF2 file off your device, the game assets will be stored in the file.
+All game assets (gameboard, images and code) are stored on the Arcade device, so your creations will remain even if you power the device off. Game assets are saved whenever you transition between screens. If you copy a UF2 file off your device, the game assets will be stored in the file. If you then copy this UF2 to a similar device, the games will get installed on that device. 
 
 ## Game Home Screen
 
@@ -44,7 +45,7 @@ The game's home screen displays after a game slot has been selected:
 
 ![home page](pics/homePage1.gif)
 
-Each TileCode game has four kinds of tile backgrounds and four kinds of game characters to work with, as shown on the screen. We call these game characters sprites. You can visit the art gallery to change the background art or sprite art by selecting the background/sprite. 
+Each TileCode game has four kinds of tile backgrounds and four kinds of game characters to work with, as shown on the screen. We call these game characters sprites. You can visit the art gallery to change the background art or sprite art by selecting the background/sprite from the game home screen with the **A** button.
 
 ![help cursor](pics/helpGallery.gif)
 
