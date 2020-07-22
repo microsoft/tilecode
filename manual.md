@@ -10,7 +10,7 @@ Copy this [UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.
 
 # Overview 
 
-* [From Board Games to TileCode Games](board.td)
+* [From Board Games to TileCode Games](board)
 * [Navigation and Editing](#navigate)
 * [Tour of TileCode](#tour)
 * [Programming in TileCode](#programming)
