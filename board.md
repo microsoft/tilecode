@@ -16,12 +16,18 @@ Each player takes a **turn**, which consists of moving a single piece on the boa
 ## Tile Maps (Boards)
 
 TileCode video games are similar to board games. 
-A TileCode game takes place on a **tile map**, which is similar to the board in a board game. Like the squares of a board, the **tiles** of a tile map are arranged in a grid. 
-The main differences are:
+A TileCode game takes place on a **tile map**, which is similar to the board in a board game. 
+Like the squares of a board, the **tiles** of a tile map are arranged in a grid. 
+
+A tile map visually represents a scene in which the action of the game takes place. The tile backgrounds may represent entities such as barriers (walls), pathways, etc. 
+Here is part of a tile map that uses just two backgrounds from the four available in TileCode:
+
+![tile map](pics/tilemap.png)
+
+The main differences of a tile map compared to a board are:
 - a tile map can be much larger than a chess or checker board, and does not need to be square
 - each tile can be ``painted’’ with **background** art, chosen from a gallery of artwork
-
-A tile map visually represents a scene in which the action of the game takes place. The tile backgrounds may represent entities such as barriers (walls), pathways, etc. A tile's art can be changed during the game. 
+- a tile's background art can be changed during the game. 
 
 It’s easy to create your own physical tile map using construction paper (of assorted colors) and scissors, or with color pencils/marks and paper. A large set of paper tiles of various colors will allow for a lot of 2D creativity on a table and topic for discussion and collaboration.
 
