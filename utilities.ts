@@ -29,8 +29,8 @@ namespace tileworld {
     // cache these???
     export function greyImage(img: Image): Image {
         let ret: Image = img.clone();
-        for(let x=0; x<ret.width(); x++) {
-            for (let y = 0; y < ret.height(); y++) {
+        for(let x=0; x<ret.width; x++) {
+            for (let y = 0; y < ret.height; y++) {
                 let pix = ret.getPixel(x,y);
                 ret.setPixel(x,y,pix == 0 ? 0 : 12)
             }
@@ -40,8 +40,8 @@ namespace tileworld {
 
     export function splitImage(imgLeft: Image, imgRight: Image): Image {
         let ret: Image = imgLeft.clone();
-        for(let x=(ret.width()>>1); x<ret.width(); x++) {
-            for (let y = 0; y < ret.height(); y++) {
+        for(let x=(ret.width>>1); x<ret.width; x++) {
+            for (let y = 0; y < ret.height; y++) {
                 ret.setPixel(x,y,imgRight.getPixel(x,y));
             }
         }
@@ -68,14 +68,14 @@ namespace tileworld {
 
     export function imageToBuffer(img: Image) {
         // worst case = 1 byte per pixel
-        let buf = control.createBuffer(2 + (img.width() * img.height()));
+        let buf = control.createBuffer(2 + (img.width * img.height));
         let index = 0;
-        buf.setNumber(NumberFormat.Int8LE, index++, img.width());
-        buf.setNumber(NumberFormat.Int8LE, index++, img.height());
+        buf.setNumber(NumberFormat.Int8LE, index++, img.width);
+        buf.setNumber(NumberFormat.Int8LE, index++, img.height);
         let pixel = 17;
         let length = 0;
-        for(let x = 0; x < img.width(); x++) {
-            for (let y = 0; y < img.height(); y++) {
+        for(let x = 0; x < img.width; x++) {
+            for (let y = 0; y < img.height; y++) {
                 let newPixel = img.getPixel(x, y);
                 if (newPixel != pixel) {
                     if (length > 0) {

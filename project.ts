@@ -306,7 +306,7 @@ namespace tileworld {
         let p = new Project(prefix, backImages, spriteImages);
         // get the rules, at least
         let ruleName = prefix + RuleKey;
-        let ruleids = names.filter(s => s.indexOf(ruleName) == 0).map(s => parseInt(s.substr(ruleName.length())));
+        let ruleids = names.filter(s => s.indexOf(ruleName) == 0).map(s => parseInt(s.substr(ruleName.length)));
         let rules: RuleView[] = [];
         let derivedRules = 0;
         let whenDoCount = 0;
