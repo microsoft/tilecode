@@ -2,6 +2,8 @@
 
 Board games like checkers (also known as draughts) have been played for thousands of years of human history. Checkers and chess are both played on a **board** with 64 **squares** arranged in an 8x8 **grid**. The squares are alternating colored in each row and column, created a checkered pattern.  
 
+[eight by eight board](pics/board8by8.png)
+
 Game **pieces** are placed in their initial **positions** on the squares of the board and game play begins. Each player takes a **turn**, which consists of moving a single piece on the board from its square to another square, and possibly removing other pieces.
 
 The rules of the game (checkers, chess, etc.) define the **legal moves** that a piece is permitted, given the type of the piece and the current positions of the pieces on the board.  For example, in checkers, a piece may be moved diagonally into an adjacent unoccupied square. 
