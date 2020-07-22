@@ -6,9 +6,14 @@ Board games like checkers (also known as draughts) have been played for thousand
 
 The squares are alternating colored in each row and column, created a checkered pattern.  
 
-Game **pieces** are placed in their initial **positions** on the squares of the board and game play begins. Each player takes a **turn**, which consists of moving a single piece on the board from its square to another square, and possibly removing other pieces.
+Game **pieces** are placed in their initial **positions** on the squares of the board and game play begins, such as in chess:
 
-The rules of the game (checkers, chess, etc.) define the **legal moves** that a piece is permitted, given the type of the piece and the current positions of the pieces on the board (also called the **state** of the board).  For example, in checkers, a piece may be moved diagonally into an adjacent unoccupied square. 
+![initial board](pics/initialBoard.png)
+
+Each player takes a **turn**, which consists of moving a single piece on the board from its square to another square, and possibly removing other pieces. The rules of the game (checkers, chess, etc.) define the **legal moves** that a piece is permitted, given the type of the piece and the current positions of the pieces on the board (also called the **state** of the board).  For example, in checkers, a piece may be moved diagonally into an adjacent unoccupied square:
+
+![legal move](pics/legalMove.png)
+
 
 ## Tile Maps (Boards)
 
