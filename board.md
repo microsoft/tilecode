@@ -20,7 +20,7 @@ A TileCode game takes place on a **tile map**, which is similar to the board in 
 Like the squares of a board, the **tiles** of a tile map are arranged in a grid. 
 
 A tile map visually represents a scene in which the action of the game takes place. The tile backgrounds may represent entities such as barriers (walls), pathways, etc. 
-Here is part of a tile map that uses just two backgrounds from the four available in TileCode:
+Here is part of a tile map that uses just two backgrounds (wall and grass) from the four available in TileCode:
 
 ![tile map](pics/tilemap.png)
 
