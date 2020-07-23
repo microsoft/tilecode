@@ -19,35 +19,33 @@ TileCode video games are similar to board games.
 A TileCode game takes place on a **tile map**, which is similar to the board in a board game. 
 Like the squares of a board, the **tiles** of a tile map are arranged in a grid. 
 
-A tile map visually represents a scene in which the action of the game takes place. The tile backgrounds may represent entities such as barriers (walls), pathways, etc. 
-Here is part of a tile map that uses just two backgrounds (wall and grass) from the four available in TileCode:
+A tile map visually represents a scene in which the action of the game takes place. The tile backgrounds may represent entities such as barriers (walls), pathways, etc. On the right-hand side below is a part of a tile map that uses just two backgrounds (wall and grass) from the four backgrounds listed on the left-hand side:
 
 ![tile map](pics/tilemap.png)
 
 The main differences of a tile map compared to a board are:
 - a tile map can be much larger than a chess or checker board, and does not need to be square
 - each tile can be ``painted’’ with **background** art, chosen from a gallery of artwork
-- a tile's background art can be changed during the game. 
+- a tile's background art can be changed during the game 
 
 It’s easy to create your own physical tile map using construction paper (of assorted colors) and scissors, or with color pencils/marks and paper. A large set of paper tiles of various colors will allow for a lot of 2D creativity on a table and topic for discussion and collaboration.
 
 ## Sprites (Pieces)
 
 Board games feature pieces, which are **movable** objects. 
-Each piece may have a different **form**, signifying its kind and capabilities.
+Each piece may have a different **kind**, signified by its form, that defines the moves it may make.
 In chess, pieces are of six kinds (king, queen, knight, bishop, rook, pawn) and
 the legal moves for a piece are determined by its kind and the current state of the
 board. Each piece that is ``in play'' occupies a single square of the board. 
-In most board games, there is at most one piece in a square, though in checkers, 
+In most board games, there is at most one piece on a square (though in checkers, 
 one may "crown" a checker with another checker to create a king, which has the 
-capability  to move backward as well as forward. 
+capability to move backward as well as forward). 
 
-In TileCode games, sprites are the digital counterparts of pieces. 
-* kind
-* position
+In TileCode games, sprites are the digital counterparts of pieces, moveable
+objects. Each sprite has a kind (with an associated image) and a position
+on the tile map. The main differences of a sprite compared to a piece are:
+- there can be multiple sprites (overlapped) on a tile
+- TileCode sprites can only move in one of four directions (up, down, left, or right)
 
-Sprite Actions:
-* move
-* destroy
-* create
+![tile map](pics/tilemapSprites.png)
 
