@@ -8,12 +8,12 @@ Game **pieces** are placed in their initial **positions** on the squares of the 
 
 ![initial board](pics/initialBoard.png)
 
-Each player takes a **turn**, which consists of moving a single piece on the board from its square to another square, and possibly removing other pieces. The rules of the game (checkers, chess, etc.) define the **permitted moves** that a piece is permitted, given the type of the piece and the current positions of the pieces on the board (also called the **state** of the board).  For example, in checkers, a piece may be moved diagonally into an adjacent unoccupied square:
+Each player takes a **turn**, which consists of moving a single piece on the board from its square to another square, and possibly removing other pieces. The rules of the game (checkers, chess, etc.) define the **permitted moves** for a piece, given its kind and the current positions of the pieces on the board. For example, in checkers, a piece may be moved diagonally into an adjacent unoccupied square:
 
 ![permitted move](pics/legalMove.png)
 
 
-## Tile Maps (Boards)
+## From Boards to Tile Maps
 
 TileCode video games are similar to board games. 
 A TileCode game takes place on a **tile map**, which is similar to the board in a board game. 
@@ -30,20 +30,22 @@ The main differences of a tile map compared to a board are:
 
 It’s easy to create your own physical tile map using construction paper (of assorted colors) and scissors, or with color pencils/marks and paper. A large set of paper tiles of various colors will allow for a lot of 2D creativity on a table and topic for discussion and collaboration.
 
-## Sprites (Pieces)
+## From Pieces to Sprites
 
 Board games feature pieces, which are **movable** objects. 
 Each piece may have a different **kind**, signified by its form, that defines the moves it may make.
 In chess, pieces are of six kinds (king, queen, knight, bishop, rook, pawn) and
-the permitted moves for a piece are determined by its kind (and the current state of the
-board). Each piece that is ``in play'' occupies a single square of the board. 
+the permitted moves for a piece are determined by its kind and the positions of
+the pieces on the board, also called the **state** of the board.  
+
+Each piece that is ``in play'' occupies a single square of the board. 
 In most board games, there is at most one piece on a square (though in checkers, 
 one may "crown" a checker with another checker to create a king, which has the 
 capability to move backward as well as forward). 
 
-In TileCode games, **sprites** are the digital counterparts of pieces, moveable
-objects. Each sprite has a kind (with an associated image) and a position
-on the tile map. Here is the tile map from above with a few sprites positioned on it:
+In TileCode games, **sprites** are the digital counterparts of pieces. Each sprite is a moveable object that 
+has a kind (with an associated image) and a position on the tile map. Here is the tile map from above with a 
+few sprites positioned on it:
 
 ![tile map](pics/tilemapSprites.png)
 
