@@ -8,7 +8,14 @@ Game **pieces** are placed in their initial **positions** on the squares of the 
 
 ![initial board](pics/initialBoard.png)
 
-Each player takes a **turn**, which consists of moving a single piece on the board from its square to another square, and possibly removing other pieces. The rules of the game (checkers, chess, etc.) define the **permitted moves** for a piece, given its kind and the current positions of the pieces on the board. For example, in checkers, a piece may be moved diagonally into an adjacent unoccupied square:
+Each player takes a **turn**, which consists of moving a single piece on the board 
+from its square to another square, and possibly removing other pieces. 
+
+The rules of the game (checkers, chess, etc.), also called the **game mechanics**, 
+define the **permitted moves** for a piece, given its kind and the current positions 
+of the pieces on the board. 
+
+For example, in checkers, a piece may be moved diagonally into an adjacent unoccupied square:
 
 ![permitted move](pics/legalMove.png)
 
@@ -19,7 +26,10 @@ TileCode video games are similar to board games.
 A TileCode game takes place on a **tile map**, which is similar to the board in a board game. 
 Like the squares of a board, the **tiles** of a tile map are arranged in a grid. 
 
-A tile map visually represents a scene in which the action of the game takes place. The tile backgrounds may represent entities such as barriers (walls), pathways, etc. On the right-hand side below is a part of a tile map that uses just two backgrounds (wall and grass) from the four backgrounds listed on the left-hand side:
+A tile map visually represents a scene in which the action of the game takes place. 
+The tile backgrounds may represent entities such as barriers (walls), pathways, etc. 
+On the right-hand side below is a part of a tile map that uses just two backgrounds 
+(wall and grass) from the four backgrounds listed on the left-hand side:
 
 ![tile map](pics/tilemap.png)
 
@@ -28,7 +38,10 @@ The main differences of a tile map compared to a board are:
 - each tile can be ``painted’’ with **background** art, chosen from a gallery of artwork
 - a tile's background art can be changed during the game 
 
-It’s easy to create your own physical tile map using construction paper (of assorted colors) and scissors, or with color pencils/marks and paper. A large set of paper tiles of various colors will allow for a lot of 2D creativity on a table and topic for discussion and collaboration.
+It’s easy to create your own physical tile map using construction paper (of assorted colors) 
+and scissors, or with color pencils/marks and paper. A large set of paper tiles of various 
+colors will allow for a lot of creativity on a table and provide topics for discussion and 
+collaboration.
 
 ## From Pieces to Sprites
 
