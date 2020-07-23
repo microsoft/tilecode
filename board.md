@@ -69,3 +69,7 @@ The main differences of a sprite compared to a piece are:
 ## From Rules to Game Mechanics
 
 TBD
+
+## From Turns to Rounds
+
+TBD
