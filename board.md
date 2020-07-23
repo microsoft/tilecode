@@ -65,3 +65,7 @@ The main differences of a sprite compared to a piece are:
 - there can be multiple sprites (overlapped) on a tile
 - a TileCode sprite can only move in one of four directions (up, down, left, or right) and at most one tile per turn
 - a TileCode sprite remembers the direction it last moved
+
+## From Rules to Game Mechanics
+
+TBD
