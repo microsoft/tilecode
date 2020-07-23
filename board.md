@@ -35,8 +35,8 @@ It’s easy to create your own physical tile map using construction paper (of as
 Board games feature pieces, which are **movable** objects. 
 Each piece may have a different **kind**, signified by its form, that defines the moves it may make.
 In chess, pieces are of six kinds (king, queen, knight, bishop, rook, pawn) and
-the legal moves for a piece are determined by its kind and the current state of the
-board. Each piece that is ``in play'' occupies a single square of the board. 
+the legal moves for a piece are determined by its kind (and the current state of the
+board). Each piece that is ``in play'' occupies a single square of the board. 
 In most board games, there is at most one piece on a square (though in checkers, 
 one may "crown" a checker with another checker to create a king, which has the 
 capability to move backward as well as forward). 
@@ -49,5 +49,6 @@ on the tile map. Here is the tile map from above with a few sprites positioned o
 
 The main differences of a sprite compared to a piece are:
 - there can be multiple sprites (overlapped) on a tile
-- TileCode sprites can only move in one of four directions (up, down, left, or right)
+- a TileCode sprite can only move in one of four directions (up, down, left, or right) and at most one tile per turn
+- a TileCode sprite remembers the direction it last moved
 
