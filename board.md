@@ -43,9 +43,11 @@ capability to move backward as well as forward).
 
 In TileCode games, sprites are the digital counterparts of pieces, moveable
 objects. Each sprite has a kind (with an associated image) and a position
-on the tile map. The main differences of a sprite compared to a piece are:
-- there can be multiple sprites (overlapped) on a tile
-- TileCode sprites can only move in one of four directions (up, down, left, or right)
+on the tile map. Here is the tile map from above with a few sprites positioned on it:
 
 ![tile map](pics/tilemapSprites.png)
+
+The main differences of a sprite compared to a piece are:
+- there can be multiple sprites (overlapped) on a tile
+- TileCode sprites can only move in one of four directions (up, down, left, or right)
 
