@@ -1,10 +1,13 @@
 # From Board Games to TileCode Games
 
-Board games like checkers (also known as draughts) have been played for thousands of years of human history. Checkers and chess are both played on a **board** with 64 **squares** arranged in an 8x8 two-dimensional **grid**. The squares are alternating colored in each row and column, created a checkered pattern:
+Board games like checkers (also known as draughts) have been played for thousands of years of human history. 
+Checkers and chess are both played on a **board** with 64 **squares** arranged in an 8x8 two-dimensional **grid**. 
+The squares are alternating colored in each row and column, created a checkered pattern:
 
 ![eight by eight board](pics/board8by8.png)
  
-Game **pieces** are placed in their initial **positions** on the squares of the board and game play begins, such as in checkers:
+Game **pieces** are placed in their initial **positions** on the squares of the board and game play begins, 
+such as in checkers:
 
 ![initial board](pics/initialBoard.png)
 
