@@ -18,7 +18,6 @@ For example, in checkers, a piece may be moved diagonally into an adjacent unocc
 
 ![permitted move](pics/legalMove.png)
 
-
 ## From Boards to Tile Maps
 
 TileCode video games are similar to board games. 
@@ -66,10 +65,16 @@ The main differences of a sprite compared to a piece are:
 - a TileCode sprite can only move in one of four directions (up, down, left, or right) and at most one tile per turn
 - a TileCode sprite remembers the direction it last moved
 
-## From Rules to Game Mechanics
+## From Turns to Continuous Action
 
-TBD
+Most board games are turn-based and take place between two or more players. 
+On the other hand, many video games are single player and have no concept of turn-taking.
+Video games often have the concept of a **player avatar**, a unique sprite 
+that the player controls via keyboard, mouse, game controller, or touch.
+Furthermore, video games contain **non-player characters**, which are represented
+by sprites that move on their own, based on how they are programmed.
+Finally, compared to turn-based board games, where each player may spend quite a bit of
+time observing the game board before thinking before making their next move, 
+many video games involve **continuous action** where the player does not have much
+time to decide what to do next. 
 
-## From Turns to Rounds
-
-TBD
