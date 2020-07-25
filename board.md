@@ -2,7 +2,7 @@
 
 Board games like checkers (also known as draughts) have been played for thousands of years of human history. 
 Checkers and chess are both played on a **board** with 64 **squares** arranged in an 8x8 two-dimensional **grid**. 
-The squares are alternating colored in each row and column, created a checkered pattern:
+The squares are alternating colored in each row and column, creating a checkered pattern:
 
 ![eight by eight board](pics/board8by8.png)
  
