@@ -30,7 +30,14 @@
     <link rel="shortcut icon" href="./icon.png">
     <script type="text/javascript" src="./assets/js/loader.js?v={{ site.github.build_revision }}"></script>
     <!-- 
-
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 1.5em);
+            border: none;
+        }
     -->
     <style>
         body {
@@ -39,15 +46,6 @@
             font-family: monospace;
             overflow: hidden;
             font-size: 14pt;
-        }
-
-        iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: calc(100% - 1.5em);
-            border: none;
         }
 
         .embed {
@@ -153,14 +151,14 @@
                 id="path4210" fill="#fff" fill-opacity="1" />
         </svg>
     </div>
-    <iframe id="simframe" allowfullscreen="allowfullscreen"
+
+    <iframe id="manual" src="https://{{ site.github.owner_name }}.github.io/{{ site.github.repository_name }}/manual" 
+        top="0" left="0" width="40%" height="100%"     
         sandbox="allow-popups allow-forms allow-scripts allow-same-origin">
     </iframe>
-    <!--
-    <iframe id="simframe2" allowfullscreen="allowfullscreen"
+    <iframe id="simframe" width="60%" height="100%" allowfullscreen="allowfullscreen"
         sandbox="allow-popups allow-forms allow-scripts allow-same-origin">
     </iframe>
--->
     <footer id="footer">
         <a target="blank" rel="nofollow noopener" href="https://{{ site.github.owner_name }}.github.io/{{ site.github.repository_name }}/manual">Manual</a>
         <a target="blank" rel="nofollow noopener" href="https://arcade.makecode.com/#pub:github:{{ site.github.owner_name }}/{{ site.github.repository_name }}">Edit</a>
