@@ -2,26 +2,28 @@
 
 The behavior of a video game can be described informally in English by **game mechanics**, 
 the desired interactions and relationships among the game elements, which includes both 
-digital elements (tiles, sprites) and physical elements (the buttons on a gaming handheld). 
+digital elements (such as tiles and sprites in TileCode) and physical elements 
+(the buttons on a gaming handheld). 
 
 For example, the classic Snake video game can be partially described as follows:
-- “the snake is composed of a head and body segments and is always in motion”
-- “each segment of the snake body follows the segment/head in front of it” 
-- “the snake grows by one segment each time it eats an apple”
-- “the user changes which way the head of the snake moves using the direction pad”
-- “the game ends if the snake head collides with a barrier or a segment of the snake body”
+- "the snake is composed of a head and body segments"
+- "the snake is always in motion"
+- "each segment of the snake body follows the segment/head in front of it" 
+- "the snake grows by one segment each time it eats an apple"
+- "the user changes which way the head of the snake moves using the direction pad"
+- "the game ends if the snake head collides with a barrier or a segment of the snake body"
 
-Game mechanics generally can be put into one of three categories:
-- player control rules (in TileCode, usually via a **press** rule, as well as **collid** rules)
-- "physics" rules - how non-player sprites move (in TileCode, usually via **change** or **collide** rules)
-- goal rules for ending the game with win/loss (see **misc** rule)
+Game mechanics generally fall into one of three categories:
+- **player rules** govern how the player sprites move - in TileCode, usually via a **press** rule, as well as **smash** events
+- **physics rules** govern how non-player sprites move, usually via **change** or **smash** events
+- **goal rules** are conditions for ending the game with win/loss
 
 ## Checklist
 
 When you analyze a video game's mechanics, it's good to have a checklist of questions
-to ask about the games:
-- what are the key elements of the game? 
-- which sprite (or sprites) does the player control?
+to ask about the game:
+- what are the key elements (tiles/sprites) of the game? what are their characteristics (are they stationary? do they move? how do they move?)
+- which sprite (or sprites) does the player control? how are the game controller buttons related to sprite movement?
 - what are the relationships between the key elements? 
 
 ## Refining Mechanics
