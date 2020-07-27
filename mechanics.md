@@ -11,11 +11,18 @@ For example, the classic Snake video game can be partially described as follows:
 - “the user changes which way the head of the snake moves using the direction pad”
 - “the game ends if the snake head collides with a barrier or a segment of the snake body”
 
-## Types of Mechanics
+Game mechanics generally can be put into one of three categories:
+- player control rules (in TileCode, usually via a **press** rule, as well as **collid** rules)
+- "physics" rules - how non-player sprites move (in TileCode, usually via **change** or **collide** rules)
+- goal rules for ending the game with win/loss (see **misc** rule)
 
-* controller/user rules  (press)
-* "physics" rules (change/collide)
-* goal/termination rules (negate)
+## Checklist
+
+When you analyze a video game's mechanics, it's good to have a checklist of questions
+to ask about the games:
+- what are the key elements of the game? 
+- which sprite (or sprites) does the player control?
+- what are the relationships between the key elements? 
 
 ## Refining Mechanics
 
