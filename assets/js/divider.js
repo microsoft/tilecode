@@ -38,7 +38,7 @@ var divider = document.getElementById("divider")
   , ratio = .6
   , dividerWidth = 4;
 window.onresize = setWidths,
-setWidths(),
+setWidths()
 /*
 divider.onmouseover = function() {
     document.body.style.cursor = "w-resize",
