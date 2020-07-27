@@ -47,27 +47,18 @@
             top: 0px; 
             margin: 0px; 
             padding: 0px; 
-            width: 485px; 
-            height: 100%; visibility: inherit;
-        }
-
-        div.divider {
-            position: absolute; 
-            left: 485px; 
-            top: 0px; 
-            margin: 0px; 
-            width: 4px; 
-            height: 100%;
-            background: gray;
+            width: 50%; 
+            height: 100%; 
+            visibility: inherit;
         }
 
         iframe.newsim {
-            position: absolute; 
-            left: 489px; 
+            position: absolute;  
             top: 0px; 
             margin: 0px; 
-            width: 852px; 
-            height: 100%; visibility: inherit;
+            width: 50%; 
+            height: 100%; 
+            visibility: inherit;
         }
 
         iframe.simframe {
@@ -186,7 +177,6 @@
     <iframe class="manual" id="manual" src="https://{{ site.github.owner_name }}.github.io/{{ site.github.repository_name }}/manual" 
         sandbox="allow-popups allow-forms allow-scripts allow-same-origin">
     </iframe>
-    <div class="divider"></div>
     <iframe class="newsim" id="simframe" allowfullscreen="allowfullscreen" sandbox="allow-popups allow-forms allow-scripts allow-same-origin">
     </iframe>
     <footer id="footer">
