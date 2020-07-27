@@ -1,4 +1,7 @@
 function makeCodeRun(options) {
+    if (document.getElementById("simframe").style.visibility == "hidden")
+        return;
+
     var code = "";
     var isReady = false;
     var simState = {}
