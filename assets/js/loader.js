@@ -1,7 +1,4 @@
 function makeCodeRun(options) {
-    if (document.getElementById("simframe").style.visibility == "hidden")
-        return;
-
     var code = "";
     var isReady = false;
     var simState = {}
@@ -126,11 +123,12 @@ function makeCodeRun(options) {
         } catch (e) {
             simState = {}
         }
+        /*
         setInterval(function () {
             if (simStateChanged)
                 localStorage["simstate"] = JSON.stringify(simState)
             simStateChanged = false
-        }, 200)
+        }, 200) */
     }
     
     function initFullScreen() {
