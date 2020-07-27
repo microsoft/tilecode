@@ -32,6 +32,7 @@ function startDrag() {
         divider.onmouseout = t
     }
 }
+
 var divider = document.getElementById("divider")
   , manualContent = document.getElementById("manual")
   , simulatorContent = document.getElementById("simframe")
