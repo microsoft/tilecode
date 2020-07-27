@@ -29,11 +29,13 @@
     <link rel="icon" type="image/png" href="./icon.png">
     <link rel="shortcut icon" href="./icon.png">
     <script type="text/javascript" src="./assets/js/loader.js?v={{ site.github.build_revision }}"></script>
+    <script type="text/javascript" src="./assets/js/divider.js?v={{ site.github.build_revision }}"></script>
     <!-- 
 
     -->
     <style>
         body {
+            cursor: default;
             background: black;
             color: white;
             font-family: monospace;
@@ -50,12 +52,24 @@
             visibility: inherit;
         }
 
-        iframe.newsim {
-            float: left;
+        div.divider {
+            position: absolute; 
+            left: 642px; 
+            top: 0px; 
+            background: gray; 
             margin: 0px; 
-            width: 50%; 
+            width: 4px; 
+            height: 100%;
+        }
+
+        iframe.newsim {
+            position: absolute; 
+            left: 646px; 
+            top: 0px; 
+            margin: 0px; 
+            width: 546px; 
             height: 100%; 
-            visibility: inherit;
+            visibility: inherit; 
         }
 
         iframe.simframe {
@@ -148,6 +162,7 @@
 </head>
 
 <body id="root">
+    
     <div id="loader" class="lds-ripple">
         <div></div>
         <div></div>
@@ -170,11 +185,12 @@
                 id="path4210" fill="#fff" fill-opacity="1" />
         </svg>
     </div>
-    <!---
+
     <iframe class="manual" id="manual" src="https://{{ site.github.owner_name }}.github.io/{{ site.github.repository_name }}/manual" 
         sandbox="allow-popups allow-forms allow-scripts allow-same-origin">
-    </iframe> -->
-    <iframe class="simframe" id="simframe" allowfullscreen="allowfullscreen" sandbox="allow-popups allow-forms allow-scripts allow-same-origin">
+    </iframe>
+    <div class="divider" id="divider"></div>
+    <iframe class="newsim" id="simframe" allowfullscreen="allowfullscreen" sandbox="allow-popups allow-forms allow-scripts allow-same-origin">
     </iframe>
     <footer id="footer">
         <a target="blank" rel="nofollow noopener" href="https://{{ site.github.owner_name }}.github.io/{{ site.github.repository_name }}/manual">Manual</a>
