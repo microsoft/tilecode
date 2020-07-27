@@ -2,15 +2,15 @@ function setWidths() {
     var t = document.body.clientWidth
       , n = Math.floor(t * ratio)
       , i = Math.max(t - n - dividerWidth, 4);
-    pageContent.style.width = n + "px",
+    manualContent.style.width = n + "px",
     divider.style.left = n + "px",
     divider.style.width = dividerWidth + "px",
-    pexForFunContent.style.left = n + dividerWidth + "px",
-    pexForFunContent.style.width = i + "px"
+    simulatorContent.style.left = n + dividerWidth + "px",
+    simulatorContent.style.width = i + "px"
 }
 function startDrag() {
-    pageContent.style.visibility = "hidden",
-    pexForFunContent.style.visibility = "hidden";
+    // manualContent.style.visibility = "hidden",
+    // simulatorContent.style.visibility = "hidden";
     var n = divider.onmouseover
       , t = divider.onmouseout;
     divider.onmouseover = null,
@@ -26,20 +26,20 @@ function startDrag() {
     document.body.onmouseup = function() {
         document.body.onmousemove = null,
         document.body.onmouseup = null,
-        pageContent.style.visibility = "inherit",
-        pexForFunContent.style.visibility = "inherit",
+        // manualContent.style.visibility = "inherit",
+        // simulatorContent.style.visibility = "inherit",
         divider.onmouseover = n,
         divider.onmouseout = t
     }
 }
 var divider = document.getElementById("divider")
-  , pageContent = document.getElementById("manual")
-  , pexForFunContent = document.getElementById("simframe")
+  , manualContent = document.getElementById("manual")
+  , simulatorContent = document.getElementById("simframe")
   , ratio = .6
   , dividerWidth = 4;
 window.onresize = setWidths,
 setWidths()
-/*
+
 divider.onmouseover = function() {
     document.body.style.cursor = "w-resize",
     divider.onmousedown = startDrag
@@ -49,4 +49,3 @@ divider.onmouseout = function() {
     document.body.style.cursor = "default",
     divider.onmousedown = null
 }
-*/
