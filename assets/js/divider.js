@@ -9,8 +9,8 @@ function setWidths() {
     simulatorContent.style.width = i + "px"
 }
 function startDrag() {
-    // manualContent.style.visibility = "hidden",
-    // simulatorContent.style.visibility = "hidden";
+    manualContent.style.visibility = "hidden",
+    simulatorContent.style.visibility = "hidden";
     var n = divider.onmouseover
       , t = divider.onmouseout;
     divider.onmouseover = null,
@@ -26,8 +26,8 @@ function startDrag() {
     document.body.onmouseup = function() {
         document.body.onmousemove = null,
         document.body.onmouseup = null,
-        // manualContent.style.visibility = "inherit",
-        // simulatorContent.style.visibility = "inherit",
+        manualContent.style.visibility = "inherit",
+        simulatorContent.style.visibility = "inherit",
         divider.onmouseover = n,
         divider.onmouseout = t
     }
