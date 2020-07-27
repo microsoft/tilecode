@@ -39,6 +39,7 @@ var divider = document.getElementById("divider")
   , dividerWidth = 4;
 window.onresize = setWidths,
 setWidths(),
+/*
 divider.onmouseover = function() {
     document.body.style.cursor = "w-resize",
     divider.onmousedown = startDrag
@@ -48,4 +49,4 @@ divider.onmouseout = function() {
     document.body.style.cursor = "default",
     divider.onmousedown = null
 }
-;
+*/
