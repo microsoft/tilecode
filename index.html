@@ -41,11 +41,11 @@
 
         iframe.manual {
             position: absolute; 
-            left: 0px;
-            top: 0px;
+            left: 646px; 
+            top: 0px; 
             padding: 0px;
             margin: 0px; 
-            width: 642px; 
+            width: 546px; 
             height: 100%; 
             visibility: inherit;
         }
@@ -62,10 +62,11 @@
 
         iframe.newsim {
             position: absolute; 
-            left: 646px; 
-            top: 0px; 
+            left: 0px;
+            top: 0px;
             margin: 0px; 
-            width: 546px; 
+
+            width: 642px; 
             height: 100%; 
             visibility: inherit; 
         }
@@ -184,13 +185,14 @@
         </svg>
     </div>
 
-    <iframe class="newsim" id="simframe" allowfullscreen="allowfullscreen" sandbox="allow-popups allow-forms allow-scripts allow-same-origin">
+
+    <iframe class="manual" id="manual" src="https://{{ site.github.owner_name }}.github.io/{{ site.github.repository_name }}/manual" 
+    sandbox="allow-popups allow-forms allow-scripts allow-same-origin">
     </iframe>
 
     <div class="divider" id="divider"></div>
 
-    <iframe class="manual" id="manual" src="https://{{ site.github.owner_name }}.github.io/{{ site.github.repository_name }}/manual" 
-    sandbox="allow-popups allow-forms allow-scripts allow-same-origin">
+    <iframe class="newsim" id="simframe" allowfullscreen="allowfullscreen" sandbox="allow-popups allow-forms allow-scripts allow-same-origin">
     </iframe>
 
     <footer id="footer">
