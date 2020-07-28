@@ -28,11 +28,13 @@ function startDrag() {
         e.preventDefault();
         document.body.removeEventListener('mousemove', newMouseMove, true);
         document.body.removeEventListener('mouseup', newMouseUp, true);
+        document.body.removeEventListener('mouseup', newMouseUp);
         divider.onmouseover = n;
         divider.onmouseout = t;
     }
     document.body.addEventListener('mousemove', newMouseMove, true);
     document.body.addEventListener('mouseup', newMouseUp, true);
+    document.body.addEventListener('mouseup', newMouseUp);
 }
 
 var divider = document.getElementById("divider")
