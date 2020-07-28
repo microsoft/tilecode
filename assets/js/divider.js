@@ -11,30 +11,32 @@ function setWidths() {
 function startDrag() {
     //manualContent.style.pointerEvents = "none";
     //simulatorContent.style.pointerEvents = "none";
-    manualContent.style.visibility = "hidden";
+    //manualContent.style.visibility = "hidden";
     //simulatorContent.style.visibility = "hidden";
     var n = divider.onmouseover
       , t = divider.onmouseout;
     divider.onmouseover = null,
-    divider.onmouseout = null,
-    document.body.onmousemove = function(n) {
-        n || (n = window.event),
-        ratio = (n.clientX - dividerWidth / 2) / document.body.clientWidth,
-        ratio < .1 && (ratio = .1),
-        ratio > .9 && (ratio = .9),
-        setWidths()
-    }
-    ,
-    document.body.onmouseup = function() {
-        document.body.onmousemove = null,
-        document.body.onmouseup = null,
-        //manualContent.style.pointerEvents = "auto";
-        //simulatorContent.style.pointerEvents = "auto";
-        manualContent.style.visibility = "inherit";
-        //simulatorContent.style.visibility = "inherit",
-        divider.onmouseover = n,
-        divider.onmouseout = t
-    }
+    divider.onmouseout = null
+    document.body.addEventListener('onmousemove',
+        function(n) {
+            n || (n = window.event),
+            ratio = (n.clientX - dividerWidth / 2) / document.body.clientWidth,
+            ratio < .1 && (ratio = .1),
+            ratio > .9 && (ratio = .9),
+            setWidths()
+        }, true);
+
+    document.body.addEventListener('onmouseup',
+        function() {
+            document.body.onmousemove = null,
+            document.body.onmouseup = null,
+            //manualContent.style.pointerEvents = "auto";
+            //simulatorContent.style.pointerEvents = "auto";
+            //manualContent.style.visibility = "inherit";
+            //simulatorContent.style.visibility = "inherit",
+            divider.onmouseover = n,
+            divider.onmouseout = t
+        }, true);
 }
 
 var divider = document.getElementById("divider")
