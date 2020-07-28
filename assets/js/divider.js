@@ -16,19 +16,19 @@ function startDrag() {
     divider.onmouseout = null;
     function newMouseMove(e) {
         e || (e = window.event),
-        e.preventDefault(), 
         ratio = (n.clientX - dividerWidth / 2) / document.body.clientWidth,
         ratio < .1 && (ratio = .1),
         ratio > .9 && (ratio = .9),
-        setWidths();
+        setWidths(),
+        e.preventDefault();
     }
     function newMouseUp(e) {
         e || (e = window.event),
-        e.preventDefault(),
         document.body.removeEventListener('mousemove', newMouseMove),
         document.body.removeEventListener('mouseup', newMouseUp),
         divider.onmouseover = n,
-        divider.onmouseout = t;
+        divider.onmouseout = t,
+        e.preventDefault();
     }
     document.body.addEventListener('mousemove', newMouseMove, true);
     document.body.addEventListener('mouseup', newMouseUp, true);
