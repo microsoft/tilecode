@@ -1,7 +1,7 @@
 function setWidths() {
     var t = document.body.clientWidth
       , n = Math.floor(t * ratio)
-      , i = Math.max(t - n - dividerWidth, 4);
+      , i = Math.max(t - n - dividerWidth, 8);
     leftContent.style.width = n + "px";
     divider.style.left = n + "px";
     divider.style.width = dividerWidth + "px";
@@ -19,7 +19,7 @@ function startDrag() {
     document.body.onmousemove = function newMouseMove(e) {
         console.log("mousemove");
         if (!e) e = window.event;
-        ratio = e.clientX / document.body.clientWidth;
+        ratio = (e.clientX - dividerWidth/2) / document.body.clientWidth;
         if (ratio < .1) ratio = .1;
         if (ratio > .9) ratio = .9;
         setWidths();
@@ -40,7 +40,7 @@ var divider = document.getElementById("divider")
   , leftContent = document.getElementById("simframe")
   , rightContent = document.getElementById("manual")
   , ratio = .6
-  , dividerWidth = 4;
+  , dividerWidth = 8;
 
 window.onresize = setWidths;
 setWidths()
