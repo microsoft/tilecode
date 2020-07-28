@@ -15,17 +15,15 @@ function startDrag() {
     divider.onmouseover = null;
     divider.onmouseout = null;
     function newMouseMove(e) {
-        if (!e)
-            e = window.event;
+        if (!e) e = window.event;
         e.preventDefault();
-        ratio = (e.clientX - dividerWidth / 2) / document.body.clientWidth;
+        ratio = e.clientX / document.body.clientWidth;
         if (ratio < .1) ratio = .1;
         if (ratio > .9) ratio = .9;
         setWidths();
     }
     function newMouseUp(e) {
-        if (!e)
-            e = window.event;
+        if (!e) e = window.event;
         e.preventDefault();
         document.body.removeEventListener('mousemove', newMouseMove, true);
         document.body.removeEventListener('mouseup', newMouseUp, true);
