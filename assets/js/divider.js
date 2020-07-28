@@ -15,7 +15,9 @@ function startDrag() {
     divider.onmousedown = null;
     divider.onmouseover = null;
     divider.onmouseout = null;
-    function newMouseMove(e) {
+    leftContent.style.visibility = "hidden";
+    rightContent.style.visibility = "hidden";
+    document.body.onmousemove = function newMouseMove(e) {
         if (!e) e = window.event;
         e.preventDefault();
         ratio = e.clientX / document.body.clientWidth;
@@ -23,18 +25,22 @@ function startDrag() {
         if (ratio > .9) ratio = .9;
         setWidths();
     }
-    function newMouseUp(e) {
+    document.body.onmouseup = function newMouseUp(e) {
         if (!e) e = window.event;
         e.preventDefault();
-        document.body.removeEventListener('mousemove', newMouseMove, true);
-        document.removeEventListener('mouseup', newMouseUp, true);
-        document.removeEventListener('mouseup', newMouseUp);
+        document.body.onmousemove = null;
+        // removeEventListener('mousemove', newMouseMove, true);
+        document.body.onmouseup = null; 
+        // removeEventListener('mouseup', newMouseUp, true);
+        //document.removeEventListener('mouseup', newMouseUp);
         divider.onmouseover = n;
         divider.onmouseout = t;
+        leftContent.style.visibility = "inherit";
+        rightContent.style.visibility = "inherit";
     }
-    document.body.addEventListener('mousemove', newMouseMove, true);
-    document.addEventListener('mouseup', newMouseUp, true);
-    document.addEventListener('mouseup', newMouseUp);
+    //document.body.addEventListener('mousemove', newMouseMove, true);
+    //document.addEventListener('mouseup', newMouseUp, true);
+    //document.addEventListener('mouseup', newMouseUp);
 }
 
 var divider = document.getElementById("divider")
