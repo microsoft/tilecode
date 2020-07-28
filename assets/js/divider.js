@@ -2,11 +2,11 @@ function setWidths() {
     var t = document.body.clientWidth
       , n = Math.floor(t * ratio)
       , i = Math.max(t - n - dividerWidth, 4);
-    manualContent.style.width = n + "px";
+    leftContent.style.width = n + "px";
     divider.style.left = n + "px";
     divider.style.width = dividerWidth + "px";
-    simulatorContent.style.left = n + dividerWidth + "px";
-    simulatorContent.style.width = i + "px";
+    rightContent.style.left = n + dividerWidth + "px";
+    rightContent.style.width = i + "px";
 }
 
 function startDrag() {
@@ -38,8 +38,8 @@ function startDrag() {
 }
 
 var divider = document.getElementById("divider")
-  , manualContent = document.getElementById("manual")
-  , simulatorContent = document.getElementById("simframe")
+  , leftContent = document.getElementById("simframe")
+  , rightContent = document.getElementById("manual")
   , ratio = .6
   , dividerWidth = 4;
 
