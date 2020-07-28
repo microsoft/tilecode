@@ -23,9 +23,10 @@ function startDrag() {
         ratio = (n.clientX - dividerWidth / 2) / document.body.clientWidth,
         ratio < .1 && (ratio = .1),
         ratio > .9 && (ratio = .9),
-        setWidths()
+        setWidths();
+        n.preventDefault();
     }
-    function newMouseUp() {
+    function newMouseUp(e) {
         document.body.removeEventListener('mousemove', newMouseMove);
         document.body.removeEventListener('mouseup', newMouseUp);
         //document.body.onmousemove = null;
@@ -35,7 +36,8 @@ function startDrag() {
         //manualContent.style.visibility = "inherit";
         //simulatorContent.style.visibility = "inherit",
         divider.onmouseover = n,
-        divider.onmouseout = t
+        divider.onmouseout = t;
+        e.preventDefault();
     }
     document.body.addEventListener('mousemove', newMouseMove, true);
     document.body.addEventListener('mouseup', newMouseUp, true);
