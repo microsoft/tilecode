@@ -12,6 +12,7 @@ function setWidths() {
 function startDrag() {
     let n = divider.onmouseover;
     let t = divider.onmouseout;
+    divider.onmousedown = null;
     divider.onmouseover = null;
     divider.onmouseout = null;
     function newMouseMove(e) {
