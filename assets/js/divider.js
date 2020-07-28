@@ -17,7 +17,7 @@ function startDrag() {
     function newMouseMove(e) {
         e || (e = window.event),
         e.preventDefault(),
-        ratio = (e.clientX - dividerWidth / 2) / document.body.clientWidth,
+        ratio = ((e.clientX - dividerWidth) / 2) / document.body.clientWidth,
         ratio < .1 && (ratio = .1),
         ratio > .9 && (ratio = .9),
         setWidths();
