@@ -16,7 +16,7 @@ function startDrag() {
     divider.onmouseout = null;
     function newMouseMove(e) {
         e || (e = window.event),
-        ratio = (n.clientX - dividerWidth / 2) / document.body.clientWidth,
+        ratio = (e.clientX - dividerWidth / 2) / document.body.clientWidth,
         ratio < .1 && (ratio = .1),
         ratio > .9 && (ratio = .9),
         setWidths(),
