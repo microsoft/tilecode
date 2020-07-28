@@ -19,7 +19,6 @@ function startDrag() {
     rightContent.style.display = "none";
     document.body.onmousemove = function newMouseMove(e) {
         if (!e) e = window.event;
-        e.preventDefault();
         ratio = e.clientX / document.body.clientWidth;
         if (ratio < .1) ratio = .1;
         if (ratio > .9) ratio = .9;
@@ -27,20 +26,13 @@ function startDrag() {
     }
     document.body.onmouseup = function newMouseUp(e) {
         if (!e) e = window.event;
-        e.preventDefault();
         document.body.onmousemove = null;
-        // removeEventListener('mousemove', newMouseMove, true);
         document.body.onmouseup = null; 
-        // removeEventListener('mouseup', newMouseUp, true);
-        //document.removeEventListener('mouseup', newMouseUp);
         divider.onmouseover = n;
         divider.onmouseout = t;
         leftContent.style.display = "block";
         rightContent.style.display = "block";
     }
-    //document.body.addEventListener('mousemove', newMouseMove, true);
-    //document.addEventListener('mouseup', newMouseUp, true);
-    //document.addEventListener('mouseup', newMouseUp);
 }
 
 var divider = document.getElementById("divider")
