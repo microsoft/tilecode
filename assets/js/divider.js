@@ -17,7 +17,7 @@ function startDrag() {
       , t = divider.onmouseout;
     divider.onmouseover = null,
     divider.onmouseout = null
-    document.body.addEventListener('onmousemove',
+    document.body.addEventListener('mousemove',
         function(n) {
             n || (n = window.event),
             ratio = (n.clientX - dividerWidth / 2) / document.body.clientWidth,
@@ -26,7 +26,7 @@ function startDrag() {
             setWidths()
         }, true);
 
-    document.body.addEventListener('onmouseup',
+    document.body.addEventListener('mouseup',
         function() {
             document.body.onmousemove = null,
             document.body.onmouseup = null,
