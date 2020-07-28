@@ -8,35 +8,37 @@ function setWidths() {
     simulatorContent.style.left = n + dividerWidth + "px",
     simulatorContent.style.width = i + "px"
 }
+
 function startDrag() {
     //manualContent.style.pointerEvents = "none";
     //simulatorContent.style.pointerEvents = "none";
     //manualContent.style.visibility = "hidden";
     //simulatorContent.style.visibility = "hidden";
-    var n = divider.onmouseover
-      , t = divider.onmouseout;
-    divider.onmouseover = null,
-    divider.onmouseout = null
-    document.body.addEventListener('mousemove',
-        function(n) {
-            n || (n = window.event),
-            ratio = (n.clientX - dividerWidth / 2) / document.body.clientWidth,
-            ratio < .1 && (ratio = .1),
-            ratio > .9 && (ratio = .9),
-            setWidths()
-        }, true);
-
-    document.body.addEventListener('mouseup',
-        function() {
-            document.body.onmousemove = null,
-            document.body.onmouseup = null,
-            //manualContent.style.pointerEvents = "auto";
-            //simulatorContent.style.pointerEvents = "auto";
-            //manualContent.style.visibility = "inherit";
-            //simulatorContent.style.visibility = "inherit",
-            divider.onmouseover = n,
-            divider.onmouseout = t
-        }, true);
+    let n = divider.onmouseover;
+    let t = divider.onmouseout;
+    divider.onmouseover = null;
+    divider.onmouseout = null;
+    function newMouseMove(n) {
+        n || (n = window.event),
+        ratio = (n.clientX - dividerWidth / 2) / document.body.clientWidth,
+        ratio < .1 && (ratio = .1),
+        ratio > .9 && (ratio = .9),
+        setWidths()
+    }
+    function newMouseUp() {
+        document.body.removeEventListener('mousemove', newMouseMove);
+        document.body.removeEventListener('mouseup', newMouseUp);
+        //document.body.onmousemove = null;
+        //document.body.onmouseup = null;
+        //manualContent.style.pointerEvents = "auto";
+        //simulatorContent.style.pointerEvents = "auto";
+        //manualContent.style.visibility = "inherit";
+        //simulatorContent.style.visibility = "inherit",
+        divider.onmouseover = n,
+        divider.onmouseout = t
+    }
+    document.body.addEventListener('mousemove', newMouseMove, true);
+    document.body.addEventListener('mouseup', newMouseUp, true);
 }
 
 var divider = document.getElementById("divider")
