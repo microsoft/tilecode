@@ -12,12 +12,12 @@ function setWidths() {
 function startDrag() {
     let n = divider.onmouseover;
     let t = divider.onmouseout;
-    divider.onmousedown = null;
     divider.onmouseover = null;
     divider.onmouseout = null;
     leftContent.style.display = "none";
     rightContent.style.display = "none";
     document.body.onmousemove = function newMouseMove(e) {
+        console.log("mousemove");
         if (!e) e = window.event;
         ratio = e.clientX / document.body.clientWidth;
         if (ratio < .1) ratio = .1;
@@ -25,6 +25,7 @@ function startDrag() {
         setWidths();
     }
     document.body.onmouseup = function newMouseUp(e) {
+        console.log("mouseup")
         if (!e) e = window.event;
         document.body.onmousemove = null;
         document.body.onmouseup = null; 
