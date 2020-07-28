@@ -25,8 +25,8 @@ function startDrag() {
     function newMouseUp(e) {
         e || (e = window.event),
         e.preventDefault(),
-        document.body.removeEventListener('mousemove', newMouseMove),
-        document.body.removeEventListener('mouseup', newMouseUp),
+        document.body.removeEventListener('mousemove', newMouseMove, true),
+        document.body.removeEventListener('mouseup', newMouseUp, true),
         divider.onmouseover = n,
         divider.onmouseout = t;
     }
