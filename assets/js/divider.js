@@ -15,8 +15,8 @@ function startDrag() {
     divider.onmousedown = null;
     divider.onmouseover = null;
     divider.onmouseout = null;
-    leftContent.style.visibility = "hidden";
-    rightContent.style.visibility = "hidden";
+    leftContent.style.display = "none";
+    rightContent.style.display = "none";
     document.body.onmousemove = function newMouseMove(e) {
         if (!e) e = window.event;
         e.preventDefault();
@@ -35,8 +35,8 @@ function startDrag() {
         //document.removeEventListener('mouseup', newMouseUp);
         divider.onmouseover = n;
         divider.onmouseout = t;
-        leftContent.style.visibility = "inherit";
-        rightContent.style.visibility = "inherit";
+        leftContent.style.display = "block";
+        rightContent.style.display = "block";
     }
     //document.body.addEventListener('mousemove', newMouseMove, true);
     //document.addEventListener('mouseup', newMouseUp, true);
