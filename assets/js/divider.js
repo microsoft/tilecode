@@ -37,7 +37,7 @@ function startDrag() {
 }
 
 var divider = document.getElementById("divider")
-  , leftContent = document.getElementById("simframe")
+  , leftContent = document.getElementById("foobar")
   , rightContent = document.getElementById("manual")
   , ratio = .6
   , dividerWidth = 4;
