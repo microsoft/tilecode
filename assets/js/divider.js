@@ -16,9 +16,10 @@ function startDrag() {
     rightContent.style.display = "none";
     document.body.onmousemove = function newMouseMove(e) {
         console.log("mousemove");
-        ratio = (e.clientX - dividerWidth/2) / document.body.clientWidth;
-        if (ratio < .1) ratio = .1;
-        if (ratio > .9) ratio = .9;
+        e || (e = window.event);
+        ratio = (e.clientX - dividerWidth / 2) / document.body.clientWidth;
+        ratio < .1 && (ratio = .1);
+        ratio > .9 && (ratio = .9);
         setWidths();
     }
     document.body.onmouseup = function newMouseUp(e) {
