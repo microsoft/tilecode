@@ -27,6 +27,8 @@ function startDrag() {
         if (!e) e = window.event;
         leftContent.style.display = "block";
         rightContent.style.display = "block";
+        document.body.onmousemove = null;
+        document.body.onmouseup = null;
         drag = false;
     }
 }
