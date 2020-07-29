@@ -37,8 +37,8 @@ function startDrag() {
 }
 
 var divider = document.getElementById("divider")
-  , leftContent = document.getElementById("simframe")
-  , rightContent = document.getElementById("manual")
+  , leftContent = document.getElementById("manual")
+  , rightContent = document.getElementById("simframe")
   , ratio = .6
   , dividerWidth = 8;
 
