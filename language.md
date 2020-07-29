@@ -16,9 +16,13 @@ created and/or destroyed,  After a round, the movements/actions are executed by 
 (left, right, up, down) it moved in the last round (or if it remained at rest), for inspection by the rules in the next round.
 
 ## Sprite Kinds
-- ordered 1..4
-- first one is special: player - camera follows it
-- Z order
+
+Sprite kinds are ordered from left to right as shown in the game home screen, the tile map editor, and the paint editor.
+The first sprite is generally used for the player avatar and, by default, the camera follows this sprite as it moves
+around the tile map. Furthermore, all rules created for the first sprite are automatically generalized to all four
+directions (this can be changed by the user, as explained later.) Finally, the z-depths of the sprites are assigned so 
+that the first sprite kind will be on top of all kinds that follow, the second sprite kind will be on top of third 
+and fourth sprite kind, etc.  In the future, it will be possible to change these attributes. 
 
 ## Rules and Center Sprites
 
