@@ -9,11 +9,9 @@ function setWidths() {
     rightContent.style.width = i + "px";
 }
 
+let drag = false;
 function startDrag() {
-    let n = divider.onmouseover;
-    let t = divider.onmouseout;
-    divider.onmouseover = null;
-    divider.onmouseout = null;
+    drag = true;
     leftContent.style.display = "none";
     rightContent.style.display = "none";
     document.body.onmousemove = function newMouseMove(e) {
@@ -27,12 +25,9 @@ function startDrag() {
     document.body.onmouseup = function newMouseUp(e) {
         console.log("mouseup")
         if (!e) e = window.event;
-        document.body.onmousemove = null;
-        document.body.onmouseup = null; 
-        divider.onmouseover = n;
-        divider.onmouseout = t;
         leftContent.style.display = "block";
         rightContent.style.display = "block";
+        drag = false;
     }
 }
 
@@ -46,11 +41,13 @@ window.onresize = setWidths;
 setWidths()
 
 divider.onmouseover = function() {
+    if (drag) return;
     document.body.style.cursor = "w-resize";
     divider.onmousedown = startDrag;
 }
 
 divider.onmouseout = function() {
+    if (drag) return;
     document.body.style.cursor = "default";
     divider.onmousedown = null;
 }
