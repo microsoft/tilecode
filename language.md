@@ -77,20 +77,12 @@ Common actions that are invoked on a smash event include:
 Many game progress/win conditions require that a predicate holds for every member of a set: 
 - "the player goes to the next level when every diamond has been collected from the game board"
 
-For these cases, we make use of **never** rules, which fire at the beginning of a round on 
-the current state (before any other events and rules fire). The red "no-entry" circle signifies
-the never rule. A never rule fires successfully exactly when there is no 3x3 region of the tile
-map on which the When section fires successfully. 
+For these cases, we make use of **never** rules, which fire at the beginning of a round on the current state (before any other events and rules fire). The red "no-entry" circle signifies the never rule. A never rule fires successfully exactly when there is no 3x3 region of the tile map on which the When section fires successfully. 
 
 ## When-Do Rules
 
-We have defined TileCode concepts of **state**, **rounds**, **center sprites** and **events**.
-With these hand, we are now ready to discuss rules in more detail. As already seen, a TileCode rule 
-is formed by a pair of a **When** predicate and **Do** commands. 
-Rules fire in parallel on the current game state and events, 
-which results in commands being sent to tiles/sprites; 
-each tile/sprite stores a local log of the commands sent to it. 
-A resolution step determines which of the (possibly conflicting) commands in each log will be executed. 
+Having defined the concepts of **state**, **rounds**, **center sprites** and **events** in TileCode, we are now ready to discuss rules in more detail. As already seen, a TileCode rule is formed by a pair of a **When** predicate and **Do** commands. Rules fire in parallel on the current game state and events, 
+which results in commands being sent to tiles/sprites; each tile/sprite stores a local log of the commands sent to it. A **resolution** step determines which of the (possibly conflicting) commands in each log will be executed. 
 A new game state is produced by executing the commands.
 
 ### Tile Predicates
@@ -107,18 +99,13 @@ and whose direction (in the case of a sprite) matches the direction predicate (d
 - **Include'**: the tile must contain at least one background/sprite whose kind is in this set;
 - **Exclude**: the tile must not contain any of the backgrounds/sprites from this set.
 
-A black tile's include and exclude sets all are empty. The Include set is denoted by green check marks; 
-the Exclude set is denoted by the red "no-entry" circle sign; 
+A black tile's include and exclude sets all are empty. The Include set is denoted by green check marks; the Exclude set is denoted by the red "no-entry" circle sign; 
 membership in the Include' set is denoted by a yellow dot. 
 
 ### Sprite Witnesses
 
 If a tile predicate has a non-empty Include set that contains only sprite kinds then
-the associated tile must contain a sprite if that predicate evaluates to true on a state. 
-We call such a sprite a **sprite witness**, as it witnesses the truth of the predicate.
-Sprite witnesses are TileCode's form of variable binding. Sprite witnesses are displayed 
-in the column to the right of the **Do** keyword, as discussed further below. Note that
-the Include' set does not bind a sprite witness.
+the associated tile must contain a sprite if that predicate evaluates to true on a state. We call such a sprite a **sprite witness**, as it witnesses the truth of the predicate. Sprite witnesses are TileCode's form of variable binding. Sprite witnesses are displayed in the column to the right of the **Do** keyword, as discussed further below. Note that the Include' set does not bind a sprite witness.
 
 As discussed earlier, the center tile is treated specially so that XYZ. 
 The four tiles adjacent to the center tile also may have sprite witnesses.  
@@ -126,18 +113,9 @@ The four tiles adjacent to the center tile also may have sprite witnesses.
 
 ### Direction Predicates
 
-If a tile predicate has identified a sprite witness, then we may wish to constrain the direction of that sprite.  
-Selecting the sprite witness in the column to the right of the **Do** label, brings up the direction predicate menu.  
-The currently selected direction predicate (resting) is selected and may be changed by navigating to the 
-desired new predicate and selecting it. 
-Note that the direction predicate is reflected in the tile predicate in the When section, 
-as the predicate takes part in the pattern matching, as described previously.
+If a tile predicate has identified a sprite witness, then we may wish to constrain the direction of that sprite. Selecting the sprite witness in the column to the right of the **Do** label, brings up the direction predicate menu.  The currently selected direction predicate (resting) is selected and may be changed by navigating to the desired new predicate and selecting it. Note that the direction predicate is reflected in the tile predicate in the When section, as the predicate takes part in the pattern matching, as described previously.
 
 ### Commands
-
-When a rule successfully fires, the commands in the Do section of the rule are issued 
-to the center tile/sprite as well as the four tile/sprites adjacent to the center. Each object (tile/sprite)
-maintains a log of the commands sent to it. 
 
 Commands:
 - **move**
@@ -150,6 +128,8 @@ Commands:
 - **increase score**
 
 ### Resolution
+
+When a rule successfully fires, the commands in the Do section of the rule are issued to the center tile/sprite as well as the four tile/sprites adjacent to the center. Each object (tile/sprite) maintains a log of the commands sent to it. 
 
 ## Parallelism, Conflicts and Non-Determinism
 
