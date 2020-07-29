@@ -35,10 +35,11 @@ function startDrag() {
 var divider = document.getElementById("divider")
   , pageContent = document.getElementById("manual")
   , pexForFunContent = document.getElementById("simframe")
-  , ratio = .6
+  , ratio = .4
   , dividerWidth = 8;
 window.onresize = setWidths,
-setWidths(),
+setWidths()
+/*
 divider.onmouseover = function() {
     document.body.style.cursor = "w-resize",
     divider.onmousedown = startDrag
@@ -48,4 +49,4 @@ divider.onmouseout = function() {
     document.body.style.cursor = "default",
     divider.onmousedown = null
 }
-;
+*/
