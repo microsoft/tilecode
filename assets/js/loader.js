@@ -27,7 +27,7 @@ function makeCodeRun(options) {
                 var ap = document.createElement("a");
                 ap.download = "arcade.uf2";
                 ap.href = "https://github.com/" + meta.repo + "/releases/download/v" + meta.version + "/arcade.uf2";
-                ap.innerText = "v" + meta.version;
+                ap.innerText = "UF2 File";
                 vel.appendChild(ap);
             }
             // load simulator with correct version

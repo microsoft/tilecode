@@ -8,10 +8,10 @@ TileCode games are similar to board games with pieces that can move from one til
 # Install and Run
 
 You can run TileCode in a [web browser](https://microsoft.github.io/tilecode/), or 
-on any [MakeCode Arcade device](https://arcade.makecode.com/hardware) - copy this 
-[UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.2.3/arcade.uf2) 
-to your device to get started (works for all MakeCode Arcade devices) after you 
-connect your device to a computer via an USB cable.
+on any [MakeCode Arcade device](https://arcade.makecode.com/hardware) - click on
+the link **UF2 File** at the bottom of the screen to download the latest TileCode
+UF2 File. Copy this file to your Arcade device to get started (works for all MakeCode 
+Arcade devices).
 
 # Background Reading
 
