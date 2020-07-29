@@ -24,14 +24,15 @@ directions (this can be changed by the user, as explained later.) Finally, the z
 that the first sprite kind will be on top of all kinds that follow, the second sprite kind will be on top of third 
 and fourth sprite kind, etc.  In the future, it will be possible to change these attributes. 
 
-## Rules and Center Sprites
+## Center Sprites
 
-A TileCode **rule** applies to one or more **center sprites**, those that appear in the center tile of the 3x3 When section.
-If you select the center tile of the **When** section, the sprites with green check marks are the ones to which
+A TileCode **rule** applies to one or more **center sprites**, 
+namely those that appear in the center tile of the rule's 3x3 **When** section.
+If you select the center tile of the When section, the sprites with green check marks are the ones to which
 the rule applies. If there are no sprites with green check marks, the rule will not run (rules cannot yet apply to a tile
 by itself). When you visit the rule selector screen, you can choose among the four sprite kinds. When you create a new rule 
 from this screen, the currently selected sprite will be the center sprite of the new rule.  You can change which sprite a 
-rule applies to by selecting the center tile of the **When** section.
+rule applies to by selecting the center tile of the When section.
 
 ## Events
 
@@ -41,25 +42,45 @@ There are three basic kinds of events in TileCode: button **press**, neighborhoo
 ### Button Press
 
 During game play, the TileCode game engine raises five button press events: **A button**, **dpad-left**, **dpad-right**, 
-**dpad-up**, **dpad-down**.  When a **press** rule fires for a sprite **S** in a round, then no **change** rule
-for S will be fired in that round. That is, **press** rules shadow **change** rules, prioritizing events from the user
-over internal events. 
+**dpad-up**, **dpad-down**.  If a press rule successfully fires (meaning that the **When** pattern of the rule matches, 
+as defined later) for a sprite **S** in a round, then no change rule for S will be fired in that round. That is, press 
+rules shadow change rules, prioritizing events from the user over internal events. 
 
 ### Neighborhood Change
 
-If the 3x3 neighborhood of a sprite changed in the previous, a change event is raised for the current round and
-all applicable change rules for the sprite are fired. 
+If the 3x3 neighborhood of a sprite changed (due to an action) in the previous round, a change event is raised for the current round and
+all applicable change rules for the sprite are fired. A 3x3 neighborhood changes in a around if any one the nine tiles 
+**T** in the neighborhood registers one of the following changes:
+- T's background art changed (due to a paint command)
+- a sprite moved in to or out of tile T
+- a sprite was created or destroyed at tile T
+- a sprite came to rest at tile T (moved into tile T at the beginning of the round, but was not issued a move command in the round)
 
-Changes (all sprites consider)
-- painting a tile
-- a sprite moved into a tile
-- a sprite transitioned from moving to resting
-- a sprite created/destroyed
+Change events are critical for creating non-player characters, animations, etc.
 
 ### Sprite Smash
 
+After the press and change rules have fired, every sprite now has a new direction to move in (or will stay at rest - more on this later).
+A **smash** event is raised within the same round if based on the proposed directions, a pair of sprites will collide with one another.
+In the rule for a smash event, the center sprite has been issued a command to move in a particular direction.  The red dot in an
+adjacent tile represents a second sprite that the center sprite will collide with. This second sprite may be in motion or at rest.
+
+Common actions that are invoked on a smash event include:
+- **destroy** - in this case, the center sprite usually is "consuming" the second sprite;
+- **stop** - cancel the move command on the center sprite
+- **game over** - end the game.
+
 ### Miscellaneous
 
+#### Never conditions
+
+Many game progress/win conditions require that a predicate holds for every member of a set: 
+- "the player goes to the next level when every diamond has been collected from the game board"
+
+For these cases, we make use of the **never** rule, which fire at the beginning of a round on 
+the current state (before any other events and rules fire). The red-slash-circle signifies
+the never rule. The rule fires successfully exactly when there is no 3x3 region of the tile
+map on which the When section fires successfully. 
 
 ## When-Do Rules
 
@@ -70,5 +91,12 @@ Changes (all sprites consider)
 ### Sprite Direction Predicates
 
 ### Commands
+
+When a rule successfully fires, the commands in the Do section of the rule are issued 
+to the center tile/sprite as well as the four tile/sprites adjacent to the center. Each object (tile/sprite)
+maintains a log of the commands sent to it. 
+
+
+
 
 
