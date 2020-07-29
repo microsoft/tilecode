@@ -177,24 +177,23 @@
     </div>
 -->
 
-    <iframe id="simframe" sandbox="allow-popups allow-forms allow-scripts allow-same-origin"></iframe>
+    <iframe id="simframe" allowfullscreen="allowfullscreen" sandbox="allow-popups allow-forms allow-scripts allow-same-origin"></iframe>
     <div id="divider"></div>
     <iframe id="manual" src="https://{{ site.github.owner_name }}.github.io/{{ site.github.repository_name }}/manual"></iframe>
 
-
-    <!--
     <footer id="footer">
+            <!--
         <a target="blank" rel="nofollow noopener" href="https://{{ site.github.owner_name }}.github.io/{{ site.github.repository_name }}/manual">Manual</a>
         <a target="blank" rel="nofollow noopener" href="https://arcade.makecode.com/#pub:github:{{ site.github.owner_name }}/{{ site.github.repository_name }}">Edit</a>
         <a target="blank" rel="nofollow noopener" href="https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}">GitHub</a>
         <span id="version"></span>
-        <div id="fullscreen">⇲</div>
+        <div id="fullscreen">⇲</div>\
+        -->
     </footer>
--->
+
     <script type="text/javascript" src="./assets/js/divider.js?v={{ site.github.build_revision }}"></script>
     <script type="text/javascript">
         makeCodeRun({ js: "./assets/js/binary.js?v={{ site.github.build_revision }}" });
-    /*
         if (window.location && window.location.search) {
             var noFooter = /nofooter=1/i.test(window.location.search);
             var embed = /embed=1/i.test(window.location.search);
@@ -209,7 +208,7 @@
             if (embed && root) {
                 root.className += " embed";
             }
-        }*/
+        }
     </script>
 </body>
 
