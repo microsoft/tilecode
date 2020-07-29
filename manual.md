@@ -9,7 +9,7 @@ TileCode games are similar to board games with pieces that can move from one til
 
 You can run TileCode in a [web browser](https://microsoft.github.io/tilecode/), or 
 on any [MakeCode Arcade device](https://arcade.makecode.com/hardware) - copy this 
-[UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.2.2/arcade.uf2) 
+[UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.2.3/arcade.uf2) 
 to your device to get started (works for all MakeCode Arcade devices) after you 
 connect your device to a computer via an USB cable.
 
@@ -22,14 +22,6 @@ connect your device to a computer via an USB cable.
 
 * [TileCode App Overview](tilecodeapp)
 * [Hello World Game](helloworld)
-
-# Some TileCode Games
-
-TBD
-
-# TileCode Language
-
-TBD
 
 # Having Problems?
 
