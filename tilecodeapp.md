@@ -21,7 +21,7 @@ in a web browser, you can use keyboard shortcuts:
 The easiest way to share a TileCode game you have created on an Arcade device is to copy 
 the UF2 file from your device and share that file with a friend. The UF2 file includes the 
 flash settings in which your games are stored. When your friend copies this UF2 file to 
-their Arcade device, they will get the games you created. Keep in mind that if your friend's 
+their Arcade device, they will get the games you created. Please be aware that if your friend's 
 Arcade device is not the same as yours, this may not work.
 
 ## Load Screen

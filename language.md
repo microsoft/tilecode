@@ -47,7 +47,8 @@ over internal events.
 
 ### Neighborhood Change
 
-When there is a change to the 3x3 neighborhood of a sprite, 
+If the 3x3 neighborhood of a sprite changed in the previous, a change event is raised for the current round and
+all applicable change rules for the sprite are fired. 
 
 Changes (all sprites consider)
 - painting a tile
@@ -55,9 +56,10 @@ Changes (all sprites consider)
 - a sprite transitioned from moving to resting
 - a sprite created/destroyed
 
-
 ### Sprite Smash
+
 ### Miscellaneous
+
 
 ## When-Do Rules
 
@@ -68,6 +70,5 @@ Changes (all sprites consider)
 ### Sprite Direction Predicates
 
 ### Commands
-
 
 

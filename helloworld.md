@@ -6,21 +6,21 @@ TileCode programming takes place by creating a set of rules that describe sprite
 
 ## Creating the "Hello World" game
 
-Let’s learn how we can create this game, step by step. Back up to the load screen. Game slot #2 should be available (purple color), so select that one to create a new game. (If there is no available slot, you will need to delete an existing game to make space for a new one. To delete a game, first go to one of the existing slots and select it to go to the game's home screen; then select the settings wheel and select the "delete" button. Press **A** to confirm that you want to delete the game). 
+Let’s learn how to create the game, step by step. Back up to the load screen. Game slot #2 should be available (purple color), so select that one to create a new game. (If there is no available slot, you will need to delete an existing game to make space for a new one. To delete a game, first go to one of the existing slots and select it to go to the game's home screen; then select the settings wheel and select the "delete" button. Press **A** to confirm that you want to delete the game). 
 
 ## Step 1: Pick your game characters (sprites)
 
-Select the player, the apple and the snake from the gallery for your game. Pick any tiles you like for the terrain. 
+Select the player, the apple, and the snake from the gallery for your game. Pick any tiles you like for the terrain. 
 
 ![hello_game_sprites](pics/helloGameSprites.png)
 
 ## Step 2: Build your game level/map
 
-For this step you will need to go to the map editor. Here you can select any tile background or sprite you prefer and place it on the board. In the case of our "Hello World" game we want the player sprite to avoid the walls, walk on grass, pick apples and avoid snakes so we will build our game board to support that scenario. 
+For this step you will need to go to the map editor. Here you can select any tile background or sprite you prefer and place it on the board. In the case of our "Hello World" game. we want the player sprite to avoid the walls, walk on grass, pick apples, and avoid snakes, so we will build our game board to support that scenario. 
 
 ![hello_map_edit](pics/helloMapEditing.png)
 
-Here we have selected the apple sprite and place a few more apple sprites on the map:
+Here we have selected the apple sprite and placed a few more apple sprites on the map:
 
 ![hello_map_apple_edit](pics/helloMapAppleEdit.png)
 
@@ -33,7 +33,7 @@ Now let's create our first game rule and bring the player sprite to life. Naviga
 
 ![hello_rules_gallery](pics/helloRulesAll.png)
 
-This will bring up the rule editor for the player sprite on the dpad-right press, as shown below in the **When** section. For the **Do** action add a move right command by selecting the tile to the right of the player sprite in the **Do** section. This will bring up the command menu (shown at the top). Navigate to select the blue right arrow and then press **B** to dismiss the command menu.
+This will bring up the rule editor for the player sprite on the dpad-right press, as shown below in the **When** section. For the **Do** action, add a move right command by selecting the tile to the right of the player sprite in the **Do** section. This will bring up the command menu (shown at the top). Navigate to select the blue right arrow and then press **B** to dismiss the command menu.
 
 ![hello_motion_simple](pics/helloMotionSimple.png)
 
@@ -61,11 +61,11 @@ In order for the player to be able to eat the apples we need to create a smash r
 
 ![hello_rules_smash](pics/helloRulesSmash.png)
 
-In the rule editor, select the red dot tile in the **When** section and add an apple sprite to show we want to create a rule for when the player is meeting with (smashing into) the apple:
+In the rule editor, select the red dot tile in the **When** section and add an apple sprite to show we want to create a rule for when the player collides with (smashes into) the apple:
 
 ![hello_collision_apple_select](pics/collisionAppleSelect.png)
 
-For the **Do** section we will not have any action for the player; for the apple we will have a destroy action (yellow pacman) and  add a 10 points action so the player gets more points with more apples. 
+For the **Do** section we will not have any action for the player; for the apple we will have a destroy action (yellow pacman) and add a 10 points action so the player gets more points with more apples. 
 
 ![hello_collision_apple_rule](pics/collisionAppleRule.png)
 
