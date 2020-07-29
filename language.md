@@ -19,9 +19,9 @@ created and/or destroyed,  After a round, the movements/actions are executed by 
 
 Sprite kinds are ordered from left to right as shown in the game home screen, the tile map editor, and the paint editor.
 The first sprite is generally used for the player avatar and, by default, the camera follows this sprite as it moves
-around the tile map. Furthermore, all rules created for the first sprite are automatically generalized to all four
-directions (this can be changed by the user, as explained later.) Finally, the z-depths of the sprites are assigned so 
-that the first sprite kind will be on top of all kinds that follow, the second sprite kind will be on top of third 
+around the tile map during game play. Furthermore, all rules created for the first sprite are automatically generalized 
+to all four directions (this can be changed by the user, as explained later.) Finally, the z-depths of the sprites are 
+assigned so  that the first sprite kind will be on top of all kinds that follow, the second sprite kind will be on top of third 
 and fourth sprite kind, etc.  In the future, it will be possible to change these attributes. 
 
 ## Center Sprites
@@ -37,7 +37,7 @@ rule applies to by selecting the center tile of the When section.
 ## Events
 
 There are three basic kinds of events in TileCode: button **press**, neighborhood **change**, and sprite **smash**
-(there are also some **miscellaneous** events)
+(there are also some important **miscellaneous** events).
 
 ### Button Press
 
@@ -77,18 +77,42 @@ Common actions that are invoked on a smash event include:
 Many game progress/win conditions require that a predicate holds for every member of a set: 
 - "the player goes to the next level when every diamond has been collected from the game board"
 
-For these cases, we make use of the **never** rule, which fire at the beginning of a round on 
-the current state (before any other events and rules fire). The red-slash-circle signifies
-the never rule. The rule fires successfully exactly when there is no 3x3 region of the tile
+For these cases, we make use of **never** rules, which fire at the beginning of a round on 
+the current state (before any other events and rules fire). The red "no-entry" circle signifies
+the never rule. A never rule fires successfully exactly when there is no 3x3 region of the tile
 map on which the When section fires successfully. 
 
 ## When-Do Rules
 
+We have defined TileCode concepts of **state**, **rounds**, **center sprites** and **events**.
+With these hand, we are now ready to discuss rules in more detail. As already seen, a TileCode rule 
+is formed by a pair of a **When** predicate and **Do** commands. 
+Rules fire in parallel on the current game state and events, 
+which results in commands being sent to tiles/sprites; 
+each tile/sprite stores a local log of the commands sent to it. 
+A resolution step determines which of the (possibly conflicting) commands in each log will be executed. 
+A new game state is produced by executing the commands.
+
 ### Tile Predicates
+
+A **When** predicate is a predicate on the game state that examines the 
+3x3 neighborhood around a sprite. More precisely, a **When** predicate is 
+a *conjunction* of **tile predicates**, one for each of the nine tiles in a 
+sprite's neighborhood, including the center tile. Most of these predicates will 
+simply be ``true'', corresponding to a black tile, which means that no constraints are placed on that tile.  
+
+A tile predicate is defined by three non-intersecting sets **Include**, **Include'**, and **Exclude** and a direction predicate:
+- **Include**: the tile must contain at least one background/sprite whose kind is in this set and whose direction (in the case of a sprite) matches the direction predicate;
+- **Include'**: the tile must contain at least one background/sprite whose kind is in this set;
+- **Exclude**: the tile must not contain any of the backgrounds/sprites from this set.
+
+A black tile's include and exclude sets all are empty. The Include set is denoted by green check marks; 
+the Exclude set is denoted by the red "no-entry" circle sign; 
+membership in the Include' set is denoted by a yellow dot. 
 
 ### Sprite Witnesses
 
-### Sprite Direction Predicates
+### Direction Predicates
 
 ### Commands
 
@@ -96,7 +120,10 @@ When a rule successfully fires, the commands in the Do section of the rule are i
 to the center tile/sprite as well as the four tile/sprites adjacent to the center. Each object (tile/sprite)
 maintains a log of the commands sent to it. 
 
+### Resolution
 
+## Parallelism, Conflicts and Non-Determinism
 
+## Rule Generalization
 
 
