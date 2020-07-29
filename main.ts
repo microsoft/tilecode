@@ -1,3 +1,3 @@
 // see games.ts for built-in games
 
-let TileWorld = new tileworld.LoadScreen();
+let tw = new tileworld.LoadScreen();

@@ -101,8 +101,9 @@ a *conjunction* of **tile predicates**, one for each of the nine tiles in a
 sprite's neighborhood, including the center tile. Most of these predicates will 
 simply be ``true'', corresponding to a black tile, which means that no constraints are placed on that tile.  
 
-A tile predicate is defined by three non-intersecting sets **Include**, **Include'**, and **Exclude** and a direction predicate:
-- **Include**: the tile must contain at least one background/sprite whose kind is in this set and whose direction (in the case of a sprite) matches the direction predicate;
+A tile predicate is defined by three non-intersecting sets over the eight tile/sprite kinds:
+- **Include**: the tile must contain at least one background/sprite whose kind is in this set 
+and whose direction (in the case of a sprite) matches the direction predicate (discussed further below);
 - **Include'**: the tile must contain at least one background/sprite whose kind is in this set;
 - **Exclude**: the tile must not contain any of the backgrounds/sprites from this set.
 
@@ -112,13 +113,41 @@ membership in the Include' set is denoted by a yellow dot.
 
 ### Sprite Witnesses
 
+If a tile predicate has a non-empty Include set that contains only sprite kinds then
+the associated tile must contain a sprite if that predicate evaluates to true on a state. 
+We call such a sprite a **sprite witness**, as it witnesses the truth of the predicate.
+Sprite witnesses are TileCode's form of variable binding. Sprite witnesses are displayed 
+in the column to the right of the **Do** keyword, as discussed further below. Note that
+the Include' set does not bind a sprite witness.
+
+As discussed earlier, the center tile is treated specially so that XYZ. 
+The four tiles adjacent to the center tile also may have sprite witnesses.  
+*ROW correspondence*
+
 ### Direction Predicates
+
+If a tile predicate has identified a sprite witness, then we may wish to constrain the direction of that sprite.  
+Selecting the sprite witness in the column to the right of the **Do** label, brings up the direction predicate menu.  
+The currently selected direction predicate (resting) is selected and may be changed by navigating to the 
+desired new predicate and selecting it. 
+Note that the direction predicate is reflected in the tile predicate in the When section, 
+as the predicate takes part in the pattern matching, as described previously.
 
 ### Commands
 
 When a rule successfully fires, the commands in the Do section of the rule are issued 
 to the center tile/sprite as well as the four tile/sprites adjacent to the center. Each object (tile/sprite)
 maintains a log of the commands sent to it. 
+
+Commands:
+- **move**
+- **stop**
+- **paint**
+- **create**
+- **destroy**
+- **portal**
+- **game lost/won**
+- **increase score**
 
 ### Resolution
 
