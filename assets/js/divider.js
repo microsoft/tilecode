@@ -16,7 +16,6 @@ function startDrag() {
     rightContent.style.display = "none";
     document.body.onmousemove = function newMouseMove(e) {
         console.log("mousemove");
-        if (!e) e = window.event;
         ratio = (e.clientX - dividerWidth/2) / document.body.clientWidth;
         if (ratio < .1) ratio = .1;
         if (ratio > .9) ratio = .9;
@@ -24,7 +23,6 @@ function startDrag() {
     }
     document.body.onmouseup = function newMouseUp(e) {
         console.log("mouseup")
-        if (!e) e = window.event;
         leftContent.style.display = "block";
         rightContent.style.display = "block";
         document.body.onmousemove = null;
