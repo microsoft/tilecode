@@ -136,7 +136,7 @@ Tile-based commands are:
 - **create**: creates a sprite at the given tile
 - **paint**: paint the given tile with a background
 
-All other commands are found under:
+The other commands are:
 - **portal**: opens a portal to a random tile on the tile map
 - **game**:  game lose, game win, increase score
 
@@ -146,13 +146,15 @@ The legend below shows the commands and their associated icons:
 
 It's important to note that the **create** command creates a new sprite witness,
 namely the sprite this created. Thus, one can send a sprite-based command (such as move)
-to the just created sprite by placing that command immediately after the create
+to the newly-created sprite by placing that command immediately after the create
 command.  Similarly, the **portal** command opens a portal to a new tile, so one
 can place a tile-based command immediately after the portal command (such as paint or create).
 
 ### Resolution
 
-When a rule successfully fires, the commands in the Do section of the rule are issued to the center tile/sprite as well as the four tile/sprites adjacent to the center. Each object (tile/sprite) maintains a log of the commands sent to it. 
+When a rule successfully fires, the commands in the Do section of the rule are issued to the 
+center tile/sprite as well as the four tile/sprites adjacent to the center. Each object 
+(tile/sprite) maintains a log of the commands sent to it. 
 
 ## Parallelism, Conflicts and Non-Determinism
 
