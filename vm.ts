@@ -53,7 +53,7 @@ namespace tileworld {
             const t = this.top - oy;
 
             screen.drawTransparentImage(this.image, l, t);
-            // if (this.changed)
+            //if (this.changed)
             //    screen.drawTransparentImage(include, l, t);
             // screen.drawTransparentImage(ruleediting.movedImages[this.dir], l, t);
         }
@@ -251,14 +251,12 @@ namespace tileworld {
         // use the changed map to determine if a sprite's context has changed
         private contextChanged(ts: TileSprite) {
             // check neighborhood
-            for(let i = -2; i <= 2; i++) {
-                for (let j = -2; j <= 2; j++) {
-                    if (Math.abs(i) + Math.abs(j) <= 2) {
-                        let x = ts.col() + i;
-                        let y = ts.row() + j;
-                        if (this.inBounds(x,y) && this.vm.changed.getPixel(x,y))
-                            return true;
-                    }
+            for(let i = -1; i <= 1; i++) {
+                for (let j = -1; j <= 1; j++) {
+                    let x = ts.col() + i;
+                    let y = ts.row() + j;
+                    if (this.inBounds(x,y) && this.vm.changed.getPixel(x,y))
+                        return true;
                 }
             }
             return false;
@@ -439,9 +437,9 @@ namespace tileworld {
                 }
             }
             // set bit on sprite
-            // this.allSprites(ts => {
-            //     ts.changed = this.contextChanged(ts);
-            // });
+            //this.allSprites(ts => {
+            //    ts.changed = this.contextChanged(ts);
+            //});
         }
 
         // ---------------------------------------------------------------------
