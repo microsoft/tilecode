@@ -126,7 +126,7 @@ Commands:
 - **portal**:
 - **game**:
 
-![command legend](pics/commandsLegend.png)
+![command legend](pics/commandsLegend.PNG)
 
 ### Resolution
 
