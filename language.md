@@ -21,8 +21,8 @@ A sprite can move at most one tile per round.
 
 ## Sprite Kinds
 
-Sprite kinds are ordered from left to right as shown in the game home screen, the tile map editor, and the paint editor.
-The first sprite usually represents the player avatar and, by default, the camera follows this sprite as it moves
+Sprite kinds are ordered from left to right as shown above on the game home screen.
+The first sprite usually represents the player avatar. By default, the camera follows the first sprite as it moves
 around the tile map during game play. Furthermore, all rules created for the first sprite are automatically generalized 
 to all four directions (this can be changed by the user, as explained later.) Finally, the z-depths of the sprites are 
 assigned so that the first sprite is on top of all other sprites, the second sprite is on top of the third 
@@ -121,15 +121,28 @@ If a tile predicate has identified a sprite witness, then we may wish to constra
 
 ### Commands
 
-Commands:
+TileCode commands come in three basic varieties: (1) commands that apply to sprite; (2) commands that apply to tiles; (3) all other commands.
+Sprite-based commands are:
 - **move**: left, right, up, down, stop (on a pending collision/smash event)
-- **paint**:
-- **create**:
-- **destroy**:
-- **portal**:
-- **game**:
+- **destroy**: remove the sprite
+
+Tile-based commands are:
+- **create**: creates a sprite at the tile
+- **paint**: paint the tile with a background
+
+All other commands are found under:
+- **portal**: opens a portal to a random tile on the tile map
+- **game**:  game lose, game win, increase score
+
+The legend below shows the commands and their associated icons:
 
 ![command legend](pics/commandsLegend.PNG)
+
+It's important to note that the **create** command creates a new sprite witness,
+namely the sprite this created. Thus, one can send a sprite-based command (such as move)
+to the just created sprite by placing that command immediately after the create
+command.  Similarly, the **portal** command opens a portal to a new tile, so one
+can place a tile-based command immediately after the portal command (such as paint or create).
 
 ### Resolution
 
