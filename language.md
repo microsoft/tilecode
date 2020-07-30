@@ -21,7 +21,7 @@ A sprite can move at most one tile per round.
 
 ## Sprite Kinds
 
-Sprite kinds are ordered from left to right as shown above on the game home screen.
+Sprite kinds are ordered from left to right as shown above (and on the game home screen, tile map editor, etc.).
 The first sprite usually represents the player avatar. By default, the camera follows the first sprite as it moves
 around the tile map during game play. Furthermore, all rules created for the first sprite are automatically generalized 
 to all four directions (this can be changed by the user, as explained later.) Finally, the z-depths of the sprites are 
@@ -43,14 +43,14 @@ rule applies to by selecting the center tile of the When section.
 There are three basic kinds of events in TileCode: button **press**, neighborhood **change**, and sprite **smash**
 (there are also some important **miscellaneous** events).
 
-### Button Press
+### Button Press Event
 
 During game play, the TileCode game engine raises five button press events: **A button**, **dpad-left**, **dpad-right**, 
 **dpad-up**, **dpad-down**.  If a press rule successfully fires (meaning that the **When** pattern of the rule matches, 
 as defined later) for a sprite **S** in a round, then no change rule for S will be fired in that round. That is, press 
 rules shadow change rules, prioritizing events from the user over internal events. 
 
-### Neighborhood Change
+### Neighborhood Change Event
 
 If the 3x3 neighborhood of a sprite changed due to a command in the previous round, a change event is raised for the current round and
 all applicable change rules for the sprite are fired. A 3x3 neighborhood changes in a round if any one the nine tiles 
@@ -62,7 +62,7 @@ all applicable change rules for the sprite are fired. A 3x3 neighborhood changes
 
 Change events are critical for creating non-player characters, animations, etc.
 
-### Sprite Smash
+### Sprite Smash Event
 
 After the press and change rules have fired, every sprite now has a new direction to move in (or will stay at rest - more on this later).
 A **smash** event is raised within the same round if based on the proposed directions, a pair of sprites will collide with one another.
@@ -76,12 +76,15 @@ Common commands that are invoked on a smash event include:
 
 ### Miscellaneous
 
-#### Never conditions
+#### Never Conditions
 
 Many game progress/win conditions require that a predicate holds for every member of a set: 
 - "the player goes to the next level when every diamond has been collected from the game board"
 
-For these cases, we make use of **never** rules, which fire at the beginning of a round on the current state (before any other events and rules fire). The red "no-entry" circle signifies the never rule. A never rule fires successfully exactly when there is no 3x3 region of the tile map on which the When section fires successfully. 
+For these cases, we make use of **never** rules, which fire at the beginning of a round on the current 
+state (before any other events and rules fire). The red "no-entry" circle signifies the never rule. 
+A never rule fires successfully exactly when there is no 3x3 region of the tile map on which the When 
+section fires successfully. 
 
 ## When-Do Rules
 
@@ -103,7 +106,8 @@ and whose direction (in the case of a sprite) matches the direction predicate (d
 - **Include'**: the tile must contain at least one background/sprite whose kind is in this set;
 - **Exclude**: the tile must not contain any of the backgrounds/sprites from this set.
 
-A black tile's include and exclude sets all are empty. The Include set is denoted by green check marks; the Exclude set is denoted by the red "no-entry" circle sign; 
+A black tile's include and exclude sets all are empty. The Include set is denoted by green check marks; 
+the Exclude set is denoted by the red "no-entry" circle sign; 
 membership in the Include' set is denoted by a yellow dot. 
 
 ### Sprite Witnesses
@@ -123,11 +127,21 @@ and tiles shows the correspondence, as shown below:
 
 ### Direction Predicates
 
-If a tile predicate has identified a sprite witness, then we may wish to constrain the direction of that sprite. Selecting the sprite witness in the column to the right of the **Do** label, brings up the direction predicate menu.  The currently selected direction predicate (resting) is selected and may be changed by navigating to the desired new predicate and selecting it. Note that the direction predicate is reflected in the tile predicate in the When section, as the predicate takes part in the pattern matching, as described previously.
+If a tile predicate has identified a sprite witness, then we may wish to constrain the 
+direction of that sprite. Selecting the sprite witness in the column to the right of 
+the **Do** label, brings up the direction predicate menu, as shown below:
+
+![direction predicate](pics/dirExpressionEditor.JPG)
+
+From left to the right, the direction predicates are: left, up, right, down, 
+resting, moving, any (white asterisk).. The direction predicate is reflected in 
+the tile predicate in the When section, 
+as the predicate takes part in the pattern matching, as described previously. 
 
 ### Commands
 
 TileCode commands come in three basic varieties: (1) commands that apply to sprites; (2) commands that apply to tiles; (3) all other commands.
+
 Sprite-based commands are:
 - **move**: move left, right, up, or down by one tile; stop/cancel move command (on a pending collision/smash event)
 - **destroy**: remove the sprite
