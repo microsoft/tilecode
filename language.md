@@ -3,7 +3,7 @@
 ## State
 
 A TileCode state consists of a tile map populated with sprites. Each tile has one of four possible backgrounds, which can change during
-an execution. A tile may contain zero, one or more sprites. There are four kinds of sprites. A sprite's kind is fixed for the 
+program execution. A tile may contain zero, one or more sprites. There are four kinds of sprites. A sprite's kind is fixed for the 
 lifetime of the sprite (from creation to destruction). A sprite has a direction (up, down, left, right, resting), indicating the way
 the sprite moved between rounds, or if it remained at rest.
 
@@ -19,11 +19,11 @@ A sprite can move at most one tile per round.
 ## Sprite Kinds
 
 Sprite kinds are ordered from left to right as shown in the game home screen, the tile map editor, and the paint editor.
-The first sprite is generally represents the player avatar and, by default, the camera follows this sprite as it moves
+The first sprite usually represents the player avatar and, by default, the camera follows this sprite as it moves
 around the tile map during game play. Furthermore, all rules created for the first sprite are automatically generalized 
 to all four directions (this can be changed by the user, as explained later.) Finally, the z-depths of the sprites are 
-assigned so  that the first sprite will be on top of all kinds that follow, the second sprite kind be on top of third 
-and fourth sprite kind, etc.
+assigned so that the first sprite is on top of all other sprites, the second sprite is on top of the third 
+and fourth sprites, etc.
 
 ## Center Sprites
 
@@ -63,13 +63,13 @@ Change events are critical for creating non-player characters, animations, etc.
 
 After the press and change rules have fired, every sprite now has a new direction to move in (or will stay at rest - more on this later).
 A **smash** event is raised within the same round if based on the proposed directions, a pair of sprites will collide with one another.
-In the rule for a smash event, the center sprite has been issued a command to move in a particular direction.  The red dot in an
-adjacent tile represents a second sprite that the center sprite will collide with. This second sprite may be in motion or at rest.
+In the rule for a smash event, the center sprite has received a move command. The red dot in an adjacent tile represents a second sprite 
+that the center sprite will collide with if the move command is executed. This second sprite may be in motion or at rest.
 
 Common commands that are invoked on a smash event include:
-- **destroy** - in this case, the center sprite usually is "consuming" the second sprite;
+- **destroy** - in this case, the center sprite usually is "consuming" the second sprite, to which the destroy command is sent.
 - **stop** - cancel the move command on the center sprite
-- **game over** - end the game.
+- **game over** - end the game
 
 ### Miscellaneous
 
@@ -119,14 +119,14 @@ If a tile predicate has identified a sprite witness, then we may wish to constra
 ### Commands
 
 Commands:
-- **move**
-- **stop**
-- **paint**
-- **create**
-- **destroy**
-- **portal**
-- **game lost/won**
-- **increase score**
+- **move**: left, right, up, down, stop (on a pending collision/smash event)
+- **paint**:
+- **create**:
+- **destroy**:
+- **portal**:
+- **game**:
+
+![command legend](pics/commandsLegend.png)
 
 ### Resolution
 
