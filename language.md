@@ -11,18 +11,19 @@ the sprite moved between rounds, or if it remained at rest.
 
 A TileCode game proceeds in **rounds**: each round executes all rules in parallel on the current state to determine 
 the direction that each sprite should next take, which sprites should be 
-created and/or destroyed,  After a round, the movements/actions are executed by the TileCode game engine from the current the state 
+created and/or destroyed, etc. After a round, the commands are executed by the TileCode game engine from the current the state 
 (all sprites move synchronously and at the same speed) to determine the next state. A sprite stores the direction 
 (left, right, up, down) it moved in the last round (or if it remained at rest), for inspection by the rules in the next round.
+A sprite can move at most one tile per round.
 
 ## Sprite Kinds
 
 Sprite kinds are ordered from left to right as shown in the game home screen, the tile map editor, and the paint editor.
-The first sprite is generally used for the player avatar and, by default, the camera follows this sprite as it moves
+The first sprite is generally represents the player avatar and, by default, the camera follows this sprite as it moves
 around the tile map during game play. Furthermore, all rules created for the first sprite are automatically generalized 
 to all four directions (this can be changed by the user, as explained later.) Finally, the z-depths of the sprites are 
-assigned so  that the first sprite kind will be on top of all kinds that follow, the second sprite kind will be on top of third 
-and fourth sprite kind, etc.  In the future, it will be possible to change these attributes. 
+assigned so  that the first sprite will be on top of all kinds that follow, the second sprite kind be on top of third 
+and fourth sprite kind, etc.
 
 ## Center Sprites
 
@@ -48,8 +49,8 @@ rules shadow change rules, prioritizing events from the user over internal event
 
 ### Neighborhood Change
 
-If the 3x3 neighborhood of a sprite changed (due to an action) in the previous round, a change event is raised for the current round and
-all applicable change rules for the sprite are fired. A 3x3 neighborhood changes in a around if any one the nine tiles 
+If the 3x3 neighborhood of a sprite changed due to a command in the previous round, a change event is raised for the current round and
+all applicable change rules for the sprite are fired. A 3x3 neighborhood changes in a round if any one the nine tiles 
 **T** in the neighborhood registers one of the following changes:
 - T's background art changed (due to a paint command)
 - a sprite moved in to or out of tile T
@@ -65,7 +66,7 @@ A **smash** event is raised within the same round if based on the proposed direc
 In the rule for a smash event, the center sprite has been issued a command to move in a particular direction.  The red dot in an
 adjacent tile represents a second sprite that the center sprite will collide with. This second sprite may be in motion or at rest.
 
-Common actions that are invoked on a smash event include:
+Common commands that are invoked on a smash event include:
 - **destroy** - in this case, the center sprite usually is "consuming" the second sprite;
 - **stop** - cancel the move command on the center sprite
 - **game over** - end the game.
