@@ -3,9 +3,12 @@
 ## State
 
 A TileCode state consists of a tile map populated with sprites. Each tile has one of four possible backgrounds, which can change during
-program execution. A tile may contain zero, one or more sprites. There are four kinds of sprites. A sprite's kind is fixed for the 
-lifetime of the sprite (from creation to destruction). A sprite has a direction (up, down, left, right, resting), indicating the way
-the sprite moved between rounds, or if it remained at rest.
+program execution. A tile may contain zero, one or more sprites. There are four kinds of sprites as well, as shown below:
+
+![tile map](pics/tilemapSprites.png)
+
+A sprite's kind is fixed for the lifetime of the sprite (from creation to destruction). A sprite has a direction 
+(up, down, left, right, resting), indicating the way the sprite moved between rounds, or if it remained at rest.
 
 ## Rounds
 
