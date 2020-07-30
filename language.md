@@ -109,11 +109,17 @@ membership in the Include' set is denoted by a yellow dot.
 ### Sprite Witnesses
 
 If a tile predicate has a non-empty Include set that contains only sprite kinds then
-the associated tile must contain a sprite if that predicate evaluates to true on a state. We call such a sprite a **sprite witness**, as it witnesses the truth of the predicate. Sprite witnesses are TileCode's form of variable binding. Sprite witnesses are displayed in the column to the right of the **Do** keyword, as discussed further below. Note that the Include' set does not bind a sprite witness.
+the associated tile must contain a sprite if that predicate evaluates to true on a state. We call such a sprite a **sprite witness**, as it witnesses the truth of the predicate. Sprite witnesses are TileCode's form of variable binding. Sprite witnesses are displayed in the column to the right of the **Do** keyword, as discussed further below. Note that the Include' set does not bind a sprite witness. The four tiles adjacent to the center tile also may have sprite witnesses.  
 
-As discussed earlier, the center tile is treated specially so that XYZ. 
-The four tiles adjacent to the center tile also may have sprite witnesses.  
-*ROW correspondence*
+### Correspondence Between When and Do Sections
+
+There are five rows in the **Do** section in a one-to-one correspondence with the 
+center tile and its four adjacent tiles in the **When** section. You can see this
+correspondence by moving the cursor over the rows in the **Do** section, or the
+five tiles in the **When** section. With help turned on, numbering of the rows
+and tiles shows the correspondence, as shown below:
+
+![hello_grass_motion_rule](pics/helloMotionGrass.png)
 
 ### Direction Predicates
 
@@ -121,14 +127,14 @@ If a tile predicate has identified a sprite witness, then we may wish to constra
 
 ### Commands
 
-TileCode commands come in three basic varieties: (1) commands that apply to sprite; (2) commands that apply to tiles; (3) all other commands.
+TileCode commands come in three basic varieties: (1) commands that apply to sprites; (2) commands that apply to tiles; (3) all other commands.
 Sprite-based commands are:
-- **move**: left, right, up, down, stop (on a pending collision/smash event)
+- **move**: move left, right, up, or down by one tile; stop/cancel move command (on a pending collision/smash event)
 - **destroy**: remove the sprite
 
 Tile-based commands are:
-- **create**: creates a sprite at the tile
-- **paint**: paint the tile with a background
+- **create**: creates a sprite at the given tile
+- **paint**: paint the given tile with a background
 
 All other commands are found under:
 - **portal**: opens a portal to a random tile on the tile map
