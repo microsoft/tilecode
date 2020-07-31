@@ -38,14 +38,20 @@ the rule applies, as shown below:
 ![center sprite](pics/centerSprite.PNG)
 
  If there are no sprites with green check marks, the rule will not run (rules cannot yet apply to a tile
-by itself). When you visit the rule selector screen, you can choose among the four sprite kinds. When you create a new rule 
-from this screen, the currently selected sprite will be the center sprite of the new rule.  You can change which sprite a 
-rule applies to by selecting the center tile of the When section.
+by itself). 
+
+When you visit the rule selector screen, you can choose among the four sprite kinds, as shown below:
+
+![center sprite](pics/ruleSelector.gif)
+
+When you create a new rule from this screen, the currently selected sprite will be the center sprite of the new rule. 
+You can change which sprite a rule applies to by selecting the center tile of the When section.
 
 ## Events
 
 There are three basic kinds of events in TileCode: button **press**, neighborhood **change**, and sprite **smash**
-(there are also some important **miscellaneous** events).
+(there are also some important **miscellaneous** events).  As shown in the rule selector screen above, there is one
+quadrant for each of these event types.
 
 ### Button Press Event
 
