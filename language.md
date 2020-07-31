@@ -140,7 +140,8 @@ as the predicate takes part in the pattern matching, as described previously.
 
 ### Commands
 
-TileCode commands come in three basic varieties: (1) commands that apply to sprites; (2) commands that apply to tiles; (3) all other commands.
+TileCode commands come in three basic varieties: (1) commands that apply to sprites; 
+(2) commands that apply to tiles; (3) all other commands.
 
 Sprite-based commands are:
 - **move**: move left, right, up, or down by one tile; stop/cancel move command (on a pending collision/smash event)
@@ -169,6 +170,8 @@ can place a tile-based command immediately after the portal command (such as pai
 When a rule successfully fires, the commands in the Do section of the rule are issued to the 
 center tile/sprite as well as the four tile/sprites adjacent to the center. Each object 
 (tile/sprite) maintains a log of the commands sent to it. 
+
+After firing of press and change rules, 
 
 ## Parallelism, Conflicts and Non-Determinism
 
