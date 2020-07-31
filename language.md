@@ -37,10 +37,8 @@ the rule applies, as shown below:
 
 ![center sprite](pics/centerSprite.PNG)
 
- If there are no sprites with green check marks, the rule will not run (rules cannot yet apply to a tile
-by itself). 
-
-When you visit the rule selector screen, you can choose among the four sprite kinds, as shown below:
+If there are no sprites with green check marks, the rule will not run (rules cannot yet apply to a tile
+by itself). When you visit the rule selector screen, you can choose among the four sprite kinds, as shown below:
 
 ![center sprite](pics/ruleSelector.gif)
 
@@ -88,13 +86,16 @@ Common commands that are invoked on a smash event include:
 
 #### Never Conditions
 
-Many game progress/win conditions require that a predicate holds for every member of a set: 
+Many game progress/win conditions require that a predicate holds for every member of a set, such
+as the winning condition from Boulder Dash:
 - "the player goes to the next level when every diamond has been collected from the game board"
 
 For these cases, we make use of **never** rules, which fire at the beginning of a round on the current 
 state (before any other events and rules fire). The red "no-entry" circle signifies the never rule. 
 A never rule fires successfully exactly when there is no 3x3 region of the tile map on which the When 
-section fires successfully. 
+section fires successfully. Here is the rule that expresses the winning condition of Boulder Dash:
+
+![never diamond](pics/neverDiamond.PNG)
 
 ## When-Do Rules
 
