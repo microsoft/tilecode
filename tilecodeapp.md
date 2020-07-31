@@ -1,5 +1,3 @@
-[![TileCode](pics/meowbit.gif)](https://microsoft.github.io/tilecode/)
-
 # TileCode App Overview
 
 ## Navigation and Editing {#navigation}
