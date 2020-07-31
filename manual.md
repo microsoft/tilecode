@@ -27,5 +27,5 @@ MakeCode Arcade compatible devices).
 
 # Having Problems?
 
-Please file a [GitHub issue](https://github.com/microsoft/tilecode/issues) if you encounter 
+Please file a [GitHub issue](https://github.com/microsoft/tilecode/issues){:target="_blank"} if you encounter 
 a problem with TileCode. You can also help us by choosing the most appropriate tag for your issue. 
