@@ -33,7 +33,11 @@ and fourth sprites, etc.
 A TileCode **rule** applies to one or more **center sprites**, 
 namely those that appear in the center tile of the rule's 3x3 **When** section.
 If you select the center tile of the When section, the sprites with green check marks are the ones to which
-the rule applies. If there are no sprites with green check marks, the rule will not run (rules cannot yet apply to a tile
+the rule applies, as shown below:
+
+![center sprite](pics/centerSprite.PNG)
+
+ If there are no sprites with green check marks, the rule will not run (rules cannot yet apply to a tile
 by itself). When you visit the rule selector screen, you can choose among the four sprite kinds. When you create a new rule 
 from this screen, the currently selected sprite will be the center sprite of the new rule.  You can change which sprite a 
 rule applies to by selecting the center tile of the When section.
