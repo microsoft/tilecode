@@ -8,10 +8,10 @@ TileCode games are similar to board games with pieces that can move from one til
 
 # TileCode on Arcade Devices
 
-TileCode runs on any [MakeCode Arcade device](https://arcade.makecode.com/hardware){:target="_blank"} 
-- Click on the **UF2 File** link at the very bottom of the screen to download the file to your computer 
+TileCode runs on any [MakeCode Arcade device](https://arcade.makecode.com/hardware){:target="_blank"} -
+- Click on the **UF2 File** link at the bottom of the screen to download the file 
 - Plug your Arcade device into your computer via a USB cable
-- Copy the downloaded UF2 file to your Arcade device to get started
+- Copy the downloaded UF2 file to your Arcade device
 
 # TileCode in the Browser
 
