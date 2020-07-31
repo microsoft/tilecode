@@ -124,7 +124,9 @@ membership in the Include' set is denoted by a yellow dot.
 ### Sprite Witnesses
 
 If a tile predicate has a non-empty Include set that contains only sprite kinds then
-the associated tile must contain a sprite if that predicate evaluates to true on a state. We call such a sprite a **sprite witness**, as it witnesses the truth of the predicate. Sprite witnesses are TileCode's form of variable binding. Sprite witnesses are displayed in the column to the right of the **Do** keyword, as discussed further below. Note that the Include' set does not bind a sprite witness. The four tiles adjacent to the center tile also may have sprite witnesses.  
+the associated tile must contain a sprite if that predicate evaluates to true on a state. We call such a sprite a **sprite witness**, as it witnesses the truth of the predicate. Sprite witnesses are TileCode's form of variable binding. Sprite witnesses are displayed in the column to the right of the **Do** keyword, as discussed further below. 
+If there is no sprite witness, an empty circle is shown instead. 
+Note that the Include' set does not bind a sprite witness. The four tiles adjacent to the center tile also may have sprite witnesses.   
 
 ### Correspondence Between When and Do Sections
 
@@ -144,10 +146,9 @@ the **Do** label, brings up the direction predicate menu, as shown below:
 
 ![direction predicate](pics/dirExpressionEditor.JPG)
 
-From left to the right, the direction predicates are: left, up, right, down, 
-resting, moving, any (white asterisk).. The direction predicate is reflected in 
-the tile predicate in the When section, 
-as the predicate takes part in the pattern matching, as described previously. 
+As shown above, the direction predicates are: left, up, right, down, 
+resting, moving, any (white asterisk). The direction predicate is reflected in 
+the tile predicate in the When section.
 
 ### Commands
 
@@ -163,7 +164,7 @@ Tile-based commands are:
 - **paint**: paint the given tile with a background
 
 The other commands are:
-- **portal**: opens a portal to a random tile on the tile map
+- **portal**: opens a portal to a random tile on the tile map of the given background that does not contain a sprite
 - **game**:  game lose, game win, increase score
 
 The legend below shows the commands and their associated icons:
@@ -176,16 +177,30 @@ to the newly-created sprite by placing that command immediately after the create
 command.  Similarly, the **portal** command opens a portal to a new tile, so one
 can place a tile-based command immediately after the portal command (such as paint or create).
 
-### Resolution
+### Command Conflicts and Resolution
 
-When a rule successfully fires, the commands in the Do section of the rule are issued to the 
-center tile/sprite as well as the four tile/sprites adjacent to the center. Each object 
-(tile/sprite) maintains a log of the commands sent to it. 
+Commands are not immediately executed but sent to the addressed tile/sprite object, each of
+which maintains a log of the commands sent to it in the round. Conflicting commands are resolved automatically, 
+by removing commands from the log before execution. The sprite command conflicts and their resolutions are: 
+- **move**: conflicts with itself - resolve by choosing one move command at random from the log to keep - discard the rest;
+- **destroy**: no conflicts
+- **stop**: conflicts with move command - overrides all move commands (stop command can only be issued by collision rules)
 
-After firing of press and change rules, 
+The tile commands conflicts and their resolutions are:
+- **paint**: conflicts with itself--resolve by choosing one paint command at random
+- **create**: no conflicts
+- **portal**: no conflicts
 
-## Parallelism, Conflicts and Non-Determinism
+Note that the portal command interacts with the create command. If one opens a portal and creates
+a sprite at the tile (T) chosen by the portal command, then subsequent portal commands issued in the
+same round will not choose T.
 
-## Rule Generalization
+## Non-Determinism
 
+Note that the resolution for move and paint commands introduces the possibility of **non-deterministic** behavior
+in games. For example, if a move-left and move-right command are sent to the same sprite, the resolution will
+choose one of the two commands at random.   This is useful for coding unpredictable non-player character
+behavior.
+
+## Parallelism
 
