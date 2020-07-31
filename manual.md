@@ -23,7 +23,7 @@ MakeCode Arcade compatible devices).
 
 * [TileCode App Overview](tilecodeapp)
 * [Hello World Game](helloworld)
-* [TileCode Language](language)
+* [TileCode Programming](language)
 
 # Having Problems?
 
