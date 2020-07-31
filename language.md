@@ -99,9 +99,12 @@ section fires successfully. Here is the rule that expresses the winning conditio
 
 ## When-Do Rules
 
-Having defined the concepts of **state**, **rounds**, **center sprites** and **events** in TileCode, we are now ready to discuss rules in more detail. As already seen, a TileCode rule is formed by a pair of a **When** predicate and **Do** commands. Rules fire in parallel on the current game state and events, 
-which results in commands being sent to tiles/sprites; each tile/sprite stores a local log of the commands sent to it. A **resolution** step determines which of the (possibly conflicting) commands in each log will be executed. 
-A new game state is produced by executing the commands.
+Having defined the concepts of **state**, **rounds**, **center sprites** and **events** in TileCode, 
+we are now ready to discuss rules in more detail. As already seen, a TileCode rule is formed by a pair 
+of a **When** predicate and **Do** commands. Rules fire in parallel on the current game state and events, 
+which results in commands being sent to tiles/sprites; each tile/sprite stores a local log of the commands 
+sent to it. A **resolution** step determines which of the (possibly conflicting) commands in each log will 
+be executed. A new game state is produced by executing the commands.
 
 ### Tile Predicates
 
@@ -177,7 +180,7 @@ to the newly-created sprite by placing that command immediately after the create
 command.  Similarly, the **portal** command opens a portal to a new tile, so one
 can place a tile-based command immediately after the portal command (such as paint or create).
 
-### Command Conflicts and Resolution
+### Command Conflicts, Resolution and Non-determinism
 
 Commands are not immediately executed but sent to the addressed tile/sprite object, each of
 which maintains a log of the commands sent to it in the round. Conflicting commands are resolved automatically, 
@@ -195,12 +198,33 @@ Note that the portal command interacts with the create command. If one opens a p
 a sprite at the tile (T) chosen by the portal command, then subsequent portal commands issued in the
 same round will not choose T.
 
-## Non-Determinism
-
-Note that the resolution for move and paint commands introduces the possibility of **non-deterministic** behavior
+The resolution for move and paint commands introduces the possibility of **non-deterministic** behavior
 in games. For example, if a move-left and move-right command are sent to the same sprite, the resolution will
 choose one of the two commands at random.   This is useful for coding unpredictable non-player character
 behavior.
 
-## Parallelism
+## Rule Generalization
 
+There are two main ways to generalize a rule in TileCode. The first is to have a rule apply to multiple kinds of sprites.  
+For example, in Boulder Dash, diamonds fall just like boulders do. The snapshot belowshows how we generalize a boulder 
+falling rule to include the diamond (by adding the diamond sprite to the Include set of the center tile):
+
+![diamond and boulder](pics/diamondBoulder.JPG)
+
+The center tile now shows half of each sprite (more than two sprites can be added to the Include set, but the 
+visualization shows at most two).
+
+The second way to generalize a rule is by direction. Often, when a user codes a behavior for a sprite to move 
+in one direction (boulder tumbling to the left), they will also want to code a behavior for the opposite 
+direction (boulder tumbling to the right). 
+TileCode provides a feature for *deriving* new rules from existing rules: flip vertically/horizontally and 
+rotate clockwise/counter-clockwise (by 90 degrees). As shown below, we have used the flip horizontal operation 
+to create the desired derived rule:
+
+![rule generalization](pics/generalize.JPG)
+
+Derived rules are represented as views of the original rule, so if the user changes the original rule, 
+the changes are propagated to the derived rules. The existence of derived rules is shown in the rule editor by a 
+yellow dot on the flip icon (to the left of the garbage can). As discussed before, for the first sprite, 
+TileCode automatically generalizes each rule from one direction to
+four directions by three rotation operations. The user can undo or change this generalization.
