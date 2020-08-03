@@ -24,12 +24,7 @@ will expand the game simulator to full screen.
 # TileCode Examples
 
 Both the UF2 file and the simulator come loaded with six games in the following slots:
-- **#1**: Hello World example
-- **#4**: Bejeweled
-- **#5**: Snake
-- **#6**: Boulder Dash
-- **#7**: Sokoban
-- **#8**: Pac-Man 
+Hello World (#1), Bejeweled (#4), Snake (#5), Boulder Dash (#6), Sokoban (#7), and Pac-Man (#8).
 
 # Background Reading
 
