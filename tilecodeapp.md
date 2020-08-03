@@ -1,15 +1,14 @@
 # TileCode App Overview
 
-## Navigation and Editing {#navigation}
+## Navigation and Editing in TileCode
  
-On a [MakeCode Arcade compatible device](https://arcade.makecode.com/hardware), 
-such as the Meowbit shown above, navigation and editing takes place as follows:
+Navigation and editing in the TileCode takes place as follows:
 * move the square-shaped cursor between nearby tiles using the direction pad (dpad); 
 * select a tile using the **A** button to perform an action; 
 * press the **B** button to take you back to the menu of the current screen or to the previous screen
 
 When you are working with [Arcade simulator](https://microsoft.github.io/tilecode) 
-in a web browser, you can use keyboard shortcuts:
+in a web browser, you also can use keyboard shortcuts:
 * the **arrow keys** (left, right, up, down) replace the direction pad (alteranatively, you can use the 'A', 'D, 'W', and 'S' keys)
 * the **space bar** replaces the A button
 * the **enter key** replaces the B button
