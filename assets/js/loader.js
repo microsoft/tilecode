@@ -12,17 +12,6 @@ function makeCodeRun(options) {
     initSimState();
     fetchCode();
 
-    document.getElementById('manual').onload = function() {
-        // rewrite external URLs
-        var iframe = document.getElementById("manual");
-        var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-        innerDoc.getElementById("forkme_banner").setAttribute("target", "_blank");
-        var footer_wrap = innerDoc.getElementById("footer_wrap")
-        // rewrite each URL in footer weap with target
-        var hrefs = footer_wrap.querySelectorAll("a");
-        hrefs.forEach(e => { e.setAttribute("target", "_blank")})
-    }
-
     // helpers
     function fetchCode() {
         sendReq(options.js, function (c, status) {
@@ -38,7 +27,7 @@ function makeCodeRun(options) {
                 var ap = document.createElement("a");
                 ap.download = "arcade.uf2";
                 ap.href = "https://github.com/" + meta.repo + "/releases/download/v" + meta.version + "/arcade.uf2";
-                ap.innerText = "v" + meta.version;
+                ap.innerText = "UF2 File"
                 vel.appendChild(ap);
             }
             // load simulator with correct version
