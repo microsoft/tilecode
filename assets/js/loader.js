@@ -12,10 +12,12 @@ function makeCodeRun(options) {
     initSimState();
     fetchCode();
 
-    var iframe = document.getElementById("manual");
-    var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
-    innerDoc.getElementById("forkme_banner").setAttribute("target", "_blank");
-
+    document.getElementById('manual').onload = function() {
+        var iframe = document.getElementById("manual");
+        var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+        innerDoc.getElementById("forkme_banner").setAttribute("target", "_blank");
+    }
+    
     // helpers
     function fetchCode() {
         sendReq(options.js, function (c, status) {
