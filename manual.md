@@ -1,11 +1,11 @@
 ![TileCode](pics/meowbit.gif)
 
-# Introduction
+# Introduction and Videos
 
 TileCode is a game creation app that allows you to design and play games directly 
 on [MakeCode Arcade](https://arcade.makecode.com){:target="_blank"} devices (or in a web browser). 
-TileCode games are similar to board games with pieces that can move from one tile of the board to a nearby tile. 
-
+TileCode games are similar to board games with pieces that can move from one tile of the board to a nearby tile. Click on the images below to watch a short video (left) and longer video (right) about TileCode:
+  
 [![short video](pics/youtube1.PNG)](https://www.youtube.com/watch?v=3FNAsZw13Ro){:target="_blank"} [![long video](pics/youtube2.PNG)](https://www.youtube.com/watch?v=ZUZNi3dbtLI){:target="_blank"} 
 
 # TileCode on Arcade Devices
