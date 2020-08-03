@@ -1,4 +1,4 @@
-# Patterns of Game Play
+## Patterns of Game Play
 
 A game is composed of various [game mechanics](mechanics). Below you'll find
 a variety of different mechanics that you can use as a starting point for 

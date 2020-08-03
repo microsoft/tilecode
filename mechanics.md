@@ -1,4 +1,4 @@
-# Game Mechanics
+## Game Mechanics
 
 The behavior of a video game can be described informally in English by **game mechanics**, 
 the desired interactions and relationships among the game elements, which includes both 

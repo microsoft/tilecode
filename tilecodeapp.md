@@ -1,4 +1,4 @@
-# TileCode App Overview
+## TileCode App Overview
 
 ## Navigation and Editing in TileCode
  
