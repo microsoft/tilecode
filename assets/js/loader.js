@@ -19,7 +19,7 @@ function makeCodeRun(options) {
         innerDoc.getElementById("forkme_banner").setAttribute("target", "_blank");
         var footer_wrap = innerDoc.getElementById("footer_wrap")
         // rewrite each URL in footer weap with target
-        var hrefs = theElement.querySelectorAll("a");
+        var hrefs = footer_wrap.querySelectorAll("a");
         hrefs.forEach(e => { e.setAttribute("target", "_blank")})
     }
 

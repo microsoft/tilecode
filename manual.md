@@ -19,6 +19,8 @@ You also can run TileCode in the web-based MakeCode Arcade simulator at bottom o
 Clicking on the lower right corner of the screen (arrow icon pointing down and to the right) 
 will expand the game simulator to full screen. 
 
+## Installed Games
+
 Both the UF2 file and the simulator come loaded with six games in the following slots:
 Hello World (#1), Bejeweled (#4), Snake (#5), Boulder Dash (#6), Sokoban (#7), and Pac-Man (#8).
 
