@@ -477,18 +477,17 @@ if (settings.exists(prefix+"VersionS"))
 
 
 function createPacMan(prefix: string) {
-if (settings.exists(prefix+"VersionS"))
-    return;
+if (settings.exists(prefix+"-VersionS")) return;
 settings.writeString(prefix+"VersionS","4.0.0");
-// buffer length = 246
+// buffer length = 247
 settings.writeBuffer(prefix+"WBackM", hex`
 201880111012b0211061101110111011103110311021101120111011101110111011101110311011
 10211011201110113011301130111011102110f13110111021101120115011301110113011102110
 11203110711031101110211041103110131011103110311021401130113311301130111021104110
 3110131011103110311021101120311071103110111021101120115011301110113011102110f131
 10111021101120111011301130113011101110211011201110111011101110111011103110111021
-106110111011101110311031102180111012101190f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1
-f1f1f1f1f121`);
+106110111011101110311031102180111012101190c110f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1
+f1f1f1f1f1f141`);
 // buffer length = 185
 settings.writeBuffer(prefix+"WSpriteM", hex`
 2018ffaf613f113f311f314f112f111f113f113f111f311f114f112f111f113f113f113f111f114f
@@ -535,25 +534,19 @@ settings.writeBuffer(prefix+"SpriteI3", hex`
 1010f0502839a0384980485960586950587940281928893018391899201839111981201829211971
 301841196140184119517031194180311931a0211921f080`);
 settings.writeNumber(prefix+"HelpN",0);
-settings.writeNumber(prefix+"HighN",0);
-// buffer length = 8
-settings.writeBuffer(prefix+"RuleB0", hex`
-2016220801160002`);
+settings.writeNumber(prefix+"HighN",950);
 // buffer length = 12
-settings.writeBuffer(prefix+"RuleB1", hex`
-222622000112234100060004`);
+settings.writeBuffer(prefix+"RuleB0", hex`
+202622000116231400060002`);
 // buffer length = 14
 settings.writeBuffer(prefix+"RuleB2", hex`
 2226220001022300042603000402`);
-// buffer length = 18
+// buffer length = 16
 settings.writeBuffer(prefix+"RuleB3", hex`
-202022200146210400060300050202000002`);
-// buffer length = 18
+20202220013621040006030005020200`);
+// buffer length = 16
 settings.writeBuffer(prefix+"RuleB4", hex`
-002022200146230400060300050202000000`);
-// buffer length = 12
-settings.writeBuffer(prefix+"RuleB5", hex`
-002022200116210400060000`);
+00202220013623040006030005020200`);
 // buffer length = 20
 settings.writeBuffer(prefix+"RuleB6", hex`
 2146220010121201000623040006320100060002`);
@@ -577,6 +570,7 @@ settings.writeBuffer(prefix+"RuleB12", hex`
 222622001012230001060401`);
 settings.writeNumber(prefix+"PlayerN",0);
 }
+
 
 // space invaders
 function createSpaceInvaders(prefix: string) {
