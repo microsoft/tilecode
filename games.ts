@@ -15,10 +15,8 @@ createPacMan("TW8-");
 // --------------------------------------    
 
 function createBoulderDash(prefix: string) {
-    if (settings.exists(prefix+"VersionS"))
-        return;
-
-    settings.writeString(prefix+"VersionS", "4.0.0");
+if (settings.exists(prefix+"-VersionS")) return;
+settings.writeString(prefix+"VersionS","4.0.0");
 // buffer length = 108
 settings.writeBuffer(prefix+"WBackM", hex`
 2018f0a0f17120f17120f171204112f12120f17120f17120f171203122f121205132e1201132f131
@@ -28,96 +26,94 @@ f17120f17120f17120f17120f17120f17120f17120f17120f171f0a0`);
 settings.writeBuffer(prefix+"WSpriteM", hex`
 2018ffffffffffffbf10ffffffffffff4f21ff9f2112ff2f1221ffffff2f2112ffffffffbf31ff1f
 21122f111211ff6f31ffffffffffffffffffffffffffffffffffffffffffffff6f`);
-    settings.writeNumber(prefix+"BackN", 4);
-    // buffer length = 147
-    settings.writeBuffer(prefix+"BackI0", hex`
+settings.writeNumber(prefix+"BackN",4);
+// buffer length = 147
+settings.writeBuffer(prefix+"BackI0", hex`
 1010fd181d363826181618161816181d2618361816181618161816181d1618163826181618161816
 181d1816281d28561816181d1816183d1876181d1816281d2876181d1618163886181d2618361866
 281d26181618164826381d2618161816181628261816181d2618161816182618261816181d261816
 1816182618261816181d261816181618162826381d48163866f828`);
-    // buffer length = 112
-    settings.writeBuffer(prefix+"BackI1", hex`
+// buffer length = 112
+settings.writeBuffer(prefix+"BackI1", hex`
 10101f6e3f1e2f2e1f2e342e1f5e1f3e544e341e1f2e642e541e1f2e541e743e541e741e1f2e342e
 742e1f3e1f1e1f1e541e1f1e4f3e1f1e341e1f2e2f2e345e1f1e142e1f1e541e1f1e1f1e341e1f1e
 542e1f1e441e1f1e641e1f1e443e641e1f2e342e1f1e347e144e1f4e2f1e1f3e`);
-    // buffer length = 55
-    settings.writeBuffer(prefix+"BackI2", hex`
+// buffer length = 55
+settings.writeBuffer(prefix+"BackI2", hex`
 1010ff3f3ccf5c4f3c4f6c2f5c4f5c1f7c3f5c1f7c4f3c2f7caf5ccf3c8f3c7f1c4f5c5f3c3f5c4f
 4c3f6c3f4c3f6c4f3c4f3c7f1cff1f`);
-    // buffer length = 35
-    settings.writeBuffer(prefix+"BackI3", hex`
+// buffer length = 35
+settings.writeBuffer(prefix+"BackI3", hex`
 1010bd21ed217d1bcd21ed21fd6d1bfd5d11fdfd8d2bed2bfdfd8d1b4d1bfded1bfd1d`);
-    settings.writeNumber(prefix+"SpriteN", 4);
-    // buffer length = 130
-    settings.writeBuffer(prefix+"SpriteI0", hex`
+settings.writeNumber(prefix+"SpriteN",4);
+// buffer length = 130
+settings.writeBuffer(prefix+"SpriteI0", hex`
 1010f0802fa05f1e1f101e24403f1e1f3e1f141d14303f1e122f142e3f302f1e122f1b111d1e2214
 4f121e121f1e2f1d1422143f12131e121f1e142d1422151f101f221e121f1e142d1422151f102f12
 1e121f1e2f1d1422142f102f1e122f1b111d1e22142f103f1e122f142e3f402f2e1f3e1f141d1450
 5f1e1f101e24902ff080`);
-    // buffer length = 120
-    settings.writeBuffer(prefix+"SpriteI1", hex`
+// buffer length = 120
+settings.writeBuffer(prefix+"SpriteI1", hex`
 1010804ca02c1b1c1b2c901c1d2b1c1b2c603c2d1b1c1b2c303c2b1c1b2d4c201c1b2d3b1c2d1b3c
 201c5d3b1d1b4c101b5d3b1d1b2c1b1c101b5d3b1d2b1c2b1c1b6d2b1d1b1d1c2b1c101b5d2b1d1b
 1d1c2b1c201b4d1b1d2b1d1c2b1c201b3d2b1d1b1d3b1c407b1d1c2b1c701b3d2c1b1c902b2c2b30
 `);
-    // buffer length = 64
-    settings.writeBuffer(prefix+"SpriteI2", hex`
+// buffer length = 64
+settings.writeBuffer(prefix+"SpriteI2", hex`
 1010f0502839a0384980485960586950587940281928893018391899201839111981201829211971
 301841196140184119517031194180311931a0211921f080`);
-    // buffer length = 101
-    settings.writeBuffer(prefix+"SpriteI3", hex`
+// buffer length = 101
+settings.writeBuffer(prefix+"SpriteI3", hex`
 10106057a01730373fb0271c111d1f408f1b1c1f302f5d1b1c1f211d1f101f1b513d1f1b1c1f201f
 611d1b1c1b1c111d2f812f1d3f101f811d111b3f101f811d213f101f812f1b3f201f611d1b1c1d3f
 201f1b513d3f402f5d1b1c1f807f1cc01f1c1b1f40`);
-    settings.writeNumber(prefix+"HelpN", 0);
-    settings.writeNumber(prefix+"HighN", 0);
-    // buffer length = 12
-    settings.writeBuffer(prefix+"RuleB0", hex`
+settings.writeNumber(prefix+"HelpN",0);
+settings.writeNumber(prefix+"HighN",0);
+// buffer length = 12
+settings.writeBuffer(prefix+"RuleB0", hex`
 20262200011623030c060002`);
-    // buffer length = 12
-    settings.writeBuffer(prefix+"RuleB3", hex`
+// buffer length = 12
+settings.writeBuffer(prefix+"RuleB3", hex`
 4120220014143210ff060003`);
-    // buffer length = 12
-    settings.writeBuffer(prefix+"RuleB4", hex`
+// buffer length = 12
+settings.writeBuffer(prefix+"RuleB4", hex`
 41202200141332103c060003`);
-    // buffer length = 12
-    settings.writeBuffer(prefix+"RuleB5", hex`
+// buffer length = 12
+settings.writeBuffer(prefix+"RuleB5", hex`
 222622000102230010140300`);
-    // buffer length = 20
-    settings.writeBuffer(prefix+"RuleB7", hex`
+// buffer length = 20
+settings.writeBuffer(prefix+"RuleB7", hex`
 414122001416320014042110ff063110ff060000`);
-    // buffer length = 12
-    settings.writeBuffer(prefix+"RuleB8", hex`
+// buffer length = 12
+settings.writeBuffer(prefix+"RuleB8", hex`
 322022001403320001160401`);
-    // buffer length = 8
-    settings.writeBuffer(prefix+"RuleB9", hex`
+// buffer length = 8
+settings.writeBuffer(prefix+"RuleB9", hex`
 6310220010160400`);
-    // buffer length = 12
-    settings.writeBuffer(prefix+"RuleB2", hex`
+// buffer length = 12
+settings.writeBuffer(prefix+"RuleB2", hex`
 21212200141232103c060003`);
-    // buffer length = 18
-    settings.writeBuffer(prefix+"RuleB6", hex`
+// buffer length = 18
+settings.writeBuffer(prefix+"RuleB6", hex`
 203122000116230004163305140600020002`);
-    // buffer length = 8
-    settings.writeBuffer(prefix+"RuleB10", hex`
+// buffer length = 8
+settings.writeBuffer(prefix+"RuleB10", hex`
 2016220001160102`);
-    // buffer length = 12
-    settings.writeBuffer(prefix+"RuleB13", hex`
+// buffer length = 12
+settings.writeBuffer(prefix+"RuleB13", hex`
 222122001412230554060004`);
-    // buffer length = 18
-    settings.writeBuffer(prefix+"RuleB1", hex`
+// buffer length = 18
+settings.writeBuffer(prefix+"RuleB1", hex`
 2031220001162300041633103c0600020003`);
-    // buffer length = 8
-    settings.writeBuffer(prefix+"RuleB12", hex`
+// buffer length = 8
+settings.writeBuffer(prefix+"RuleB12", hex`
 6110220001160102`);
-    // buffer length = 6
-    settings.writeBuffer(prefix+"RuleB11", hex`
-631022000106`);
-    // buffer length = 12
-    settings.writeBuffer(prefix+"RuleB14", hex`
+// buffer length = 12
+settings.writeBuffer(prefix+"RuleB14", hex`
 222122000112230004060004`);
-    settings.writeNumber(prefix+"PlayerN", 0);
+settings.writeNumber(prefix+"PlayerN",0);
 }
+
 
 function createSnake(prefix: string) {
 settings.writeString(prefix+"VersionS","4.0.0");
