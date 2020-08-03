@@ -12,6 +12,8 @@ function makeCodeRun(options) {
     initSimState();
     fetchCode();
 
+    document.getElementById("forkme_banner").setAttribute("target", "_blank");
+    
     // helpers
     function fetchCode() {
         sendReq(options.js, function (c, status) {
