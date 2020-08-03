@@ -148,6 +148,7 @@ namespace tileworld {
             this.vm.queued = [];
             this.vm.phase = RuleType.NegationCheck;
 
+            // can this be optimized?
             this.allSprites(ts => {
                 ts.x = ((ts.x >> 4) << 4) + 8;      // make sure sprite is centered
                 ts.y = ((ts.y >> 4) << 4) + 8;      // on its tile
