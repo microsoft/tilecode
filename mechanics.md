@@ -6,12 +6,12 @@ digital elements (such as tiles and sprites in TileCode) and physical elements
 (the buttons on a gaming handheld). 
 
 For example, the classic Snake video game can be partially described as follows:
-- "the snake is composed of a head and body segments"
-- "the snake is always in motion"
-- "each segment of the snake body follows the segment/head in front of it" 
-- "the user changes which way the head of the snake moves using the direction pad"
-- "the snake grows by one segment each time it eats an apple"
-- "the game ends if the snake head collides with a barrier or a segment of the snake body"
+- the snake is composed of a head and body segments
+- the snake is always in motion
+- each segment of the snake body follows the segment/head in front of it 
+- the user changes which way the head of the snake moves using the direction pad
+- the snake grows by one segment each time it eats an apple
+- the game ends if the snake head collides with a barrier or a segment of the snake body
 
 Game mechanics generally fall into one of three categories:
 - **player rules** govern how the player sprite moves - in TileCode, usually via a **press** rule, as well as **smash** events
@@ -35,7 +35,8 @@ would substantially affect the game play.
 
 The mechanics for the Snake game given above is highly ambiguous and leaves much undefined; 
 for example, what does it mean for a segment of the snake to "follow" the segment in front of it?  
-Much of this imprecision can be discovered, discussed, and worked through using pencil and paper.  
+Much of this imprecision can be discovered, discussed, and worked through using pencil and paper. 
+
 Once  the mechanics are programmed using the TileCode app, testing will continue to reveal
 issues and help to further refine the mechanics.
 
