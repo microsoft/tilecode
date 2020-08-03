@@ -31,7 +31,6 @@
     <script type="text/javascript" src="./assets/js/loader.js?v={{ site.github.build_revision }}"></script>
     <style>
         body {
-            cursor: default;
             background: black;
             color: white;
             font-family: monospace;
@@ -39,40 +38,17 @@
             font-size: 14pt;
         }
 
-        #manual {
-            position: absolute; 
-            left: 0px;
-            top: 0px;
-            height: calc(100% - 330px);
-            margin: 0px; 
-            width: 100%;  
-            visibility: inherit;
-        }
-
-        #divider {
-            position: absolute; 
-            left: 642px; 
-            top: 0px; 
-            background: gray; 
-            margin: 0px; 
-            width: 8px; 
-            height: 100%;
-        }
-
-        #simframe {
-            position: absolute; 
-            bottom:30px;                          
-            left:0;
-            padding: 0px;
-            margin: 0px; 
-            width: 100%; 
-            height: 300px; 
-            visibility: inherit; 
-        }
-
-
         .embed {
             background: transparent;
+        }
+
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 1.5em);
+            border: none;
         }
 
         .nofooter iframe {
@@ -152,8 +128,6 @@
 </head>
 
 <body id="root">
-
-    <!--
     <div id="loader" class="lds-ripple">
         <div></div>
         <div></div>
@@ -176,31 +150,24 @@
                 id="path4210" fill="#fff" fill-opacity="1" />
         </svg>
     </div>
--->
-
-    <iframe id="simframe" allowfullscreen="allowfullscreen" sandbox="allow-popups allow-forms allow-scripts allow-same-origin"></iframe>
-    <!-- <div id="divider"></div> -->
-    <iframe id="manual" src="https://{{ site.github.owner_name }}.github.io/{{ site.github.repository_name }}/manual"></iframe>
-    <div id="bottom"></div>
-
+    <iframe id="simframe" allowfullscreen="allowfullscreen"
+        sandbox="allow-popups allow-forms allow-scripts allow-same-origin">
+    </iframe>
     <footer id="footer">
-            <!--
-        <a target="blank" rel="nofollow noopener" href="https://{{ site.github.owner_name }}.github.io/{{ site.github.repository_name }}/manual">Manual</a>
+        <a target="blank" rel="nofollow noopener" href="https://{{ site.github.owner_name }}.github.io/{{ site.github.repository_name }}/README">Manual</a>
         <a target="blank" rel="nofollow noopener" href="https://arcade.makecode.com/#pub:github:{{ site.github.owner_name }}/{{ site.github.repository_name }}">Edit</a>
-                -->
         <a target="blank" rel="nofollow noopener" href="https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}">GitHub</a>
         <span id="version"></span>
         <div id="fullscreen">⇲</div>
-
     </footer>
-
-    <!-- script type="text/javascript" src="./assets/js/divider.js?v={{ site.github.build_revision }}"></script -->
     <script type="text/javascript">
         makeCodeRun({ js: "./assets/js/binary.js?v={{ site.github.build_revision }}" });
+
         if (window.location && window.location.search) {
             var noFooter = /nofooter=1/i.test(window.location.search);
             var embed = /embed=1/i.test(window.location.search);
             var root = document.querySelector("#root");
+
             if (noFooter) {
                 var footer = document.querySelector("#footer");
                 if (root)
@@ -208,6 +175,7 @@
                 if (footer)
                     footer.remove();
             }
+
             if (embed && root) {
                 root.className += " embed";
             }
