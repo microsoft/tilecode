@@ -12,8 +12,10 @@ function makeCodeRun(options) {
     initSimState();
     fetchCode();
 
-    document.getElementById("forkme_banner").setAttribute("target", "_blank");
-    
+    var iframe = document.getElementById("manual");
+    var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
+    innerDoc.getElementById("forkme_banner").setAttribute("target", "_blank");
+
     // helpers
     function fetchCode() {
         sendReq(options.js, function (c, status) {
