@@ -29,7 +29,9 @@
         "games.ts",
         "mytilemap.ts",
         "ruleTransform.ts",
-        "when.ts"
+        "when.ts",
+        "README.md",
+        "manual.md"
     ],
     "testFiles": [
         "test.ts"
