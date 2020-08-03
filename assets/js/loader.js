@@ -13,11 +13,16 @@ function makeCodeRun(options) {
     fetchCode();
 
     document.getElementById('manual').onload = function() {
+        // rewrite external URLs
         var iframe = document.getElementById("manual");
         var innerDoc = iframe.contentDocument || iframe.contentWindow.document;
         innerDoc.getElementById("forkme_banner").setAttribute("target", "_blank");
+        var footer_wrap = innerDoc.getElementById("footer_wrap")
+        // rewrite each URL in footer weap with target
+        var hrefs = theElement.querySelectorAll("a");
+        hrefs.forEach(e => { e.setAttribute("target", "_blank")})
     }
-    
+
     // helpers
     function fetchCode() {
         sendReq(options.js, function (c, status) {
