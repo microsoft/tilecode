@@ -116,16 +116,17 @@ settings.writeNumber(prefix+"PlayerN",0);
 
 
 function createSnake(prefix: string) {
+if (settings.exists(prefix+"-VersionS")) return;
 settings.writeString(prefix+"VersionS","4.0.0");
 // buffer length = 109
 settings.writeBuffer(prefix+"WBackM", hex`
 2018f0a0f17120f17120f17120f17120f17120f17120f17120f17120f17120a122a1209142912081
 52912081529120815291209132a120f17120f17120f17120f17120f171204122f111203142f12031
 42f1203132f111204122f11120f17120f17120f17120f17120f171f0a0`);
-// buffer length = 77
+// buffer length = 70
 settings.writeBuffer(prefix+"WSpriteM", hex`
-2018ffffffffff1f11ff8f11ff8f116f12ff1f11ff8f11ff8f11ff8f10ffbf12ffffffcf12ff2f12
-ffffffff3f12ffffffffffffaf12ffbf12ffffffffffffffff4f12ffffffff12ffffffff6f`);
+2018ffffffffffffffffbf12ffffaf11ff8f11ff8f10ffbf12ffffffcf12ff2f12ffffffff3f12ff
+ffffffffffaf12ffbf12ffffffffffffffff4f12ffffffff12ffffffff6f`);
 settings.writeNumber(prefix+"BackN",4);
 // buffer length = 94
 settings.writeBuffer(prefix+"BackI0", hex`
@@ -195,6 +196,8 @@ settings.writeBuffer(prefix+"RuleB10", hex`
 2226220001322300102605010202040203000203`);
 settings.writeNumber(prefix+"PlayerN",0);
 }
+
+
 
 function createBejeweled(prefix: string) {
 if (settings.exists(prefix+"-VersionS")) return;
