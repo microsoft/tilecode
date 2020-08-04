@@ -110,12 +110,16 @@ namespace tileworld {
         private globalInsts: number[];
         private globalArgs: number[];
         private ruleIndex: RuleView[][] = [];     // lookup of rules by phase
+        private kindHasRule: boolean[] = [];      // does a sprite kind have any rules?
         
         constructor(private p: Project, private rules: RuleView[]) {
             this.vm = null;
             for(let rt = RuleType.FirstRule; rt <= RuleType.LastRule; rt++) {
                 this.ruleIndex[rt] = [];
-            }       
+            }
+            for(let kind = 0; kind < p.spriteCnt(); kind++) {
+                this.kindHasRule[kind] = false;
+            }
             // populate indices for more efficient lookup over
             // rules (and derived rules)
             this.rules.forEach(rv => {
@@ -125,6 +129,7 @@ namespace tileworld {
                     let rt = rv.getRuleType();
                     this.ruleIndex[rt].push(rv);
                 });
+                rv.getSpriteKinds().forEach(k => { this.kindHasRule[k] = true });
             });
         }
 
@@ -154,7 +159,8 @@ namespace tileworld {
                 ts.y = ((ts.y >> 4) << 4) + 8;      // on its tile
                 ts.inst = -1;                       // reset instruction
                 ts.movedToStopped = false;
-                this.vm.queued.push(ts);
+                if (this.kindHasRule[ts.kind()])
+                    this.vm.queued.push(ts);
             });
         }
 
