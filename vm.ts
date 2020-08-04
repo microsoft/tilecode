@@ -10,7 +10,6 @@ namespace tileworld {
         public lastDir: MoveRest;
         public inst: number;        // the one instruction history to apply to the sprite to 
         public arg: number;         // create the next sprite state
-        public movedToStopped: boolean;   // did the sprite get a move command, and then a stop command?
         // public changed: boolean;
         constructor(img: Image, kind: number, d: boolean = false) {
             super(img);
@@ -22,7 +21,7 @@ namespace tileworld {
             this.lastDir = Resting;
             this.inst = -1;
             this.state = SpriteState.Alive;
-            this.z = 100 - kind;
+            this.z = 70 - kind;
         }
 
         public col() { return this.x >> 4; }    // the position of sprite in tile world
@@ -79,6 +78,8 @@ namespace tileworld {
         public phase: RuleType;
         public queued: TileSprite[];
         public buttonMatch: TileSprite[];       // which sprites had a button event rule (external influence)
+        public moving: TileSprite[];
+        public resting: TileSprite[];
         public movingToResting: TileSprite[];   // sprites that transitioned to resting due to collision
         // affects of commands (before being committed)
         public paintTile: Tile[];            // log of paint commands
@@ -109,6 +110,7 @@ namespace tileworld {
         // (temporary) state for global commands
         private globalInsts: number[];
         private globalArgs: number[];
+        // static program information
         private ruleIndex: RuleView[][] = [];     // lookup of rules by phase
         private kindHasRule: boolean[] = [];      // does a sprite kind have any rules?
         
@@ -149,6 +151,8 @@ namespace tileworld {
             this.vm.paintTile = [];
             this.vm.buttonMatch = [];
             this.vm.nextBlockedSprites = [];
+            this.vm.moving = [];
+            this.vm.resting = [];
             this.vm.movingToResting = [];
             this.vm.queued = [];
             this.vm.phase = RuleType.NegationCheck;
@@ -158,7 +162,6 @@ namespace tileworld {
                 ts.x = ((ts.x >> 4) << 4) + 8;      // make sure sprite is centered
                 ts.y = ((ts.y >> 4) << 4) + 8;      // on its tile
                 ts.inst = -1;                       // reset instruction
-                ts.movedToStopped = false;
                 if (this.kindHasRule[ts.kind()])
                     this.vm.queued.push(ts);
             });
@@ -169,17 +172,6 @@ namespace tileworld {
             if (rc.rv.getRuleType() == RuleType.ButtonPress) {
                 if (this.vm.buttonMatch.indexOf(rc.self) == -1)
                     this.vm.buttonMatch.push(rc.self);
-            } else if (false) { // rc.rv.getRuleType() == RuleType.Collision) {
-                // TODO: if a colliding sprite in motion transitions to
-                // resting (via stop or uturn command) then we
-                // may have more collisions to process
-                if (rc.self.movedToStopped) {
-                    if (this.vm.movingToResting.indexOf(rc.self) == -1)
-                        this.vm.movingToResting.push(rc.self);  
-                } else if (rc.witnesses[0].movedToStopped) {
-                    if (this.vm.movingToResting.indexOf(rc.witnesses[0]) == -1)
-                        this.vm.movingToResting.push(rc.witnesses[0]);
-                }
             }
         }
 
@@ -227,7 +219,7 @@ namespace tileworld {
                     }
                 } else {
                     this.vm.phase = RuleType.Collision;
-                    this.allSprites(ts => { this.vm.queued.push(ts) });
+                    this.vm.moving.forEach(ts => { this.vm.queued.push(ts) });
                 }
             }
             // collisions
@@ -237,7 +229,11 @@ namespace tileworld {
                     return this.collisionDetection( ts );
                 } else {
                     if (this.vm.movingToResting.length > 0) {
+
                         // TODO: need a special mode for this?
+                        // TODO: the problem here is that we 
+                        // TODO: we need to revisit the other moving
+                        // TODO: sprites again!
                     } else
                         this.vm.phase = -1;
                 }
@@ -315,7 +311,6 @@ namespace tileworld {
         //   (b) os moving into T    
         private collisionDetection(ts: TileSprite) {
             let rcs: RuleClosure[] = [];
-            if (!this.moving(ts)) return rcs;
             let wcol = ts.col() + moveXdelta(ts.arg);
             let wrow = ts.row() + moveYdelta(ts.arg);
             if (!this.inBounds(wcol, wrow))
@@ -597,11 +592,12 @@ namespace tileworld {
                             (colliding ? rc.witnesses[0]
                                        : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow));
                         if (witness && (witness.inst == -1 || Math.randomRange(0,1) < 0.5 || colliding || button)) {
-                            // TODO: this is where we can determine if a colliding witness
-                            // TODO: is transition from a moving state to a resting state
+                            if (witness.inst == -1 && witness.arg < MoveArg.Stop)
+                                this.vm.moving.push(witness);
                             if (colliding && !self && witness.inst == CommandType.Move && witness.arg < MoveArg.Stop) {
                                 if (arg == MoveArg.Stop || arg == MoveArg.UTurn)
-                                    witness.movedToStopped = true;
+                                    this.vm.movingToResting.push(witness);
+                                    this.vm.moving.removeElement(witness);
                             }
                             witness.inst = inst;
                             witness.arg = arg;
