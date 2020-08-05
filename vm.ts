@@ -114,26 +114,27 @@ namespace tileworld {
         private globalArgs: number[];
         // static program information
         private ruleIndex: RuleView[][] = [];     // lookup of rules by phase
-        private kindHasRule: boolean[] = [];      // does a sprite kind have any rules?
+        private ruleKinds: number[][] = [];       // lookup of kinds having rules by phase
         
         constructor(private p: Project, private rules: RuleView[]) {
             this.vm = null;
             for(let rt = RuleType.FirstRule; rt <= RuleType.LastRule; rt++) {
                 this.ruleIndex[rt] = [];
-            }
-            for(let kind = 0; kind < p.spriteCnt(); kind++) {
-                this.kindHasRule[kind] = false;
+                this.ruleKinds[rt] = [];
             }
             // populate indices for more efficient lookup over
             // rules (and derived rules)
             this.rules.forEach(rv => {
                 let derivedRules = rv.getDerivedRules();
                 derivedRules.push(rv);
+                let rt = rv.getRuleType();
                 derivedRules.forEach(rv => {
-                    let rt = rv.getRuleType();
                     this.ruleIndex[rt].push(rv);
                 });
-                rv.getSpriteKinds().forEach(k => { this.kindHasRule[k] = true });
+                rv.getSpriteKinds().forEach(k => { 
+                    if (this.ruleKinds[rt].indexOf(k) == -1)
+                      this.ruleKinds[rt].push(k); 
+                });
             });
         }
 
@@ -168,8 +169,18 @@ namespace tileworld {
                 ts.x = ((ts.x >> 4) << 4) + 8;      // make sure sprite is centered
                 ts.y = ((ts.y >> 4) << 4) + 8;      // on its tile
                 ts.inst = -1;                       // reset instruction
-                if (this.kindHasRule[ts.kind()])
-                    this.vm.queued.push(ts);
+            });
+        }
+
+        nextPhase(phase: RuleType) {
+            this.vm.phase = phase;
+            this.vm.queued = [];
+            this.ruleKinds[phase].forEach(k => {
+                if (this.vm.sprites[k]) 
+                    this.vm.sprites[k].forEach(ts => { 
+                        if (phase != RuleType.ContextChange || this.vm.buttonMatch.indexOf(ts) == -1) 
+                            this.vm.queued.push(ts); 
+                    });
             });
         }
 
@@ -199,7 +210,7 @@ namespace tileworld {
                         // check predicate for each witness
                     }
                 });
-                this.vm.phase = RuleType.ButtonPress;
+                this.nextPhase(RuleType.ButtonPress);
                 return ruleClosures;
             }
             // external events
@@ -208,12 +219,8 @@ namespace tileworld {
                     let ts = this.vm.queued.pop();
                     return this.applyRules(RuleType.ButtonPress, ts);
                 } else {
-                    this.vm.phase = RuleType.ContextChange;
-                    this.allSprites(ts => { 
-                        // ButtonPress on sprite shadows ContextChange
-                        if (this.vm.buttonMatch.indexOf(ts) == -1) 
-                            this.vm.queued.push(ts);
-                    });
+                    this.nextPhase(RuleType.ContextChange);
+                    return null;
                 }
             }
             // context change
