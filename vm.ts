@@ -10,7 +10,6 @@ namespace tileworld {
         public lastDir: MoveRest;
         public inst: number;        // the one instruction history to apply to the sprite to 
         public arg: number;         // create the next sprite state
-        public movedToStopped: boolean;   // did the sprite get a move command, and then a stop command?
         // public changed: boolean;
         constructor(img: Image, kind: number, d: boolean = false) {
             super(img);
@@ -22,7 +21,7 @@ namespace tileworld {
             this.lastDir = Resting;
             this.inst = -1;
             this.state = SpriteState.Alive;
-            this.z = 100 - kind;
+            this.z = 70 - kind;
         }
 
         public col() { return this.x >> 4; }    // the position of sprite in tile world
@@ -79,7 +78,9 @@ namespace tileworld {
         public phase: RuleType;
         public queued: TileSprite[];
         public buttonMatch: TileSprite[];       // which sprites had a button event rule (external influence)
-        public movingToResting: TileSprite[];   // sprites that transitioned to resting due to collision
+        public moving: TileSprite[];
+        public moving2resting: TileSprite[];   // sprites that transitioned to resting due to collision
+        public newresting: TileSprite[]; 
         // affects of commands (before being committed)
         public paintTile: Tile[];            // log of paint commands
         public deadSprites: TileSprite[];    // the sprites removed this round
@@ -109,6 +110,7 @@ namespace tileworld {
         // (temporary) state for global commands
         private globalInsts: number[];
         private globalArgs: number[];
+        // static program information
         private ruleIndex: RuleView[][] = [];     // lookup of rules by phase
         private kindHasRule: boolean[] = [];      // does a sprite kind have any rules?
         
@@ -143,14 +145,19 @@ namespace tileworld {
             this.dpad = currDir;
             this.globalInsts = [];
             this.globalArgs = [];
+            
             this.vm.blockedSpriteKinds = this.vm.nextBlockedSprites;
+            this.vm.nextBlockedSprites = [];
+            
             this.vm.deadSprites = [];
             this.vm.spawnedSprites = [];
             this.vm.paintTile = [];
             this.vm.buttonMatch = [];
-            this.vm.nextBlockedSprites = [];
-            this.vm.movingToResting = [];
+            this.vm.moving = [];
+            this.vm.moving2resting = [];
+            this.vm.newresting = [];
             this.vm.queued = [];
+
             this.vm.phase = RuleType.NegationCheck;
 
             // can this be optimized?
@@ -158,7 +165,6 @@ namespace tileworld {
                 ts.x = ((ts.x >> 4) << 4) + 8;      // make sure sprite is centered
                 ts.y = ((ts.y >> 4) << 4) + 8;      // on its tile
                 ts.inst = -1;                       // reset instruction
-                ts.movedToStopped = false;
                 if (this.kindHasRule[ts.kind()])
                     this.vm.queued.push(ts);
             });
@@ -169,17 +175,6 @@ namespace tileworld {
             if (rc.rv.getRuleType() == RuleType.ButtonPress) {
                 if (this.vm.buttonMatch.indexOf(rc.self) == -1)
                     this.vm.buttonMatch.push(rc.self);
-            } else if (false) { // rc.rv.getRuleType() == RuleType.Collision) {
-                // TODO: if a colliding sprite in motion transitions to
-                // resting (via stop or uturn command) then we
-                // may have more collisions to process
-                if (rc.self.movedToStopped) {
-                    if (this.vm.movingToResting.indexOf(rc.self) == -1)
-                        this.vm.movingToResting.push(rc.self);  
-                } else if (rc.witnesses[0].movedToStopped) {
-                    if (this.vm.movingToResting.indexOf(rc.witnesses[0]) == -1)
-                        this.vm.movingToResting.push(rc.witnesses[0]);
-                }
             }
         }
 
@@ -227,7 +222,7 @@ namespace tileworld {
                     }
                 } else {
                     this.vm.phase = RuleType.Collision;
-                    this.allSprites(ts => { this.vm.queued.push(ts) });
+                    this.vm.moving.forEach(ts => { this.vm.queued.push(ts) });
                 }
             }
             // collisions
@@ -236,8 +231,13 @@ namespace tileworld {
                     let ts = this.vm.queued.pop();                           
                     return this.collisionDetection( ts );
                 } else {
-                    if (this.vm.movingToResting.length > 0) {
-                        // TODO: need a special mode for this?
+                    if (this.vm.moving2resting.length > 0) {
+                        // fixpoint!
+                        // as long as moving sprites are transitioning to resting
+                        // then we need to checking moving sprites against new resting sprites
+                        this.vm.newresting = this.vm.moving2resting;
+                        this.vm.moving2resting = [];
+                        this.vm.moving.forEach(ts => { this.vm.queued.push(ts) });
                     } else
                         this.vm.phase = -1;
                 }
@@ -315,18 +315,28 @@ namespace tileworld {
         //   (b) os moving into T    
         private collisionDetection(ts: TileSprite) {
             let rcs: RuleClosure[] = [];
-            if (!this.moving(ts)) return rcs;
             let wcol = ts.col() + moveXdelta(ts.arg);
             let wrow = ts.row() + moveYdelta(ts.arg);
             if (!this.inBounds(wcol, wrow))
                 return rcs;
             const tm = game.currentScene().tileMap;
             this.collidingRules(ts, (rv) => {
-                // special case here because just one cell to check
-                // background on and only for Include
                 let wd = rv.getWhenDo(2+moveXdelta(ts.arg), 2+moveYdelta(ts.arg));
                 if (wd == -1)
                     return;
+
+                // fixpoint handling - moving against new resting sprites
+                if (this.vm.newresting.length > 0) {
+                    this.vm.newresting.forEach(os =>  {
+                        if (os.col() == wcol && os.row() == wrow && rv.getSetSpAttr(wd, os.kind()) == AttrType.Include) {
+                            this.collide(rv, ts, os, rcs);
+                        }
+                    });
+                    return;
+                }
+
+                // special case here because just one cell to check
+                // background on and only for Include
                 let includePassed: boolean = false;
                 for(let kind = 0; kind < this.p.backCnt(); kind++) {
                     if (rv.getSetBgAttr(wd, kind) == AttrType.Include) {
@@ -336,16 +346,20 @@ namespace tileworld {
                         }
                     }
                 }
+
                 // check for include on sprite
                 let hasInclude: boolean = false;
                 for(let kind = 0; kind < this.p.spriteCnt(); kind++) {
                     if (rv.getSetSpAttr(wd, kind) == AttrType.Include)
                         hasInclude = true;
                 }
+
                 if (!hasInclude)
                     return;
-                // TODO: this is inefficient, what we really need is a way to look
-                // TODO: up sprites at particular world locations
+
+                // TODO: this is super inefficient when there are a lot of sprites
+                // TODO: what we really need is a way to look
+                // TODO: up sprites in the 3x3 area around a sprite.
                 this.allSprites(os => {
                     if (os == ts || rv.getSetSpAttr(wd, os.kind()) != AttrType.Include)
                         return;
@@ -401,6 +415,7 @@ namespace tileworld {
                 if (ts.kind() == 0)
                     scene.cameraFollowSprite(ts);
             });
+            // TODO - why reset here??
             this.vm.spawnedSprites = [];
             // sprites that will die before next round
             this.vm.deadSprites.forEach(ts => {
@@ -453,19 +468,15 @@ namespace tileworld {
 
         // store the sprite witnesses identified by guards
         private evaluateRule(ts: TileSprite, rv: RuleView) {
-            // console.logValue("rid", rv.getRuleId());
             let witnesses: TileSprite[] = [];
             for(let col = 1; col <= 3; col++) {
                 for (let row = 1; row <= 3; row++) {
                     if (!this.evaluateWhenDo(ts, rv, col, row, witnesses)) {
-                        // console.log("failed");
                         return null;
                     }
                 }
             }
-            // console.log("passed");
             // all the whendos passed and we've collected witnesses (other sprites)
-            // so, we will execute the rule on the self sprite ts
             return new RuleClosure(rv, ts, witnesses);
         }
 
@@ -597,11 +608,13 @@ namespace tileworld {
                             (colliding ? rc.witnesses[0]
                                        : rc.witnesses.find(ts => ts.col() == wcol && ts.row() == wrow));
                         if (witness && (witness.inst == -1 || Math.randomRange(0,1) < 0.5 || colliding || button)) {
-                            // TODO: this is where we can determine if a colliding witness
-                            // TODO: is transition from a moving state to a resting state
-                            if (colliding && !self && witness.inst == CommandType.Move && witness.arg < MoveArg.Stop) {
-                                if (arg == MoveArg.Stop || arg == MoveArg.UTurn)
-                                    witness.movedToStopped = true;
+                            if (witness.inst == -1 && arg < MoveArg.Stop) {
+                                this.vm.moving.push(witness);
+                            }
+                            if (colliding && witness.inst == CommandType.Move && witness.arg < MoveArg.Stop && arg >= MoveArg.Stop) {
+                                // we are sending a stop command to a moving sprite involved in a collision
+                                this.vm.moving2resting.push(witness);
+                                this.vm.moving.removeElement(witness);
                             }
                             witness.inst = inst;
                             witness.arg = arg;
