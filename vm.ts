@@ -21,6 +21,7 @@ namespace tileworld {
             this.lastDir = Resting;
             this.inst = -1;
             this.state = SpriteState.Alive;
+            // keep Zs below 80 because of screen.print in shader
             this.z = 70 - kind;
         }
 
@@ -81,6 +82,7 @@ namespace tileworld {
         public moving: TileSprite[];
         public moving2resting: TileSprite[];   // sprites that transitioned to resting due to collision
         public newresting: TileSprite[]; 
+        public captureSpawned: TileSprite[];
         // affects of commands (before being committed)
         public paintTile: Tile[];            // log of paint commands
         public deadSprites: TileSprite[];    // the sprites removed this round
@@ -156,6 +158,7 @@ namespace tileworld {
             this.vm.moving = [];
             this.vm.moving2resting = [];
             this.vm.newresting = [];
+            this.vm.captureSpawned = [];
             this.vm.queued = [];
 
             this.vm.phase = RuleType.NegationCheck;
@@ -223,6 +226,8 @@ namespace tileworld {
                 } else {
                     this.vm.phase = RuleType.Collision;
                     this.vm.moving.forEach(ts => { this.vm.queued.push(ts) });
+                    this.vm.captureSpawned = this.vm.spawnedSprites;
+                    this.vm.spawnedSprites= [];
                 }
             }
             // collisions
@@ -357,10 +362,8 @@ namespace tileworld {
                 if (!hasInclude)
                     return;
 
-                // TODO: this is super inefficient when there are a lot of sprites
-                // TODO: what we really need is a way to look
-                // TODO: up sprites in the 3x3 area around a sprite.
-                this.allSprites(os => {
+                // function for processing the "other" sprite
+                let process = (os:TileSprite) => {
                     if (os == ts || rv.getSetSpAttr(wd, os.kind()) != AttrType.Include)
                         return;
                     // (a) os in square T, resting or moving towards ts, or
@@ -389,13 +392,15 @@ namespace tileworld {
                             this.collide(rv, ts, os, rcs);
                         }
                     }
-                });
+                };
+
+                // TODO: this is super inefficient when there are a lot of sprites
+                // TODO: what we really need is a way to look
+                // TODO: up sprites in the 3x3 area around a sprite.
+                this.allSprites(process);
+                this.vm.captureSpawned.forEach(process);
             });
             return rcs;
-        }
-
-        private collideIntoResting(ts: TileSprite) {
-
         }
 
         private collide(rv: RuleView, ts: TileSprite, os: TileSprite, rcs: RuleClosure[]) {
@@ -408,6 +413,7 @@ namespace tileworld {
         private updateWorld() {
             this.vm.changed.fill(0);
             // new sprites
+            this.vm.spawnedSprites = this.vm.spawnedSprites.concat(this.vm.captureSpawned);
             this.vm.spawnedSprites.forEach(ts => {
                 this.vm.sprites[ts.kind()].push(ts);
                 this.vm.changed.setPixel(ts.col(), ts.row(), 1);
@@ -415,8 +421,6 @@ namespace tileworld {
                 if (ts.kind() == 0)
                     scene.cameraFollowSprite(ts);
             });
-            // TODO - why reset here??
-            this.vm.spawnedSprites = [];
             // sprites that will die before next round
             this.vm.deadSprites.forEach(ts => {
                 this.vm.changed.setPixel(ts.col(), ts.row(), 1);
@@ -641,6 +645,8 @@ namespace tileworld {
                         if (!rc.self)
                             break;
                         spawned = new TileSprite(this.p.spriteImages()[arg], arg);
+                        // TODO: what phase of rule execution are we in?
+                        // TODO: 
                         this.vm.spawnedSprites.push(spawned);
                         spawned.x = (wcol << 4) + 8;
                         spawned.y = (wrow << 4) + 8;
