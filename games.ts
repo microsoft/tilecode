@@ -1,11 +1,11 @@
 // add games in if the slots are empty
 
 createHelloWorld("TW1-");
-createBejeweled("TW4-");
-createSnake("TW5-");
-createBoulderDash("TW6-"); 
-createSokoban("TW7-");
-createPacMan("TW8-");
+createSnake("TW4-");
+createBoulderDash("TW5-"); 
+createSokoban("TW6-");
+createPacMan("TW7-");
+createBejeweled("TW8-");
 
 //createSpaceInvaders("TW6-");
 // createSortingDiamonds("TW8-");
