@@ -671,6 +671,9 @@ namespace tileworld {
                         this.vm.spawnedSprites.forEach(ts => {
                              copy.setPixel(ts.col(), ts.row(), 1);
                         });
+                        this.vm.captureSpawned.forEach(ts => {
+                            copy.setPixel(ts.col(), ts.row(), 1);
+                        });
                         // how many candidates to portal to are there?
                         let kindCnt = 0;
                         let x = 0, y = 0;
@@ -758,7 +761,7 @@ namespace tileworld {
                     this.state.sprites[kind].push(ts);
                     ts.x = (x << 4) + 8;
                     ts.y = (y << 4) + 8;
-                }   
+                }
             }
         }
 
