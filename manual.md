@@ -1,4 +1,4 @@
-![TileCode](pics/meowbit.gif) ![TileCode](pics/sixGamesSmall.PNG)
+![TileCode](pics/meowbit.gif)
 
 ## Introduction and Videos
 
