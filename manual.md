@@ -1,5 +1,3 @@
-## Design, Code and Play Games on MakeCode Arcade Devices
-
 ![TileCode](pics/meowbit.gif)
 
 ## Introduction and Videos
