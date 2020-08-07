@@ -10,9 +10,9 @@ on low-cost [MakeCode Arcade](https://arcade.makecode.com){:target="_blank"} dev
 ## TileCode on Arcade Devices and in the Browser
 
 TileCode runs on any [MakeCode Arcade device](https://arcade.makecode.com/hardware){:target="_blank"} -
-- Click on the **UF2 File** link at the bottom of the screen to download the file 
-- Plug your Arcade device into your computer via a USB cable
-- Copy the downloaded UF2 file to your Arcade device
+1. Download the [TileCode UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.2.6/arcade.uf2) to your computer 
+2. Plug your Arcade device into your computer via a USB cable
+3. Copy the downloaded UF2 file (from step 1) to your Arcade device
 
 You also can run TileCode in the web-based MakeCode Arcade simulator at bottom of this screen. Clicking on the lower right corner of the screen (arrow icon pointing down and to the right)  expands the game simulator to full screen. 
 
