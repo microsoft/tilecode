@@ -37,11 +37,16 @@ This will bring up the rule editor for the player sprite on the dpad-right press
 
 ![hello_motion_simple](pics/helloMotionSimple.png)
 
-After dismissing the command menu, select the play button as shown below:
+After dismissing the command menu, the rule is finished, as shown below.
 
 ![hello_play](pics/helloPlay.PNG)
 
-This will allow you to see the effect of the rule you just created - you can move the player sprite anywhere on the board (for the player sprite, TileCode will automatically generalize the rule to all four directions).
+You can read the rule as:
+- **when** the user presses the right-dpad button
+- **and** there is a player sprite on the tile map
+- **do** send the player sprite a move-right command
+
+If you select the play button you can see the effect of the rule you just created - you can move the player sprite anywhere on the board (for the player sprite, TileCode will automatically generalize the rule to all four directions).
 
 ## Step 4: React to the board
 
@@ -49,9 +54,15 @@ Press the **B** button to return to the rule editor. We will now modify the rule
 
 ![hello_grass_predicate](pics/helloGrass.png)
 
-Press the **B** button to exit the menu:
+Press the **B** button to exit the menu, to see the complete rule, as shown below:
 
 ![hello_grass_motion_rule](pics/helloMotionGrass.png)
+
+You can read the modified rule as: 
+- **when** the user presses the right-dpad button
+- **and** there is a player sprite on the tile map
+- **and** there is grass on the tile to the right of the player
+- **do** send the player sprite a move-right command
 
 Again, select the play button to see the effect of the change to the rule. 
 
