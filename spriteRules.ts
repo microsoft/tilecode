@@ -27,11 +27,11 @@ namespace tileworld.ruleediting {
                     this.setTileSaved();
                     this.update();
                 } else {
-                    let rt = this.ruleTypeMap.getPixel(this.col(), this.row());
-                    let dir = this.dirMap.getPixel(this.col(), this.row());
+                    const rt = this.ruleTypeMap.getPixel(this.col(), this.row());
+                    const dir = this.dirMap.getPixel(this.col(), this.row());
                     if (rt != 0xf) {
-                        let rules = this.p.getRulesForSpriteKind(this.kind);
-                        let filteredRules = this.getRulesForTypeDir(rules, rt, dir);
+                        const rules = this.p.getRulesForSpriteKind(this.kind);
+                        const filteredRules = this.getRulesForTypeDir(rules, rt, dir);
                         if (filteredRules.length == 0) {
                             filteredRules.push(this.p.makeRule(rt, dir, this.kind));
                         }
@@ -45,13 +45,12 @@ namespace tileworld.ruleediting {
             });
         }
 
-        protected cursorMove(dir: MoveDirection, pressed: boolean = true) {
+        protected cursorMove(dir: MoveDirection, pressed: boolean): void {
             if (this.p.help) {
                 this.helpCursor.x = this.col() < 7 ? this.cursor.x + 8 : this.cursor.x - 16;
                 this.helpCursor.y = this.row() < 6 ? this.cursor.y + 32 : this.cursor.y;
-                let index = this.dirMap.getPixel(this.col(), this.row())
                 if (this.col() > 0) {
-                    let message = getHelp(this.row() < 4 ? helpStringTop : helpStringBot, this.col(), this.row());
+                    const message = getHelp(this.row() < 4 ? helpStringTop : helpStringBot, this.col(), this.row());
                     this.helpCursor.say(message);
                 } else {
                     this.helpCursor.say(null);
@@ -60,7 +59,7 @@ namespace tileworld.ruleediting {
             }
         }
 
-        protected update() {
+        protected update(): void {
             screen.fill(15);
             screen.fillRect(0, yoff, 16, 16, 11);
             screen.drawTransparentImage(code, 0, yoff)
@@ -70,7 +69,7 @@ namespace tileworld.ruleediting {
             })
         }
 
-        protected centerImage() {
+        protected centerImage(): Image {
             return this.p.getSpriteImage(this.kind);
         }
 
@@ -88,17 +87,17 @@ namespace tileworld.ruleediting {
         }
 
         private rules: RuleView[];
-        private doBoth(rt: RuleType, rd: number, col: number, row: number, center: boolean = true) {
-            let scol = 13;
-            let rules = this.getRulesForTypeDir(this.rules, rt, rd);
+        private doBoth(rt: RuleType, rd: number, col: number, row: number, center = true) {
+            const scol = 13;
+            const rules = this.getRulesForTypeDir(this.rules, rt, rd);
             if (rt == RuleType.Collision && rd != Resting) {
-                let tcol = col + moveXdelta(rd);
-                let trow = row + moveYdelta(rd);
+                const tcol = col + moveXdelta(rd);
+                const trow = row + moveYdelta(rd);
                 this.setRuleType(rt, rd, tcol, trow);
                 if (rules.length > 0) { this.fillTile(tcol, trow, scol); this.drawOutline(tcol,trow, 1); }
             } else if (rt == RuleType.ButtonPress) {
-                let tcol = rd < ButtonArg.A ? col - moveXdelta(rd) : col;
-                let trow = rd < ButtonArg.A ? row - moveYdelta(rd) : row;
+                const tcol = rd < ButtonArg.A ? col - moveXdelta(rd) : col;
+                const trow = rd < ButtonArg.A ? row - moveYdelta(rd) : row;
                 this.setRuleType(rt, rd, tcol, trow);
                 if (rules.length > 0) { this.fillTile(tcol, trow, scol); this.drawOutline(tcol, trow, 1); }
                 this.drawImage(tcol, trow, buttonImages[rd]);

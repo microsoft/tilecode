@@ -8,9 +8,7 @@ namespace tileworld {
                 this.update();
             })
         }
-        protected update() {
-
-        }
+        protected update(): void { 0; }
     }
 
     export class RuleVisualsBase extends BackgroundBase {
@@ -88,55 +86,55 @@ namespace tileworld {
             this.cursorMove(MoveDirection.Down);
         }
 
-        protected okToMove() { return true; }
+        protected okToMove(): boolean { return true; }
 
-        protected getRulesForTypeDir(rules: RuleView[], rt: RuleType, dir: MoveDirection) {
+        protected getRulesForTypeDir(rules: RuleView[], rt: RuleType, dir: MoveDirection): RuleView[] {
             return rules.filter(rv => rv.getRuleType() == rt && rv.getDirFromRule() == dir);
         }
       
-        protected setCol(col: number) {
+        protected setCol(col: number): void {
             this.cursor.x = (col << 4) + 8;
         }
 
-        protected setRow(row: number) {
+        protected setRow(row: number): void {
             this.cursor.y = (row << 4) + 8 + yoff;
         }
 
-        protected col(curr: boolean = true) {
+        protected col(curr = true): number {
             return curr ? this.cursor.x >> 4 : this.tileSaved.x >> 4;
         }
 
-        protected row(curr: boolean = true) {
+        protected row(curr = true): number {
             return curr ? (this.cursor.y - yoff) >> 4 : (this.tileSaved.y - yoff) >> 4;
         }
 
-        protected drawImage(c: number, r: number, img: Image) {
+        protected drawImage(c: number, r: number, img: Image): void {
             screen.drawTransparentImage(img, c << 4, yoff + (r << 4));
         }
 
-        protected drawImageAbs(x: number, y: number, img: Image) {
+        protected drawImageAbs(x: number, y: number, img: Image): void {
             screen.drawTransparentImage(img, x, y);
         }
 
-        protected drawOutline(c: number, r: number, col: number = 12) {
+        protected drawOutline(c: number, r: number, col = 12): void {
             screen.drawRect(c << 4, yoff + (r << 4), 17, 17, col);
         }
 
-        protected fillTile(c: number, r: number, col: color) {
+        protected fillTile(c: number, r: number, col: color): void {
             screen.fillRect((c << 4)+1, yoff + (r << 4) +1, 15, 15, col);
         }
 
-        protected setTileSaved() {
+        protected setTileSaved(): void {
             this.tileSaved.x = this.cursor.x;
             this.tileSaved.y = this.cursor.y;
             this.tileSaved.z = 100;
             this.tileSaved.setFlag(SpriteFlag.Invisible, false);
         }
 
-        protected isTileSaved() {
+        protected isTileSaved(): boolean {
             return !(this.tileSaved.flags & SpriteFlag.Invisible);
         }
 
-        protected cursorMove(dir: MoveDirection, pressed: boolean = true) { }
+        protected cursorMove(dir: MoveDirection, pressed = true): void { 0; }
     }
 }

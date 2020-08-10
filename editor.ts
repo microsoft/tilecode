@@ -4,7 +4,7 @@ namespace tileworld {
     const paintSize = 8;
     const editorY = 16+yoff;
 
-    enum CursorType { Menu, Map };
+    enum CursorType { Menu, Map }
     const paintOut = img`
         5 5 5 5 5 5 5 5
         5 . . . . . . 5
@@ -145,20 +145,20 @@ namespace tileworld {
             this.selected.y = this.cursor.y;
         }
 
-        private cursorAction(repeated: boolean = false) {
+        private cursorAction(repeated = false) {
             if (!this.aDown)
                 return;
             if (this.cursorType == CursorType.Map) {
-                let col = (this.paintCursor.x >> 3) + this.offsetX;
-                let row = ((this.paintCursor.y - (editorY +4)) >> 3) + this.offsetY;
-                let backs = this.p.getWorldBackgrounds();
+                const col = (this.paintCursor.x >> 3) + this.offsetX;
+                const row = ((this.paintCursor.y - (editorY +4)) >> 3) + this.offsetY;
+                const backs = this.p.getWorldBackgrounds();
                 if (this.userSpriteIndex == 0xf) {
                     backs.setPixel(col, row, 0xf);
                 } else if (this.userSpriteIndex < this.p.backCnt())
                     backs.setPixel(col, row, this.userSpriteIndex);
                 else {
-                    let sprs = this.p.getWorldSprites();
-                    let spriteIndex = this.userSpriteIndex - this.p.backCnt();
+                    const sprs = this.p.getWorldSprites();
+                    const spriteIndex = this.userSpriteIndex - this.p.backCnt();
                     if (sprs.getPixel(col, row) == spriteIndex)
                         sprs.setPixel(col, row, 0xf);
                     else
@@ -179,19 +179,19 @@ namespace tileworld {
             this.update();
         }
 
-        private col(current: boolean = true) {
+        private col(): number {
             return this.cursor.x >> 4;
         }
         
-        private row(current: boolean = true) {
+        private row(): number {
             return (this.cursor.y - yoff) >> 4;
         }
 
-        private drawImage(img: Image, col: number, row: number) {
+        private drawImage(img: Image, col: number, row: number): void {
             screen.drawTransparentImage(img, col << 4, (row << 4)+yoff);
         }
 
-        public update() {
+        public update(): void {
             screen.fill(0);
             screen.fillRect(0, yoff, 16, 16, 11);
             this.drawImage(map, 0, 0);
@@ -205,21 +205,21 @@ namespace tileworld {
                 index++;
             });
             // this.drawImage(emptyDiagTile, 9, 0);
-            let backs = this.p.getWorldBackgrounds();
+            const backs = this.p.getWorldBackgrounds();
             for(let x = this.offsetX; x<this.offsetX+20; x++) {
                 for (let y = this.offsetY; y < this.offsetY + 15; y++) {
-                    let inRange = 0 <= x && x < backs.width && 0 <= y && y < backs.height;
-                    let col = x - this.offsetX;
-                    let row = y - this.offsetY;
-                    let nx = col * paintSize;
-                    let ny = editorY + row * paintSize;
+                    const inRange = 0 <= x && x < backs.width && 0 <= y && y < backs.height;
+                    const col = x - this.offsetX;
+                    const row = y - this.offsetY;
+                    const nx = col * paintSize;
+                    const ny = editorY + row * paintSize;
                     // tile
-                    let index = inRange ? backs.getPixel(x, y) : -1;
-                    let img = index == -1 ? emptyTile : index == 0xf ? emptyDiagTile : this.p.getBackgroundImage(index);
+                    const index = inRange ? backs.getPixel(x, y) : -1;
+                    const img = index == -1 ? emptyTile : index == 0xf ? emptyDiagTile : this.p.getBackgroundImage(index);
                     drawHalfSize(img, nx, ny);
                     // sprite
                     if (inRange) {
-                        let index = this.p.getWorldSprites().getPixel(x, y);
+                        const index = this.p.getWorldSprites().getPixel(x, y);
                         if (index != 0xf) {
                             drawHalfSize(this.p.getSpriteImage(index), nx, ny, true);
                         }

@@ -8,26 +8,26 @@ namespace tileworld {
         constructor(private p: Project, private rid: number, private r: Rule) {
         }
 
-        public getBaseRule() {
+        public getBaseRule(): Rule {
             return this.r;
         }
 
-        public getDerivedRules() {
-            let ret: RuleView[] = [];
+        public getDerivedRules(): RuleView[] {
+            const ret: RuleView[] = [];
             switch(this.r.transforms){
                 case RuleTransforms.HorzMirror:
                 case RuleTransforms.VertMirror: 
                 case RuleTransforms.LeftRotate: 
                 case RuleTransforms.RightRotate:        
                 {
-                    let rv = new RuleView(this.p, -1, this.r);
+                    const rv = new RuleView(this.p, -1, this.r);
                     rv.view = this.r.transforms;
                     ret.push(rv);
                     break;
                 }
                 case RuleTransforms.Rotate3Way: {
                     for (let t = RuleTransforms.LeftRotate; t != RuleTransforms.Rotate3Way; t++) {
-                        let rv = new RuleView(this.p, -1, this.r);
+                        const rv = new RuleView(this.p, -1, this.r);
                         rv.view = t;
                         ret.push(rv)
                     }
@@ -37,45 +37,45 @@ namespace tileworld {
             return ret;
         }
 
-        public getViewTransform() {
+        public getViewTransform(): number {
             if (this.rid == -1)
                 return this.view;
             return -1;
         }
 
-        public getTransforms() {
+        public getTransforms(): number {
             return this.r.transforms;
         }
 
-        public setTransforms(n:number) {
+        public setTransforms(n:number): void {
             this.r.transforms = n;
         }
 
-        public getRuleId() {
+        public getRuleId(): number {
             return this.rid;
         }
 
-        public getRuleType() {
+        public getRuleType(): RuleType {
             return this.r.ruleType;
         }
 
-        public setRuleType(rt: RuleType) {
+        public setRuleType(rt: RuleType): void {
             this.r.ruleType = rt;
         }
 
-        public getRuleArg() {
+        public getRuleArg(): RuleArg {
             return this.rid != -1 ? this.r.ruleArg : 
                 this.r.ruleType == RuleType.ButtonPress ? flipRotateDir(this.r.ruleArg, this.view) : this.r.ruleArg;
         }
 
-        public setRuleArg(ra: RuleArg) {
+        public setRuleArg(ra: RuleArg): void  {
             this.r.ruleArg = ra;
         }
 
-        public getDirFromRule() {
-            let rt = this.getRuleType();
+        public getDirFromRule(): number {
+            const rt = this.getRuleType();
             if (rt == RuleType.Collision || rt == RuleType.ContextChange) {
-                let wd = this.getWhenDo(2, 2);
+                const wd = this.getWhenDo(2, 2);
                 return wd == -1 ? AnyDir : this.getWitnessDirection(wd);
             } else if (rt == RuleType.ButtonPress) {
                 return this.getRuleArg();
@@ -83,27 +83,27 @@ namespace tileworld {
             return AnyDir;
         }
         
-        private rawView() {
+        private rawView(): number {
              return this.view == RuleTransforms.LeftRotate ? RuleTransforms.RightRotate : 
                    (this.view == RuleTransforms.RightRotate ? RuleTransforms.LeftRotate: this.view);
         }
 
-        public getWhenDo(col: number, row: number) {
+        public getWhenDo(col: number, row: number): number {
             if (this.rid == -1) {
-                let ncol = transformCol(col, row, this.rawView());
-                let nrow = transformRow(row, col, this.rawView());
+                const ncol = transformCol(col, row, this.rawView());
+                const nrow = transformRow(row, col, this.rawView());
                 col = ncol;
                 row = nrow;
             }
-            let whendo = this.r.whenDo.find(wd => wd.col == col && wd.row == row);
+            const whendo = this.r.whenDo.find(wd => wd.col == col && wd.row == row);
             if (whendo == null)
                 return -1;
             else
                 return this.r.whenDo.indexOf(whendo);
         }
 
-        public makeWhenDo(col: number, row: number) {
-            let wd = new WhenDo(col, row);
+        public makeWhenDo(col: number, row: number): number {
+            const wd = new WhenDo(col, row);
             wd.bgPred = control.createBuffer(this.p.backCnt());
             wd.spPred = control.createBuffer(this.p.spriteCnt()); 
             wd.commandsLen = 0;
@@ -112,35 +112,35 @@ namespace tileworld {
             return this.r.whenDo.length - 1;
         }
 
-        public getWhenDoCol(whendo: number) {
+        public getWhenDoCol(whendo: number): number {
             return this.r.whenDo[whendo].col;
         }
 
-        public getWhenDoRow(whendo: number) {
+        public getWhenDoRow(whendo: number): number {
             return this.r.whenDo[whendo].row;
         }
 
-        private getSetBuffAttr(buf: Buffer, index: number, val: number) {
-            let byteIndex = index >> 2;
-            let byte = buf.getUint8(byteIndex);
-            let remainder = index - (byteIndex << 2);
+        private getSetBuffAttr(buf: Buffer, index: number, val: number): number {
+            const byteIndex = index >> 2;
+            const byte = buf.getUint8(byteIndex);
+            const remainder = index - (byteIndex << 2);
             if (val != 0xffff) {
-                let mask = (0x3 << (remainder << 1)) ^ 0xff;
-                let newByte = (byte & mask) | ((val & 0x3) << (remainder << 1));
+                const mask = (0x3 << (remainder << 1)) ^ 0xff;
+                const newByte = (byte & mask) | ((val & 0x3) << (remainder << 1));
                 buf.setUint8(byteIndex, newByte)
             }
             return (byte >> (remainder << 1)) & 0x3;
         }
 
-        public getSetBgAttr(wdid: number, index: number, val: number = 0xffff): AttrType {
+        public getSetBgAttr(wdid: number, index: number, val = 0xffff): AttrType {
             return this.getSetBuffAttr(this.r.whenDo[wdid].bgPred, index, val);
         }
 
-        public getSetSpAttr(wdid: number, index: number, val: number = 0xffff): AttrType {
+        public getSetSpAttr(wdid: number, index: number, val = 0xffff): AttrType {
             return this.getSetBuffAttr(this.r.whenDo[wdid].spPred, index, val);
         }
 
-        public attrCnt(whendo: number) {
+        public attrCnt(whendo: number): number {
             let cnt = 0;
             for (let i = 0; i < this.p.backCnt(); i++) {
                 if (this.getSetBgAttr(whendo, i) != AttrType.OK)
@@ -153,7 +153,7 @@ namespace tileworld {
             return cnt;
         }
 
-        private attrBgIndex(whendo: number, a: AttrType) {
+        private attrBgIndex(whendo: number, a: AttrType): number {
             for (let i = 0; i < this.p.backCnt(); i++) {
                 if (this.getSetBgAttr(whendo, i) == a)
                     return i;
@@ -161,7 +161,7 @@ namespace tileworld {
             return -1;
         }
 
-        private attrSpIndex(whendo: number, a: AttrType) {
+        private attrSpIndex(whendo: number, a: AttrType): number {
             for (let i = 0; i < this.p.spriteCnt(); i++) {
                 if (this.getSetSpAttr(whendo, i) == a)
                     return i;
@@ -169,10 +169,10 @@ namespace tileworld {
             return -1;
         }
 
-        public findWitnessColRow(col: number, row: number, editor: boolean = true): number {
+        public findWitnessColRow(col: number, row: number, editor = true): number {
             if (editor && this.getRuleType() == RuleType.NegationCheck)
                 return -1;
-            let whendo = this.getWhenDo(col, row);
+            const whendo = this.getWhenDo(col, row);
             if (whendo == -1)
                 return -1;
             if (this.attrBgIndex(whendo, AttrType.Include) != -1)
@@ -180,27 +180,27 @@ namespace tileworld {
             return this.attrSpIndex(whendo, AttrType.Include);
         }
 
-        public getWitnessDirection(wdid: number) {
-            let dir = this.r.whenDo[wdid].dir;
+        public getWitnessDirection(wdid: number): number {
+            const dir = this.r.whenDo[wdid].dir;
             return (this.rid != -1 || dir >= Resting) ? dir : flipRotateDir(dir, this.view);
         }
 
-        public setWitnessDirection(wdid: number, val:number) {
+        public setWitnessDirection(wdid: number, val:number): void {
             this.r.whenDo[wdid].dir = val;
         }
 
-        public getCmdsLen(wdid: number) {
+        public getCmdsLen(wdid: number): number {
             return this.r.whenDo[wdid].commandsLen;
         }
 
-        public getCmdInst(wdid: number, cid: number) {
-            let wd = this.r.whenDo[wdid];
+        public getCmdInst(wdid: number, cid: number): number {
+            const wd = this.r.whenDo[wdid];
             if (cid >= wd.commandsLen) return 0xff;
             return wd.commands.getUint8(cid << 1);
         }
 
-        public getCmdArg(wdid: number, cid: number) {
-            let wd = this.r.whenDo[wdid];
+        public getCmdArg(wdid: number, cid: number): number {
+            const wd = this.r.whenDo[wdid];
             if (cid >= wd.commandsLen) return 0xff;
             let arg = wd.commands.getUint8((cid << 1)+1);
             if (this.rid == -1 && this.getCmdInst(wdid, cid) == CommandType.Move) {
@@ -209,8 +209,8 @@ namespace tileworld {
             return arg;        
         }
 
-        public setCmdInst(wdid: number, cid: number, n: number) {
-            let wd = this.r.whenDo[wdid];
+        public setCmdInst(wdid: number, cid: number, n: number): number {
+            const wd = this.r.whenDo[wdid];
             if (cid > wd.commandsLen)
                 return 0xff;
             if (cid == wd.commandsLen)
@@ -219,8 +219,8 @@ namespace tileworld {
             return n & 0xff;
         }
 
-        public setCmdArg(wdid: number, cid: number, n: number) {
-            let wd = this.r.whenDo[wdid];
+        public setCmdArg(wdid: number, cid: number, n: number): number {
+            const wd = this.r.whenDo[wdid];
             if (cid > wd.commandsLen)
                 return 0xff;
             if (cid == wd.commandsLen)
@@ -229,8 +229,8 @@ namespace tileworld {
             return n & 0xff;
         }
 
-        public removeCommand(wdid: number, cid: number) {
-            let wd = this.r.whenDo[wdid];
+        public removeCommand(wdid: number, cid: number): number {
+            const wd = this.r.whenDo[wdid];
             if (wd.commandsLen == 0 || cid >= wd.commandsLen)
                 return wd.commandsLen;
             for(let i=(cid << 1); i <= ((MaxCommands-1)<<1)-1; i++) {
@@ -242,11 +242,11 @@ namespace tileworld {
 
         // predicates/misc info
 
-        public getSpriteKinds() {
-            let wd = this.getWhenDo(2, 2);
-            let ret: number[] = [];
+        public getSpriteKinds(): number[] {
+            const wd = this.getWhenDo(2, 2);
+            const ret: number[] = [];
             for(let i=0; i < this.p.spriteCnt(); i++) {
-                let at = this.getSetSpAttr(wd, i);
+                const at = this.getSetSpAttr(wd, i);
                 // TODO: Include vs. Include2?
                 if (at == AttrType.Include || at == AttrType.Include2)
                     ret.push(i);
@@ -254,25 +254,25 @@ namespace tileworld {
             return ret;
         }
 
-        public hasSpriteKind(kind: number) {
-            let wd = this.getWhenDo(2, 2);
+        public hasSpriteKind(kind: number): boolean {
+            const wd = this.getWhenDo(2, 2);
             // TODO: Include vs. Include2?
             return wd == -1 ?  false : this.getSetSpAttr(wd, kind) == AttrType.Include
         }
 
-        public whendoTrue(whendo: number) {
-            let wd = this.r.whenDo[whendo];
+        public whendoTrue(whendo: number): boolean {
+            const wd = this.r.whenDo[whendo];
             return isWhenDoTrue(wd);
         }
 
-        public isRuleTrue() {
+        public isRuleTrue(): boolean {
             return isRuleTrue(this.r);
         }
 
         // printing out a rule
 
         private whenDoAttrs(wd: number, a: AttrType) {
-            let ret: string[] = [];
+            const ret: string[] = [];
             for(let i = 0; i < this.p.backCnt(); i++) {
                 if (this.getSetBgAttr(wd, i) == a)
                     ret.push("b"+i.toString())
@@ -300,7 +300,7 @@ namespace tileworld {
             return "none";
         }
 
-        public printRule() {
+        public printRule(): void {
             // rule header
             console.log("id:"+this.getRuleId().toString());
             console.log("rule:"+ruleToString[this.getRuleType()]+":"+this.ruleArgToString());
@@ -313,8 +313,8 @@ namespace tileworld {
                 console.log("exclude:"+this.whenDoAttrs(wdi,AttrType.Exclude).join(":"));
                 // output commands
                 for(let i=0; i<wd.commandsLen; i++) {
-                    let inst = this.getCmdInst(wdi, i);
-                    let arg = this.getCmdArg(wdi, i)
+                    const inst = this.getCmdInst(wdi, i);
+                    const arg = this.getCmdArg(wdi, i)
                     console.log("cmd:"+cmdInstToString[inst]+":"+this.commandArgToString(inst, arg))
                 }
             });

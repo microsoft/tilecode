@@ -11,7 +11,7 @@ namespace tileworld {
         public inst: number;        // the one instruction history to apply to the sprite to 
         public arg: number;         // create the next sprite state
         // public changed: boolean;
-        constructor(img: Image, kind: number, d: boolean = false) {
+        constructor(img: Image, kind: number, d = false) {
             super(img);
             const scene = game.currentScene();
             scene.physicsEngine.addSprite(this);
@@ -65,7 +65,7 @@ namespace tileworld {
         }
     }
 
-    enum GameState { InPlay, Won, Lost, };
+    enum GameState { InPlay, Won, Lost, }
 
     // the interpreter state
     class VMState {
@@ -125,9 +125,9 @@ namespace tileworld {
             // populate indices for more efficient lookup over
             // rules (and derived rules)
             this.rules.forEach(rv => {
-                let derivedRules = rv.getDerivedRules();
+                const derivedRules = rv.getDerivedRules();
                 derivedRules.push(rv);
-                let rt = rv.getRuleType();
+                const rt = rv.getRuleType();
                 derivedRules.forEach(rv => {
                     this.ruleIndex[rt].push(rv);
                 });
@@ -194,15 +194,15 @@ namespace tileworld {
 
         continueRound() {
             if (this.vm.phase == RuleType.NegationCheck) {
-                let ruleClosures: RuleClosure[] = [];
+                const ruleClosures: RuleClosure[] = [];
                 // negation rules currently only inspect (2,2)
                 this.ruleIndex[RuleType.NegationCheck].forEach(rv => {
                     // for now, we will deal only with rules that have witness in (2,2)
                     // TODO: generalize this rule
-                    let kind = rv.findWitnessColRow(2, 2, false);
+                    const kind = rv.findWitnessColRow(2, 2, false);
                     if (kind == -1)
                         return;
-                    let witnesses = this.vm.sprites[kind];
+                    const witnesses = this.vm.sprites[kind];
                     if (!witnesses || witnesses.length == 0) {
                         // SUCCESS!
                         ruleClosures.push(new RuleClosure(rv, null, []));
@@ -216,7 +216,7 @@ namespace tileworld {
             // external events
             if (this.vm.phase == RuleType.ButtonPress) {
                 if (this.vm.queued.length > 0) {
-                    let ts = this.vm.queued.pop();
+                    const ts = this.vm.queued.pop();
                     return this.applyRules(RuleType.ButtonPress, ts);
                 } else {
                     this.nextPhase(RuleType.ContextChange);
@@ -226,7 +226,7 @@ namespace tileworld {
             // context change
             if (this.vm.phase == RuleType.ContextChange) {
                 if (this.vm.queued.length > 0) {
-                    let ts = this.vm.queued.pop();
+                    const ts = this.vm.queued.pop();
                     if (this.contextChanged(ts)) {
                         return this.applyRules(RuleType.ContextChange,  ts);
                     }
@@ -240,7 +240,7 @@ namespace tileworld {
             // collisions
             if (this.vm.phase == RuleType.Collision) {
                 if (this.vm.queued.length > 0) {
-                    let ts = this.vm.queued.pop();                           
+                    const ts = this.vm.queued.pop();                           
                     return this.collisionDetection( ts );
                 } else {
                     if (this.vm.moving2resting.length > 0) {
@@ -272,8 +272,8 @@ namespace tileworld {
             // check neighborhood
             for(let i = -1; i <= 1; i++) {
                 for (let j = -1; j <= 1; j++) {
-                    let x = ts.col() + i;
-                    let y = ts.row() + j;
+                    const x = ts.col() + i;
+                    const y = ts.row() + j;
                     if (this.inBounds(x,y) && this.vm.changed.getPixel(x,y))
                         return true;
                 }
@@ -294,12 +294,12 @@ namespace tileworld {
         }
 
         private applyRules(phase: RuleType, ts: TileSprite) {
-            let ruleClosures: RuleClosure[] = [];
+            const ruleClosures: RuleClosure[] = [];
             this.ruleIndex[phase].forEach(rv => {
                 if (this.ruleMatchesSprite(rv, ts) &&
                     (phase == RuleType.ContextChange && this.ruleMatchesDirection(rv, ts.dir)
                   || phase == RuleType.ButtonPress && this.dpad.indexOf(rv.getRuleArg()) != -1)) {
-                    let closure = this.evaluateRule(ts, rv);
+                    const closure = this.evaluateRule(ts, rv);
                     if (closure)
                         ruleClosures.push(closure);
                 }
@@ -326,14 +326,14 @@ namespace tileworld {
         //   (a) os in square T, resting or moving towards ts, or
         //   (b) os moving into T    
         private collisionDetection(ts: TileSprite) {
-            let rcs: RuleClosure[] = [];
-            let wcol = ts.col() + moveXdelta(ts.arg);
-            let wrow = ts.row() + moveYdelta(ts.arg);
+            const rcs: RuleClosure[] = [];
+            const wcol = ts.col() + moveXdelta(ts.arg);
+            const wrow = ts.row() + moveYdelta(ts.arg);
             if (!this.inBounds(wcol, wrow))
                 return rcs;
             const tm = game.currentScene().tileMap;
             this.collidingRules(ts, (rv) => {
-                let wd = rv.getWhenDo(2+moveXdelta(ts.arg), 2+moveYdelta(ts.arg));
+                const wd = rv.getWhenDo(2+moveXdelta(ts.arg), 2+moveYdelta(ts.arg));
                 if (wd == -1)
                     return;
 
@@ -349,7 +349,6 @@ namespace tileworld {
 
                 // special case here because just one cell to check
                 // background on and only for Include
-                let includePassed: boolean = false;
                 for(let kind = 0; kind < this.p.backCnt(); kind++) {
                     if (rv.getSetBgAttr(wd, kind) == AttrType.Include) {
                         if (tm.getTileIndex(wcol, wrow) == kind) {
@@ -360,7 +359,7 @@ namespace tileworld {
                 }
 
                 // check for include on sprite
-                let hasInclude: boolean = false;
+                let hasInclude = false;
                 for(let kind = 0; kind < this.p.spriteCnt(); kind++) {
                     if (rv.getSetSpAttr(wd, kind) == AttrType.Include)
                         hasInclude = true;
@@ -370,7 +369,7 @@ namespace tileworld {
                     return;
 
                 // function for processing the "other" sprite
-                let process = (os:TileSprite) => {
+                const process = (os:TileSprite) => {
                     if (os == ts || rv.getSetSpAttr(wd, os.kind()) != AttrType.Include)
                         return;
                     // (a) os in square T, resting or moving towards ts, or
@@ -381,13 +380,13 @@ namespace tileworld {
                     }
                     // (b) os moving into T
                     if (this.moving(os)) {
-                        let leftRotate = flipRotateDir(ts.arg, RuleTransforms.LeftRotate);
+                        const leftRotate = flipRotateDir(ts.arg, RuleTransforms.LeftRotate);
                         let osCol = wcol + moveXdelta(leftRotate);
                         let osRow = wrow + moveYdelta(leftRotate);
                         if (os.col() == osCol && os.row() == osRow && oppDir(leftRotate,os.arg)) {
                             this.collide(rv, ts, os, rcs);
                         } 
-                        let rightRotate = flipRotateDir(ts.arg, RuleTransforms.RightRotate);
+                        const rightRotate = flipRotateDir(ts.arg, RuleTransforms.RightRotate);
                         osCol = wcol + moveXdelta(rightRotate);
                         osRow = wrow + moveYdelta(rightRotate);
                         if (os.col() == osCol && os.row() == osRow && oppDir(rightRotate, os.arg)) {
@@ -446,7 +445,7 @@ namespace tileworld {
             // update the tile map and set dirty bits in changed map
             this.vm.paintTile.forEach(pt => {
                 const tm = game.currentScene().tileMap;
-                let old = tm.getTileIndex(pt.col, pt.row);
+                const old = tm.getTileIndex(pt.col, pt.row);
                 if (old != pt.kind) {
                     tm.setTileAt(pt.col, pt.row, pt.kind);
                     this.vm.changed.setPixel(pt.col, pt.row, 1);
@@ -454,8 +453,8 @@ namespace tileworld {
             });
             // now, execute the global instructions
             for (let i = 0; i < this.globalInsts.length; i++) {
-                let inst = this.globalInsts[i];
-                let arg = this.globalArgs[i];
+                const inst = this.globalInsts[i];
+                const arg = this.globalArgs[i];
                 switch (inst) {
                     case CommandType.Game: {
                         if (arg == GameArg.Win || arg == GameArg.Lose) {
@@ -479,7 +478,7 @@ namespace tileworld {
 
         // store the sprite witnesses identified by guards
         private evaluateRule(ts: TileSprite, rv: RuleView) {
-            let witnesses: TileSprite[] = [];
+            const witnesses: TileSprite[] = [];
             for(let col = 1; col <= 3; col++) {
                 for (let row = 1; row <= 3; row++) {
                     if (!this.evaluateWhenDo(ts, rv, col, row, witnesses)) {
@@ -505,26 +504,26 @@ namespace tileworld {
         private evaluateWhenDo(ts: TileSprite, rv: RuleView, 
                 col: number, row: number, witnesses: TileSprite[]) {
             // whendo
-            let whendo = rv.getWhenDo(col, row);
+            const whendo = rv.getWhenDo(col, row);
             if (whendo == -1 || rv.whendoTrue(whendo))
                 return true;
             
             // world coordinates
-            let wcol = ts.col() + (col - 2);
-            let wrow = ts.row() + (row - 2);
+            const wcol = ts.col() + (col - 2);
+            const wrow = ts.row() + (row - 2);
             if (!this.inBounds(wcol, wrow))
                 return false;                   // TODO: or should this be true???
 
-            let hasInclude: boolean = false;
-            let includePassed: boolean = false;
+            let hasInclude = false;
+            let includePassed = false;
             let includeWitness: TileSprite = null;
-            let hasInclude2: boolean = false;
-            let include2Passed: boolean = false;
+            let hasInclude2 = false;
+            let include2Passed = false;
             const tm = game.currentScene().tileMap;
             // check backgrounds
             for(let kind = 0; kind < this.p.backCnt(); kind++) {
-                let hasKind = tm.getTileIndex(wcol, wrow) == kind;
-                let attr = rv.getSetBgAttr(whendo, kind);
+                const hasKind = tm.getTileIndex(wcol, wrow) == kind;
+                const attr = rv.getSetBgAttr(whendo, kind);
                 if (attr == AttrType.Exclude && hasKind) {
                     return false;
                 } else if (attr == AttrType.Include) {
@@ -536,11 +535,11 @@ namespace tileworld {
                 }
             }
             // check sprites
-            let adjacent = this.manhattan(col, row) <= 1;
+            const adjacent = this.manhattan(col, row) <= 1;
             for(let kind = 0; kind < this.p.spriteCnt(); kind++) {
-                let attr = rv.getSetSpAttr(whendo, kind);
+                const attr = rv.getSetSpAttr(whendo, kind);
                 // TODO: there could be multiple matching witnesses (cross product)
-                let witness = this.getWitness(kind, wcol, wrow);
+                const witness = this.getWitness(kind, wcol, wrow);
                 if (attr == AttrType.Exclude && witness) {
                     return false;
                 } else if (attr == AttrType.Include) {
@@ -559,7 +558,7 @@ namespace tileworld {
                     }
                 }
             }
-            let ret = !hasInclude || includePassed;
+            const ret = !hasInclude || includePassed;
             if (ret && includeWitness) {
                 // need to check direction of sprite against witness.dir
                 if (!this.exprMatchesDirection(rv.getWitnessDirection(whendo), includeWitness.dir))
@@ -582,7 +581,7 @@ namespace tileworld {
         }
 
         private evaluateWhenDoCommands(rc: RuleClosure, col: number, row: number) {
-            let wid = rc.rv.getWhenDo(col, row);
+            const wid = rc.rv.getWhenDo(col, row);
             if (wid == -1 || rc.rv.getCmdInst(wid, 0) == -1)
                 return;
             let wcol = rc.self ? rc.self.col() + (col - 2) : -1;
@@ -597,9 +596,9 @@ namespace tileworld {
                     wcol = portal.col;
                     wrow = portal.row;
                 }
-                let inst = rc.rv.getCmdInst(wid, cid);
+                const inst = rc.rv.getCmdInst(wid, cid);
                 if (inst == -1) break;
-                let arg = rc.rv.getCmdArg(wid, cid);
+                const arg = rc.rv.getCmdArg(wid, cid);
                 switch(inst) {
                     case CommandType.Paint: {
                         if (!rc.self)
@@ -610,10 +609,10 @@ namespace tileworld {
                     case CommandType.Move: {
                         if (!rc.self)
                             break;
-                        let colliding = rc.rv.getRuleType() == RuleType.Collision;
-                        let button = rc.rv.getRuleType() == RuleType.ButtonPress;
-                        let self = col == 2 && row == 2;
-                        let witness =
+                        const colliding = rc.rv.getRuleType() == RuleType.Collision;
+                        const button = rc.rv.getRuleType() == RuleType.ButtonPress;
+                        const self = col == 2 && row == 2;
+                        const witness =
                             spawned ? spawned : 
                             self ? rc.self : 
                             (colliding ? rc.witnesses[0]
@@ -668,8 +667,8 @@ namespace tileworld {
                     case CommandType.Portal: {
                         // find a tile in the map with given background kind
                         // that has no sprite on it.
-                        let tm = game.currentScene().tileMap;
-                        let copy = this.vm.changed.clone();
+                        const tm = game.currentScene().tileMap;
+                        const copy = this.vm.changed.clone();
                         copy.fill(0);
                         // don't consider tiles with sprites on them
                         this.allSprites(ts => {
@@ -693,7 +692,7 @@ namespace tileworld {
                         }
                         if (kindCnt > 0) {
                             // select one
-                            let index = Math.randomRange(0,kindCnt-1);
+                            const index = Math.randomRange(0,kindCnt-1);
                             kindCnt = 0;
                             x = 0;
                             for(; x<copy.width; x++) {
@@ -738,7 +737,7 @@ namespace tileworld {
             this.vm = new TileWorldVM(p, rules);
         }
         
-        public setWorld(w: Image, sprites: Image) {
+        public setWorld(w: Image, sprites: Image): void {
             this.signal = null;
             this.state = new VMState();
             this.state.game = GameState.InPlay;
@@ -761,10 +760,10 @@ namespace tileworld {
             }
             for(let x = 0; x<sprites.width; x++) {
                 for (let y = 0; y < sprites.height; y++) {
-                    let kind = sprites.getPixel(x,y);
+                    const kind = sprites.getPixel(x,y);
                     if (kind == 0xf) continue;
-                    let art = this.p.getSpriteImage(kind);
-                    let ts = new TileSprite(art, kind, this.debug);
+                    const art = this.p.getSpriteImage(kind);
+                    const ts = new TileSprite(art, kind, this.debug);
                     this.state.sprites[kind].push(ts);
                     ts.x = (x << 4) + 8;
                     ts.y = (y << 4) + 8;
@@ -775,18 +774,18 @@ namespace tileworld {
         private roundToCompletion(dirs: number[]) {
             this.vm.startRound(dirs);
             while (this.state.phase != -1) {
-                let rcs = this.vm.continueRound();
+                const rcs = this.vm.continueRound();
                 while (rcs && rcs.length > 0) {
-                    let rc = rcs.pop();
+                    const rc = rcs.pop();
                     this.vm.processClosure(rc);
                 }
             }
         }
 
         private currentDirection: MoveDirection[];
-        public start() {
+        public start(): void {
             this.currentDirection = [];
-            let signal = new TileSprite(cursorIn, 0);
+            const signal = new TileSprite(cursorIn, 0);
             signal.setFlag(SpriteFlag.Invisible, true);
             signal.x = signal.y = 8;
             signal.dir = MoveDirection.Right;
@@ -796,7 +795,7 @@ namespace tileworld {
 
             // get the game started
  
-            let playerId = this.p.getPlayer();
+            const playerId = this.p.getPlayer();
             if (playerId != -1 && this.state.sprites[playerId]) {
                 scene.cameraFollowSprite(this.state.sprites[playerId][0]);
             }

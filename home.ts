@@ -11,7 +11,7 @@ namespace tileworld {
             this.setRow(0);
 
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                let index = this.dirMap.getPixel(this.col(), this.row())
+                const index = this.dirMap.getPixel(this.col(), this.row())
                 if (index != 0xf) {
                     game.pushScene();
                     new Gallery(this.p, index,
@@ -21,12 +21,12 @@ namespace tileworld {
                 }
                 if (this.row()>0)
                     return;
-                let command = commandImages[this.col()];
+                const command = commandImages[this.col()];
                 if (command == play) {
-                    let rules = this.p.getRules();
+                    const rules = this.p.getRules();
                     if (rules.length > 0) {
                         game.pushScene();
-                        let g = new RunGame(this.p, rules);
+                        const g = new RunGame(this.p, rules);
                         g.setWorld(this.p.getWorldBackgrounds(), this.p.getWorldSprites());
                         g.start();
                     }
@@ -56,13 +56,13 @@ namespace tileworld {
             });
         }
 
-        protected cursorMove(dir: MoveDirection, pressed: boolean = true) { 
+        protected cursorMove(dir: MoveDirection, pressed: boolean): void { 
             if(this.p.help) {
                 this.helpCursor.x = this.col() < 7 ? this.cursor.x + 8 : this.cursor.x-16;
                 this.helpCursor.y = this.cursor.y + 32;
-                let index = this.dirMap.getPixel(this.col(), this.row())
+                const index = this.dirMap.getPixel(this.col(), this.row())
                 if (this.row() < 1) {
-                    let message = getHelp(helpString, this.col(), this.row());
+                    const message = getHelp(helpString, this.col(), this.row());
                     this.helpCursor.say(message);
                 } else if (index != 0xf) {
                     this.helpCursor.say("A: gallery");
@@ -72,14 +72,14 @@ namespace tileworld {
             } 
         }
         
-        protected update() {
+        protected update(): void {
             if (!this.p.help) {
                 this.helpCursor.say(null);
             }
             screen.fill(0);
             this.dirMap.fill(0xf);
             commandImages.forEach((img,i) => {
-                let img2 = img == play ? (this.p.getRules().length > 0 ? img : greyImage(img)) : img;
+                const img2 = img == play ? (this.p.getRules().length > 0 ? img : greyImage(img)) : img;
                 this.drawImage(i, 0, img2);
             });
             this.drawImage(9, 0, settingsIcon);

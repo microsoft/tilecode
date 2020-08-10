@@ -46,7 +46,7 @@ namespace tileworld {
         . . . . . .
     `;
 
-    enum CursorType { Color, Paint, Menu };
+    enum CursorType { Color, Paint, Menu }
 
     // UI region order
     // Menu -> sprite -> color choice -> canvas
@@ -58,9 +58,9 @@ namespace tileworld {
         private menuCursor: Sprite;
         private selectedColor: number;
         private image: Image;    // 16x16
-        private Adown: boolean = false;
-        private kind: number = 0;
-        private dirty: boolean = false;
+        private Adown = false;
+        private kind = 0;
+        private dirty = false;
         constructor(private p: AllExport) {
             super();
             this.image = p.getImage(this.kind);
@@ -109,17 +109,17 @@ namespace tileworld {
             if (!this.Adown)
                 return;
             if (this.cursorType == CursorType.Color) {
-                let col = ((this.colorCursor.x - colorsX) / colorSize) | 0x0;
-                let row = ((this.colorCursor.y - (colorSize << 1) - colorsY) / colorSize) | 0x0;
+                const col = ((this.colorCursor.x - colorsX) / colorSize) | 0x0;
+                const row = ((this.colorCursor.y - (colorSize << 1) - colorsY) / colorSize) | 0x0;
                 this.selectedColor = row * 2 + col;
                 this.setCursor(CursorType.Paint);
             } else if (this.cursorType == CursorType.Paint) {
                 this.dirty = true;
-                let col = ((this.paintCursor.x - (paintSize * 5 + 2)) / paintSize) | 0x0;
-                let row = ((this.paintCursor.y - (editorY + 2)) / paintSize) | 0x0;
+                const col = ((this.paintCursor.x - (paintSize * 5 + 2)) / paintSize) | 0x0;
+                const row = ((this.paintCursor.y - (editorY + 2)) / paintSize) | 0x0;
                 this.image.setPixel(col, row, this.selectedColor);
             } else {
-                let col = this.menuCursor.x >> 4;
+                const col = this.menuCursor.x >> 4;
                 if (2 <= col && col < 2 + this.p.getImages().length) {
                     if (this.dirty)
                         this.p.saveImage(this.kind);
@@ -206,7 +206,7 @@ namespace tileworld {
             this.cursorType= ct;
         }
 
-        protected update() {
+        protected update(): void {
             screen.fill(0);
             screen.fillRect(0, yoff, 16, 16, 11);
             screen.drawTransparentImage(paint, 0, yoff)
@@ -220,8 +220,8 @@ namespace tileworld {
             // draw the 16 colors
             for (let row = 0; row < 8; row++) {
                 for (let col = 0; col < 2; col++) {
-                    let color = row * 2 + col
-                    let yOffset = colorsY + colorSize + (colorSize >> 1)
+                    const color = row * 2 + col
+                    const yOffset = colorsY + colorSize + (colorSize >> 1)
                     screen.fillRect(colorsX + col * colorSize + 1, yOffset + row * colorSize + 1, colorSize-2, colorSize-2, color)
                     if (this.selectedColor == color) {
                         screen.drawRect(colorsX + col * colorSize, yOffset + row * colorSize, colorSize, colorSize, 1)
@@ -234,10 +234,10 @@ namespace tileworld {
             // frame the sprite editor
             // draw the sprite editor
             for (let row = 0; row < this.image.height; row++) {
-                let y = editorY + row * paintSize
+                const y = editorY + row * paintSize
                 for (let col = 0; col < this.image.width; col++) {
-                    let x = paintSize * 5 + col * paintSize
-                    let color = this.image.getPixel(col, row)
+                    const x = paintSize * 5 + col * paintSize
+                    const color = this.image.getPixel(col, row)
                     screen.fillRect(x, y, paintSize-1, paintSize-1, color)
                     if (color == 0) {
                         screen.fillRect(x, y, (paintSize >> 1) -1, (paintSize >> 1) -1, 13)

@@ -14,11 +14,11 @@ namespace tileworld {
             this.setCol(0); this.setRow(0);
 
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                let isCurrent = this.col() == 2 && this.row() == 1 ;
-                let index = this.dirMap.getPixel(this.col(), this.row());
+                const isCurrent = this.col() == 2 && this.row() == 1 ;
+                const index = this.dirMap.getPixel(this.col(), this.row());
                 if (isCurrent || index != 0xf) {
                     this.setTileSaved();
-                    let img = this.gallery[index];
+                    const img = this.gallery[index];
                     this.newImage.copyFrom(isCurrent ? this.current : img);
                 }
             });
@@ -30,7 +30,7 @@ namespace tileworld {
             });
         }
 
-        protected update() {
+        protected update(): void{
             this.dirMap.fill(0xf);
             screen.fill(0);
             screen.print("Gallery", 0, yoff);

@@ -1,0 +1,97 @@
+
+C:\GitHub\pxt-tileworld\editor.ts
+  1:1   error    ES2015 module syntax is preferred over custom TypeScript modules and namespaces  @typescript-eslint/no-namespace
+  1:11  warning  'tileworld' is defined but never used                                            @typescript-eslint/no-unused-vars
+
+C:\GitHub\pxt-tileworld\gallery.ts
+  1:1   error    ES2015 module syntax is preferred over custom TypeScript modules and namespaces  @typescript-eslint/no-namespace
+  1:11  warning  'tileworld' is defined but never used                                            @typescript-eslint/no-unused-vars
+
+C:\GitHub\pxt-tileworld\games.ts
+  294:10  warning  'createLeftHandRule' is defined but never used     @typescript-eslint/no-unused-vars
+  373:10  warning  'createSortingDiamonds' is defined but never used  @typescript-eslint/no-unused-vars
+  576:10  warning  'createSpaceInvaders' is defined but never used    @typescript-eslint/no-unused-vars
+  822:10  warning  'createPaint' is defined but never used            @typescript-eslint/no-unused-vars
+
+C:\GitHub\pxt-tileworld\home.ts
+   1:1   error    ES2015 module syntax is preferred over custom TypeScript modules and namespaces  @typescript-eslint/no-namespace
+   1:11  warning  'tileworld' is defined but never used                                            @typescript-eslint/no-unused-vars
+  59:30  warning  'dir' is defined but never used                                                  @typescript-eslint/no-unused-vars
+  59:50  warning  'pressed' is defined but never used                                              @typescript-eslint/no-unused-vars
+
+C:\GitHub\pxt-tileworld\imageeditor.ts
+  1:1   error    ES2015 module syntax is preferred over custom TypeScript modules and namespaces  @typescript-eslint/no-namespace
+  1:11  warning  'tileworld' is defined but never used                                            @typescript-eslint/no-unused-vars
+
+C:\GitHub\pxt-tileworld\loadScreen.ts
+  1:1   error    ES2015 module syntax is preferred over custom TypeScript modules and namespaces  @typescript-eslint/no-namespace
+  1:11  warning  'tileworld' is defined but never used                                            @typescript-eslint/no-unused-vars
+
+C:\GitHub\pxt-tileworld\mytilemap.ts
+   1:1  error  ES2015 module syntax is preferred over custom TypeScript modules and namespaces  @typescript-eslint/no-namespace
+  15:1  error  ES2015 module syntax is preferred over custom TypeScript modules and namespaces  @typescript-eslint/no-namespace
+
+C:\GitHub\pxt-tileworld\project.ts
+  65:1  error  ES2015 module syntax is preferred over custom TypeScript modules and namespaces  @typescript-eslint/no-namespace
+
+C:\GitHub\pxt-tileworld\rule.ts
+  65:1   error    ES2015 module syntax is preferred over custom TypeScript modules and namespaces  @typescript-eslint/no-namespace
+  65:11  warning  'tileworld' is defined but never used                                            @typescript-eslint/no-unused-vars
+
+C:\GitHub\pxt-tileworld\ruleTransform.ts
+  1:1   error    ES2015 module syntax is preferred over custom TypeScript modules and namespaces  @typescript-eslint/no-namespace
+  1:11  warning  'tileworld' is defined but never used                                            @typescript-eslint/no-unused-vars
+  1:21  warning  'ruleediting' is defined but never used                                          @typescript-eslint/no-unused-vars
+
+C:\GitHub\pxt-tileworld\ruledisplay.ts
+   1:1   error    ES2015 module syntax is preferred over custom TypeScript modules and namespaces  @typescript-eslint/no-namespace
+   1:11  warning  'tileworld' is defined but never used                                            @typescript-eslint/no-unused-vars
+   1:21  warning  'ruleediting' is defined but never used                                          @typescript-eslint/no-unused-vars
+  73:30  warning  'dir' is defined but never used                                                  @typescript-eslint/no-unused-vars
+  73:50  warning  'pressed' is defined but never used                                              @typescript-eslint/no-unused-vars
+  79:96  warning  'rt' is defined but never used                                                   @typescript-eslint/no-unused-vars
+
+C:\GitHub\pxt-tileworld\ruleeditor.ts
+    1:1   error    ES2015 module syntax is preferred over custom TypeScript modules and namespaces  @typescript-eslint/no-namespace
+    1:11  warning  'tileworld' is defined but never used                                            @typescript-eslint/no-unused-vars
+    1:21  warning  'ruleediting' is defined but never used                                          @typescript-eslint/no-unused-vars
+  432:60  warning  'show' is defined but never used                                                 @typescript-eslint/no-unused-vars
+
+C:\GitHub\pxt-tileworld\rulesBase.ts
+    1:1   error    ES2015 module syntax is preferred over custom TypeScript modules and namespaces  @typescript-eslint/no-namespace
+    1:11  warning  'tileworld' is defined but never used                                            @typescript-eslint/no-unused-vars
+  138:50  warning  'pressed' is assigned a value but never used                                     @typescript-eslint/no-unused-vars
+
+C:\GitHub\pxt-tileworld\ruleview.ts
+  1:1   error    ES2015 module syntax is preferred over custom TypeScript modules and namespaces  @typescript-eslint/no-namespace
+  1:11  warning  'tileworld' is defined but never used                                            @typescript-eslint/no-unused-vars
+
+C:\GitHub\pxt-tileworld\settings.ts
+  1:1   error    ES2015 module syntax is preferred over custom TypeScript modules and namespaces  @typescript-eslint/no-namespace
+  1:11  warning  'tileworld' is defined but never used                                            @typescript-eslint/no-unused-vars
+
+C:\GitHub\pxt-tileworld\spriteRules.ts
+   1:1   error    ES2015 module syntax is preferred over custom TypeScript modules and namespaces  @typescript-eslint/no-namespace
+   1:11  warning  'tileworld' is defined but never used                                            @typescript-eslint/no-unused-vars
+   1:21  warning  'ruleediting' is defined but never used                                          @typescript-eslint/no-unused-vars
+  48:30  warning  'dir' is defined but never used                                                  @typescript-eslint/no-unused-vars
+  48:50  warning  'pressed' is defined but never used                                              @typescript-eslint/no-unused-vars
+
+C:\GitHub\pxt-tileworld\sprites.ts
+     1:1   error    ES2015 module syntax is preferred over custom TypeScript modules and namespaces  @typescript-eslint/no-namespace
+     1:11  warning  'tileworld' is defined but never used                                            @typescript-eslint/no-unused-vars
+  1100:11  warning  'cat' is assigned a value but never used                                         @typescript-eslint/no-unused-vars
+  1118:11  warning  'fish' is assigned a value but never used                                        @typescript-eslint/no-unused-vars
+  1154:11  warning  'chimp' is assigned a value but never used                                       @typescript-eslint/no-unused-vars
+  1334:11  warning  'wall2' is assigned a value but never used                                       @typescript-eslint/no-unused-vars
+
+C:\GitHub\pxt-tileworld\utilities.ts
+  1:1   error    ES2015 module syntax is preferred over custom TypeScript modules and namespaces  @typescript-eslint/no-namespace
+  1:11  warning  'tileworld' is defined but never used                                            @typescript-eslint/no-unused-vars
+
+C:\GitHub\pxt-tileworld\vm.ts
+  1:1   error    ES2015 module syntax is preferred over custom TypeScript modules and namespaces  @typescript-eslint/no-namespace
+  1:11  warning  'tileworld' is defined but never used                                            @typescript-eslint/no-unused-vars
+
+✖ 56 problems (19 errors, 37 warnings)
+

@@ -3,14 +3,14 @@ namespace tileworld {
     // TODO
     // - world size
     export class ProjectSettings extends RuleVisualsBase {
-        private askDeleteRule: boolean = false;
+        private askDeleteRule = false;
         constructor(p: Project) {
             super(p);
             this.setCol(0); this.setRow(0);
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 if (this.askDeleteRule) {
                     if (this.p) {
-                        let keys = settings.list(this.p.prefix);
+                        const keys = settings.list(this.p.prefix);
                         keys.forEach(k => { settings.remove(k)});
                         // need an extra pop scene to return to load screen
                         game.popScene();
@@ -46,7 +46,7 @@ namespace tileworld {
             });
         }
 
-        protected update() {
+        protected update(): void {
             screen.fill(0);
             screen.fillRect(0, yoff, 16, 16, 11);
             screen.drawTransparentImage(settingsIcon, 0, yoff);
@@ -55,7 +55,7 @@ namespace tileworld {
                 this.drawImage(3, 1, emptyTile);
                 this.drawImage(3, 1, this.p.help ? collisionSprite : genericSprite);
 
-                let worldY = 32 + yoff + 6;
+                const worldY = 32 + yoff + 6;
                 screen.print("World", 16, worldY);
                 screen.print(this.p.getWorldBackgrounds().width.toString(), 64, worldY);
                 screen.print("by", 96, worldY);

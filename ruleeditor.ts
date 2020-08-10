@@ -3,8 +3,8 @@ namespace tileworld.ruleediting {
     // ------------------------------------------------------------------------------------
     // the rule editor
 
-    enum RuleEditorMenus { MainMenu, AttrTypeMenu, DirExprMenu, CommandMenu };
-    enum CommandTokens { Delete = 100 };
+    enum RuleEditorMenus { MainMenu, AttrTypeMenu, DirExprMenu, CommandMenu }
+    enum CommandTokens { Delete = 100 }
 
     // top-level command categories (instructions)
     const categoryImages = [allFour, paint, spawn, eat, gameIcon, portal, exclude ];
@@ -36,9 +36,9 @@ namespace tileworld.ruleediting {
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
                 this.helpCursor.say(null);
                 if (this.askDeleteRule) {
-                    let index = this.currentRules().indexOf(this.rule);
+                    const index = this.currentRules().indexOf(this.rule);
                     this.p.removeRule(this.rule.getRuleId());
-                    let rules = this.currentRules();
+                    const rules = this.currentRules();
                     if (rules.length == 0) {
                         game.popScene();
                         return;
@@ -68,8 +68,8 @@ namespace tileworld.ruleediting {
                     if (this.row() == 0) {
                         if (7 <= this.col() && this.col() <= 9) {
                             // move backward/forward in rule space
-                            let rules = this.currentRules();
-                            let index = rules.indexOf(this.rule);
+                            const rules = this.currentRules();
+                            const index = rules.indexOf(this.rule);
                             if (this.col() == 7 && index > 0) {
                                 this.changeRule(rules[index-1]);
                             } else if (this.col() == 9 && index < rules.length-1) {
@@ -85,8 +85,8 @@ namespace tileworld.ruleediting {
                         } else if (this.col() == 2) { // no debugger for now || this.col() == 3) {
                             this.p.saveRule(this.rule);
                             game.pushScene();
-                            let rules = this.p.getRules();
-                            let g = new RunGame(this.p, rules, this.col() == 3);
+                            const rules = this.p.getRules();
+                            const g = new RunGame(this.p, rules, this.col() == 3);
                             g.setWorld(this.p.getWorldBackgrounds(), this.p.getWorldSprites());
                             g.start();
                             return;
@@ -102,8 +102,8 @@ namespace tileworld.ruleediting {
                         if (this.col() > 5) {
                             this.tryEditCommand();
                         } else if (this.col() == 5 && this.row() < editorRow + 5) {
-                            let col = this.rowToColCoord(this.row() - editorRow);
-                            let row = this.rowToRowCoord(this.row() - editorRow);
+                            const col = this.rowToColCoord(this.row() - editorRow);
+                            const row = this.rowToRowCoord(this.row() - editorRow);
                             if (this.rule.findWitnessColRow(col, row) != -1 &&
                                 // don't allow direction change on central sprite in collision rule
                                 (this.rule.getRuleType() != RuleType.Collision || col != 2 || row != 2 )) { 
@@ -156,7 +156,7 @@ namespace tileworld.ruleediting {
             this.restoreCursor();
         }
         
-        protected okToMove() {
+        protected okToMove(): boolean {
             return !this.askDeleteRule;
         }
 
@@ -182,12 +182,12 @@ namespace tileworld.ruleediting {
             game.popScene();
         }
 
-        protected currentRules() {
+        protected currentRules(): RuleView[] {
             // TODO: we should sort this by ruletype and direction
             return this.p.getRulesForSpriteKind(this.kind);
         }
 
-        protected cursorMove(dir: MoveDirection, pressed: boolean) {
+        protected cursorMove(dir: MoveDirection, pressed: boolean): void {
             if (this.menu == RuleEditorMenus.MainMenu) {
                 super.cursorMove(dir, pressed);
                 if (this.row() >= 2) {
@@ -221,11 +221,11 @@ namespace tileworld.ruleediting {
                    1 <= (this.row() - editorRow) && (this.row() - editorRow) <= 3;
         }
 
-        protected update() {
+        protected update(): void {
             super.update();
             
             if (this.p.help && this.menu == RuleEditorMenus.MainMenu && this.col() > 5 && this.row() >= editorRow) {
-                let len = this.commandLengths[this.row() - editorRow];
+                const len = this.commandLengths[this.row() - editorRow];
                 if (len != -1 && this.col()-6 < len) {
                     this.helpCursor.say(this.col() - 6 == len - 1 ? "A: add command" : "E: edit command");
                 }
@@ -260,26 +260,26 @@ namespace tileworld.ruleediting {
                 this.drawImage(5, 0, include2);
             }
             this.drawImage(6, 0, garbageCan);
-            let rules = this.currentRules();
-            let index = rules.indexOf(this.rule);
+            const rules = this.currentRules();
+            const index = rules.indexOf(this.rule);
             this.drawImage(9, 0, index < rules.length -1 ? rightArrow : greyImage(rightArrow));
             this.drawImage(8, 0, this.getType() != -1 ? addRule : greyImage(addRule));
             this.drawImage(7, 0, index > 0 ? leftArrow : greyImage(leftArrow));
         }
 
         private tryEditCommand() {
-            let row = this.row()-editorRow;
+            const row = this.row()-editorRow;
             if (row > 4) return false;
-            let cmd = this.col() - 6;
-            let len = this.commandLengths[row];
+            const cmd = this.col() - 6;
+            const len = this.commandLengths[row];
             if (len == -1 || cmd >= len) return false;
             // set up the state
             this.menu = RuleEditorMenus.CommandMenu;
             this.ruleTypeMap.fill(0xf);
             this.dirMap.fill(0xf);
             // map the command row back to when context coordinates
-            let newCol = this.rowToColCoord(row);
-            let newRow = this.rowToRowCoord(row);
+            const newCol = this.rowToColCoord(row);
+            const newRow = this.rowToRowCoord(row);
             // no editing if coordinate not active
             if (!this.active(newCol, newRow))
                 return false;
@@ -301,9 +301,9 @@ namespace tileworld.ruleediting {
             return true;
         }
 
-        private makeCommandMenu(inst: number, arg: number, inEdit: boolean = false) {
+        private makeCommandMenu(inst: number, arg: number, inEdit = false) {
             let col = 3;
-            let row = 0;
+            const row = 0;
             // show the categories
             // which one is currently selected?
             this.tokens.forEach(ct => {
@@ -324,9 +324,9 @@ namespace tileworld.ruleediting {
             }
         }
 
-        private modifyCommandMenu(inEdit: boolean = false) {
-            let inst = this.rule.getCmdInst(this.whenDo, this.currentCommand);
-            let arg = this.rule.getCmdArg(this.whenDo, this.currentCommand);
+        private modifyCommandMenu(inEdit = false) {
+            const inst = this.rule.getCmdInst(this.whenDo, this.currentCommand);
+            const arg = this.rule.getCmdArg(this.whenDo, this.currentCommand);
             if (this.tokens.length > 0) {
                 this.makeCommandMenu(inst, arg, inEdit);
             } else if (inst != 0xff) {
@@ -368,9 +368,9 @@ namespace tileworld.ruleediting {
 
         private makeArgMenu(inst: number, arg: number, inEdit: boolean) {
             let col = 4;
-            let row = 1;
+            const row = 1;
             this.dirMap.fill(0xf);
-            let last = this.instToStartArg(inst) + this.instToNumArgs(inst);
+            const last = this.instToStartArg(inst) + this.instToNumArgs(inst);
             for (let i = this.instToStartArg(inst); i < last; i++) {
                 this.drawImage(col, row, this.instToImage(inst, i));
                 this.drawOutline(col, row);
@@ -386,15 +386,15 @@ namespace tileworld.ruleediting {
             }
         }
 
-        private commandUpdate(hover: boolean = false) {
-            let tok = this.ruleTypeMap.getPixel(this.col(), this.row());
-            let arg = this.dirMap.getPixel(this.col(), this.row());
-            let inst = this.rule.getCmdInst(this.whenDo, this.currentCommand);
+        private commandUpdate(hover = false) {
+            const tok = this.ruleTypeMap.getPixel(this.col(), this.row());
+            const arg = this.dirMap.getPixel(this.col(), this.row());
+            const inst = this.rule.getCmdInst(this.whenDo, this.currentCommand);
             if (tok == CommandTokens.Delete) {
                 if (hover) {
                     if (this.p.help) this.helpCursor.say("delete command");
                 } else {
-                    let len = this.rule.removeCommand(this.whenDo, this.currentCommand);
+                    this.rule.removeCommand(this.whenDo, this.currentCommand);
                     this.mainMenu();
                 }
             } else if (this.row() == 0 && tok != 0xf) {
@@ -429,7 +429,7 @@ namespace tileworld.ruleediting {
         // TODO:
         // - for collision rule, only Include
 
-        protected showAttributes(col: number, row: number, show: boolean) {
+        protected showAttributes(col: number, row: number, show: boolean): void {
             super.showAttributes(col, row, this.menu == RuleEditorMenus.MainMenu);
         }
 
@@ -439,7 +439,7 @@ namespace tileworld.ruleediting {
             if (whenDo == -1)
                 whenDo = this.rule.makeWhenDo(col, row);
             this.whenDo = whenDo;
-            let collision22 = this.rule.getRuleType() == RuleType.Collision && col == 2 && row == 2;
+            const collision22 = this.rule.getRuleType() == RuleType.Collision && col == 2 && row == 2;
             // for all user-defined sprites
             attrImages.forEach((img, i) => {
                 if (this.rule.getRuleType() == RuleType.Collision && i > 0)
@@ -454,7 +454,7 @@ namespace tileworld.ruleediting {
             this.all.getImages().forEach((image, i ) => {
                 if (collision22 && i<this.p.backCnt())
                     return;
-                let a = this.all.getSetAttr(this.rule, whenDo, i);
+                const a = this.all.getSetAttr(this.rule, whenDo, i);
                 this.drawImage(aCol, 1, image);
                 this.drawImage(aCol, 1, attrImages[attrValues.indexOf(a)]);
                 aCol++;
@@ -470,10 +470,10 @@ namespace tileworld.ruleediting {
         }
 
         private attrUpdate() {
-            let collision22 = this.rule.getRuleType() == RuleType.Collision 
+            const collision22 = this.rule.getRuleType() == RuleType.Collision 
                 && this.rule.getWhenDoCol(this.whenDo) == 2
                 && this.rule.getWhenDoRow(this.whenDo) == 2;
-            let a = this.row() == 0 ? this.col() : -1
+            const a = this.row() == 0 ? this.col() : -1
             if (a == 9) {
                 // reset attributes
                 for(let i = 0; i< this.p.allCnt(); i++) {
@@ -484,15 +484,15 @@ namespace tileworld.ruleediting {
             if (a != -1 && a < 3 && this.rule.getRuleType() != RuleType.Collision) { 
                 this.selectAttr(a); return; 
             }
-            let m = this.row() == 1 ? this.col() : -1; 
+            const m = this.row() == 1 ? this.col() : -1; 
             if (m != -1 && (!collision22 && m< this.p.allCnt() || collision22 && m<this.p.backCnt())) { 
-                let val = attrValues[this.attrSelected];
+                const val = attrValues[this.attrSelected];
                 this.setAttr(!collision22 ? m : m+this.p.backCnt(), val, true);
             }
         }
 
-        private setAttr(m: number, val: AttrType, toggle: boolean = false) {
-            let whenDo = this.rule.getWhenDo(this.col(false), this.row(false)-editorRow);
+        private setAttr(m: number, val: AttrType, toggle = false) {
+            const whenDo = this.rule.getWhenDo(this.col(false), this.row(false)-editorRow);
             if (toggle && this.all.getSetAttr(this.rule,whenDo,m) == val)
                 val = AttrType.OK;
             this.all.getSetAttr(this.rule, whenDo, m, val)

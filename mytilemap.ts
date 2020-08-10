@@ -1,12 +1,12 @@
 namespace scene {
 
-    export function setTileMap(map: Image, scale = TileScale.Sixteen) {
+    export function setTileMap(map: Image, scale = TileScale.Sixteen): void {
         const scene = game.currentScene();
         (scene.tileMap as tiles.legacy.LegacyTilemap).setMap(map);
         scene.tileMap.scale = scale;
     }
 
-    export function setTile(index: number, img: Image, wall?: boolean) {
+    export function setTile(index: number, img: Image, wall?: boolean): void {
         const scene = game.currentScene();
         (scene.tileMap as tiles.legacy.LegacyTilemap).setTile(index, img, !!wall);
     }
@@ -46,7 +46,7 @@ namespace tiles.legacy {
 
         public isLegacy: boolean;
 
-        constructor(scale: TileScale = TileScale.Sixteen, left: number = 0) {
+        constructor(scale: TileScale = TileScale.Sixteen, left = 0) {
             super(scale);
             this._screenX = left;
             this._tileSets = [];
@@ -61,29 +61,29 @@ namespace tiles.legacy {
             return this._mapImage;
         }
 
-        myLeft() {
+        myLeft(): number {
             return this._screenX << this.scale;
         }
 
-        myWidth() {
+        myWidth(): number {
             return screen.width - this.myLeft();
         }
 
-        offsetX(value: number) {
+        offsetX(value: number): number {
             return Math.clamp(0, 
                               Math.max(this.areaWidth() - this.myWidth(), 0), 
                               value);
         }
 
-        offsetY(value: number) {
+        offsetY(value: number): number {
             return Math.clamp(0, Math.max(this.areaHeight() - screen.height, 0), value);
         }
 
-        areaWidth() {
+        areaWidth(): number {
             return this._mapImage ? (this._mapImage.width << this.scale) : 0;
         }
 
-        areaHeight() {
+        areaHeight(): number {
             return this._mapImage ? (this._mapImage.height << this.scale) : 0;
         }
 
@@ -101,12 +101,12 @@ namespace tiles.legacy {
             return !!this._mapImage;
         }
 
-        setTile(index: number, img: Image, collisions?: boolean) {
+        setTile(index: number, img: Image, collisions?: boolean): void {
             if (this.isInvalidIndex(index)) return;
             this._tileSets[index] = new TileSet(img, collisions, this);
         }
 
-        setMap(map: Image) {
+        setMap(map: Image): void {
             this._mapImage = map;
         }
 
@@ -126,10 +126,10 @@ namespace tiles.legacy {
         public getTilesByType(index: number): Location[] {
             if (this.isInvalidIndex(index) || !this.enabled) return [];
 
-            let output: Location[] = [];
+            const output: Location[] = [];
             for (let col = 0; col < this._mapImage.width; ++col) {
                 for (let row = 0; row < this._mapImage.height; ++row) {
-                    let currTile = this._mapImage.getPixel(col, row);
+                    const currTile = this._mapImage.getPixel(col, row);
                     if (currTile === index) {
                         output.push(new Location(col, row, this));
                     }
@@ -141,10 +141,10 @@ namespace tiles.legacy {
         public getTilesByTypeLegacy(index: number): Tile[] {
             if (this.isInvalidIndex(index) || !this.enabled) return [];
 
-            let output: Tile[] = [];
+            const output: Tile[] = [];
             for (let col = 0; col < this._mapImage.width; ++col) {
                 for (let row = 0; row < this._mapImage.height; ++row) {
-                    let currTile = this._mapImage.getPixel(col, row);
+                    const currTile = this._mapImage.getPixel(col, row);
                     if (currTile === index) {
                         output.push(new Tile(col, row, this));
                     }
@@ -171,7 +171,7 @@ namespace tiles.legacy {
         }
 
         // TODO: proper clipping on the left side
-        protected draw(target: Image, camera: scene.Camera) {
+        protected draw(target: Image, camera: scene.Camera): void {
             if (!this.enabled) return;
 
             // render tile map
@@ -228,15 +228,15 @@ namespace tiles.legacy {
             }
         }
 
-        public isObstacle(col: number, row: number) {
+        public isObstacle(col: number, row: number): boolean {
             if (!this.enabled) return false;
             if (this.isOutsideMap(col, row)) return true;
 
-            let t = this._tileSets[this._mapImage.getPixel(col, row)];
+            const t = this._tileSets[this._mapImage.getPixel(col, row)];
             return t && t.obstacle;
         }
 
-        public getObstacle(col: number, row: number) {
+        public getObstacle(col: number, row: number): sprites.StaticObstacle {
             const index = this.isOutsideMap(col, row) ? 0 : this._mapImage.getPixel(col, row);
             const tile = this._tileSets[index] || this.generateTile(index);
             return new sprites.StaticObstacle(
@@ -248,7 +248,7 @@ namespace tiles.legacy {
             );
         }
 
-        public isOnWall(s: Sprite) {
+        public isOnWall(s: Sprite): boolean {
             const hbox = s._hitbox
 
             const left = Fx.toIntShifted(hbox.left, this.scale);
@@ -267,11 +267,11 @@ namespace tiles.legacy {
             return false;
         }
 
-        public getTileIndex(col: number, row: number) {
+        public getTileIndex(col: number, row: number): number {
             return this._mapImage.getPixel(col, row);
         }
 
-        public getTileImage(index: number) {
+        public getTileImage(index: number): Image {
             if (!this._tileSets[index]) this.generateTile(index);
             return this._tileSets[index].image;
         }

@@ -9,11 +9,11 @@ namespace tileworld {
             super(null);
             controller.setRepeatDefault(500, 80);
             controller.A.onEvent(ControllerButtonEvent.Pressed, () => {
-                let first = this.col() >= loadLeft && this.col() <= loadLeft+1;
-                let second = this.col() >= loadLeft+2 && this.col() <= loadLeft+3;
+                const first = this.col() >= loadLeft && this.col() <= loadLeft+1;
+                const second = this.col() >= loadLeft+2 && this.col() <= loadLeft+3;
                 if ( ( first || second) && (this.row() > loadTop && this.row() <= loadTop+numRows) ) {
-                    let slot = (this.row()-loadTop) + (first ? 0 : numRows);
-                    let prefix = "TW"+slot.toString()+"-";
+                    const slot = (this.row()-loadTop) + (first ? 0 : numRows);
+                    const prefix = "TW"+slot.toString()+"-";
                     this.p = loadProject(prefix);
                     this.update();
                     if (!this.p) {
@@ -33,20 +33,20 @@ namespace tileworld {
         }
         
         private lastDir: MoveDirection = -1;
-        protected cursorMove(dir: MoveDirection, pressed: boolean) {
+        protected cursorMove(dir: MoveDirection, pressed: boolean): void {
             this.lastDir = pressed ? dir : -1;
         }
 
         private makeIt(col: number, row: number, id: string) {
-            let prefix = "TW" + id + "-";
-            let projectAvailable = settings.list(prefix).length > 0;
+            const prefix = "TW" + id + "-";
+            const projectAvailable = settings.list(prefix).length > 0;
             this.drawImage(col, row, diskIcon);
             this.fillTile(col+1, row, (this.col() == col || this.col() == col + 1) && this.row() == row ? 7 : 
                     (projectAvailable ? 6 : 12));
             screen.print(id, ((col+1) << 4) + 6, (row << 4) + 4 + yoff);
         }
 
-        protected update() {
+        protected update(): void {
             for(let col = 0; col < 10; col ++) {
                 for (let row = 0; row < 7; row++) {
                     this.drawImage(col, row, emptyTile)

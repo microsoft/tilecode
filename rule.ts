@@ -1,4 +1,69 @@
+// ---------------------------------------------------------------------------
+// binary read/write of a rule
+
+let ruleBuf: Buffer = null
+let bitIndex = 0;
+
+function readWriteBuf(v: number, bits: number, write: boolean): number {
+    const byteIndex = bitIndex >> 3;
+    if (byteIndex >= ruleBuf.length) {
+        // shouldn't get here
+        control.assert(false, 43);
+    }
+    const shift = bitIndex - (byteIndex << 3);
+    if (shift + bits > 8) {
+        // packing error - can't have value that spans byte boundary
+        control.assert(false, 44);
+    }
+    let byte = ruleBuf.getUint8(byteIndex);
+    let mask = 0;
+    for(let i=0; i<bits; i++) { mask = 0x1 | (mask << 1); }
+    // make sure we only keep the proper number of bits from v
+    v = v & mask;
+    mask = mask << shift;
+    const writeMask = mask ^ 0xffffffff;
+
+    if (write) {
+        const newVal = (byte & writeMask) | (v << shift);
+        ruleBuf.setUint8(byteIndex, newVal);
+    }
+    
+    bitIndex += bits;
+
+    byte = ruleBuf.getUint8(byteIndex);
+    const ret = (byte & mask) >> shift
+    if (write) {
+        control.assert(ret == v, 42);
+    }
+    return ret;
+}
+
+function writeBuf(v: number, bits: number) {
+    readWriteBuf(v, bits, true);
+}
+
+// must be byte-aligned when writing a raw buffer
+function writeBufRaw(b: Buffer, cnt: number) {
+    for(let i = 0; i < cnt; i++) {
+        writeBuf(b.getUint8(i), 8);
+    }
+}
+
+function readBuf(bits: number) {
+    return readWriteBuf(0, bits, false);
+}
+
+// must be byte-aligned when reading a raw buffer
+function readBufRaw(bytes: number, cnt: number) {
+    const b = control.createBuffer(bytes);
+    for (let i = 0; i < cnt; i++) {
+        b.setUint8(i, readBuf(8));
+    }
+    return b;
+}
+
 namespace tileworld {
+
     // enums must fit in 4 bits (16 values maximum)
 
     // the first three rule types should have a self (centered) witness sprite
@@ -15,7 +80,7 @@ namespace tileworld {
         NegationCheck,  // check spec
         FirstRule = ButtonPress,
         LastRule = NegationCheck
-    };
+    }
 
     export const ruleToString = ["press", "change", "collide", "negate"]
 
@@ -113,7 +178,7 @@ namespace tileworld {
     }
 
     // Rotate3Way = {LeftRotate, RightRotate, DoubleRotate}
-    export enum RuleTransforms { Begin=0, None=0, HorzMirror, VertMirror, LeftRotate, DoubleRotate, RightRotate, Rotate3Way, End=Rotate3Way };
+    export enum RuleTransforms { Begin=0, None=0, HorzMirror, VertMirror, LeftRotate, DoubleRotate, RightRotate, Rotate3Way, End=Rotate3Way }
 
     export class Rule {
         constructor( 
@@ -130,22 +195,22 @@ namespace tileworld {
         return new Rule(rt, ra, []);
     }
 
-    export function moveXdelta(dir: MoveDirection) {
+    export function moveXdelta(dir: MoveDirection): number {
         return dir == MoveDirection.Left ? -1 : (dir == MoveDirection.Right ? 1 : 0);
     }
 
-    export function moveYdelta(dir: MoveDirection) {
+    export function moveYdelta(dir: MoveDirection): number {
         return dir == MoveDirection.Up ? -1 : (dir == MoveDirection.Down ? 1 : 0);
     }
 
-    export function oppDir(dir: MoveDirection, dir2: MoveDirection) {
+    export function oppDir(dir: MoveDirection, dir2: MoveDirection): boolean {
         return (dir + 2) % 4 == dir2;
     }
 
     // ---------------------------------------------------------------------------
     // rule transforms
 
-    export function flipRotateDir(d: MoveDirection, rt: RuleTransforms) {
+    export function flipRotateDir(d: MoveDirection, rt: RuleTransforms): MoveDirection {
         if (rt == RuleTransforms.None || d >= 4)
             return d;
         if (rt == RuleTransforms.HorzMirror) {
@@ -162,7 +227,7 @@ namespace tileworld {
         return d;
     }
 
-    export function transformCol(col: number, row: number, rt: RuleTransforms) {
+    export function transformCol(col: number, row: number, rt: RuleTransforms): number {
         if (rt == RuleTransforms.None)
             return col; 
         else if (rt == RuleTransforms.HorzMirror || rt == RuleTransforms.VertMirror)
@@ -176,7 +241,7 @@ namespace tileworld {
         }
     }
 
-    export function transformRow(row: number, col: number, rt: RuleTransforms) {
+    export function transformRow(row: number, col: number, rt: RuleTransforms): number {
         if (rt == RuleTransforms.None)
             return row; 
         else if (rt == RuleTransforms.HorzMirror || rt == RuleTransforms.VertMirror)
@@ -192,7 +257,7 @@ namespace tileworld {
     // ---------------------------------------------------------------------------
     // rule predicates
 
-    export function isWhenDoTrue(wd: WhenDo) {
+    export function isWhenDoTrue(wd: WhenDo): boolean {
         for(let i = 0; i< wd.bgPred.length; i++) {
             if (wd.bgPred.getUint8(i)) return false;
         }
@@ -202,10 +267,10 @@ namespace tileworld {
         return true;
     }
 
-    export function isRuleTrue(r: Rule) {
+    export function isRuleTrue(r: Rule): boolean {
         for (let col = 1; col <= 3; col++) {
             for (let row = 1; row <= 3; row++) {
-                let whendo = r.whenDo.find((wd) => wd.col == col && wd.row == row); 
+                const whendo = r.whenDo.find((wd) => wd.col == col && wd.row == row); 
                 if (whendo && !isWhenDoTrue(whendo))
                     return false;
             }
@@ -213,13 +278,13 @@ namespace tileworld {
         return true;
     }
 
-    export function ruleStats(rv: RuleView) {
+    export function ruleStats(rv: RuleView): [number, number, number] {
         let wdCnt = 0;
         let cmdCnt = 0;
         let attrCnt = 0;
         for (let col = 1; col <= 3; col++) {
             for (let row = 1; row <= 3; row++) {
-                let whendo = rv.getWhenDo(col, row)
+                const whendo = rv.getWhenDo(col, row)
                 if (whendo != -1) {
                     wdCnt++;
                     cmdCnt += rv.getCmdsLen(whendo);
@@ -230,74 +295,10 @@ namespace tileworld {
         return [wdCnt, cmdCnt, attrCnt];
     }
 
-    // ---------------------------------------------------------------------------
-    // binary read/write of a rule
-
-    let ruleBuf: Buffer = null
-    let bitIndex = 0;
-
-    function readWriteBuf(v: number, bits: number, write: boolean) {
-        let byteIndex = bitIndex >> 3;
-        if (byteIndex >= ruleBuf.length) {
-            // shouldn't get here
-            control.assert(false, 43);
-        }
-        let shift = bitIndex - (byteIndex << 3);
-        if (shift + bits > 8) {
-            // packing error - can't have value that spans byte boundary
-            control.assert(false, 44);
-        }
-        let byte = ruleBuf.getUint8(byteIndex);
-        let mask = 0;
-        for(let i=0; i<bits; i++) { mask = 0x1 | (mask << 1); }
-        // make sure we only keep the proper number of bits from v
-        v = v & mask;
-        mask = mask << shift;
-        let writeMask = mask ^ 0xffffffff;
-
-        if (write) {
-            let newVal = (byte & writeMask) | (v << shift);
-            ruleBuf.setUint8(byteIndex, newVal);
-        }
-        
-        bitIndex += bits;
-
-        byte = ruleBuf.getUint8(byteIndex);
-        let ret = (byte & mask) >> shift
-        if (write) {
-            control.assert(ret == v, 42);
-        }
-        return ret;
-    }
-
-    function writeBuf(v: number, bits: number) {
-        readWriteBuf(v, bits, true);
-    }
-
-    // must be byte-aligned when writing a raw buffer
-    function writeBufRaw(b: Buffer, cnt: number) {
-        for(let i = 0; i < cnt; i++) {
-            writeBuf(b.getUint8(i), 8);
-        }
-    }
-
-    function readBuf(bits: number) {
-        return readWriteBuf(0, bits, false);
-    }
-
-    // must be byte-aligned when reading a raw buffer
-    function readBufRaw(bytes: number, cnt: number) {
-        let b = control.createBuffer(bytes);
-        for (let i = 0; i < cnt; i++) {
-            b.setUint8(i, readBuf(8));
-        }
-        return b;
-    }
-
     // TODO: output textual representation to console
-    export function packRule(r: Rule, bgLen: number, spLen: number) {
+    export function packRule(r: Rule, bgLen: number, spLen: number): Buffer {
         // determine vacuous whendo rules (predicate true, no commands)
-        let wds = r.whenDo.filter(wd => wd.commandsLen > 0 || !isWhenDoTrue(wd));
+        const wds = r.whenDo.filter(wd => wd.commandsLen > 0 || !isWhenDoTrue(wd));
         bitIndex = 0;
         let bytes = 2 + wds.length * (2 + (bgLen >> 2) + (spLen >> 2));
         for (let i = 0; i<wds.length; i++) {
@@ -325,18 +326,18 @@ namespace tileworld {
         return ruleBuf;
     }
 
-    export function unPackRule(buf: Buffer, bgLen: number, spLen: number) {
+    export function unPackRule(buf: Buffer, bgLen: number, spLen: number): Rule {
         ruleBuf = buf;
         bitIndex = 0;
-        let rt = readBuf(4);
-        let ra = readBuf(4);
-        let rv = readBuf(4);
-        let rule = new Rule(rt, ra, [], rv);
-        let whenDoLen = readBuf(4);
+        const rt = readBuf(4);
+        const ra = readBuf(4);
+        const rv = readBuf(4);
+        const rule = new Rule(rt, ra, [], rv);
+        const whenDoLen = readBuf(4);
         for(let i = 0; i<whenDoLen; i++) {
-            let col = readBuf(4);
-            let row = readBuf(4);
-            let wd = new WhenDo(col, row,
+            const col = readBuf(4);
+            const row = readBuf(4);
+            const wd = new WhenDo(col, row,
                     readBufRaw((bgLen >> 2), (bgLen >> 2)),
                     readBufRaw((spLen >> 2), (spLen >> 2)), 
                     -1, 
