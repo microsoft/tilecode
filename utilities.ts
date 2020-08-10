@@ -1,4 +1,4 @@
-namespace tileworld {
+namespace utilities {
 
     const zeroCode = "0".charCodeAt(0);
 

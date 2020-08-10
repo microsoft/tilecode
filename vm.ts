@@ -1,4 +1,4 @@
-namespace tileworld {
+module tileworld {
 
     enum SpriteState { Alive, Dead, }
 

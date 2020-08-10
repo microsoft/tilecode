@@ -1,4 +1,4 @@
-namespace tileworld {
+module tileworld {
 
     // all sprites go here
 

@@ -1,4 +1,4 @@
-namespace tileworld {
+module tileworld {
 
     export class Gallery extends RuleVisualsBase {
         private current: Image;

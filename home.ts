@@ -1,4 +1,4 @@
-namespace tileworld {
+module tileworld {
 
     const helpString = "00map,10paint,20code,30play,90settings,";  // 40debug,50music
     const commandImages = [map, paint, code, play];
@@ -62,7 +62,7 @@ namespace tileworld {
                 this.helpCursor.y = this.cursor.y + 32;
                 const index = this.dirMap.getPixel(this.col(), this.row())
                 if (this.row() < 1) {
-                    const message = getHelp(helpString, this.col(), this.row());
+                    const message = utilities.getHelp(helpString, this.col(), this.row());
                     this.helpCursor.say(message);
                 } else if (index != 0xf) {
                     this.helpCursor.say("A: gallery");
@@ -79,7 +79,7 @@ namespace tileworld {
             screen.fill(0);
             this.dirMap.fill(0xf);
             commandImages.forEach((img,i) => {
-                const img2 = img == play ? (this.p.getRules().length > 0 ? img : greyImage(img)) : img;
+                const img2 = img == play ? (this.p.getRules().length > 0 ? img : utilities.greyImage(img)) : img;
                 this.drawImage(i, 0, img2);
             });
             this.drawImage(9, 0, settingsIcon);

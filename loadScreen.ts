@@ -1,4 +1,4 @@
-namespace tileworld {
+module tileworld {
 
     const loadLeft = 3;
     const loadTop = 1;
@@ -62,10 +62,10 @@ namespace tileworld {
             for(let i = 0; i < 4; i++) {
                 this.fillTile(i,0,12);
             }
-            this.drawImage(1, 6, this.lastDir == MoveDirection.Down ? downButton : greyImage(downButton));
-            this.drawImage(1, 4, this.lastDir == MoveDirection.Up ? upButton : greyImage(upButton));
-            this.drawImage(0, 5, this.lastDir == MoveDirection.Left ? leftButton : greyImage(leftButton));
-            this.drawImage(2, 5, this.lastDir == MoveDirection.Right ? rightButton : greyImage(rightButton));
+            this.drawImage(1, 6, this.lastDir == MoveDirection.Down ? downButton : utilities.greyImage(downButton));
+            this.drawImage(1, 4, this.lastDir == MoveDirection.Up ? upButton : utilities.greyImage(upButton));
+            this.drawImage(0, 5, this.lastDir == MoveDirection.Left ? leftButton : utilities.greyImage(leftButton));
+            this.drawImage(2, 5, this.lastDir == MoveDirection.Right ? rightButton : utilities.greyImage(rightButton));
 
             screen.print("TileCode", 6, yoff + 4);
             this.fillTile(loadLeft,loadTop,12); this.fillTile(loadLeft+1,loadTop,12);

@@ -1,4 +1,4 @@
-namespace tileworld.ruleediting {
+module tileworld.ruleediting {
 
     const transformMap = [ RuleTransforms.None, RuleTransforms.HorzMirror, RuleTransforms.VertMirror, 
                            RuleTransforms.LeftRotate, RuleTransforms.RightRotate, RuleTransforms.Rotate3Way];

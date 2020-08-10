@@ -1,4 +1,4 @@
-namespace tileworld {
+module tileworld {
     
     // a rule view encapsulates a rule and allows editing of the rule
     // as well as creating views of the underlying rule, where the

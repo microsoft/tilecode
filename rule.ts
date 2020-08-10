@@ -62,7 +62,7 @@ function readBufRaw(bytes: number, cnt: number) {
     return b;
 }
 
-namespace tileworld {
+module tileworld {
 
     // enums must fit in 4 bits (16 values maximum)
 

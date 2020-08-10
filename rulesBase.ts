@@ -1,4 +1,4 @@
-namespace tileworld {
+module tileworld {
 
     export const yoff = 6;
 
@@ -31,7 +31,7 @@ namespace tileworld {
             this.cursor = sprites.create(cursorIn);
             this.cursor.x = 24;
             this.cursor.y = yoff + 40;
-            cursorAnimation(this.cursor, cursorOut);
+            utilities.cursorAnimation(this.cursor, cursorOut);
 
             this.helpCursor = sprites.create(cursorIn);
             this.helpCursor.setFlag(SpriteFlag.Invisible, true);

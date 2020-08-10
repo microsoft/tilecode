@@ -1,4 +1,4 @@
-namespace tileworld.ruleediting {
+module tileworld.ruleediting {
 
     const yoff = 6;
     const helpStringTop = "41any,31moved left,51moved right,40moved up,42moved down,32rested,52moved,71dpad left,91dpad right,80dpad up,82dpad down,81A button,";
@@ -50,7 +50,7 @@ namespace tileworld.ruleediting {
                 this.helpCursor.x = this.col() < 7 ? this.cursor.x + 8 : this.cursor.x - 16;
                 this.helpCursor.y = this.row() < 6 ? this.cursor.y + 32 : this.cursor.y;
                 if (this.col() > 0) {
-                    const message = getHelp(this.row() < 4 ? helpStringTop : helpStringBot, this.col(), this.row());
+                    const message = utilities.getHelp(this.row() < 4 ? helpStringTop : helpStringBot, this.col(), this.row());
                     this.helpCursor.say(message);
                 } else {
                     this.helpCursor.say(null);

@@ -1,4 +1,4 @@
-namespace tileworld.ruleediting {
+module tileworld.ruleediting {
 
     // IMPORTANT: the order of direction-oriented images matches directions from rule.ts
     export const moveImages = [leftArrow, upArrow, rightArrow, downArrow, stopSign, uTurn];
@@ -280,9 +280,9 @@ namespace tileworld.ruleediting {
             const index = include == -1 ? exclude : include;
             // do split images when there are multiple includes/excludes 
             if (include != -1 && include2 != -1)
-                return splitImage(this.all.getImage(include), this.all.getImage(include2));
+                return utilities.splitImage(this.all.getImage(include), this.all.getImage(include2));
             else if (include == -1 && exclude != -1 && exclude2 != -1)
-                return splitImage(this.all.getImage(exclude), this.all.getImage(exclude2));
+                return utilities.splitImage(this.all.getImage(exclude), this.all.getImage(exclude2));
             else if (index != -1)
                 return this.all.getImage(index);
             else

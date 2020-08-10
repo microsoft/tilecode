@@ -1,5 +1,5 @@
-namespace tileworld {
-
+module tileworld {
+    
     const yoff = 4;
     const paintSize = 8;
     const editorY = 16+yoff;
@@ -47,10 +47,10 @@ namespace tileworld {
             this.cursor = sprites.create(cursorIn);
             this.cursor.x = 8
             this.cursor.y = 8 + yoff;
-            cursorAnimation(this.cursor, cursorOut);
+            utilities.cursorAnimation(this.cursor, cursorOut);
 
             this.paintCursor = sprites.create(paintOut)
-            cursorAnimation(this.paintCursor, paintIn)
+            utilities.cursorAnimation(this.paintCursor, paintIn)
             this.paintHome();
 
             this.setCursor(CursorType.Menu);
@@ -216,12 +216,12 @@ namespace tileworld {
                     // tile
                     const index = inRange ? backs.getPixel(x, y) : -1;
                     const img = index == -1 ? emptyTile : index == 0xf ? emptyDiagTile : this.p.getBackgroundImage(index);
-                    drawHalfSize(img, nx, ny);
+                    utilities.drawHalfSize(img, nx, ny);
                     // sprite
                     if (inRange) {
                         const index = this.p.getWorldSprites().getPixel(x, y);
                         if (index != 0xf) {
-                            drawHalfSize(this.p.getSpriteImage(index), nx, ny, true);
+                            utilities.drawHalfSize(this.p.getSpriteImage(index), nx, ny, true);
                         }
                     }
                 }    

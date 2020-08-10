@@ -1,4 +1,4 @@
-namespace scene {
+module scene {
 
     export function setTileMap(map: Image, scale = TileScale.Sixteen): void {
         const scene = game.currentScene();
@@ -12,7 +12,7 @@ namespace scene {
     }
 }
 
-namespace tiles.legacy {
+module tiles.legacy {
     class TileSet {
         obstacle: boolean;
         private map: TileMap;

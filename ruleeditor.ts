@@ -1,4 +1,4 @@
-namespace tileworld.ruleediting {
+module tileworld.ruleediting {
 
     // ------------------------------------------------------------------------------------
     // the rule editor
@@ -200,13 +200,13 @@ namespace tileworld.ruleediting {
                 this.helpCursor.say(null);
                 if (this.menu == RuleEditorMenus.MainMenu) {
                     if (this.row() == 0 || this.row() == 6) {
-                        this.helpCursor.say(getHelp(menuHelpString, this.col(), this.row()));
+                        this.helpCursor.say(utilities.getHelp(menuHelpString, this.col(), this.row()));
                     } else if (this.inWhenPredicate()) {
                         this.helpCursor.say("A: predicate");
                     } 
                 } else if (this.menu == RuleEditorMenus.AttrTypeMenu) {
                     if (this.row() == 0) {
-                        this.helpCursor.say(getHelp(attrHelpString, this.col(), this.row()));
+                        this.helpCursor.say(utilities.getHelp(attrHelpString, this.col(), this.row()));
                     } else if (this.row() == 1 && this.col() < 8) {
                         this.helpCursor.say("A: set flag");
                     }
@@ -262,9 +262,9 @@ namespace tileworld.ruleediting {
             this.drawImage(6, 0, garbageCan);
             const rules = this.currentRules();
             const index = rules.indexOf(this.rule);
-            this.drawImage(9, 0, index < rules.length -1 ? rightArrow : greyImage(rightArrow));
-            this.drawImage(8, 0, this.getType() != -1 ? addRule : greyImage(addRule));
-            this.drawImage(7, 0, index > 0 ? leftArrow : greyImage(leftArrow));
+            this.drawImage(9, 0, index < rules.length -1 ? rightArrow : utilities.greyImage(rightArrow));
+            this.drawImage(8, 0, this.getType() != -1 ? addRule : utilities.greyImage(addRule));
+            this.drawImage(7, 0, index > 0 ? leftArrow : utilities.greyImage(leftArrow));
         }
 
         private tryEditCommand() {

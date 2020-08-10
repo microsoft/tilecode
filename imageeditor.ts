@@ -1,4 +1,4 @@
-namespace tileworld {
+module tileworld {
     
     const yoff = 4;
     const colorSize = 8;
@@ -68,18 +68,18 @@ namespace tileworld {
             this.colorCursor = sprites.create(colorOut)
             this.colorCursor.x = colorsX  + (colorSize>>1);
             this.colorCursor.y = colorsY + colorSize*8;
-            cursorAnimation(this.colorCursor, colorIn);
+            utilities.cursorAnimation(this.colorCursor, colorIn);
             this.selectedColor = 0;
 
             this.paintCursor = sprites.create(paintOut);
-            cursorAnimation(this.paintCursor, paintIn);
+            utilities.cursorAnimation(this.paintCursor, paintIn);
             this.paintCursor.x = paintSize * 5 + 2;
             this.paintCursor.y = editorY + 2;
 
             this.menuCursor = sprites.create(cursorIn);
             this.menuCursor.x = 8;
             this.menuCursor.y = yoff + 8
-            cursorAnimation(this.menuCursor, cursorOut);
+            utilities.cursorAnimation(this.menuCursor, cursorOut);
 
             this.setCursor(CursorType.Menu);
             this.update();

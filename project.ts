@@ -49,7 +49,7 @@ function readImages(cnt: number, prefix: string, key: string, output: boolean) {
     const images: Image[] = []
     for (let i = 0; i < cnt; i++) {
         const buf = settingsReadBuffer(prefix, key+i.toString(), output);
-        let img = buf && buf.length > 0 ? tileworld.bufferToImage(buf) : null;
+        let img = buf && buf.length > 0 ? utilities.bufferToImage(buf) : null;
         if (!img) { img = image.create(16, 16); img.fill(1 + i); }
         images.push(img);
     }
@@ -57,12 +57,12 @@ function readImages(cnt: number, prefix: string, key: string, output: boolean) {
 }
 
 function saveImage(prefix: string, kind: number, img: Image, background: boolean) {
-    const buf = tileworld.imageToBuffer(img);
+    const buf = utilities.imageToBuffer(img);
     settings.writeBuffer(prefix + (background ? BackImageKey : SpriteImageKey) + kind.toString(), buf);
     return buf;
 }
 
-namespace tileworld {
+module tileworld {
 
     export const TileWorldVersion = "4.0.0";
 
@@ -213,9 +213,9 @@ namespace tileworld {
         }
 
         public saveWorld(): void {
-            const worldBuf = imageToBuffer(this._backgrounds);
+            const worldBuf = utilities.imageToBuffer(this._backgrounds);
             settings.writeBuffer(this.prefix + WorldBackgroundsKey, worldBuf);
-            const spritesBuf = imageToBuffer(this._sprites);
+            const spritesBuf = utilities.imageToBuffer(this._sprites);
             settings.writeBuffer(this.prefix + WorldSpritesKey, spritesBuf);
         }
 
@@ -247,9 +247,9 @@ namespace tileworld {
             this.spriteImages().forEach((img, i) => {
                 saveImage(prefix, i, img, false);
             });
-            const worldBuf = imageToBuffer(this.getWorldBackgrounds());
+            const worldBuf = utilities.imageToBuffer(this.getWorldBackgrounds());
             settings.writeBuffer(prefix + WorldBackgroundsKey, worldBuf);
-            const spritesBuf = imageToBuffer(this.getWorldSprites());
+            const spritesBuf = utilities.imageToBuffer(this.getWorldSprites());
             settings.writeBuffer(prefix + WorldSpritesKey, spritesBuf);
             this.getRules().forEach(r => {
                 this.storeRule(prefix, r.getRuleId(), r.getBaseRule());
@@ -292,11 +292,11 @@ namespace tileworld {
         const version = settingsReadString(prefix, VersionKey, output);
         // get the tile map, handling errors
         let buf = settingsReadBuffer(prefix, WorldBackgroundsKey, output);
-        let world = buf && buf.length > 0 ? bufferToImage(buf) : null;
+        let world = buf && buf.length > 0 ? utilities.bufferToImage(buf) : null;
         world = world ? world : image.create(32, 24);
         // sprite map
         buf = settingsReadBuffer(prefix, WorldSpritesKey, output);
-        let sprites = buf && buf.length > 0 ? bufferToImage(buf) : null;
+        let sprites = buf && buf.length > 0 ? utilities.bufferToImage(buf) : null;
         sprites = sprites ? sprites : image.create(32, 24);
         // background images and sprite images
         const backCnt = settingsReadNumber(prefix, BackImgCntKey, output);
