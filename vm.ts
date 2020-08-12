@@ -76,18 +76,18 @@ module tileworld {
         public sprites: TileSprite[][];     // the sprites, sorted by kind
         public blockedSpriteKinds: number[];// rules won't get applied to these sprites in this round
         // during evaluating
-        public phase: RuleType;
-        public queued: TileSprite[];
-        public buttonMatch: TileSprite[];       // which sprites had a button event rule (external influence)
+        public phase: RuleType;             // which phase of a round are we in?
+        public queued: TileSprite[];        // sprites queued for processing by rules
+        public buttonMatch: TileSprite[];   // which sprites had a button event rule (external influence)
         public moving: TileSprite[];
-        public moving2resting: TileSprite[];   // sprites that transitioned to resting due to collision
-        public newresting: TileSprite[]; 
+        public moving2resting: TileSprite[];// sprites that transitioned to resting due to collision
+        public newresting: TileSprite[];    
         public captureSpawned: TileSprite[];
         // affects of commands (before being committed)
-        public paintTile: Tile[];            // log of paint commands
-        public deadSprites: TileSprite[];    // the sprites removed this round
-        public spawnedSprites: TileSprite[]; // the sprites spawned this round
-        public nextBlockedSprites: number[]; // the sprites that will not have rules applied in next round
+        public paintTile: Tile[];           // log of paint commands
+        public deadSprites: TileSprite[];   // the sprites removed this round
+        public spawnedSprites: TileSprite[];// the sprites spawned this round
+        public nextBlockedSprites: number[];// the sprites that will not have rules applied in next round
         // 
         public changed: Image;              // what changed in last round
         constructor() {
@@ -95,7 +95,7 @@ module tileworld {
         }
     }
 
-    // rule (rid) plus binding of self and other sprite, in preparation
+    // rule plus binding of self and other sprite, in preparation
     // for the evalation of rule's commands 
     class RuleClosure {
         constructor(
@@ -208,6 +208,16 @@ module tileworld {
                         ruleClosures.push(new RuleClosure(rv, null, []));
                     } else {
                         // check predicate for each witness
+                        let nonPass = true;
+                        for(let i = 0; i< witnesses.length; i++) {
+                            const ts = witnesses[i];
+                            if (this.evaluateRule(ts, rv)) {
+                                nonPass = false;
+                                break;
+                            }
+                        }
+                        if (nonPass)      
+                            ruleClosures.push(new RuleClosure(rv, null, []));
                     }
                 });
                 this.nextPhase(RuleType.ButtonPress);
@@ -299,9 +309,11 @@ module tileworld {
                 if (this.ruleMatchesSprite(rv, ts) &&
                     (phase == RuleType.ContextChange && this.ruleMatchesDirection(rv, ts.dir)
                   || phase == RuleType.ButtonPress && this.dpad.indexOf(rv.getRuleArg()) != -1)) {
-                    const closure = this.evaluateRule(ts, rv);
-                    if (closure)
-                        ruleClosures.push(closure);
+                    const witnesses = this.evaluateRule(ts, rv);
+                    if (witnesses != null) {
+                        // all the whendos passed and we've collected witnesses (other sprites)
+                        ruleClosures.push(new RuleClosure(rv, ts, witnesses));
+                    }
                 }
             });
             return ruleClosures;
@@ -486,8 +498,7 @@ module tileworld {
                     }
                 }
             }
-            // all the whendos passed and we've collected witnesses (other sprites)
-            return new RuleClosure(rv, ts, witnesses);
+            return witnesses;
         }
 
         private getWitness(kind: number, col: number, row: number) {
