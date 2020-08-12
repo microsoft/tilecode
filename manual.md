@@ -22,14 +22,14 @@ Both the UF2 file and the simulator come loaded with six sample games in the fol
 
 ## Background Reading
 
-* [From Board Games to TileCode Games](board)
-* [Game Mechanics](mechanics)
+* [From Board Games to TileCode Games](doc/board)
+* [Game Mechanics](doc/mechanics)
 
 ## Overview
 
-* [TileCode App Overview](tilecodeapp)
-* [Hello World Game](helloworld)
-* [TileCode Programming](language)
+* [TileCode App Overview](doc/tilecodeapp)
+* [Hello World Game](doc/helloworld)
+* [TileCode Programming](doc/language)
 
 ## Having Problems?
 
