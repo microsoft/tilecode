@@ -51,7 +51,7 @@ background/sprite from the game home screen with the **A** button.
 
 In the gallery, simply move to the artwork you wish and select it with the **A** button:
 
-![gallery](pics/gallery.GIF)
+![gallery](pics/gallery.gif)
 
 When you are done, use the **B** button to return to the game home screen.
 
@@ -77,7 +77,7 @@ Press **B** to return to the menu bar and select another background or sprite.
 After selecting a sprite, the **A** button will place the sprite on a tile, 
 replacing the sprite that is there (or removing it if it is the same as the selected sprite). 
 
-![tile map editor](pics/map.gif)
+![tile map editor](pics/map.GIF)
 
 You can paint tiles quickly by holding down the **A** button while moving the cursor. 
 The reset button (upper right) resets the camera to the upper left of the map.
@@ -86,7 +86,7 @@ The reset button (upper right) resets the camera to the upper left of the map.
 
 The paint editor lets you change the art associated with a tile background or sprite.
 
-![paint art](pics/paintSnake.GIF)
+![paint art](pics/paintSnake.gif)
 
  As with the map editor, select the tile/sprite whose art you want to change. Move the 
  cursor down to edit the bitmap (using the **A** button to apply the currently selected color). 
