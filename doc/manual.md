@@ -7,20 +7,15 @@ on low-cost [MakeCode Arcade](https://arcade.makecode.com){:target="_blank"} dev
   
 [![short video](pics/youtube1.PNG)](https://www.youtube.com/watch?v=3FNAsZw13Ro){:target="_blank"} [![long video](pics/youtube2.PNG)](https://www.youtube.com/watch?v=ZUZNi3dbtLI){:target="_blank"} 
 
-## TileCode on Arcade Devices and in the Browser
+## TileCode on Arcade Devices and the Web Browser
 
-TileCode runs on any [MakeCode Arcade device](https://arcade.makecode.com/hardware){:target="_blank"} -
-1. Download the [TileCode UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.2.6/arcade.uf2) to your computer 
-2. Plug your Arcade device into your computer via a USB cable
-3. Copy the downloaded UF2 file (from step 1) to your Arcade device
-
-Here are [detailed instructions](download) on how to copy the **arcade.uf2** file to your Arcade device. 
+TileCode runs on any [MakeCode Arcade device](https://arcade.makecode.com/hardware){:target="_blank"} - here are [detailed instructions](download) on how to download and copy the [TileCode UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.2.6/arcade.uf2) file to your Arcade device. 
 
 You also can run TileCode in the web-based MakeCode Arcade simulator at bottom of this screen. Clicking on the lower right corner of the screen (arrow icon pointing down and to the right)  expands the game simulator to full screen. 
 
 ## Installed Games
 
-Both the UF2 file and the simulator come loaded with six sample games in the following slots: (1) Hello World, (4) Snake, (5) Boulder Dash, (6) Sokoban, (7) Pac-Man, and (8) Bejeweled. The first game is a very simple example. The other games are simplified versions of five popular games that together demonstrate all of the programming features of TileCode.
+Both the UF2 file and the game simulator come loaded with six sample games in the following slots: (1) Hello World, (4) Snake, (5) Boulder Dash, (6) Sokoban, (7) Pac-Man, and (8) Bejeweled. The first game is a very simple example. The other games are simplified versions of five popular games that together demonstrate all of the programming features of TileCode.
 
 ## Background Reading
 
