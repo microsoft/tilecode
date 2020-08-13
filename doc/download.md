@@ -2,7 +2,7 @@
 
 On this page, you'll find detailed instructions for installing the [TileCode UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.2.6/arcade.uf2) to your Arcade device, after you've downloaded it to your computer (by clicking on the above link) and saved it to a file (probably named **arcade.uf2**). Don't try to open the file as it's not human readable.
 
-## Micro-USB Cable
+### Micro-USB Cable
 
 You need a micro-USB cable to connect your Arcade device to the USB port on your computer:
 
@@ -10,7 +10,7 @@ You need a micro-USB cable to connect your Arcade device to the USB port on your
 
 The small end of the cable plugs into your Arcade device. The larger end plugs into the USB slot on your computer. You should make sure your Arcade device is **turned off** when you connect the cable to it and plug it into your computer.
 
-## Turn On Device, Find Device as a Drive, and Copy File
+### Turn On Device, Find Device as a Drive, and Copy File
 
 Now, turn on your Arcade device. It should automatically enter "file copy" mode and display a screen that indicates the device is ready to receive your **arcade.uf2** file:
 
@@ -29,7 +29,7 @@ This will take some time during which you might see a file copy window. When the
 ![load screen](pics/meowbitLoadScreen.jpg)
 
 
-## Troubleshooting
+### Troubleshooting
 
 ### Problem: device does not display "file copy" screen
 
