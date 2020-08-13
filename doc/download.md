@@ -12,7 +12,7 @@ The small end of the cable plugs into your Arcade device. The larger end plugs i
 
 ## Turn On Device, Find Device as a Drive, and Copy File
 
-Now, turn on your Arcade device. It should automatically enter "bootloader" mode and display a screen that indicates the device is ready to receive a UF2 file:
+Now, turn on your Arcade device. It should automatically enter "file copy" mode and display a screen that indicates the device is ready to receive a UF2 file:
 
 ![Arcade bootloader screens](pics/bootloaderScreens.jpg)
 
@@ -28,9 +28,9 @@ This will take some time during which you might see a file copy window.
 
 ## Troubleshooting
 
-### Problem: device does not display bootloader screen
+### Problem: device does not display "file copy" screen
 
-If it does not, put your device into "bootloader" mode by pressing the reset button on the device. The **reset** button is located in different locations on the [MakeCode Arcade devices](https://arcade.makecode.com/hardware/):
+If your Arcade device is not displaying the "file copy" screen, put your device into "file copy" mode by pressing the reset button on the device. The **reset** button is located in different locations on the [MakeCode Arcade devices](https://arcade.makecode.com/hardware/):
 
 - Kittenbot [Meowbit](https://www.kittenbot.cc/collections/frontpage/products/meowbit-codable-console-for-microsoft-makecode-arcade): **reset** is on the upper-right side of the device
 - GHI [Brainpad Arcade](https://www.brainpad.com/): **reset** is on the upper-right of the front of the device
@@ -38,6 +38,6 @@ If it does not, put your device into "bootloader" mode by pressing the reset but
 - Kitronix [ARCADE](https://kitronik.co.uk/products/5311-arcade-for-makecode-arcade): **reset** is above the screen on the front of the device
 - TinkerGen [GameGo](https://shop.tinkergen.com/gamego.html): **reset** is at the bottom of the front of the device, to the right of the Menu button
 
-### Problem: device displays bootloader screen but does not show as a drive on computer
+### Problem: device displays "file copy" screen but does not show as a drive on computer
 
 It might be that your micro-USB cable is faulty (or is a power-only cable). Try a different cable. 
