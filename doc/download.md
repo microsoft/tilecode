@@ -26,7 +26,7 @@ Now, you need to find the **arcade.uf2** file you downloaded and copy it to the 
 
 This will take some time during which you might see a file copy window. When the file copy operation completes, the Arcade device will reboot and you should see the TileCode home screen:
 
-![load screen](pics/meowbitLoadScreen.JPG)
+![load screen](pics/meowbitLoadScreen.jpg)
 
 
 ## Troubleshooting
