@@ -12,7 +12,7 @@ The small end of the cable plugs into your Arcade device. The larger end plugs i
 
 ## Turn On Device, Find Device as a Drive, and Copy File
 
-Now, turn on your Arcade device. It should automatically enter "file copy" mode and display a screen that indicates the device is ready to receive a UF2 file:
+Now, turn on your Arcade device. It should automatically enter "file copy" mode and display a screen that indicates the device is ready to receive your **arcade.uf2** file:
 
 ![Arcade bootloader screens](pics/bootloaderScreens.jpg)
 
@@ -24,7 +24,10 @@ Now, you need to find the **arcade.uf2** file you downloaded and copy it to the 
 
 ![file copy](pics/fileCopy.jpg)
 
-This will take some time during which you might see a file copy window. 
+This will take some time during which you might see a file copy window. When the file copy operation completes, the Arcade device will reboot and you should see the TileCode home screen:
+
+![load screen](pics/meowbitLoadScreen.JPG)
+
 
 ## Troubleshooting
 
