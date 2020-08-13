@@ -6,6 +6,8 @@ developing your own game.
 
 ## Player Movement
 
+The player sprite typically is controlled using the four-way direction pad (dpad).
+
 ### Player-Moves-Anywhere
 
 ### Player-Moves-Only-On-Background
