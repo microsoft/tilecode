@@ -1,4 +1,4 @@
-![TileCode](pics/meowbit.gif)
+![TileCode banner](pics/banner.JPG)
 
 ## Introduction and Videos
 
