@@ -26,7 +26,7 @@ Here's how you change the first rule to the second rule:
 
 ## Dog Pushes Cat
 
-In games like Boulder Dash and Sokoban, the player sprite can push another object. Here is a rule that allows the player's dog to push a cat around:
+In games like Boulder Dash and Sokoban, the player sprite can push another object. Here is a rule that allows the player's dog to push a cat around by sending a move right command to both the dog and cat when the cat is immediately to the right of the dog (and the dpad-right button is pressed):
 
 ![dog pushes cat](pics/dogPushCatRule.JPG)
 
@@ -34,14 +34,17 @@ Create a tile map with several cats and try pushing them around:
 
 ![dog and cat on map](pics/dogCatMap.JPG)
 
-Notice that you can push a cat anywhere, including onto another cat or onto a wall.  We create a rule to stop the cat from moving if it is going to smash into a wall or another cat:
+Notice that you can push a cat anywhere, including onto another cat or onto a wall.  We create a rule to stop the cat from moving if it is going to smash into the wall:
 
 ![cat smash rule](pics/catSmashRule.JPG)
 
-Make sure to generalize the rule to all four directions! This rule will prevent a cat from being pushed onto a wall or another cat but will still allow the dog to move on top of a cat.  If you don't want that to happen, then you need add another smash rule to stop the dog moving if it is going to smash into a cat:
+Make sure to generalize the rule to all four directions! You can create a separate smash rule to prevent a cat from smashing into a cat as well:
+
+![cat smash rule](pics/catSmashRule2.JPG)
+
+ These two rules will prevent a cat from being pushed onto a wall or onto another cat but will still allow the dog to move on top of a cat.  If you don't want that to happen, then you need add another smash rule to stop the dog moving if it is going to smash into a cat:
 
 ![dog smash rule](pics/dogSmashCat.JPG)
-
 
 ## Projectile Movement
 
