@@ -52,7 +52,7 @@ Many games have characters that move of their own accord. Let's put some snakes 
 
 ![snake at rest](pics/snakesSwimming.gif)
 
-When the snake is at rest it will move to the left:
+We will use the change quadrant in the rule selector screen to code four rules for the snake sprite. When the snake is at rest it will move to the left:
 
 ![snake at rest](pics/snakeRestLeft.JPG)
 
