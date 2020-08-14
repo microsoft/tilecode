@@ -1,6 +1,6 @@
 ## Copying the TileCode UF2 File to an Arcade Device
 
-On this page, you'll find detailed instructions for installing the [TileCode UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.2.6/arcade.uf2) to your Arcade device, after you've downloaded it to your computer (by clicking on the above link) and saved it to a file (probably named **arcade.uf2**). Don't try to open the file as it's not human readable.
+On this page, you'll find detailed instructions for installing the [TileCode UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.2.7/arcade.uf2) to your Arcade device, after you've downloaded it to your computer (by clicking on the above link) and saved it to a file (probably named **arcade.uf2**). Don't try to open the file as it's not human readable.
 
 ### Micro-USB Cable
 

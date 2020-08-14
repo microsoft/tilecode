@@ -6,6 +6,7 @@
         "device": "*",
         "animation": "*"
     },
+    "disableTargetTemplateFiles": true,
     "files": [
         "utilities.ts",
         "rule.ts",
