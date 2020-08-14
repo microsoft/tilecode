@@ -9,7 +9,7 @@ on low-cost [MakeCode Arcade](https://arcade.makecode.com){:target="_blank"} dev
 
 ## TileCode on Arcade Devices and the Web Browser
 
-TileCode runs on any [MakeCode Arcade device](https://arcade.makecode.com/hardware){:target="_blank"} - here are [detailed instructions](download) on how to download and copy the [TileCode UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.2.7/tilecode.uf2) file to your Arcade device. You also can run TileCode in the web-based MakeCode Arcade simulator at bottom of this screen. Clicking on the lower right corner of the screen (arrow icon pointing down and to the right)  expands the game simulator to **full screen mode**. 
+TileCode runs on any [MakeCode Arcade device](https://arcade.makecode.com/hardware){:target="_blank"} - here are [detailed instructions](download) on how to download and copy the [TileCode UF2 file](https://github.com/microsoft/tilecode/releases/download/v4.2.7/arcade.uf2) file to your Arcade device. You also can run TileCode in the web-based MakeCode Arcade simulator at bottom of this screen. Clicking on the lower right corner of the screen (arrow icon pointing down and to the right)  expands the game simulator to **full screen mode**. 
 
 Both the UF2 file and the game simulator come loaded with six sample games in the following slots: (1) Hello World, (4) Snake, (5) Boulder Dash, (6) Sokoban, (7) Pac-Man, and (8) Bejeweled. The first game is a very simple example. The other games are simplified versions of five popular games that together demonstrate all of TileCode's programming features.
 
