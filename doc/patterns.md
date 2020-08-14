@@ -46,11 +46,31 @@ Make sure to generalize the rule to all four directions! You can create a separa
 
 ![dog smash rule](pics/dogSmashCat.JPG)
 
+## Non-Player Character Movement
+
+Many games have characters that move of their own accord. Let's put some snakes in a pond and have the snakes move back and forth: 
+
+![snake at rest](pics/snakesSwimming.gif)
+
+When the snake is at rest it will move to the left:
+
+![snake at rest](pics/snakeRestLeft.JPG)
+
+If the snake has just moved left and there is water to the left of the snake, it will move left:
+
+![snake moves left](pics/snakeLeftLeft.JPG)
+
+If the snake has just moved left and there is sand to the left of the snake, it will move right:
+
+![snake turns around](pics/snakeLeftRight.JPG)
+
+If the snake has just moved right and there is water to the right of the snake, it will move right:
+
+![snake moves right](pics/snakeLeftRight.JPG)
+
 ## Projectile Movement
 
 Many games allow a player to shoot a projectile in a given direction.
-
-## Non-Player Character Movement
 
 
 
