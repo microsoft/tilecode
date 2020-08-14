@@ -52,7 +52,11 @@ Many games have characters that move of their own accord. Let's put some snakes 
 
 ![snake at rest](pics/snakesSwimming.gif)
 
-We will use the change quadrant in the rule selector screen to code four rules for the snake sprite. When the snake is at rest it will move to the left:
+We will use the change quadrant in the rule selector screen to code four rules for the snake sprite, starting with the snake at rest:
+
+![snake at rest](pics/snakeChangeRule.gif)
+
+When the snake is at rest it will move to the left:
 
 ![snake at rest](pics/snakeRestLeft.JPG)
 
@@ -66,7 +70,9 @@ If the snake has just moved left and there is sand to the left of the snake, it 
 
 If the snake has just moved right and there is water to the right of the snake, it will move right:
 
-![snake moves right](pics/snakeLeftRight.JPG)
+![snake moves right](pics/snakeRightRight.JPG)
+
+## Painting Tiles
 
 ## Projectile Movement
 
