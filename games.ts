@@ -15,7 +15,7 @@ createBejeweled("TW8-");
 // --------------------------------------    
 
 function createBoulderDash(prefix: string) {
-if (settings.exists(prefix+"-VersionS")) return;
+if (settings.exists(prefix+"VersionS")) return;
 settings.writeString(prefix+"VersionS","4.0.0");
 // buffer length = 108
 settings.writeBuffer(prefix+"WBackM", hex`
@@ -116,7 +116,7 @@ settings.writeNumber(prefix+"PlayerN",0);
 
 
 function createSnake(prefix: string) {
-if (settings.exists(prefix+"-VersionS")) return;
+if (settings.exists(prefix+"VersionS")) return;
 settings.writeString(prefix+"VersionS","4.0.0");
 // buffer length = 109
 settings.writeBuffer(prefix+"WBackM", hex`
@@ -200,7 +200,7 @@ settings.writeNumber(prefix+"PlayerN",0);
 
 
 function createBejeweled(prefix: string) {
-if (settings.exists(prefix+"-VersionS")) return;
+if (settings.exists(prefix+"VersionS")) return;
 settings.writeString(prefix+"VersionS","4.0.0");
 // buffer length = 83
 settings.writeBuffer(prefix+"WBackM", hex`
@@ -477,7 +477,7 @@ if (settings.exists(prefix+"VersionS"))
 
 
 function createPacMan(prefix: string) {
-if (settings.exists(prefix+"-VersionS")) return;
+if (settings.exists(prefix+"VersionS")) return;
 settings.writeString(prefix+"VersionS","4.0.0");
 // buffer length = 247
 settings.writeBuffer(prefix+"WBackM", hex`
@@ -742,7 +742,7 @@ settings.writeNumber(prefix+"PlayerN",0);
 }
 
 function createHelloWorld(prefix: string) {
-if (settings.exists(prefix+"-VersionS")) return;
+if (settings.exists(prefix+"VersionS")) return;
 settings.writeString(prefix+"VersionS","4.0.0");
 // buffer length = 117
 settings.writeBuffer(prefix+"WBackM", hex`
@@ -883,7 +883,7 @@ settings.writeNumber(prefix+"PlayerN",0);
 }
 
 function createSokoban2(prefix: string) {
-if (settings.exists(prefix+"-VersionS")) return;
+if (settings.exists(prefix+"VersionS")) return;
 settings.writeString(prefix+"VersionS","4.0.0");
 // buffer length = 121
 settings.writeBuffer(prefix+"WBackM", hex`

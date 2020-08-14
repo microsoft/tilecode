@@ -288,7 +288,7 @@ module tileworld {
         if (names.length == 0)
             return null;
         if (output) console.log("function createNAME(prefix: string) {");
-        if (output) console.log("if (settings.exists(prefix+\"-VersionS\")) return;");
+        if (output) console.log("if (settings.exists(prefix+\"VersionS\")) return;");
         const version = settingsReadString(prefix, VersionKey, output);
         // get the tile map, handling errors
         let buf = settingsReadBuffer(prefix, WorldBackgroundsKey, output);

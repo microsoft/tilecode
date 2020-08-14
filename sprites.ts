@@ -1387,6 +1387,6 @@ module tileworld {
     `;
 
     // up to 15 max
-    export const gallerySprites = [player, ship, snakeHead, diamond, alien, missile, twCursor, boulder, enemy, apple, snakeBody ];
+    export const gallerySprites = [player, cat, snakeHead, diamond, alien, missile, twCursor, boulder, dog, apple, snakeBody ];
     export const galleryTiles = [brick, grass, water, dirt, dirt2, space, wall];
 }
