@@ -8,7 +8,7 @@ developing your own game.
 
 The player sprite typically is controlled using the four-way direction pad (dpad).
 Here is a tile map where the player sprite is a dog and four types of tile
-backgrounds are visible:
+backgrounds are visible (grey wall, orange sand, blue/green grass, and dark grey sand):
 
 ![tile map with dog](pics/dogMap.JPG)
 
@@ -24,10 +24,24 @@ We create the above rule by selecting the "never" red-slash-circle and applying 
 
 ![no wall selector](pics/dogMoveNoWallAttr.JPG)
 
+## Dog Pushes Cat
 
-## Player Pushes Object
+In games like Boulder Dash and Sokoban, the player sprite can push another object. Here is a rule that allows the player's dog to push a cat around:
 
-In games like Boulder Dash and Sokoban, the player sprite can push another object.
+![dog pushes cat](pics/dogPushCatRule.JPG)
+
+Create a tile map with several cats and try pushing them around:
+
+![dog and cat on map](pics/dogCatMap.JPG)
+
+Notice that you can push a cat anywhere, including onto another cat or onto a wall.  We create a rule to stop the cat from moving if it is going to smash into a wall or another cat:
+
+![cat smash rule](pics/catSmashRule.JPG)
+
+Make sure to generalize the rule to all four directions! This rule will prevent a cat from being pushed onto a wall or another cat but will still allow the dog to move on top of a cat.  If you don't want that to happen, then you need add another smash rule to stop the dog moving if it is going to smash into a cat:
+
+![dog smash rule](pics/dogSmashCat.JPG)
+
 
 ## Projectile Movement
 
