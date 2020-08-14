@@ -32,7 +32,7 @@ In games like Boulder Dash and Sokoban, the player sprite can push another objec
 
 Create a tile map with several cats and try pushing them around:
 
-![dog and cat on map](pics/dogCatMap.JPG)
+![dog and cat on map](pics/dogMovingCats.gif)
 
 Notice that you can push a cat anywhere, including onto another cat or onto a wall.  We create a rule to stop the cat from moving if it is going to smash into the wall:
 
@@ -74,9 +74,12 @@ If the snake has just moved right and there is water to the right of the snake, 
 
 ## Painting Tiles
 
+
 ## Projectile Movement
 
 Many games allow a player to shoot a projectile in a given direction.
+
+## Game Over
 
 
 
