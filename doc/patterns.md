@@ -7,25 +7,33 @@ developing your own game.
 ## Player Movement
 
 The player sprite typically is controlled using the four-way direction pad (dpad).
+Here is a tile map where the player sprite is a dog and four types of tile
+backgrounds are visible:
 
-### Player-Moves-Anywhere
+![tile map with dog](pics/dogMap.JPG)
 
-### Player-Moves-Only-On-Background
+If we want the user to be able to move the dog only on the orange sand, we can use the following rule:
 
-### Player-Moves-Anywhere-Except-Background
+![orange sand](pics/dogMove.JPG)
 
-### Player-Moves-Continuously-Slow
+With this rule, the dog will not be able to move onto any other tile than orange sand.  If we want the dog to be able to move anywhere except the wall, then we can use the following rule instead:
 
-### Player-Moves-Continously-Fast
+![no wall](pics/dogMoveNoWall.JPG)
 
+We create the above rule by selecting the "never" red-slash-circle and applying it to the wall background:
+
+![no wall selector](pics/dogMoveNoWallAttr.JPG)
+
+
+## Player Pushes Object
+
+In games like Boulder Dash and Sokoban, the player sprite can push another object.
 
 ## Projectile Movement
 
+Many games allow a player to shoot a projectile in a given direction.
 
 ## Non-Player Character Movement
 
-## Falling-Off-Left-Or-Right
 
 
-
-## Portals
