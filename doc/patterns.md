@@ -20,9 +20,9 @@ With this rule, the dog will not be able to move onto any other tile than orange
 
 ![no wall](pics/dogMoveNoWall.JPG)
 
-We create the above rule by selecting the "never" red-slash-circle and applying it to the wall background:
+Here's how you change the first rule to the second rule:
 
-![no wall selector](pics/dogMoveNoWallAttr.JPG)
+![sand to wall](pics/dogSandToWall.gif)
 
 ## Dog Pushes Cat
 
