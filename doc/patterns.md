@@ -56,19 +56,19 @@ We will use the change quadrant in the rule selector screen to code four rules f
 
 ![snake at rest](pics/snakeChangeRule.gif)
 
-When the snake is at rest it will move to the left:
+When the snake is at rest, send the snake a move-left command:
 
 ![snake at rest](pics/snakeRestLeft.JPG)
 
-If the snake has just moved left and there is water to the left of the snake, it will move left:
+When the snake has just moved left and there is water to the left of the snake, send it a move-left command :
 
 ![snake moves left](pics/snakeLeftLeft.JPG)
 
-If the snake has just moved left and there is sand to the left of the snake, it will move right:
+If the snake has just moved left and there is sand to the left of the snake, send the snake a move-right command:
 
 ![snake turns around](pics/snakeLeftRight.JPG)
 
-If the snake has just moved right and there is water to the right of the snake, it will move right:
+If the snake has just moved right and there is water to the right of the snake, sent it a move-right command:
 
 ![snake moves right](pics/snakeRightRight.JPG)
 
@@ -80,6 +80,4 @@ If the snake has just moved right and there is water to the right of the snake, 
 Many games allow a player to shoot a projectile in a given direction.
 
 ## Game Over
-
-
 
