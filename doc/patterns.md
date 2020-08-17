@@ -72,12 +72,37 @@ If the snake has just moved right and there is water to the right of the snake, 
 
 ![snake moves right](pics/snakeRightRight.JPG)
 
-## Painting Tiles
 
+## Painting Tiles and Move on Change
+
+The snakes know that the cats don't like water, so every time they get to the left edge of the pond, they take a bite of the orange sand to expand the pond's boundaries. This is done by modifying the rule that makes the snake turn right when it meets orange sand:
+
+![snake paints water on sand](pics/snakeLeftRightPaint.JPG)
+
+As the cats don't like water, whenever there is water to their right, they move one stop to the left (as long as there is no wall to their left):
+
+![cat avoids water](pics/catAvoidsWater.JPG)
+
+## Game Over Condition
+
+The game is over when there is no cat on the orange sand:
 
 ## Projectile Movement
 
-Many games allow a player to shoot a projectile in a given direction.
+We want to dog to be able to help as many cats get to the other side of the pond. To do this, the dog must be able to beat back the advance of the pond towards the cats. 
 
-## Game Over
+It does so by firing projectiles towards the pond. When these projectiles hit the water, they turn the water back into sand. We create a projective, and send it a move-right command when the A button is pressed:
+
+![dog shoots](pics/dogShoots.JPG)
+
+Once created, the projectile always move to the right:
+
+![projectile moves right](pics/projectileMovesRight.JPG)
+
+When the projectile is going to collide with water, the projectile is destroyed and water painted over by orange sand:
+
+![water to sand](pics/waterToSand.JPG)
+
+## Snakes Need Water
+
 
