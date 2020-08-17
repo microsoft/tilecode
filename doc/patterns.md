@@ -42,9 +42,7 @@ Make sure to generalize the rule to all four directions! You can create a separa
 
 ![cat smash rule](pics/catSmashRule2.JPG)
 
- These two rules will prevent a cat from being pushed onto a wall or onto another cat but will still allow the dog to move on top of a cat.  If you don't want that to happen, then you need add another smash rule to stop the dog moving if it is going to smash into a cat:
-
-![dog smash rule](pics/dogSmashCat.JPG)
+ These two rules will prevent a cat from being pushed onto a wall or onto another cat but will still allow the dog to move onto a tile containing a cat.
 
 ## Non-Player Character Movement
 
@@ -68,10 +66,9 @@ If the snake has just moved left and there is sand to the left of the snake, sen
 
 ![snake turns around](pics/snakeLeftRight.JPG)
 
-If the snake has just moved right and there is water to the right of the snake, sent it a move-right command:
+dIf the snake has just moved right and there is water to the right of the snake, sent it a move-right command:
 
 ![snake moves right](pics/snakeRightRight.JPG)
-
 
 ## Painting Tiles and Move on Change
 
@@ -85,13 +82,13 @@ As the cats don't like water, whenever there is water to their right, they move 
 
 ## Game Over Condition
 
-The game is over when there is no cat on the orange sand:
+The game is over when there is no tile that contains both a cat and the orange sand:
+
+![game over](pics/catGameOver.JPG)
 
 ## Projectile Movement
 
-We want to dog to be able to help as many cats get to the other side of the pond. To do this, the dog must be able to beat back the advance of the pond towards the cats. 
-
-It does so by firing projectiles towards the pond. When these projectiles hit the water, they turn the water back into sand. We create a projective, and send it a move-right command when the A button is pressed:
+We want to dog to be able to help as many cats get to the other side of the pond. To do this, the dog must be able to beat back the advance of the pond towards the cats. It does so by firing projectiles towards the pond. When these projectiles hit the water, they turn the water back into sand. When the A button is pressed, we create a projectile and send it a move-right command:
 
 ![dog shoots](pics/dogShoots.JPG)
 
@@ -102,7 +99,5 @@ Once created, the projectile always move to the right:
 When the projectile is going to collide with water, the projectile is destroyed and water painted over by orange sand:
 
 ![water to sand](pics/waterToSand.JPG)
-
-## Snakes Need Water
 
 
