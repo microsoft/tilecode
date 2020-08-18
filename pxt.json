@@ -6,7 +6,6 @@
         "device": "*",
         "animation": "*"
     },
-    "disableTargetTemplateFiles": true,
     "files": [
         "utilities.ts",
         "rule.ts",
@@ -42,5 +41,6 @@
     "supportedTargets": [
         "arcade"
     ],
-    "preferredEditor": "tsprj"
+    "preferredEditor": "tsprj",
+    "disableTargetTemplateFiles": true
 }
