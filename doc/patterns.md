@@ -54,7 +54,7 @@ We will use the change quadrant in the rule selector screen to code four rules f
 
 ![snake at rest](pics/snakeChangeRule.gif)
 
-When the snake is at rest, we send the snake a move-left command:
+When the snake is at rest and there is water to the left of the snake, we send the snake a move-left command:
 
 ![snake at rest](pics/snakeRestLeft.JPG)
 
@@ -62,11 +62,11 @@ When the snake has just moved left and there is water to the left of the snake, 
 
 ![snake moves left](pics/snakeLeftLeft.JPG)
 
-If the snake has just moved left and there is sand to the left of the snake, we send the snake a move-right command:
+When the snake has just moved left and there is sand to the left of the snake, we send the snake a move-right command:
 
 ![snake turns around](pics/snakeLeftRight.JPG)
 
-If the snake has just moved right and there is water to the right of the snake, we send it a move-right command:
+When the snake has just moved right and there is water to the right of the snake, we send it a move-right command:
 
 ![snake moves right](pics/snakeRightRight.JPG)
 
@@ -80,18 +80,29 @@ As the cats don't like water, whenever there is water to their right, they move 
 
 ![cat avoids water](pics/catAvoidsWater.JPG)
 
-## Scoring and Game Over Condition
+## Scoring and Game Over Conditions
 
-Whenever the cat is pushed all the way to the right side of the game map, the score is increased by ten points:
+To make the game more interesting, we introduce scoring and a game over condition, supported by the tile map below. We put the light beige tile ("kitty litter") on the left and right sides of the map to give the cats a place to stay away from the snakes.  The goal of the game is for the dog to help as many cats as possible get to the kitty litter on the right side of the pond:
 
+![tile map goal](pics/dogCatMapFull.JPG)
+
+Whenever the cat moves right onto the kitty litter (lining the right side of the game map), the score is increased by ten points:
+
+![cat scores 10](pics/catScore10.JPG)
 
 The game is over when there is no tile that contains both a cat and the orange sand:
 
 ![game over](pics/catGameOver.JPG)
 
+Finally, when a cat or dog runs into a snake, the game also is over:
+
+![don't run into snake](pics/catDogSnake.JPG)
+
 ## Projectile Movement
 
-We want the dog to be able to help as many cats get to right side of the pond. To do this, the dog must be able to beat back the advance of the pond towards the cats. It does so by firing projectiles towards the pond. When these projectiles hit the water, they turn the water back into sand. When the A button is pressed, we create a projectile and send it a move-right command:
+For the dog to get cats to the right side of the pond, it must able to beat back the advance of the pond towards the cats. It does so by firing projectiles towards the pond. When these projectiles hit the water, they turn the water back into sand. 
+
+When the A button is pressed, we create a projectile and send it a move-right command:
 
 ![dog shoots](pics/dogShoots.JPG)
 
