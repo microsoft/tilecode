@@ -955,30 +955,29 @@ settings.writeBuffer(prefix+"RuleB6", hex`
 settings.writeNumber(prefix+"PlayerN",0);
 }
 
-function weirdSideScroller(prefix: string) {
+function sideScroller(prefix: string) {
 if (settings.exists(prefix+"VersionS")) return;
 settings.writeString(prefix+"VersionS","4.0.0");
-// buffer length = 161
+// buffer length = 156
 settings.writeBuffer(prefix+"WBackM", hex`
-2018f0a04110f121204110f121204110f121204110f121204110f121204110f121204110f1212041
-10f121204110f121204110f121204110f121204110f121204110f121204110f121204110f1212041
-10f121204110f121204110f12120311310f121204110f121204110f121204110f12120311310f121
-204110f121204110f121204110f12120311310f12120311310f121204110f121204110f1215011f0
-40`);
-// buffer length = 60
+2018f090511310f11110511310f11110511310f11110511310f11110511310f11110511310f11110
+511310f11110511310f11110511310f11110511310f11110511310f11110511310f11110511210f1
+11106110f11110f18110f18110f18110f181104113f13110f181104113f131103113f141104113f1
+31103113f141104113f131104113f131104113f131104113f13110f18110f1811061f030`);
+// buffer length = 77
 settings.writeBuffer(prefix+"WSpriteM", hex`
-2018ffffffffffffffffffffff7f10ffffffffffffffffffffffffffffffffffffffffffff5f13ff
-ffffffffff5f13ffffffffffff5f13ffffffff7f`);
+2018ffef12ff8f12ff8f12ff8f12ff8f12ff7f1012ff8f12ff8f12ff8f12ff8f12ff8f12ff8f12ff
+8f12ffffff1f13ffffffffffffffffff8f13ffffffffffffffffff8f13ffffffffffffffaf`);
 settings.writeNumber(prefix+"BackN",4);
 // buffer length = 94
 settings.writeBuffer(prefix+"BackI0", hex`
 10101b6d1c1b6d1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d7b
 1d7b6c1b1a6c1b1a1b6d1c1b6d1b1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b
 1c1d6b1c1d7b1d6b7c1b1a6c1b1a`);
-// buffer length = 53
+// buffer length = 55
 settings.writeBuffer(prefix+"BackI1", hex`
-101015f7f71715471637155715472516e72516b725f725f71725d7251647158715165725d7151715
-c725167715571516f7f7f75725`);
+1010ff3f3ccf5c4f3c4f6c2f5c4f5c1f7c3f5c1f7c4f3c2f7caf5ccf3c8f3c7f1c4f5c5f3c3f5c4f
+4c3f6c3f4c3f6c4f3c4f3c7f1cff1f`);
 // buffer length = 53
 settings.writeBuffer(prefix+"BackI2", hex`
 101017f6f61617461836175617462718e62718b627f627f61627d6271846178617185627d6171617
@@ -1010,7 +1009,7 @@ settings.writeBuffer(prefix+"SpriteI3", hex`
 112c16773c361c101c67161f561c201c1637161f27461f302c3f37261c1f801c27161c2fa01c171c
 e02c50`);
 settings.writeNumber(prefix+"HelpN",1);
-settings.writeNumber(prefix+"HighN",110);
+settings.writeNumber(prefix+"HighN",280);
 // buffer length = 8
 settings.writeBuffer(prefix+"RuleB0", hex`
 6110220040160000`);
@@ -1019,15 +1018,21 @@ settings.writeBuffer(prefix+"RuleB1", hex`
 02202200401021010026030005030203`);
 // buffer length = 12
 settings.writeBuffer(prefix+"RuleB2", hex`
-402022000114320100060001`);
+402022000114320010060001`);
 // buffer length = 12
 settings.writeBuffer(prefix+"RuleB3", hex`
-6120220001143204c0060003`);
+6120220001143204f0060003`);
 // buffer length = 12
 settings.writeBuffer(prefix+"RuleB4", hex`
 022022004010210001060401`);
 // buffer length = 12
 settings.writeBuffer(prefix+"RuleB5", hex`
 412622000116320040060402`);
+// buffer length = 12
+settings.writeBuffer(prefix+"RuleB6", hex`
+612022001016214000060000`);
+// buffer length = 18
+settings.writeBuffer(prefix+"RuleB7", hex`
+612022001046210100060300050202020000`);
 settings.writeNumber(prefix+"PlayerN",0);
 }
