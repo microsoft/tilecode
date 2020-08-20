@@ -4,7 +4,7 @@
 
 ## Introduction and Videos
 
-Microsoft TileCode is a game creation app that allows you to design and play games directly on low-cost [Microsoft MakeCode Arcade](https://arcade.makecode.com){:target="_blank"} devices or in a web browser. TileCode games are similar to board games with pieces that can move from one tile of the board to a nearby tile. Click on the two images below to watch a 30 second video (left) and a 5 minute video (right) about TileCode:
+Microsoft TileCode is a game creation app that allows you to design and play games directly on low-cost [Microsoft MakeCode Arcade devices](https://arcade.makecode.com/hardware){:target="_blank"} or in a web browser. TileCode games are similar to board games with pieces that can move from one tile of the board to a nearby tile. Click on the two images below to watch a 30 second video (left) and a 5 minute video (right) about TileCode:
   
 [![short video](pics/youtube1.PNG)](https://www.youtube.com/watch?v=3FNAsZw13Ro){:target="_blank"} [![long video](pics/youtube2.PNG)](https://www.youtube.com/watch?v=ZUZNi3dbtLI){:target="_blank"} 
 
