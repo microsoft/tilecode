@@ -1,0 +1,123 @@
+---
+# this is an empty front matter
+---
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Microsoft TileCode</title>
+    <meta name="description" content="{{ site.github.project_tagline }}" />
+    <meta name="author" content="{{ site.github.owner_name }}">
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="/" />
+    <meta name="twitter:title" content="{{ site.github.project_tagline }}" />
+    <meta name="twitter:description" content="{{ site.github.project_tagline }}" />
+    <meta name="twitter:image" content="./icon.png" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Microsoft TileCode">
+    <meta name="apple-mobile-web-app-status-bar-style" content="translucent-black">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="application-name" content="Microsoft TileCode">
+    <meta name="theme-color" content="#000">
+    <meta property="og:title" content="Microsoft TileCode" />
+    <meta property="og:site_name" content="Microsoft TileCode" />
+    <meta property="og:description" content="{{ site.github.project_tagline }}" />
+    <meta property="og:image" content="./icon.png" />
+    <link rel="apple-touch-icon" href="./icon.png">
+    <link rel="icon" type="image/png" href="./icon.png">
+    <link rel="shortcut icon" href="./icon.png">
+    <script type="text/javascript" src="./assets/js/loader.js?v={{ site.github.build_revision }}"></script>
+    
+    <style>
+        body {
+            cursor: default;
+            background: black;
+            color: white;
+            font-family: monospace;
+            overflow: hidden;
+            font-size: 14pt;
+        }
+
+        #simframe {
+            position: absolute; 
+            top:0;                          
+            left:0;
+            padding: 0px;
+            margin: 0px; 
+            width: 100%; 
+            height: 100%; 
+            visibility: inherit; 
+        }
+
+
+        .embed {
+            background: transparent;
+        }
+
+        .nofooter iframe {
+            height: 100%;
+        }
+
+        footer {
+            color: grey;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            left: 0;
+            z-index: 100;
+            text-align: center;
+            font-size: 1em;
+            margin-bottom: 0.25em;
+        }
+
+        footer a {
+            color: grey;
+        }
+
+        .embed footer,
+        .embed footer a {
+            color: black;
+        }
+
+    </style>
+</head>
+
+<body id="root">
+
+    <iframe title="simulator" id="simframe" sandbox="allow-popups allow-forms allow-scripts allow-same-origin"></iframe>
+    
+    <div id="bottom"></div>
+
+    <footer id="footer">
+        <a target="_blank" href="https://makecode.com/privacy">Privacy</a>
+        <a target="_blank" href="https://makecode.com/termsofuse">Terms Of Use</a>
+        <a target="_blank" href="https://makecode.com/trademarks">Trademarks</a>
+        © 2020 Microsoft
+    </footer>
+
+    <script type="text/javascript">
+        makeCodeRun({ js: "./assets/js/binary.js?v={{ site.github.build_revision }}" });
+
+        if (window.location && window.location.search) {
+            var noFooter = /nofooter=1/i.test(window.location.search);
+            var embed = /embed=1/i.test(window.location.search);
+            var root = document.querySelector("#root");
+
+            if (noFooter) {
+                var footer = document.querySelector("#footer");
+                if (root)
+                    root.className += " nofooter";
+                if (footer)
+                    footer.remove();
+            }
+
+            if (embed && root) {
+                root.className += " embed";
+            }
+        }
+    </script>
+</body>
+
+</html>
