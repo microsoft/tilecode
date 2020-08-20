@@ -32,4 +32,4 @@ Please file a [GitHub issue](https://github.com/microsoft/tilecode/issues){:targ
 
 ## Read More About It!
 
-You can read more about TileCode in the paper [TileCode: Creation of Video Games on Gaming Handhelds](https://www.microsoft.com/en-us/research/publication/tilecode-creation-of-video-games-on-gaming-handhelds/){:target="_blank"}
+You can read more about TileCode in an upcoming UIST 2020 [TileCode: Creation of Video Games on Gaming Handhelds](https://www.microsoft.com/en-us/research/publication/tilecode-creation-of-video-games-on-gaming-handhelds/){:target="_blank"}
