@@ -1,6 +1,6 @@
 ![Microsoft TileCode banner](pics/banner.JPG)
 
-[open manual in new tab](manual){:target="_blank"} [open web app in new tab](https://microsoft.github.io/tilecode/tilecode.html){:target="_blank"}
+[open manual in new tab](manual){:target="_blank"} | [open web app in new tab](https://microsoft.github.io/tilecode/tilecode.html){:target="_blank"}
 
 ## Introduction and Videos
 
