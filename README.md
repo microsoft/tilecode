@@ -4,7 +4,7 @@
 
 # Building
 
-TileCode is built using [Microsoft MakeCode Arcade](https://arcade.makecode.com), a web app for programming retro video games in the web browser, with support for a variety of [gaming handhelds][Microsoft MakeCode Arcade](https://arcade.makecode.com/hardware). Once the web app is loaded, click the "import" button on the right side of the screen and then input the URL of this repo to load the TileCode project into MakeCode Arcade.
+TileCode is built using [Microsoft MakeCode Arcade](https://arcade.makecode.com), a web app for programming retro video games in the web browser, with support for a variety of [gaming handhelds](https://arcade.makecode.com/hardware). Once the web app is loaded, click the "import" button on the right side of the screen and then input the URL of this repo to load the TileCode project into MakeCode Arcade.
 
 # Contributing
 
