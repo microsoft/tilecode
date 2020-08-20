@@ -1,9 +1,8 @@
-![TileCode banner](pics/banner.JPG)
+![Microsoft TileCode banner](pics/banner.JPG)
 
 ## Introduction and Videos
 
-TileCode is a game creation app that allows you to design and play games directly 
-on low-cost [MakeCode Arcade](https://arcade.makecode.com){:target="_blank"} devices or in a web browser. TileCode games are similar to board games with pieces that can move from one tile of the board to a nearby tile. Click on the two images below to watch a 30 second video (left) and a 5 minute video (right) about TileCode:
+Microsoft TileCode is a game creation app that allows you to design and play games directly on low-cost [Microsoft MakeCode Arcade](https://arcade.makecode.com){:target="_blank"} devices or in a web browser. TileCode games are similar to board games with pieces that can move from one tile of the board to a nearby tile. Click on the two images below to watch a 30 second video (left) and a 5 minute video (right) about TileCode:
   
 [![short video](pics/youtube1.PNG)](https://www.youtube.com/watch?v=3FNAsZw13Ro){:target="_blank"} [![long video](pics/youtube2.PNG)](https://www.youtube.com/watch?v=ZUZNi3dbtLI){:target="_blank"} 
 
@@ -27,6 +26,4 @@ Both the UF2 file and the game simulator come loaded with six sample games in th
 
 ## Having Problems?
 
-Please file a [GitHub issue](https://github.com/microsoft/tilecode/issues){:target="_blank"} if you encounter 
-a problem with TileCode. You can also help us by choosing the most appropriate tag for your issue.  If you can't
-file an issue, mail us at [tilecode@microsoft.com](mailto:tilecode@microsoft.com)
+Please file a [GitHub issue](https://github.com/microsoft/tilecode/issues){:target="_blank"} if you encounter a problem with TileCode. You can also help us by choosing the most appropriate tag for your issue.  If you can't file an issue, mail us at [tilecode@microsoft.com](mailto:tilecode@microsoft.com)
