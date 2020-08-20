@@ -7,7 +7,7 @@ Navigation and editing in the TileCode takes place as follows:
 * select a tile using the **A** button to perform an action; 
 * press the **B** button to take you back to the menu of the current screen or to the previous screen
 
-When you are working with [Arcade simulator](https://microsoft.github.io/tilecode) 
+When you are working with [the Arcade simulator](https://microsoft.github.io/tilecode/tilecode.html){:target="_blank"}
 in a web browser, you also can use keyboard shortcuts:
 * the **arrow keys** (left, right, up, down) replace the direction pad (alteranatively, you can use the 'A', 'D, 'W', and 'S' keys)
 * the **space bar** replaces the A button
