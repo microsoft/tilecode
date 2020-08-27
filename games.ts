@@ -6,8 +6,9 @@ createBoulderDash("TW5-");
 createSokoban("TW6-");
 createPacMan("TW7-");
 createBejeweled("TW8-");
+// createSideScroller("TW8-");
 
-//createSpaceInvaders("TW6-");
+//createSpaceInvaders("TW8-");
 // createSortingDiamonds("TW8-");
 // createPaint("TW8-");
 // createLeftHandRule("TW4-");
@@ -955,7 +956,7 @@ settings.writeBuffer(prefix+"RuleB6", hex`
 settings.writeNumber(prefix+"PlayerN",0);
 }
 
-function sideScroller(prefix: string) {
+function createSideScroller(prefix: string) {
 if (settings.exists(prefix+"VersionS")) return;
 settings.writeString(prefix+"VersionS","4.0.0");
 // buffer length = 156
@@ -1034,5 +1035,109 @@ settings.writeBuffer(prefix+"RuleB6", hex`
 // buffer length = 18
 settings.writeBuffer(prefix+"RuleB7", hex`
 612022001046210100060300050202020000`);
+settings.writeNumber(prefix+"PlayerN",0);
+}
+
+function createCatsDogsAndSnakes(prefix: string) {
+if (settings.exists(prefix+"VersionS")) return;
+settings.writeString(prefix+"VersionS","4.0.0");
+// buffer length = 114
+settings.writeBuffer(prefix+"WBackM", hex`
+2018f0a08310d1208110d1208110d1208110d1208110d1208110d1208110d1208110d1208110d120
+11621110d1208210d1208210d1208210d12011621110d1208110d1208310d1b0d120f17120f17120
+f17120f17120f17120f17120f17120f17120f17120f17120f17120f17120f171f0a0`);
+// buffer length = 78
+settings.writeBuffer(prefix+"WSpriteM", hex`
+2018ffffff7f12ff6f124f12ff4f121f12ff9f12ffffff10ffffffffffff4f11ff7f111f111f111f
+11ff1f115f11ff6f11ffffffffffffffffffffffffffffffffffffffffffffffffffffffff6f`);
+settings.writeNumber(prefix+"BackN",4);
+// buffer length = 94
+settings.writeBuffer(prefix+"BackI0", hex`
+10101b6d1c1b6d1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d7b
+1d7b6c1b1a6c1b1a1b6d1c1b6d1b1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b
+1c1d6b1c1d7b1d6b7c1b1a6c1b1a`);
+// buffer length = 112
+settings.writeBuffer(prefix+"BackI1", hex`
+10101f6e3f1e2f2e1f2e342e1f5e1f3e544e341e1f2e642e541e1f2e541e743e541e741e1f2e342e
+742e1f3e1f1e1f1e541e1f1e4f3e1f1e341e1f2e2f2e345e1f1e142e1f1e541e1f1e1f1e341e1f1e
+542e1f1e441e1f1e641e1f1e443e641e1f2e342e1f1e347e144e1f4e2f1e1f3e`);
+// buffer length = 53
+settings.writeBuffer(prefix+"BackI2", hex`
+101017f6f61617461836175617462718e62718b627f627f61627d6271846178617185627d6171617
+c627187617561718f6f6f65627`);
+// buffer length = 35
+settings.writeBuffer(prefix+"BackI3", hex`
+1010bd21ed217d1bcd21ed21fd6d1bfd5d11fdfd8d2bed2bfdfd8d1b4d1bfded1bfd1d`);
+settings.writeNumber(prefix+"SpriteN",4);
+// buffer length = 112
+settings.writeBuffer(prefix+"SpriteI0", hex`
+101030241ec014351ea01435142e2f7014252435145f20142514251f251614251f301e7516251f50
+1e45141f16251f501e45141f16252f301e7516351f20142514251f251615141f3014252435161425
+1f301435142e2f24251f3014351e301f143f40241e301f251fb01f251fb03f60`);
+// buffer length = 123
+settings.writeBuffer(prefix+"SpriteI1", hex`
+1010b01c2f502c2f301c21161f301c16371f101c1731161c101c271c16271f27412c1627161f271c
+22412c3726271c37312c3726271c2726212c37161f17161c171c1f26112c371c16171c17161f2c16
+112c16773c361c101c67161f561c201c1637161f27461f302c3f37261c1f801c27161c2fa01c171c
+e02c50`);
+// buffer length = 112
+settings.writeBuffer(prefix+"SpriteI2", hex`
+1010f0201e3c1f2e2f701e1d1b131b3d1b5f201e2d1b131d1f2d121b2d1f301c5d1f1d122d1f501f
+5d1b122d1f501f1b4d1b122d2f301c5d1f1d123d1f201e2d1b131d1f2d121d1b1f301e1d1b131b3d
+121b2d1f301e3c1f2e2f2b2d1fb01f1b3f801b3f1d1fa01f3d1b1fa01b4ff050`);
+// buffer length = 71
+settings.writeBuffer(prefix+"SpriteI3", hex`
+1010f0f0707f801f751f601f951f501f353f351f501f251f301f251f501f251f301f251f501f251f
+301f251f501f251f301f251f501f353f351f501f951f601f751f807ff0f060`);
+settings.writeNumber(prefix+"HelpN",0);
+settings.writeNumber(prefix+"HighN",80);
+// buffer length = 12
+settings.writeBuffer(prefix+"RuleB0", hex`
+202622000116230300060002`);
+// buffer length = 14
+settings.writeBuffer(prefix+"RuleB1", hex`
+2026220001162300101600020002`);
+// buffer length = 12
+settings.writeBuffer(prefix+"RuleB2", hex`
+222622001012230100060004`);
+// buffer length = 12
+settings.writeBuffer(prefix+"RuleB4", hex`
+222622001012230010060004`);
+// buffer length = 8
+settings.writeBuffer(prefix+"RuleB5", hex`
+4010220001160203`);
+// buffer length = 8
+settings.writeBuffer(prefix+"RuleB6", hex`
+6110220040160002`);
+// buffer length = 12
+settings.writeBuffer(prefix+"RuleB8", hex`
+412022000414211000060000`);
+// buffer length = 14
+settings.writeBuffer(prefix+"RuleB9", hex`
+4120220004102104ff1600020102`);
+// buffer length = 12
+settings.writeBuffer(prefix+"RuleB10", hex`
+012022000410211000060000`);
+// buffer length = 12
+settings.writeBuffer(prefix+"RuleB11", hex`
+012022000412231000060002`);
+// buffer length = 14
+settings.writeBuffer(prefix+"RuleB7", hex`
+2220220040122310001603000101`);
+// buffer length = 16
+settings.writeBuffer(prefix+"RuleB12", hex`
+61302200101623100006210300060000`);
+// buffer length = 12
+settings.writeBuffer(prefix+"RuleB13", hex`
+222022001012234000060402`);
+// buffer length = 12
+settings.writeBuffer(prefix+"RuleB3", hex`
+222622000112231000060004`);
+// buffer length = 8
+settings.writeBuffer(prefix+"RuleB14", hex`
+6316220810160400`);
+// buffer length = 12
+settings.writeBuffer(prefix+"RuleB15", hex`
+222622001112230004060401`);
 settings.writeNumber(prefix+"PlayerN",0);
 }
