@@ -1,21 +1,24 @@
 // add games in if the slots are empty
 
 createHelloWorld("TW1-");
-createSnake("TW4-");
-createBoulderDash("TW5-"); 
-createSokoban("TW6-");
-createPacMan("TW7-");
-createBejeweled("TW8-");
+createApplesGrow("TW4-");
+createMineRocks("TW5-"); 
+createPushBoxes("TW6-");
+createEatDots("TW7-");
+createSwapSprites("TW8-");
+
+// createCatsDogsAndSnakes("TW2-");
+
 // createSideScroller("TW8-");
 
-//createSpaceInvaders("TW8-");
+//createDescendingAliens("TW8-");
 // createSortingDiamonds("TW8-");
 // createPaint("TW8-");
 // createLeftHandRule("TW4-");
 
 // --------------------------------------    
 
-function createBoulderDash(prefix: string) {
+function createMineRocks(prefix: string) {
 if (settings.exists(prefix+"VersionS")) return;
 settings.writeString(prefix+"VersionS","4.0.0");
 // buffer length = 108
@@ -116,7 +119,7 @@ settings.writeNumber(prefix+"PlayerN",0);
 }
 
 
-function createSnake(prefix: string) {
+function createApplesGrow(prefix: string) {
 if (settings.exists(prefix+"VersionS")) return;
 settings.writeString(prefix+"VersionS","4.0.0");
 // buffer length = 109
@@ -200,7 +203,7 @@ settings.writeNumber(prefix+"PlayerN",0);
 
 
 
-function createBejeweled(prefix: string) {
+function createSwapSprites(prefix: string) {
 if (settings.exists(prefix+"VersionS")) return;
 settings.writeString(prefix+"VersionS","4.0.0");
 // buffer length = 83
@@ -477,7 +480,7 @@ if (settings.exists(prefix+"VersionS"))
 }
 
 
-function createPacMan(prefix: string) {
+function createEatDots(prefix: string) {
 if (settings.exists(prefix+"VersionS")) return;
 settings.writeString(prefix+"VersionS","4.0.0");
 // buffer length = 247
@@ -573,8 +576,7 @@ settings.writeNumber(prefix+"PlayerN",0);
 }
 
 
-// space invaders
-function createSpaceInvaders(prefix: string) {
+function createDescendingAliens(prefix: string) {
 if (settings.exists(prefix+"VersionS"))
     return;
 settings.writeString(prefix+"VersionS","4.0.0");
@@ -662,7 +664,7 @@ settings.writeBuffer(prefix+"RuleB10", hex`
 settings.writeNumber(prefix+"PlayerN",0);
 }
 
-function createSokoban(prefix: string) {
+function createPushBoxes(prefix: string) {
 if (settings.exists(prefix+"VersionS"))
     return;
 settings.writeString(prefix+"VersionS","4.0.0");
