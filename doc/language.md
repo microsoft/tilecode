@@ -87,13 +87,13 @@ Common commands that are invoked on a smash event include:
 #### Never Conditions
 
 Many game progress/win conditions require that a predicate holds for every member of a set, such
-as the winning condition from Boulder Dash:
+as the winning condition:
 - "the player goes to the next level when every diamond has been collected from the game board"
 
 For these cases, we make use of **never** rules, which fire at the beginning of a round on the current 
 state (before any other events and rules fire). The red "no-entry" circle signifies the never rule. 
 A never rule fires successfully exactly when there is no 3x3 region of the tile map on which the When 
-section fires successfully. Here is the rule that expresses the winning condition of Boulder Dash:
+section fires successfully. Here is the rule that expresses the winning condition above:
 
 ![never diamond](pics/neverDiamond.PNG)
 
@@ -206,7 +206,7 @@ behavior.
 ## Rule Generalization
 
 There are two main ways to generalize a rule in TileCode. The first is to have a rule apply to multiple kinds of sprites.  
-For example, in Boulder Dash, diamonds fall just like boulders do. The snapshot belowshows how we generalize a boulder 
+For example, diamonds fall just like boulders do. The snapshot below shows how we generalize a boulder 
 falling rule to include the diamond (by adding the diamond sprite to the Include set of the center tile):
 
 ![diamond and boulder](pics/diamondBoulder.JPG)

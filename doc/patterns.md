@@ -26,7 +26,7 @@ Here's how you change the first rule to the second rule:
 
 ## Dog Pushes Cat
 
-In games like Boulder Dash and Sokoban, the player sprite can push another object. Here is a rule that allows the player's dog to push a cat around by sending a move right command to both the dog and cat when the cat is immediately to the right of the dog (and the dpad-right button is pressed):
+In various games, the player sprite can push another object. Here is a rule that allows the player's dog to push a cat around by sending a move right command to both the dog and cat when the cat is immediately to the right of the dog (and the dpad-right button is pressed):
 
 ![dog pushes cat](pics/dogPushCatRule.JPG)
 
