@@ -74,7 +74,11 @@ When the snake has just moved right and there is water to the right of the snake
 
 ### Painting Tiles and Move on Change
 
-The snakes know that the cats don't like water, so every time they get to the left edge of the pond, they take a bite of the orange sand to expand the pond's boundary to the left. This is done by modifying the rule that makes the snake turn right when it meets orange sand:
+The snakes know that the cats don't like water, so every time they get to the left edge of the pond, they take a bite of the orange sand to expand the pond's boundary to the left:
+
+![snakes advance](pics/snakesAdvance.gif)
+
+This is done by modifying the rule that makes the snake turn right when it meets orange sand:
 
 ![snake paints water on sand](pics/snakeLeftRightPaint.JPG)
 
@@ -102,7 +106,9 @@ Finally, when a cat or dog runs into a snake, the game also is over:
 
 ### Projectile Movement
 
-For the dog to get cats to the right side of the pond, it must able to beat back the advance of the pond towards the cats. It does so by firing projectiles towards the pond. When these projectiles hit the water, they turn the water back into sand. 
+For the dog to get cats to the right side of the pond, it must able to beat back the advance of the pond towards the cats. It does so by firing projectiles towards the pond. When these projectiles hit the water, they turn the water back into sand:
+
+![dog fires back](pics/dogFiresBack.gif)
 
 When the A button is pressed, we create a projectile and send it a move-right command:
 
