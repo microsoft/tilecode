@@ -1011,7 +1011,7 @@ settings.writeBuffer(prefix+"SpriteI3", hex`
 22412c3726271c37312c3726271c2726212c37161f17161c171c1f26112c371c16171c17161f2c16
 112c16773c361c101c67161f561c201c1637161f27461f302c3f37261c1f801c27161c2fa01c171c
 e02c50`);
-settings.writeNumber(prefix+"HelpN",1);
+settings.writeNumber(prefix+"HelpN",0);
 settings.writeNumber(prefix+"HighN",280);
 // buffer length = 8
 settings.writeBuffer(prefix+"RuleB0", hex`
@@ -1021,10 +1021,10 @@ settings.writeBuffer(prefix+"RuleB1", hex`
 02202200401021010026030005030203`);
 // buffer length = 12
 settings.writeBuffer(prefix+"RuleB2", hex`
-402022000114320010060001`);
+402022000116320010060001`);
 // buffer length = 12
 settings.writeBuffer(prefix+"RuleB3", hex`
-6120220001143204f0060003`);
+6120220001163204c0060003`);
 // buffer length = 12
 settings.writeBuffer(prefix+"RuleB4", hex`
 022022004010210001060401`);
@@ -1039,6 +1039,7 @@ settings.writeBuffer(prefix+"RuleB7", hex`
 612022001046210100060300050202020000`);
 settings.writeNumber(prefix+"PlayerN",0);
 }
+
 
 function createCatsDogsAndSnakes(prefix: string) {
 if (settings.exists(prefix+"VersionS")) return;
