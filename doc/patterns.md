@@ -2,9 +2,11 @@
 
 A game is composed of various [game mechanics](mechanics). Below you'll find
 a variety of different mechanics that you can use as a starting point for 
-developing your own game.
+developing your own game. We illustrate the mechanics using a variety of games.
 
-## Player Movement
+## Game 1: Dog, Cats and Snakes!!!
+
+### Player Movement
 
 The player sprite typically is controlled using the four-way direction pad (dpad).
 Here is a tile map where the player sprite is a dog and four types of tile
@@ -24,7 +26,7 @@ Here's how you change the first rule to the second rule:
 
 ![sand to wall](pics/dogSandToWall.gif)
 
-## Dog Pushes Cat
+### Dog Pushes Cat
 
 In various games, the player sprite can push another object. Here is a rule that allows the player's dog to push a cat around by sending a move right command to both the dog and cat when the cat is immediately to the right of the dog (and the dpad-right button is pressed):
 
@@ -44,7 +46,7 @@ Make sure to generalize the rule to all four directions! You can create a separa
 
 These two rules will prevent a cat from being pushed onto a wall or onto another cat but will still allow the dog to move onto a tile containing a cat.
 
-## Non-Player Character Movement
+### Non-Player Character Movement
 
 Many games have characters that move of their own accord. Let's put some snakes in a pond and have the snakes move back and forth: 
 
@@ -70,7 +72,7 @@ When the snake has just moved right and there is water to the right of the snake
 
 ![snake moves right](pics/snakeRightRight.JPG)
 
-## Painting Tiles and Move on Change
+### Painting Tiles and Move on Change
 
 The snakes know that the cats don't like water, so every time they get to the left edge of the pond, they take a bite of the orange sand to expand the pond's boundary to the left. This is done by modifying the rule that makes the snake turn right when it meets orange sand:
 
@@ -80,7 +82,7 @@ As the cats don't like water, whenever there is water to their right, they move 
 
 ![cat avoids water](pics/catAvoidsWater.JPG)
 
-## Scoring and Game Over Conditions
+### Scoring and Game Over Conditions
 
 To make the game more interesting, we introduce scoring and a game over condition, supported by the tile map below. We put the light beige tile ("kitty litter") on the left and right sides of the map to give the cats a place to stay away from the snakes.  The goal of the game is for the dog to help as many cats as possible get to the kitty litter on the right side of the pond:
 
@@ -98,7 +100,7 @@ Finally, when a cat or dog runs into a snake, the game also is over:
 
 ![don't run into snake](pics/catDogSnake.JPG)
 
-## Projectile Movement
+### Projectile Movement
 
 For the dog to get cats to the right side of the pond, it must able to beat back the advance of the pond towards the cats. It does so by firing projectiles towards the pond. When these projectiles hit the water, they turn the water back into sand. 
 
@@ -113,5 +115,35 @@ Once created, the projectile always move to the right:
 When the projectile is going to collide with water, the projectile is destroyed and water painted over by orange sand:
 
 ![water to sand](pics/waterToSand.JPG)
+
+## Game 2: Dog Jumps Over Snakes
+
+The second game is called a "side-scroller" for reasons that should be obvious from the snapshot of the game below:
+
+![dog jumps snakes](pics/dogJumpsSnakes.gif)
+
+The mechanics of the game are quite simple: the user presses the A button to make the dog jump and the goal is avoid hitting snakes, which move from right to left. 
+
+### The conveyor belt.
+
+As the dog remains in the center of the screen, we put a number of other sprites into motion to give the game more dynamism. The conveyor belt of yellow blocks is in constant motion from right to left.  We design the game map as follows:
+
+![conveyor belt map](pics/dogJumpsSnakesStage1.JPG)
+
+In particular, the blue tile on the right marks the "beginning" of the conveyor belt, which ends with the wall tile on left. Neither the blue tile nor the wall tile on the left are visible to the player (we call these "off stage" elements).
+
+The following rule keeps the conveyor belt moving left as long as there is an orange tile to the left of the yellow block:
+
+![conveyor move](pics/conveyor1.JPG)
+
+The second rule destroys the yellow block that is next to the wall, opens a portal to the blue tile, creating a new yellow block at that location, and sends the sprite a move left command.
+
+![conveyor wrap around](pics/conveyor2.JPG)
+
+Together, the above two rules create illusion of a never-ending always-moving conveyor belt.
+
+### Dog Jumps
+
+### Randomizing snake appearance with portals
 
 
