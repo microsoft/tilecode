@@ -164,6 +164,18 @@ Recall that the portal command opens a portal to a tile that has a particular ba
 
 This rule destroys the current snake, opens a portal to an orange tile (not already containing a sprite), and creates a new snake at that tile. By design, if there are multiple orangel tiles that a portal could be opened to to, TileCode chooses one of the available tiles at random.
 
-### Dog Jumps
+### Dog Jumps and Scores!
 
+Finally, we use the A button to allow the dog to jump up one tile, but only if the dog has a yellow block immediately below it:
 
+![dog jump up](pics/dogJumpUp.JPG)
+
+We also need to arrange for the dog to fall back down when there is blank space below it:
+
+![dog fall down](pics/dogFallDown.JPG)
+
+Note that we don't allow the dog to fall down if there is snake below it (the dog gets to "walk" over a snake it has jumped to avoid). 
+
+Finally, whenever the dog is directly above a snake, the score gets bumped up:
+
+![dog scores](pics/dogOverSnake.JPG)
