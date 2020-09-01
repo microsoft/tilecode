@@ -136,14 +136,34 @@ The following rule keeps the conveyor belt moving left as long as there is an or
 
 ![conveyor move](pics/conveyor1.JPG)
 
-The second rule destroys the yellow block that is next to the wall, opens a portal to the blue tile, creating a new yellow block at that location, and sends the sprite a move left command.
+The second rule destroys the yellow block that is next to the wall, opens a portal to the blue tile, creates a new yellow block at that tile, and sends the sprite a move left command.
 
 ![conveyor wrap around](pics/conveyor2.JPG)
 
 Together, the above two rules create illusion of a never-ending always-moving conveyor belt.
 
-### Dog Jumps
+### Basic snake rules
 
-### Randomizing snake appearance with portals
+Snakes always move left:
+
+![snakes always move left ](pics/snakeAlwaysLeft.JPG)
+
+If a snake smashes into the dog, then it's game over:
+
+![snake smash dog](pics/snakeSmashDog.JPG)
+
+### New snakes at random
+
+Let's turn now to making the snakes appear at random intervals using more "offstage" elements and the portal command. Below is a view of the tile map offstage where three snakes are placed initially and where new snakes are created:
+
+![snakes off stage ](pics/snakesOffStage.JPG)
+
+Recall that the portal command opens a portal to a tile that has a particular background, but contains no sprites. We use the orange offstage tiles as the area to create new sprites, as shown above.  Here is the rule for spawning a new snake, which fires when a snake reaches the wall on the left:
+
+![snake spawn ](pics/snakeSpawn.JPG)
+
+This rule destroys the current snake, opens a portal to an orange tile (not already containing a sprite), and creates a new snake at that tile. By design, if there are multiple orangel tiles that a portal could be opened to to, TileCode chooses one of the available tiles at random.
+
+### Dog Jumps
 
 
