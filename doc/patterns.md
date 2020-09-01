@@ -4,7 +4,7 @@ A game is composed of various [game mechanics](mechanics). Below you'll find
 a variety of different mechanics that you can use as a starting point for 
 developing your own game. We illustrate the mechanics using a variety of games.
 
-## Game 1: Dog, Cats and Snakes!!!
+## Game 1: Dog, Cats, and Snakes!!!
 
 ### Player Movement
 
@@ -122,7 +122,7 @@ When the projectile is going to collide with water, the projectile is destroyed 
 
 ![water to sand](pics/waterToSand.JPG)
 
-## Game 2: Dog Jumps Over Snakes
+## Game 2: Jumping Dog
 
 The second game is called a "side-scroller" for reasons that should be obvious from the snapshot of the game below:
 
