@@ -28,19 +28,7 @@ This will take some time during which you might see a file copy window. When the
 
 ![load screen](pics/meowbitLoadScreen.jpg)
 
-
 ### Troubleshooting
 
-### Problem: device does not display "file copy" screen
+See the [frequently asked questions](faq) if you are having problems with the above steps. 
 
-If your Arcade device is not displaying the "file copy" screen, put your device into "file copy" mode by pressing the reset button on the device. The **reset** button is located in different locations on the [MakeCode Arcade devices](https://arcade.makecode.com/hardware/):
-
-- Kittenbot [Meowbit](https://www.kittenbot.cc/collections/frontpage/products/meowbit-codable-console-for-microsoft-makecode-arcade): **reset** is on the upper-right side of the device
-- GHI [Brainpad Arcade](https://www.brainpad.com/): **reset** is on the upper-right of the front of the device
-- Adafruit [PyBadge](https://www.adafruit.com/product/4200), [PyGamer](https://www.adafruit.com/product/4242) and [EdgeBadge](https://www.adafruit.com/product/4400): **reset** is on the upper-left of the back of the device
-- Kitronix [ARCADE](https://kitronik.co.uk/products/5311-arcade-for-makecode-arcade): **reset** is above the screen on the front of the device
-- TinkerGen [GameGo](https://shop.tinkergen.com/gamego.html): **reset** is at the bottom of the front of the device, to the right of the Menu button
-
-### Problem: device displays "file copy" screen but does not show as a drive on computer
-
-It might be that your micro-USB cable is faulty (or is a power-only cable). Try a different cable. 
