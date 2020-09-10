@@ -28,7 +28,7 @@ Both the UF2 file and the game simulator come loaded with six sample games. The 
 
 ## Having Problems?
 
-Please file a [GitHub issue](https://github.com/microsoft/tilecode/issues){:target="_blank"} if you encounter a problem with TileCode. You can also help us by choosing the most appropriate tag for your issue.  If you can't file an issue, mail us at [tilecode@microsoft.com](mailto:tilecode@microsoft.com)
+Please consult the [frequently asked questions](faq) to see if it addresses the problem you are having. Otherwise, feel free to file a [GitHub issue](https://github.com/microsoft/tilecode/issues){:target="_blank"} if you encounter a problem with TileCode. You can also help us by choosing the most appropriate tag for your issue.  If you can't file an issue, mail us at [tilecode@microsoft.com](mailto:tilecode@microsoft.com)
 
 ## Read More About It!
 
