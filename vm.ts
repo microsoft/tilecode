@@ -10,7 +10,7 @@ module tileworld {
         public lastDir: MoveRest;
         public inst: number;        // the one instruction history to apply to the sprite to 
         public arg: number;         // create the next sprite state
-        public changed: boolean;
+        // public changed: boolean;
         constructor(img: Image, kind: number, d = false) {
             super(img);
             const scene = game.currentScene();
@@ -53,8 +53,8 @@ module tileworld {
             const t = this.top - oy;
 
             screen.drawTransparentImage(this.image, l, t);
-            if (this.changed)
-                screen.drawTransparentImage(include, l, t);
+            // if (this.changed)
+            //    screen.drawTransparentImage(include, l, t);
             // screen.drawTransparentImage(ruleediting.movedImages[this.dir], l, t);
         }
     }
@@ -446,8 +446,8 @@ module tileworld {
             // update the state of each sprite, based on instructions
             this.allSprites(ts => {
                 ts.update();
-                if (ts.dir != Resting || ts.dir != ts.lastDir) {
-                    // if sprite is moving then dirty its current
+                if (ts.dir != Resting || ts.dir != ts.lastDir || ts.inst == CommandType.Move && ts.arg == MoveArg.Stop ) {
+                    // if sprite is moving then dirty its current 
                     // location and next location
                     this.vm.changed.setPixel(ts.col(), ts.row(), 1);
                     this.vm.changed.setPixel(ts.col() + moveXdelta(ts.dir),
@@ -481,9 +481,9 @@ module tileworld {
                 }
             }
             // set bit on sprite
-            this.allSprites(ts => {
-                ts.changed = this.contextChanged(ts);
-            });
+            // this.allSprites(ts => {
+            //    ts.changed = this.contextChanged(ts);
+            // });
         }
 
         // ---------------------------------------------------------------------
