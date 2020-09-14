@@ -1317,5 +1317,11 @@ settings.writeBuffer(prefix+"RuleB10", hex`
 // buffer length = 14
 settings.writeBuffer(prefix+"RuleB11", hex`
 3222220010133200041603000300`);
+// buffer length = 12
+settings.writeBuffer(prefix+"RuleB12", hex`
+322622004413320144060004`);
+// buffer length = 12
+settings.writeBuffer(prefix+"RuleB13", hex`
+322622000113320044060004`);
 settings.writeNumber(prefix+"PlayerN",0);
 }
