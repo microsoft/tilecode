@@ -1,7 +1,7 @@
 // add games in if the slots are empty
 
 // createHelloWorld("TW1-");
-createApplesGrow("TW4-");
+// createApplesGrow("TW4-");
 createMineRocks("TW5-"); 
 createPushBoxes("TW6-");
 createEatDots("TW7-");
@@ -14,7 +14,7 @@ createSkeletonDungeon("TW1-");
 // createDescendingAliens("TW8-");
 // createSortingDiamonds("TW8-");
 // createPaint("TW8-");
-// createLeftHandRule("TW4-");
+createLeftHandRule("TW4-");
 
 // --------------------------------------    
 
@@ -1237,13 +1237,13 @@ settings.writeBuffer(prefix+"WBackM", hex`
 `);
 // buffer length = 77
 settings.writeBuffer(prefix+"WSpriteM", hex`
-2018ffdf21ffffdf10ffffff6f12ff7f12ff7f12ffffffffffff4f12ef12ffffff4f12ffffffffff
+2018ffdf21ffffdf10ffffff6f12ff7f12ff8f12ffffffffffff3f12ef12ffffff4f12ffffffffff
 ffcf12ffffffffffef12ffff12ffffff1f12ffffff3f13bf125f12ffffdf124f12ffffff4f`);
 settings.writeNumber(prefix+"BackN",4);
 // buffer length = 94
 settings.writeBuffer(prefix+"BackI0", hex`
 10101b6d1c1b6d1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d7b
-1d7b6c1b1a6c1b1a1b6d1c1b6d1b1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b
+1d7b6c1b1a6c1b1a1b6d1c1b6d1b1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c1d6b1c106b1c1d6b1c1d6b
 1c1d6b1c1d7b1d6b7c1b1a6c1b1a`);
 // buffer length = 53
 settings.writeBuffer(prefix+"BackI1", hex`
@@ -1253,11 +1253,10 @@ c627187617561718f6f6f65627`);
 settings.writeBuffer(prefix+"BackI2", hex`
 1010ff3f3ccf5c4f3c4f6c2f5c4f5c1f7c3f5c1f7c4f3c2f7caf5ccf3c8f3c7f1c4f5c5f3c3f5c4f
 4c3f6c3f4c3f6c4f3c4f3c7f1cff1f`);
-// buffer length = 112
+// buffer length = 68
 settings.writeBuffer(prefix+"BackI3", hex`
-10101f6e3f1e2f2e1f2e342e1f5e1f3e544e341e1f2e642e541e1f2e541e743e541e741e1f2e342e
-742e1f3e1f1e1f1e541e1f1e4f3e1f1e341e1f2e2f2e345e1f1e142e1f1e541e1f1e1f1e341e1f1e
-542e1f1e441e1f1e641e1f1e443e641e1f2e342e1f1e347e144e1f4e2f1e1f3e`);
+10101ff0d01f6052501f408270324132602211431132502211531132502211531132502211531122
+4022115311323022115311324022114311325032413270829052f080`);
 settings.writeNumber(prefix+"SpriteN",4);
 // buffer length = 130
 settings.writeBuffer(prefix+"SpriteI0", hex`
