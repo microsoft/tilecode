@@ -86,7 +86,7 @@ module tileworld.ruleediting {
                             this.p.saveRule(this.rule);
                             game.pushScene();
                             const rules = this.p.getRules();
-                            const g = new RunGame(this.p, rules, this.col() == 3);
+                            const g = new RunGame(this.p, rules, this.p.help);
                             g.setWorld(this.p.getWorldBackgrounds(), this.p.getWorldSprites());
                             g.start();
                             return;

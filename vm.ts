@@ -39,8 +39,8 @@ module tileworld {
         isOutOfScreen(camera: scene.Camera): boolean {
             const ox = (this.flags & sprites.Flag.RelativeToCamera) ? 0 : camera.drawOffsetX;
             const oy = (this.flags & sprites.Flag.RelativeToCamera) ? 0 : camera.drawOffsetY;
-            return this.right - ox < (this.debug ? 32 : 0) || this.bottom - oy < 0 || 
-                   this.left - ox > screen.width - (this.debug ? 32 : 0) || this.top - oy > screen.height;
+            return this.right - ox < 0 || this.bottom - oy < 0 || 
+                   this.left - ox > screen.width || this.top - oy > screen.height;
         }
         // still need to translate properly
         __drawCore(camera: scene.Camera) {
@@ -49,13 +49,14 @@ module tileworld {
             const ox = (this.flags & sprites.Flag.RelativeToCamera) ? 0 : camera.drawOffsetX;
             const oy = (this.flags & sprites.Flag.RelativeToCamera) ? 0 : camera.drawOffsetY;
 
-            const l = this.left - ox + (this.debug ? 32 : 0);
+            const l = this.left - ox;
             const t = this.top - oy;
 
             screen.drawTransparentImage(this.image, l, t);
             // if (this.changed)
             //    screen.drawTransparentImage(include, l, t);
-            screen.drawTransparentImage(ruleediting.movedImages[this.dir], l, t);
+            if (this.debug)
+                screen.drawTransparentImage(ruleediting.movedImages[this.dir], l, t);
         }
     }
 
@@ -116,7 +117,7 @@ module tileworld {
         private ruleIndex: RuleView[][] = [];     // lookup of rules by phase
         private ruleKinds: number[][] = [];       // lookup of kinds having rules by phase
         
-        constructor(private p: Project, private rules: RuleView[]) {
+        constructor(private p: Project, private rules: RuleView[], private debug: boolean) {
             this.vm = null;
             for(let rt = RuleType.FirstRule; rt <= RuleType.LastRule; rt++) {
                 this.ruleIndex[rt] = [];
@@ -661,7 +662,7 @@ module tileworld {
                     case CommandType.Spawn: {
                         if (!rc.self)
                             break;
-                        spawned = new TileSprite(this.p.spriteImages()[arg], arg);
+                        spawned = new TileSprite(this.p.spriteImages()[arg], arg, this.debug);
                         // TODO: what phase of rule execution are we in?
                         // TODO: 
                         this.vm.spawnedSprites.push(spawned);
@@ -745,7 +746,7 @@ module tileworld {
         private state: VMState;
         constructor(private p: Project, rules: RuleView[], private debug: boolean = false) {
             super();
-            this.vm = new TileWorldVM(p, rules);
+            this.vm = new TileWorldVM(p, rules, debug);
         }
         
         public setWorld(w: Image, sprites: Image): void {
@@ -756,7 +757,7 @@ module tileworld {
             this.state.highScore = this.p.highScore;
             this.state.sprites = [];
             const currScene = game.currentScene();
-            currScene.tileMap = new tiles.legacy.LegacyTilemap(TileScale.Sixteen, this.debug ? 2 : 0);
+            currScene.tileMap = new tiles.legacy.LegacyTilemap(TileScale.Sixteen, 0);
             scene.setTileMap(w.clone());
             this.state.changed = w.clone();
             this.state.changed.fill(0xf);
@@ -853,12 +854,11 @@ module tileworld {
                 screen.print("High:"+this.state.highScore.toString(), 80, 0);
             })
 
-            game.onPaint(() => {
-                
+            game.onPaint(() => { 
                 // debugger here
-                if (this.debug) {
-                    screen.drawImage(debug, 0, 0)
-                }
+                //if (this.debug) {
+                //    screen.drawImage(debug, 0, 0)
+                //}
             });
 
             this.registerController();

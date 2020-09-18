@@ -26,7 +26,7 @@ module tileworld {
                     const rules = this.p.getRules();
                     if (rules.length > 0) {
                         game.pushScene();
-                        const g = new RunGame(this.p, rules);
+                        const g = new RunGame(this.p, rules, this.p.help);
                         g.setWorld(this.p.getWorldBackgrounds(), this.p.getWorldSprites());
                         g.start();
                     }
