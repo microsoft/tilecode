@@ -2,7 +2,7 @@
 
 # Microsoft TileCode
 
-[Microsoft TileCode](https://microsoft.github.io/tilecode/) is a game creation app that allows you to design, code, and play games directly on [Microsoft MakeCode Arcade](https://arcade.makecode.com/hardware) devices.  Read more about it in the upcoming UIST 2020 paper [TileCode: Creation of Video Games on Gaming Handhelds](https://www.microsoft.com/en-us/research/publication/tilecode-creation-of-video-games-on-gaming-handhelds/).
+[Microsoft TileCode](https://microsoft.github.io/tilecode/) is a game creation app that allows you to design, code, and play games directly on [Microsoft MakeCode Arcade](https://arcade.makecode.com/hardware) devices.  Read more about it in the upcoming UIST 2020 paper [TileCode: Creation of Video Games on Gaming Handhelds](https://www.microsoft.com/en-us/research/publication/tilecode-creation-of-video-games-on-gaming-handhelds/).  For more information, see the [Microsoft TileCode project page](https://www.microsoft.com/en-us/research/project/microsoft-tilecode/).
 
 # Building
 
