@@ -23,8 +23,11 @@ Both the UF2 file and the game simulator come loaded with six sample games. The 
 
 * [TileCode App Overview](tilecodeapp)
 * [Hello World Game](helloworld)
-* [TileCode Programming](language)
 * [Game Patterns](patterns)
+
+## More Details
+
+* [TileCode Reference Manual](language)
 
 ## Having Problems?
 
