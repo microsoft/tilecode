@@ -14,18 +14,18 @@ TileCode runs on any [MakeCode Arcade device](https://arcade.makecode.com/hardwa
 
 Both the UF2 file and the game simulator come loaded with six sample games. The game in slot #1 is a very simple example. The games in slots #4 - #8 are simplified versions of five popular games that together demonstrate all of TileCode's programming features.
 
-## Background Reading
+## Background Reading (for everyone)
 
 * [From Board Games to TileCode Games](board)
 * [Game Mechanics](mechanics)
 
-## Overview
+## Overview (for everyone)
 
 * [TileCode App Overview](tilecodeapp)
 * [Hello World Game](helloworld)
 * [Game Patterns](patterns)
 
-## More Details
+## Details (for programmers)
 
 * [TileCode Reference Manual](language)
 
